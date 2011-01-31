@@ -1,0 +1,64 @@
+
+AlphaPal 1.93  (formerly Bright/Brighter)
+
+AlphaPal is a hacked version of the 'bright' palettizer, which finds an optimal R,G,B,A palette for any 
+32-bit .TGA input image containing an alpha channel, and outputs it as an 8-bit .BMP file.
+
+Mainly for the benefit of the Unreal Tournament PSX2 codebase (the PSX2 supports palettized alpha natively.)
+
+Command line options:
+
+ See also the manual for 'bright'; alpha-specific options include:
+
+  -alphatest     write a sample rendering of [alpha*color] on a black background.
+  -alpha         output a sample image with only the alpha, as greyscale. 
+  -alphablue     output a sample image with alpha in the blue color channel. 	
+  -depth RGBA    limit the initial sampling depth to r,g,b,a bits for the color channels.
+
+
+Notes on using AlphaPal for font textures:
+
+ It may be intuitive to make an alpha mask by drawing antialiased characters on a dark background, and reusing
+ the antialiased outlines as your alpha channel;  keep in mind that when rendered, the end result is brightness times alpha,
+ i.e. in theory the alpha takes care of the antialiasing, and having the outlines already antialiased will bias all the
+ colors to be darker. The result is characters that don't look very antialiased at all.
+ Ideally your font doesn't fade into black at the edges, but lets the alpha channel take care of all that.
+
+Instructions:
+
+- Create a 4-channel texture in photoshop - R,G,B and an alpha layer;
+- Save it out as a 32-bit .TGA targa file
+- Run AlphaPal on it:
+
+AlphaPal  alphatest.tga   -o
+( -o stands for overwrite any previous leaves.bmp files that may exist in
+the current folder )
+The output .bmp is the one you then refer to in the skins/materials section
+of your decoration's script file.
+
+To see what happens with the alpha channel in the palettized picture you can
+make a test image as follows:
+
+AlphaPal  alphatest.tga   -o -alpha
+
+This will output only the alpha, with the exact same color resolution (read: banding) that the full-color
+output will have.
+
+Depending on the image in the alpha channel, having palettized alpha greatly limits the available hues. 
+To trade off alpha smoothness against color resolution, try the -depth RGBA   options as in:
+
+This will cause banded alpha but better color depth:
+
+AlphaPal  alphatest.tga   -o -depth 7772 
+
+This will improve alpha smoothness at the cost of color richness:
+
+AlphaPal  alphatest.tga   -o -depth 5558 
+
+
+
+- Erik de Neve
+erik@epicgames.com
+
+
+
