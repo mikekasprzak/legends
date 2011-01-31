@@ -12,6 +12,7 @@ TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 - ".repos" -- New file containing the repository root (default svn://192.168.0.101/legends/)
 - standard packaging method that creates a folder and copies all files in to
   - Then per platform code can be run on the package folder, such as palm and linux
+  - should be generic enough to use for android (i.e. copy in to target)
 - Smiles and Legends will require separate root folders (d:/Smiles and d:/Legends)
   - Experiments needs some way to co-exist
     - GameExperiments (code and content), then some plugable code area for distinct tests
