@@ -19,11 +19,17 @@ fi
 
 echo "Project Name:    $PROJECT"
 echo "$PROJECT" >.project
+if [ "$WINDIR" != "" ]; then
+	attrib +h .project
+fi
 
 REPOS=`Tools/SVNRoot.sh`
 
 echo "Repository Root: $REPOS"
 echo "$REPOS" >.repos
+if [ "$WINDIR" != "" ]; then
+	attrib +h .repos
+fi
 
 echo "Done."
 exit 0
