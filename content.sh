@@ -34,7 +34,11 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 
 	if [ ! -n "$1" ]; then
 		echo "Checkout (defaults):"
-		FILES="`cat .content`"
+		if [ -e ".content" ]; then
+			FILES="`cat .content`"
+		else	
+			FILES="`cat Tools/default/.content`"
+		fi
 	else
 		echo "Checkout:"
 		FILES="$@"
