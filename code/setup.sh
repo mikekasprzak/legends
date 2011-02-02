@@ -8,11 +8,12 @@ DEFAULTDIR=Tools/default
 
 if [ ! -n "$1" ]
 then
-	PROJECT=`cat $DEFAULTDIR/.project`
 	echo "USAGE: `basename $0` GameProjectName"
 	echo ""
 	echo "* Project not specified, using default..."
 	echo ""
+	
+	PROJECT=`cat $DEFAULTDIR/.project`
 else
 	PROJECT=$1
 fi  
