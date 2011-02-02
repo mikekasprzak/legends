@@ -1,5 +1,5 @@
 # - ------------------------------------------------------------------------ - #
--include .target
+-include Config/.target
 # - ------------------------------------------------------------------------ - #
 ___default:
 	@echo "*** ERROR: No \".target\" file detected (or included file not found)!! ***"

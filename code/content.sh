@@ -1,19 +1,22 @@
 #!/bin/sh
 # content.sh - Frontend script for checking-out, updating, and committing content
 
-if [ ! -e ".project" ]; then
+DEFAULTDIR=Tools/default
+CONFIGDIR=Config
+
+if [ ! -e "$CONFIGDIR/.project" ]; then
 	echo "ERROR: File \".project\" does not exist!  Please run \"setup.sh\" to generate."
 	exit 1
 fi
 
-if [ ! -e ".repos" ]; then
+if [ ! -e "$CONFIGDIR/.repos" ]; then
 	echo "ERROR: File \".repos\" does not exist!  Please run \"setup.sh\" to generate."
 	exit 1
 fi
 
 APPNAME=`basename $0`
-PROJECT=`cat .project`
-REPOS=`cat .repos`
+PROJECT=`cat $CONFIGDIR/.project`
+REPOS=`cat $CONFIGDIR/.repos`
 
 # TODO: verify that the repository is correct, in case of branches ? 
 
@@ -34,18 +37,17 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 
 	if [ ! -n "$1" ]; then
 		echo "Checkout (defaults):"
-		if [ -e ".content" ]; then
-			FILES="`cat .content`"
+		if [ -e "$CONFIGDIR/.content" ]; then
+			FILES="`cat $CONFIGDIR/.content`"
 		else	
-			FILES="`cat Tools/default/.content`"
-			cp Tools/default/.content .
+			FILES="`cat $DEFAULTDIR/.content`"
 		fi
 	else
 		echo "Checkout:"
 		FILES="$@"
 		
 		# Delete ".content" if a specific checkout command was issued
-		rm -f .content
+		rm -f $CONFIGDIR/.content
 		OVERWRITE=true
 	fi
 	
@@ -58,7 +60,7 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 				echo "- Content/$arg2"
 				svn co $REPOS/content/$PROJECT/$arg2 Content/$arg2
 				if [ "$OVERWRITE" == "true" ]; then
-					echo "$arg2">>.content
+					echo "$arg2">>$CONFIGDIR/.content
 				fi
 			done
 		elif [ "$arg" == "Tools" ]; then
@@ -66,14 +68,14 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 			echo "- Content/$arg"
 			svn co $REPOS/content/$arg Content/$arg
 			if [ "$OVERWRITE" == "true" ]; then
-				echo "$arg">>.content
+				echo "$arg">>$CONFIGDIR/.content
 			fi
 		else
 			echo "+ $REPOS/content/$PROJECT/$arg"
 			echo "- Content/$arg"
 			svn co $REPOS/content/$PROJECT/$arg Content/$arg
 			if [ "$OVERWRITE" == "true" ]; then
-				echo "$arg">>.content
+				echo "$arg">>$CONFIGDIR/.content
 			fi
 		fi
 	done
@@ -81,7 +83,7 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 	# If on Windows, set the content file to hidden #
 	if [ "$WINDIR" != "" ]; then
 		if [ "$OVERWRITE" == "true" ]; then
-			attrib +h .content
+			attrib +h $CONFIGDIR/.content
 		fi
 	fi
 elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
@@ -89,10 +91,10 @@ elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 
 	if [ ! -n "$1" ]; then
 		echo "Update (defaults):"
-		if [ -e ".content" ]; then
-			FILES="`cat .content`"
+		if [ -e "$CONFIGDIR/.content" ]; then
+			FILES="`cat $CONFIGDIR/.content`"
 		else	
-			FILES="`cat Tools/default/.content`"
+			FILES="`cat $DEFAULTDIR/.content`"
 		fi
 	else
 		echo "Update:"
@@ -112,10 +114,10 @@ elif [ "$1" == "commit" ] || [ "$1" == "ci" ]; then
 
 	if [ ! -n "$1" ]; then
 		echo "Commit (defaults):"
-		if [ -e ".content" ]; then
-			FILES="`cat .content`"
+		if [ -e "$CONFIGDIR/.content" ]; then
+			FILES="`cat $CONFIGDIR/.content`"
 		else	
-			FILES="`cat Tools/default/.content`"
+			FILES="`cat $DEFAULTDIR/.content`"
 		fi
 	else
 		echo "Commit:"
