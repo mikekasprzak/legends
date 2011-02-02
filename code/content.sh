@@ -22,8 +22,8 @@ usage () {
 	echo ""
 	echo "Available subcommands:"
 	echo "  checkout (co) - \"Art/4444 Sound/WAV Music/OGG Tools\" or \"all\""
-	echo "  update (up) - ??"
-	echo "  commit (ci) - ??"
+	echo "  update (up) - no args for all, or explicit repository by name"
+	echo "  commit (ci) - no args for all, or explicit repository by name"
 }
 
 if [ ! -n "$1" ]; then
@@ -86,11 +86,46 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 	shift 1
 
-	echo "Update!! $*"
+	if [ ! -n "$1" ]; then
+		echo "Update (defaults):"
+		if [ -e ".content" ]; then
+			FILES="`cat .content`"
+		else	
+			FILES="`cat Tools/default/.content`"
+		fi
+	else
+		echo "Update:"
+		FILES="$@"
+	fi
+	
+	for arg in $FILES
+	do
+		echo "Content/$arg"
+		svn update Content/$arg
+	done
+	
 elif [ "$1" == "commit" ] || [ "$1" == "ci" ]; then
 	shift 1
+	
+	# TODO: catch and forward "-m" message argument, or all options to svn
 
-	echo "Commit!! $*"
+	if [ ! -n "$1" ]; then
+		echo "Commit (defaults):"
+		if [ -e ".content" ]; then
+			FILES="`cat .content`"
+		else	
+			FILES="`cat Tools/default/.content`"
+		fi
+	else
+		echo "Commit:"
+		FILES="$@"
+	fi
+	
+	for arg in $FILES
+	do
+		echo "Content/$arg"
+		svn ci Content/$arg
+	done
 else
 	echo "ERROR: Unknown Command \"$1\""
 	usage
