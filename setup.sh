@@ -2,11 +2,12 @@
 # setup.sh - Generate several useful files reqested of the build system
 
 DEFAULTDIR=Tools/default
+CONFIGDIR=Config
 
 echo "usage: `basename $0` [GameProjectName] [target_makefile]"
 echo ""
 
-if [ -e ".project" ]; then
+if [ -e "$CONFIGDIR/.project" ]; then
 	echo "Warning! File \".project\" exists!"
 	echo -n "Overwrite [y/N]? "
 	read answer
@@ -20,8 +21,8 @@ echo "Generating project settings..."
 echo ""
 
 if [ ! -n "$1" ]; then
-	if [ -e ".project" ]; then
-		PROJECT=`cat .project`
+	if [ -e "$CONFIGDIR/.project" ]; then
+		PROJECT=`cat $CONFIGDIR/.project`
 	else
 		PROJECT=`cat $DEFAULTDIR/.project`
 	fi
@@ -35,17 +36,17 @@ else
 fi  
 
 echo "Project Name:    $PROJECT"
-rm -f .project
-echo "$PROJECT" >.project
+rm -f $CONFIGDIR/.project
+echo "$PROJECT" >$CONFIGDIR/.project
 if [ "$WINDIR" != "" ]; then
-	attrib +h .project
+	attrib +h $CONFIGDIR/.project
 fi
 
 
 # Target Makefile #
 if [ ! -n "$2" ]; then
-	if [ -e ".target" ]; then
-		TARGET=`cat .target | awk '{print $2}'`
+	if [ -e "$CONFIGDIR/.target" ]; then
+		TARGET=`cat $CONFIGDIR/.target | awk '{print $2}'`
 	else
 		if [ "$WINDIR" != "" ]; then
 			TARGET="`cat $DEFAULTDIR/windows.target`"
@@ -64,10 +65,10 @@ else
 fi
 
 echo "Target Makefile: $TARGET"
-rm -f .target
-echo "-include $TARGET">.target
+rm -f $CONFIGDIR/.target
+echo "-include $TARGET">$CONFIGDIR/.target
 if [ "$WINDIR" != "" ]; then
-	attrib +h .target
+	attrib +h $CONFIGDIR/.target
 fi
 
 
@@ -75,10 +76,10 @@ fi
 REPOS=`Tools/SVNRoot.sh`
 
 echo "Repository Root: $REPOS"
-rm -f .repos
-echo "$REPOS" >.repos
+rm -f $CONFIGDIR/.repos
+echo "$REPOS" >$CONFIGDIR/.repos
 if [ "$WINDIR" != "" ]; then
-	attrib +h .repos
+	attrib +h $CONFIGDIR/.repos
 fi
 
 # End #
