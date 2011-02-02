@@ -1,5 +1,5 @@
 #!/bin/bash
-# SVNRevision.sh - Returns the SVN Version of a file, otherwise 0
+# SVNVersion.sh - Returns the SVN Version of a file, otherwise 0
 
 if [ ! -n "$1" ]
 then
