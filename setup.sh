@@ -44,10 +44,20 @@ fi
 
 # Target Makefile #
 if [ ! -n "$2" ]; then
-	if [ "$WINDIR" != "" ]; then
-		TARGET="winsdl_makefile"
+	if [ -e ".target" ]; then
+		TARGET=`cat .target | awk '{print $2}'`
 	else
-		TARGET="Target/nixsdl_makefile"
+		if [ "$WINDIR" != "" ]; then
+			TARGET="`cat $DEFAULTDIR/windows.target`"
+		else
+			TARGET="`cat $DEFAULTDIR/linux.target`"
+		fi
+	fi
+	
+	echo -n "Target Makefile [$TARGET]: "
+	read answer
+	if [ "$answer" != "" ]; then
+		TARGET="$answer"
 	fi
 else
 	TARGET="$2"
