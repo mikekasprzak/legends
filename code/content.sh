@@ -38,6 +38,7 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 			FILES="`cat .content`"
 		else	
 			FILES="`cat Tools/default/.content`"
+			cp Tools/default/.content .
 		fi
 	else
 		echo "Checkout:"
