@@ -2,7 +2,7 @@
 -include .target
 # - ------------------------------------------------------------------------ - #
 ___default:
-	@echo "*** ERROR: No \".target\" file detected!! ***"
-	@echo "Please run \"./setup.sh [GameProjectName] [target_makefile]\""
+	@echo "*** ERROR: No \".target\" file detected (or included file not found)!! ***"
+	@echo "Please run \"./setup.sh"
 # - ------------------------------------------------------------------------ - #
 	
