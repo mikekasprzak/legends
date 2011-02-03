@@ -36,6 +36,8 @@ if [ ! -n "$1" ]; then
 elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 	shift 1
 
+	echo "$REPOS/custom/$PROJECT..."
+
 	# Confirm that the current .project and custom .project match
 	if [ -e "$CUSTOMDIR/.project" ]; then
 		if [ "`cat $CUSTOMDIR/.project`" != $PROJECT ]; then
@@ -46,20 +48,46 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 	fi
 	
 	svn co $REPOS/custom/$PROJECT $CUSTOMDIR
-	
-	# If project has a .default file, make that the current SKU #
-	if [ -e "$CUSTOMDIR/.default" ]; then
-		cat $CUSTOMDIR/.default>$CONFIGDIR/.sku
-	fi
 
+	# Remove the old .sku file	
+	rm -f $CONFIGDIR/.sku
+
+	if [ -n "$1" ]; then
+		echo $1>$CONFIGDIR/.sku
+		if [ "$WINDIR" != "" ]; then
+			attrib +h $CONFIGDIR/.sku
+		fi		
+	elif [ -e "$CUSTOMDIR/.default" ]; then
+		# If project has a .default file, make that the current SKU #
+		cat $CUSTOMDIR/.default>$CONFIGDIR/.sku
+		if [ "$WINDIR" != "" ]; then
+			attrib +h $CONFIGDIR/.sku
+		fi		
+	fi
 elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 	shift 1
 
-
-	
+	svn up $CUSTOMDIR
 elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 	shift 1
-	
+
+	svn ci $CUSTOMDIR --message "$*"
+elif [ "$1" == "set" ]; then
+	# Remove the old .sku file	
+	rm -f $CONFIGDIR/.sku
+
+	if [ -n "$1" ]; then
+		echo $1>$CONFIGDIR/.sku
+		if [ "$WINDIR" != "" ]; then
+			attrib +h $CONFIGDIR/.sku
+		fi		
+	elif [ -e "$CUSTOMDIR/.default" ]; then
+		# If project has a .default file, make that the current SKU #
+		cat $CUSTOMDIR/.default>$CONFIGDIR/.sku
+		if [ "$WINDIR" != "" ]; then
+			attrib +h $CONFIGDIR/.sku
+		fi		
+	fi
 else
 	echo "ERROR: Unknown Command \"$1\""
 	usage
