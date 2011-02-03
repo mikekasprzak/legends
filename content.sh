@@ -26,9 +26,9 @@ usage () {
 	echo "usage: $APPNAME <subcommand> [args]"
 	echo ""
 	echo "Available subcommands:"
-	echo "  checkout (co) - \"Art/4444 Sound/WAV Music/OGG Tools\" or \"all\""
-	echo "  update (up) - no args for all, or explicit repository by name"
-	echo "  commit (ci) - no args for all, or explicit repository by name"
+	echo "  checkout (co) - \"Art/4444 Sound/WAV Music/OGG Tools\" or \"all\" for everything"
+	echo "  update (up) - no args, or explicit repository by name"
+	echo "  checkin (ci) - no args, or explicit repository by name"
 }
 
 if [ ! -n "$1" ]; then
@@ -133,6 +133,6 @@ else
 	echo "ERROR: Unknown Command \"$1\""
 	usage
 	exit 1
-fi  
+fi
 
 exit 0
