@@ -24,6 +24,11 @@ if [ ! -e "$CONFIGDIR/.sku" ]; then
 	exit 1
 fi
 
+if [ ! -n "$1" ]; then
+	echo "ERROR: No commit message specified"
+	exit 1
+fi
+
 ./content.sh update
 ./content.sh commit "$*"
 
