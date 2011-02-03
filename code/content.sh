@@ -1,6 +1,10 @@
 #!/bin/sh
 # content.sh - Frontend script for checking-out, updating, and committing content
 
+# TODO: verify that the repository is correct, in case of branches ? 
+# TODO: inside checkin, catch and forward "-m" message argument (or all options) to svn
+
+
 DEFAULTDIR=Tools/default
 CONFIGDIR=Config
 
@@ -17,8 +21,6 @@ fi
 APPNAME=`basename $0`
 PROJECT=`cat $CONFIGDIR/.project`
 REPOS=`cat $CONFIGDIR/.repos`
-
-# TODO: verify that the repository is correct, in case of branches ? 
 
 usage () {
 	echo "usage: $APPNAME <subcommand> [args]"
@@ -107,11 +109,9 @@ elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 		svn update Content/$arg
 	done
 	
-elif [ "$1" == "commit" ] || [ "$1" == "ci" ]; then
+elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 	shift 1
 	
-	# TODO: catch and forward "-m" message argument, or all options to svn
-
 	if [ ! -n "$1" ]; then
 		echo "Commit (defaults):"
 		if [ -e "$CONFIGDIR/.content" ]; then

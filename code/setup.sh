@@ -9,9 +9,9 @@ echo ""
 
 if [ -e "$CONFIGDIR/.project" ]; then
 	echo "Warning! File \".project\" exists!"
-	echo -n "Overwrite [y/N]? "
+	echo -n "Overwrite [type \"yes\"]? "
 	read answer
-	if [ "$answer" != "y" ] && [ "$answer" != "Y" ] && [ "$answer" != "yes" ]; then
+	if [ "$answer" != "yes" ]; then
 		echo "Exiting..."
 		exit 1
 	fi
