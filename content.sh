@@ -139,6 +139,13 @@ elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 #		svn ci Content/$arg --message ""
 #	done
 
+
+	if [ ! -n "$1" ]; then
+		echo "ERROR: No commit message specified"
+		usage
+		exit 1
+	fi
+
 	echo "Commit:"
 	if [ -e "$CONFIGDIR/.content" ]; then
 		FILES="`cat $CONFIGDIR/.content`"
