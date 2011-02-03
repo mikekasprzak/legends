@@ -70,6 +70,12 @@ elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 	shift 1
 
+	if [ ! -n "$1" ]; then
+		echo "ERROR: No commit message specified"
+		usage
+		exit 1
+	fi
+
 	svn ci $CUSTOMDIR --message "$*"
 elif [ "$1" == "set" ]; then
 	# Remove the old .sku file	

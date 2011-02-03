@@ -82,6 +82,10 @@ if [ "$WINDIR" != "" ]; then
 	attrib +h $CONFIGDIR/.repos
 fi
 
+
+# Checkout some custom stuffs #
+./sku.sh co
+
 # End #
 echo "Done."
 exit 0
