@@ -25,10 +25,9 @@ usage () {
 	echo "Available subcommands:"
 	echo "  checkout (co) - no args, or specify a SKU file to use"
 	echo "  update (up)"
-	echo "  checkin (ci)"
-	echo "  set - no args, or specify a SKU file to use"
+	echo "  checkin (ci) - message"
+	echo "  set - no args (use default), or specify a SKU file to use"
 }
-
 
 if [ ! -n "$1" ]; then
 	usage

@@ -27,8 +27,10 @@ usage () {
 	echo ""
 	echo "Available subcommands:"
 	echo "  checkout (co) - \"Art/4444 Sound/WAV Music/OGG Tools\" or \"all\" for everything"
-	echo "  update (up) - no args, or explicit repository by name"
-	echo "  checkin (ci) - no args, or explicit repository by name"
+	echo "  update (up)"
+	echo "  checkin (ci) - message"
+#	echo "  update (up) - no args, or explicit repository by name"
+#	echo "  checkin (ci) - no args, or explicit repository by name"
 }
 
 if [ ! -n "$1" ]; then
@@ -91,16 +93,23 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 	shift 1
 
-	if [ ! -n "$1" ]; then
-		echo "Update (defaults):"
-		if [ -e "$CONFIGDIR/.content" ]; then
-			FILES="`cat $CONFIGDIR/.content`"
-		else	
-			FILES="`cat $DEFAULTDIR/.content`"
-		fi
-	else
-		echo "Update:"
-		FILES="$@"
+#	if [ ! -n "$1" ]; then
+#		echo "Update (defaults):"
+#		if [ -e "$CONFIGDIR/.content" ]; then
+#			FILES="`cat $CONFIGDIR/.content`"
+#		else	
+#			FILES="`cat $DEFAULTDIR/.content`"
+#		fi
+#	else
+#		echo "Update:"
+#		FILES="$@"
+#	fi
+
+	echo "Update:"
+	if [ -e "$CONFIGDIR/.content" ]; then
+		FILES="`cat $CONFIGDIR/.content`"
+	else	
+		FILES="`cat $DEFAULTDIR/.content`"
 	fi
 	
 	for arg in $FILES
@@ -112,22 +121,35 @@ elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
 elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 	shift 1
 	
-	if [ ! -n "$1" ]; then
-		echo "Commit (defaults):"
-		if [ -e "$CONFIGDIR/.content" ]; then
-			FILES="`cat $CONFIGDIR/.content`"
-		else	
-			FILES="`cat $DEFAULTDIR/.content`"
-		fi
-	else
-		echo "Commit:"
-		FILES="$@"
+#	if [ ! -n "$1" ]; then
+#		echo "Commit (defaults):"
+#		if [ -e "$CONFIGDIR/.content" ]; then
+#			FILES="`cat $CONFIGDIR/.content`"
+#		else	
+#			FILES="`cat $DEFAULTDIR/.content`"
+#		fi
+#	else
+#		echo "Commit:"
+#		FILES="$@"
+#	fi
+
+#	for arg in $FILES
+#	do
+#		echo "Content/$arg"
+#		svn ci Content/$arg --message ""
+#	done
+
+	echo "Commit:"
+	if [ -e "$CONFIGDIR/.content" ]; then
+		FILES="`cat $CONFIGDIR/.content`"
+	else	
+		FILES="`cat $DEFAULTDIR/.content`"
 	fi
 	
 	for arg in $FILES
 	do
 		echo "Content/$arg"
-		svn ci Content/$arg
+		svn ci Content/$arg --message "$*"
 	done
 else
 	echo "ERROR: Unknown Command \"$1\""
