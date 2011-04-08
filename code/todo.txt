@@ -14,6 +14,8 @@ TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 - Smiles and Legends will require separate root folders (d:/Smiles and d:/Legends)
   - Experiments needs some way to co-exist
     - GameExperiments (code and content), then some plugable code area for distinct tests
+- Will need some good way of differentiating/collecting project files generate/stored per proj.
+  - Smiles has multiple projects, as will other games.
 - ??
 
 
