@@ -3,7 +3,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
 	// Setup Texture Pool //
-	TexturePool::Init( "BirdContent" );
+	TexturePool::Init( "Content/Art/4444" );
 	TexturePool::AddDirectory( "" );
 /*
 	Log( "+ Setting Base Content Directory...\n" );
