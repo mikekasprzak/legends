@@ -1,0 +1,12 @@
+# - ------------------------------------------------------------------------ - #
+# Compiler and Linker Flags (specific to this target) #
+CFLAGS				+=	-I /usr/local/include
+CPPFLAGS			+=	-I /usr/local/include
+LDFLAGS				+=	-L /usr/local/lib -static-libgcc -static
+# - ------------------------------------------------------------------------ - #
+# Release Build Only #
+ifdef NDEBUG
+LDFLAGS				+=	-mwindows
+DEFINES				+=	NDEBUG
+endif
+# - ------------------------------------------------------------------------ - #
