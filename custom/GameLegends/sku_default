@@ -11,7 +11,6 @@ SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Squirrel/include \
-						src/External/Sixense/include \
 						src/External/NVTriStrip/include \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
