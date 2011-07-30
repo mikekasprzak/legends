@@ -100,7 +100,7 @@ void CallExp_Squirrel() {
 		sqstd_seterrorhandlers(v);
 		
 		// Compile and Run a script //
-		char FileName[] = "XpContent/Things.nut";
+		char FileName[] = "Content/Misc/Things.nut";
 		
 //		sq_pushroottable(v);
 //		sqstd_dofile( v, FileName, false, false );

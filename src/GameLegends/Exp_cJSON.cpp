@@ -8,7 +8,7 @@ extern void CallExp_cJSON();
 void CallExp_cJSON() {
 	Log("+ Now Testing cJSON\n");
 	{
-		DataBlock* Jay = new_read_nullterminate_DataBlock( "XpContent/MapLayout.json" );
+		DataBlock* Jay = new_read_nullterminate_DataBlock( "Content/Misc/MapLayout.json" );
 		
 		Log( "%s\n", Jay->Data );
 		

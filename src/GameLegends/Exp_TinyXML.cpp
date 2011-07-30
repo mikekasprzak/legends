@@ -10,9 +10,9 @@ void CallExp_TinyXML() {
 		// TODO: Not sure why I can't get any node data as text.  Was loking for info a way to get text, but the text
 		// function returns an TiXmlText type... dunno what tha tis. 
 		
-//		DataBlock* Jay = new_read_nullterminate_DataBlock( "XpContent/Junk.xml" );
+//		DataBlock* Jay = new_read_nullterminate_DataBlock( "Content/Misc/Junk.xml" );
 
-		TiXmlDocument doc( "XpContent/Junk.xml" );
+		TiXmlDocument doc( "Content/Misc/Junk.xml" );
 		doc.LoadFile();
 		
 		TiXmlHandle docHandle( &doc );
