@@ -1,0 +1,15 @@
+#ifdef GL_ES
+precision highp float;
+#else
+#define lowp
+#endif
+
+uniform vec4 GlobalColor;
+
+uniform mat4 ViewMatrix;
+attribute vec4 vertexPos;
+
+void main()
+{
+	gl_Position = ViewMatrix * vertexPos;
+}
