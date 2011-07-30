@@ -1,0 +1,5 @@
+HEY!
+
+Use something like scons or cmake to generate an X-Code project file!
+
+Manual project making is a bitch!
