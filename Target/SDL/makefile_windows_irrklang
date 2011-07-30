@@ -1,0 +1,29 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for PLATFORM scope (no game) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/Main/SDL \
+						src/External/irrKlang/include
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_SDL USES_SDL_1_3 USES_IRRKLANG \
+						USES_WINDOWS USES_MINGW NO_STDIO_REDIRECT \
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-L/usr/local/lib -lmingw32 -lSDL \
+						src/External/irrKlang/lib/win32-gcc/libirrKlang.a \
+# - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
+include Target/SDL/common_opengl_windows
+include Target/SDL/windows_common
+# - ------------------------------------------------------------------------ - #
+# Finally, include the standard makefile body #
+include Target/SDL/common_makefile
+# - ------------------------------------------------------------------------ - #

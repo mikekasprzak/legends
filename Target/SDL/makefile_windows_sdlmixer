@@ -1,0 +1,9 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for PLATFORM scope (no game) #
+# - ------------------------------------------------------------------------ - #
+SRC_FOLDERS			+=	src/Main/SDL
+						
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+
+include Target/SDL/default_makefile
