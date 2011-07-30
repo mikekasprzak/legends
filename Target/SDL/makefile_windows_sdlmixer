@@ -22,6 +22,9 @@ LIBRARIES			+=	-L/usr/local/lib -lwinmm -lmingw32 -lSDL.dll \
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	/usr/local/bin/SDL.dll \
 						/usr/local/bin/SDL_mixer.dll \
+						/usr/local/bin/libvorbis-*.dll \
+						/usr/local/bin/libvorbisfile-*.dll \
+						/usr/local/bin/libogg-*.dll \
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
