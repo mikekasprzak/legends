@@ -1,0 +1,174 @@
+Microsoft (R) COFF/PE Dumper Version 9.00.30729.01
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file libGLESv2.dll
+
+File Type: DLL
+
+  Section contains the following exports for LIBGLESV2.dll
+
+    00000000 characteristics
+    F8673917 time date stamp Mon Jan 23 21:53:11 2102
+        0.00 version
+           1 ordinal base
+         147 number of functions
+         147 number of names
+
+    ordinal hint RVA      name
+
+          1    0 0000ED50 glActiveTexture
+          2    1 000157DC glAttachShader
+          3    2 00015910 glBindAttribLocation
+          4    3 00007754 glBindBuffer
+          5    4 0001C440 glBindFramebuffer
+          6    5 0001C2BC glBindRenderbuffer
+          7    6 000141E0 glBindTexture
+          8    7 00004754 glBlendColor
+          9    8 0000816C glBlendEquation
+         10    9 000048E8 glBlendEquationSeparate
+         11    A 00008180 glBlendFunc
+         12    B 00004A2C glBlendFuncSeparate
+         13    C 0000C1B4 glBufferData
+         14    D 00007A70 glBufferSubData
+         15    E 0001BFF0 glCheckFramebufferStatus
+         16    F 00004BEC glClear
+         17   10 00004D20 glClearColor
+         18   11 00004EB4 glClearDepthf
+         19   12 00004F5C glClearStencil
+         20   13 00004FB4 glColorMask
+         21   14 00014E40 glCompileShader
+         22   15 00012410 glCompressedTexImage2D
+         23   16 000127F0 glCompressedTexSubImage2D
+         24   17 00011D04 glCopyTexImage2D
+         25   18 000120C8 glCopyTexSubImage2D
+         26   19 0001928C glCreateProgram
+         27   1A 00019344 glCreateShader
+         28   1B 00005024 glCullFace
+         29   1C 0000C034 glDeleteBuffers
+         30   1D 0001B084 glDeleteFramebuffers
+         32   1E 00015A38 glDeleteProgram
+         33   1F 0001AAE0 glDeleteRenderbuffers
+         34   20 00015B30 glDeleteShader
+         31   21 00014610 glDeleteTextures
+         36   22 000050F8 glDepthFunc
+         37   23 000051C8 glDepthMask
+         38   24 00005220 glDepthRangef
+         35   25 00015C00 glDetachShader
+         39   26 00005318 glDisable
+         40   27 000054E8 glDisableVertexAttribArray
+         41   28 00008198 glDrawArrays
+         42   29 00008364 glDrawElements
+         43   2A 00005688 glEnable
+         44   2B 00005854 glEnableVertexAttribArray
+         45   2C 00005B9C glFinish
+         46   2D 00005C24 glFlush
+         47   2E 0001B420 glFramebufferRenderbuffer
+         48   2F 0001B1C4 glFramebufferTexture2D
+         49   30 00005CA4 glFrontFace
+         50   31 0000799C glGenBuffers
+         52   32 0001C554 glGenFramebuffers
+         53   33 0001C3CC glGenRenderbuffers
+         54   34 00013F20 glGenTextures
+         51   35 00012AFC glGenerateMipmap
+         55   36 000166D0 glGetActiveAttrib
+         56   37 00018034 glGetActiveUniform
+         57   38 00015D34 glGetAttachedShaders
+         58   39 00018A50 glGetAttribLocation
+         59   3A 00008548 glGetBooleanv
+         60   3B 00005D60 glGetBufferParameteriv
+         61   3C 00005EB0 glGetError
+         62   3D 000097CC glGetFloatv
+         63   3E 0001B608 glGetFramebufferAttachmentParameteriv
+         64   3F 0000A9A8 glGetIntegerv
+        143   40 00007D10 glGetPhysMemUsedSLSI
+         66   41 0001683C glGetProgramInfoLog
+         65   42 00015E60 glGetProgramiv
+         67   43 0001AE5C glGetRenderbufferParameteriv
+         69   44 00014E44 glGetShaderInfoLog
+         70   45 00014D48 glGetShaderPrecisionFormat
+         71   46 00014E48 glGetShaderSource
+         68   47 00016048 glGetShaderiv
+         72   48 00005F0C glGetString
+         73   49 00012E84 glGetTexParameterfv
+         74   4A 00012D44 glGetTexParameteriv
+        144   4B 00007CEC glGetTextureUsedSLSI
+         77   4C 00016228 glGetUniformLocation
+         75   4D 00016CF4 glGetUniformfv
+         76   4E 00016D04 glGetUniformiv
+         80   4F 0000626C glGetVertexAttribPointerv
+         78   50 000061F0 glGetVertexAttribfv
+         79   51 00006200 glGetVertexAttribiv
+         81   52 000063AC glHint
+         82   53 000064B0 glIsBuffer
+         83   54 0000654C glIsEnabled
+         84   55 0001AFE4 glIsFramebuffer
+        145   56 00007CD8 glIsGPUBusy
+         85   57 00016314 glIsProgram
+         86   58 0001AA40 glIsRenderbuffer
+         87   59 00016398 glIsShader
+         88   5A 00010714 glIsTexture
+         89   5B 000066F4 glLineWidth
+         90   5C 00018C74 glLinkProgram
+        146   5D 00011270 glMapTexture
+         91   5E 000067B8 glPixelStorei
+         92   5F 000068C8 glPolygonOffset
+         93   60 00006924 glReadPixels
+         94   61 00014E4C glReleaseShaderCompiler
+         95   62 0001AC5C glRenderbufferStorage
+         96   63 00006C88 glSampleCoverage
+         97   64 00006D3C glScissor
+         98   65 00016420 glShaderBinary
+         99   66 00014E50 glShaderSource
+        100   67 0000BE6C glStencilFunc
+        101   68 00006E10 glStencilFuncSeparate
+        102   69 0000BF48 glStencilMask
+        103   6A 00006F60 glStencilMaskSeparate
+        104   6B 0000BFA4 glStencilOp
+        105   6C 00007010 glStencilOpSeparate
+        106   6D 00011844 glTexImage2D
+        107   6E 000117BC glTexParameterf
+        108   6F 000117E8 glTexParameterfv
+        109   70 00011538 glTexParameteri
+        110   71 00011768 glTexParameteriv
+        111   72 00011ABC glTexSubImage2D
+        112   73 000177DC glUniform1f
+        113   74 00017A7C glUniform1fv
+        114   75 000175B0 glUniform1i
+        115   76 000179FC glUniform1iv
+        116   77 00017858 glUniform2f
+        117   78 00017A9C glUniform2fv
+        118   79 00017630 glUniform2i
+        119   7A 00017A1C glUniform2iv
+        120   7B 000178DC glUniform3f
+        121   7C 00017ABC glUniform3fv
+        122   7D 000176B8 glUniform3i
+        123   7E 00017A3C glUniform3iv
+        124   7F 00017968 glUniform4f
+        125   80 00017ADC glUniform4fv
+        126   81 00017748 glUniform4i
+        127   82 00017A5C glUniform4iv
+        128   83 00017AFC glUniformMatrix2fv
+        129   84 00017B40 glUniformMatrix3fv
+        130   85 00017B84 glUniformMatrix4fv
+        147   86 000113F4 glUnmapTexture
+        131   87 00018244 glUseProgram
+        132   88 00019078 glValidateProgram
+        133   89 0000BFC8 glVertexAttrib1f
+        134   8A 000072D0 glVertexAttrib1fv
+        135   8B 0000BFF0 glVertexAttrib2f
+        136   8C 00007370 glVertexAttrib2fv
+        137   8D 0000C014 glVertexAttrib3f
+        138   8E 00007410 glVertexAttrib3fv
+        139   8F 00007200 glVertexAttrib4f
+        140   90 000074B0 glVertexAttrib4fv
+        141   91 00007558 glVertexAttribPointer
+        142   92 00007684 glViewport
+
+  Summary
+
+        1000 .CRT
+        1000 .data
+        2000 .pdata
+        2000 .reloc
+       57000 .text

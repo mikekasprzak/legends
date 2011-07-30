@@ -1,0 +1,4 @@
+If you want to use irrKlang as static libray, just define IRRKLANG_STATIC before including irrklang.h, like this:
+
+#define IRRKLANG_STATIC
+#include <irrKlang.h>
