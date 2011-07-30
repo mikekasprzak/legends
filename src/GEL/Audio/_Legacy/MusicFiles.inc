@@ -1,0 +1,5 @@
+musLoad( MUS_MENU, "MenuMusic" )
+musLoad( MUS_ZEN, "ZenMusic" )
+musLoad( MUS_DROP, "DropMusic" )
+musLoad( MUS_DROPPLUS, "DropPlusMusic" )
+musLoad( MUS_AVALANCHE, "AvalancheMusic" )
