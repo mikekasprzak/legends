@@ -10,3 +10,13 @@ INCLUDE_FOLDERS		+=
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	PRODUCT_LEGENDS \
+						USES_GEL USES_FOUNDATION
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
