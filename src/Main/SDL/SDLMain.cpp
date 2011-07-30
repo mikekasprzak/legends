@@ -23,21 +23,21 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef PRODUCT_EXPERIMENTS
+#ifdef PRODUCT_LEGACY_SMILES
 #include <ProductInfo.h>
-#endif // PRODUCT_EXPERIMENTS
+#endif // PRODUCT_LEGACY_SMILES
 // - ------------------------------------------------------------------------------------------ - //
 #include <GameHost.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef PRODUCT_EXPERIMENTS
+#ifdef PRODUCT_LEGACY_SMILES
 #include "Sound/SoundPlayer.h"
 #include "Sound/MusicPlayer.h"
-#else // PRODUCT_EXPERIMENTS //
+#else // PRODUCT_LEGACY_SMILES //
 #include <Audio/SoundPlayer.h>
 #include <Audio/MusicPlayer.h>
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY_SMILES //
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/Data.h>
 #include <Graphics/Graphics.h>
@@ -843,9 +843,9 @@ int main( int argc, char* argv[] ) {
 
 		gelSetupRefScreenShape( 480, 320 );
 
-#ifdef PRODUCT_EXPERIMENTS
+#ifndef PRODUCT_LEGACY_SMILES
 		gelSetupDepthSize( 24 );
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY_SMILES //
 
 #ifdef PRODUCT_OVERSCAN
 		gelSetupOverscan( 0.05f, 0.10f );
@@ -882,7 +882,7 @@ int main( int argc, char* argv[] ) {
 		
 		{
 			Log( "\n" );
-#ifndef PRODUCT_EXPERIMENTS
+#ifdef PRODUCT_LEGACY_SMILES
 			// Populate Product Info, based on Compiled Arguments //
 			ProductInfo = cProductInfo::DecodeEmbeddedInfo();
 			// Verify that the Product Info bits are correctly formatted //
@@ -891,7 +891,7 @@ int main( int argc, char* argv[] ) {
 			}
 			// Report what product we are //
 			ProductInfo.LogInfo();
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY_SMILES //
 			
 			Log("+ Creating GameHost Instance...\n");
 			WorkTime = GetTimeNow();
@@ -1040,12 +1040,12 @@ int main( int argc, char* argv[] ) {
 			Log( "\n-=======- Beginning GEL Application Shutdown... -=======-\n" );
 
 
-#ifndef PRODUCT_EXPERIMENTS			
+#ifndef PRODUCT_LEGACY_SMILES			
 			Log( "- Writing Save Data...\n" );
 			GameHost->Save();
 			Log( "+ Finished Writing Save Data.\n" );
 			Log( "\n" );
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY_SMILES //
 
 			delete GameHost;
 		}
