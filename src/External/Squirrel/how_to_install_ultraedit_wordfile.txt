@@ -1,0 +1,15 @@
+
+Copy "squirrel_syntax_hl.uew" to the wordfile folder.
+
+**NOTE**: The newer versions of UltraEdit have per-user wordfiles.  
+
+
+Instead of under the app folder as you used to, place them here:
+
+C:\Users\mike\AppData\Roaming\IDMComp\UltraEdit\wordfiles
+
+Meh.
+
+
+Also, you may want to edit your JavaScript wordfile here to include JSON files.
+

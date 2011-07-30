@@ -1,0 +1,2 @@
+C:/MinGW/bin/ar.exe cr ../../lib/libLinearMath.a  CMakeFiles/LinearMath.dir/btAlignedAllocator.obj CMakeFiles/LinearMath.dir/btConvexHull.obj CMakeFiles/LinearMath.dir/btConvexHullComputer.obj CMakeFiles/LinearMath.dir/btGeometryUtil.obj CMakeFiles/LinearMath.dir/btQuickprof.obj CMakeFiles/LinearMath.dir/btSerializer.obj
+C:/MinGW/bin/ranlib.exe ../../lib/libLinearMath.a
