@@ -20,8 +20,8 @@ Config/  - Current configuation details
 
 Content/ - Art, Sound, Music, Scripts. All files that aren't code, per project.
 
-Custom/  - Files and SKU files, unique per game. 
-Target/  - Files that are unique per platform.
+Custom/  - Files and SKU files, unique per game. (NOTE: setup.sh checks this out)
+Target/  - Files that are unique per platform. All platforms for all targets.
 
 obj/     - garbage files go here during building
 output/  - executable binaries and "to be packaged" app folders go here
