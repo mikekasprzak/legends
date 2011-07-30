@@ -4,10 +4,11 @@ __SKU_FILE__		:=	Config/.sku
 __TARGET_FILE__		:=	Config/.target
 __REPOS_FILE__		:=	Config/.repos
 # - ------------------------------------------------------------------------ - #
-PROJECT_FILE		:=	$(shell cat $(__PROJECT_FILE__))
-SKU_FILE			:=	$(shell cat $(__SKU_FILE__))
-TARGET_FILE			:=	$(shell cat $(__TARGET_FILE__))
-REPOS_FILE			:=	$(shell cat $(__REPOS_FILE__))
+# NOTE: No colon here means that it will only overwrite if it did not exist. #
+PROJECT_FILE		=	$(shell cat $(__PROJECT_FILE__))
+SKU_FILE			=	$(shell cat $(__SKU_FILE__))
+TARGET_FILE			=	$(shell cat $(__TARGET_FILE__))
+REPOS_FILE			=	$(shell cat $(__REPOS_FILE__))
 # - ------------------------------------------------------------------------ - #
 TARGET_NAME			:=	$(basename $(notdir $(SKU_FILE)))-$(basename $(notdir $(TARGET_FILE)))
 # - ------------------------------------------------------------------------ - #
