@@ -32,8 +32,8 @@ FOLDER_STUBS		:=	$(addsuffix _stub,$(.O_FOLDERS))
 # - ------------------------------------------------------------------------ - #
 TARGET_STUBS		:=	obj/$(TARGET_NAME)/output_stub
 # - ------------------------------------------------------------------------ - #
-#OTHER_FILES			:=	$(shell $(TreeTool) $(FILES_FOLDER) %)
-#OTHER_FILES_DEP		:=	$(subst $(FILES_FOLDER)/,output/$(TARGET_NAME)/,$(OTHER_FILES))
+#OTHER_FILES			+=	$(shell $(TreeTool) $(FILES_FOLDER) %)
+#OTHER_FILES_DEP		+=	$(subst $(FILES_FOLDER)/,output/$(TARGET_NAME)/,$(OTHER_FILES))
 # - ------------------------------------------------------------------------ - #
 #output/$(TARGET_NAME)/%: $(FILES_FOLDER)/%
 #	cp $< $@
@@ -43,16 +43,16 @@ TARGET_STUBS		:=	obj/$(TARGET_NAME)/output_stub
 # - ------------------------------------------------------------------------ - #
 $(TARGET): $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(TARGET_STUBS) $(OTHER_FILES_DEP)
 	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
-	g++ $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
+	cp -t $(TARGET_DIR) $(COPY_FILES)
+	$(GXX) $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
 # - ------------------------------------------------------------------------ - #
 
 
 # - ------------------------------------------------------------------------ - #
+ifndef NON_STANDARD_RUN
 run: $(TARGET)
 	./$(TARGET) -DIR .\\ -SAVE $(TARGET_DIR)/
-# - ------------------------------------------------------------------------ - #
-run2: $(TARGET)
-	./$(TARGET) -DIR .\\
+endif # NON_STANDARD_RUN #
 # - ------------------------------------------------------------------------ - #
 clean:
 	-rm $(.O_FILES) $(.O_FILES:.o=.o.d)
