@@ -1,21 +1,9 @@
 
 TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 
-- Add source tree
-- New Game Folders -- GameBlah
-  - Rename Game to Smiles, GameSmiles, or SmilesGame (something distinct)
-  - Add Legends, GameLegends, or LegendsGame folder (see above)
-- New Experiments Tree
-  - Should be easy to add a new dummy app
-    - Template!
 - standard packaging method that creates a folder and copies all files in to
   - Then per platform code can be run on the package folder, such as palm and linux
   - should be generic enough to use for android (i.e. copy in to target)
-- Smiles and Legends will require separate root folders (d:/Smiles and d:/Legends)
-  - Experiments needs some way to co-exist
-    - GameExperiments (code and content), then some plugable code area for distinct tests
-- Will need some good way of differentiating/collecting project files generate/stored per proj.
-  - Smiles has multiple projects, as will other games.
 - ??
 
 
@@ -23,3 +11,15 @@ Completed **
 
 - content.sh -- New tool in root for checking out
 - ".repos" -- New file containing the repository root (default svn://192.168.0.101/legends/)
+- Add source tree
+- New Game Folders -- GameBlah
+  - Rename Game to Smiles, GameSmiles, or SmilesGame (something distinct)
+  - Add Legends, GameLegends, or LegendsGame folder (see above)
+- Smiles and Legends will require separate root folders (d:/Smiles and d:/Legends)
+  - Experiments needs some way to co-exist
+    - GameExperiments (code and content), then some plugable code area for distinct tests
+- Will need some good way of differentiating/collecting project files generate/stored per proj.
+  - Smiles has multiple projects, as will other games.
+- New Experiments Tree
+  - Should be easy to add a new dummy app
+    - Template!
