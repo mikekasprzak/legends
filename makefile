@@ -9,7 +9,7 @@ SKU_FILE			:=	$(shell cat $(__SKU_FILE__))
 TARGET_FILE			:=	$(shell cat $(__TARGET_FILE__))
 REPOS_FILE			:=	$(shell cat $(__REPOS_FILE__))
 # - ------------------------------------------------------------------------ - #
-TARGET_NAME			:=	$(PROJECT_FILE)-$(SKU_FILE)-$(basename $(notdir $(TARGET_FILE)))
+TARGET_NAME			:=	$(PROJECT_FILE)-$(basename $(notdir $($(SKU_FILE))-$(basename $(notdir $(TARGET_FILE)))
 # - ------------------------------------------------------------------------ - #
 __SKU_CHECK__		:=	$(shell Tools/FileExists.sh $(__SKU_FILE__))
 __TARGET_CHECK__	:=	$(shell Tools/FileExists.sh $(__TARGET_FILE__))
@@ -21,7 +21,7 @@ ___default:
 else ifneq ($(__SKU_CHECK__),$(__SKU_FILE__))
 ___default:
 	@echo "*** ERROR: Makefile referenced in \".sku\" not found! ***"
-	@echo "Please run \"./sku.sh co\""
+	@echo "Please run \"./sku.sh set\" and optionally pass a SKU name"
 endif
 # - ------------------------------------------------------------------------ - #
 -include $(SKU_FILE)
