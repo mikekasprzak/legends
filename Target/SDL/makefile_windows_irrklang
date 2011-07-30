@@ -19,6 +19,10 @@ DEFINES				+=	USES_SDL USES_SDL_1_3 USES_IRRKLANG \
 LIBRARIES			+=	-L/usr/local/lib -lmingw32 -lSDL \
 						src/External/irrKlang/lib/win32-gcc/libirrKlang.a \
 # - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	/usr/local/bin/libSDL.dll \
+						src\External\irrKlang\bin\win32-gcc\irrKlang.dll \
+# - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
 include Target/SDL/common_opengl_windows
