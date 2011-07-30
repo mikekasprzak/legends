@@ -1,0 +1,12 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for GAME scope (no platform) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
