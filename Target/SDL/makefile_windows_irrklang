@@ -14,14 +14,17 @@ IGNORE_LIST			+=
 # Defines specific to this file #
 DEFINES				+=	USES_SDL USES_SDL_1_3 USES_IRRKLANG \
 						USES_WINDOWS USES_MINGW NO_STDIO_REDIRECT \
+#						USES_SIXENSE
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	-L/usr/local/lib -lwinmm -lmingw32 -lSDL.dll \
 						src/External/irrKlang/lib/win32-gcc/libirrKlang.a \
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
-COPY_FILES			+=	/usr/local/bin/libSDL.dll \
-						src\External\irrKlang\bin\win32-gcc\irrKlang.dll \
+COPY_FILES			+=	/usr/local/bin/SDL.dll \
+						src/External/irrKlang/bin/win32-gcc/irrKlang.dll \
+#						src/External/Sixense/bin/win32/DeviceDLL.dll \
+#						src/External/Sixense/bin/win32/release_dll/sixense.dll \						
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
