@@ -1,46 +1,41 @@
 # - ------------------------------------------------------------------------ - #
-# Release Build Only #
-ifdef NDEBUG
-DEFINES				+=	NDEBUG
-endif # NDEBUG #
-# - ------------------------------------------------------------------------ - #
-# Allow Overloading of default GCC and G++ commands #
-ifndef GCC
-GCC					:=	gcc
-endif # GCC #
-# - ------------------------------------------------------------------------ - #
-ifndef GXX
-GXX					:=	g++
-endif # GXX #
+include Target/common_tools
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-# Compiler and Linker Flags #
+# Compiler and Linker Flags (NOTE: Optimizations are in Target/common_tools) #
 CFLAGS				+=	-fno-strict-aliasing
 CPPFLAGS			+=	-fno-rtti -fno-strict-aliasing
 LDFLAGS				+=	
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-# Optimization #
+SRC_FILTER			:=	$(addsuffix /%,$(SRC_FOLDERS))
 # - ------------------------------------------------------------------------ - #
-ifdef OSIZE
+ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
+
+CODE_FILES			:=	$(filter %.cpp %.c,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
+H_FILES				:=	$(filter %.hpp %.h,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
+
+INCLUDES			:=	$(addprefix -I,$(INCLUDE_FOLDERS) $(SRC_FOLDERS))
+DEFINES				:=	$(addprefix -D,$(DEFINES))
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-Os
-CPPFLAGS			+=	-Os
+.O_FILES			:=	$(addprefix obj/$(TARGET_NAME)/,$(addsuffix .o,$(filter-out $(IGNORE_LIST),$(CODE_FILES))))
+.O_FOLDERS			:=	$(sort $(dir $(.O_FILES)))
+FOLDER_STUBS		:=	$(addsuffix _stub,$(.O_FOLDERS))
 # - ------------------------------------------------------------------------ - #
-else ifdef O3
+TARGET_STUBS		:=	obj/$(TARGET_NAME)/output_stub
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-O3
-CPPFLAGS			+=	-O3
+#OTHER_FILES			:=	$(shell $(TreeTool) $(FILES_FOLDER) %)
+#OTHER_FILES_DEP		:=	$(subst $(FILES_FOLDER)/,output/$(TARGET_NAME)/,$(OTHER_FILES))
 # - ------------------------------------------------------------------------ - #
-else
-# - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-O2
-CPPFLAGS			+=	-O2
-# - ------------------------------------------------------------------------ - #
-endif # OSIZE #
+#output/$(TARGET_NAME)/%: $(FILES_FOLDER)/%
+#	cp $< $@
 # - ------------------------------------------------------------------------ - #
 
+
+
+
 default:
+	@echo $(TARGET_NAME)
 	@echo Success!

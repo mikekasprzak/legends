@@ -66,7 +66,7 @@ fi
 
 echo "Target Makefile: $TARGET"
 rm -f $CONFIGDIR/.target
-echo "-include $TARGET">$CONFIGDIR/.target
+echo "$TARGET">$CONFIGDIR/.target
 if [ "$WINDIR" != "" ]; then
 	attrib +h $CONFIGDIR/.target
 fi
