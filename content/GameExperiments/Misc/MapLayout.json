@@ -1,0 +1,28 @@
+{
+	"terrain" : [
+		{
+			"file": "ExpContent/Room01.tga",
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		{
+			"file": "ExpContent/Room02.tga",
+			"x": 128,
+			"y": 256,
+			"z": 0
+		},
+		{
+			"file": "ExpContent/Room03.tga",
+			"x": 128,
+			"y": 512,
+			"z": 0
+		},
+		{
+			"file": "ExpContent/Room04.tga",
+			"x": 384,
+			"y": 512,
+			"z": 0
+		}
+	]
+}
