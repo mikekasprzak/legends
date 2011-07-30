@@ -76,12 +76,12 @@ void cGame::Init() {
 	typedef unsigned char GType;
 	Log( "%i\n", MaxValue<GType>() );
 /*	
-	//Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/TestFile.tga" );
+	//Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/TestFile.tga" );
 
-	Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/Room01.tga" );
+	Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
 
-//	save_BMP_Grid2D<GType>( MyGrid, "XpContent/Horse.bmp" );
-//	save_TGA_Grid2D<GType>( MyGrid, "XpContent/Horse.tga" );
+//	save_BMP_Grid2D<GType>( MyGrid, "Content/Misc/Horse.bmp" );
+//	save_TGA_Grid2D<GType>( MyGrid, "Content/Misc/Horse.tga" );
 	
 	new_Optimized_TriangleStrips( MyGrid, &Vert, &Index, Vector3D(128,128,64) );
 	
@@ -93,7 +93,7 @@ void cGame::Init() {
 	Vector3D RoomScale(128,128,64);
 
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/Room01.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
 ////		new_Optimized_TriangleStrips( MyGrid, &Room[0].Vert, &Room[0].Index, Vector3D(128,128,64) );
 ////		new_TriangleStrip_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
 		new_Optimized_Triangles( MyGrid, &Room[0].Vert, &Room[0].Index, RoomScale );
@@ -101,25 +101,25 @@ void cGame::Init() {
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/Room02.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room02.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[1].Vert, &Room[1].Index, RoomScale );
 		new_Triangles_OutlineList( Room[1].Index, &Room[1].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/Room03.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room03.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[2].Vert, &Room[2].Index, RoomScale );
 		new_Triangles_OutlineList( Room[2].Index, &Room[2].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "XpContent/Room04.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room04.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[3].Vert, &Room[3].Index, RoomScale );
 		new_Triangles_OutlineList( Room[3].Index, &Room[3].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 
-	Mesh = new cPMEFile( "XpContent/Monkey.pme" );
+	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
 	
 	txPlayer = gelLoadTexture( "/Player01" );
 	txSword = gelLoadTexture( "/Sword01" );

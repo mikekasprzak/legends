@@ -106,7 +106,7 @@ void CallExp_Pawn() {
 		int Error;
 		cell Ret = 0;
 		
-		Error = aux_LoadProgram( &amx, (char*)"XpContent/hello.amx", NULL );
+		Error = aux_LoadProgram( &amx, (char*)"Content/Misc/hello.amx", NULL );
 		if ( Error == 0 ) {
 			aux_MyLibInit( &amx );
 			
