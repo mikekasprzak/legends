@@ -1,2 +1,0 @@
-include Target/common_tools_makefile
-include Target/SDL/common_makefile

@@ -3,7 +3,7 @@
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/Main/SDL \
-						src/External/irrKlang/include
+
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	
@@ -12,24 +12,27 @@ INCLUDE_FOLDERS		+=
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_SDL USES_SDL_1_3 USES_IRRKLANG \
-						USES_WINDOWS USES_MINGW NO_STDIO_REDIRECT \
+DEFINES				+=	USES_SDL USES_SDL_1_3 USES_SDLMIXER \
+						USES_UNIX \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-L/usr/local/lib -lwinmm -lmingw32 -lSDL.dll \
-						src/External/irrKlang/lib/win32-gcc/libirrKlang.a \
+LIBRARIES			+=	`sdl-config --cflags --libs` \
+						-lSDL_mixer
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	/usr/local/bin/SDL.dll \
-						src/External/irrKlang/bin/win32-gcc/irrKlang.dll \
+						/usr/local/bin/SDL_mixer.dll \
+						/usr/local/bin/libvorbis-*.dll \
+						/usr/local/bin/libvorbisfile-*.dll \
+						/usr/local/bin/libogg-*.dll \
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-include Target/SDL/common_opengl_windows
-include Target/SDL/windows_common
+include Target/SDL/common_opengl_linux
+include Target/SDL/linux_common
 # - ------------------------------------------------------------------------ - #
 # Finally, include the standard makefile body #
 include Target/SDL/common_makefile
