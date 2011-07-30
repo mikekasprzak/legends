@@ -3,6 +3,7 @@
 
 DEFAULTDIR=Tools/default
 CONFIGDIR=Config
+CUSTOMDIR=Custom
 
 echo "usage: `basename $0` [GameProjectName] [target_makefile]"
 echo ""
@@ -23,6 +24,8 @@ echo ""
 if [ ! -n "$1" ]; then
 	if [ -e "$CONFIGDIR/.project" ]; then
 		PROJECT=`cat $CONFIGDIR/.project`
+	elif [ -e "$CUSTOMDIR/.project" ]; then
+		PROJECT=`cat $CUSTOMDIR/.project`
 	else
 		PROJECT=`cat $DEFAULTDIR/.project`
 	fi
