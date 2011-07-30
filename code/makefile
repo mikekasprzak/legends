@@ -31,3 +31,19 @@ ___default_missing:
 	@echo "*** ERROR: Configuration Missing! ***"
 	@echo "Please run \"./setup.sh\""
 # - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
+info:
+	@echo '* TARGET_NAME * $(TARGET_NAME)'
+	@echo '----------'
+	@echo '* SRC_FOLDERS * $(SRC_FOLDERS)'
+	@echo '* INCLUDE_FOLDERS * $(INCLUDE_FOLDERS)'
+	@echo '* COPY_FILES * $(COPY_FILES)'
+	@echo '* CFLAGS * $(CFLAGS)'
+	@echo '* CPPFLAGS * $(CPPFLAGS)'
+	@echo '* LDFLAGS * $(LDFLAGS)'
+	@echo '----------'
+	@echo '* INCLUDES * $(INCLUDES)'
+	@echo '* LIBRARIES * $(LIBRARIES)'
+	@echo '* DEFINES * $(DEFINES)'
+# - ------------------------------------------------------------------------ - #
