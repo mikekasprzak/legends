@@ -3,11 +3,14 @@
 #define NV_TRISTRIP_OBJECTS_H
 
 #include <assert.h>
-#include <windows.h>
+//#include <windows.h>
 #include <vector>
 #include <list>
 #include "VertexCache.h"
 
+// MIKE EDIT //
+typedef unsigned int UINT;
+typedef signed int WORD;
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Types defined for stripification
