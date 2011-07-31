@@ -1,4 +1,4 @@
-
+#include <string.h>
 #include "NvTriStripObjects.h"
 #include "NvTriStrip.h"
 
