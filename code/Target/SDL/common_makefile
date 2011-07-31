@@ -51,7 +51,7 @@ $(TARGET): $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(TARGET_STUBS) $(OTHER_FILES_
 # - ------------------------------------------------------------------------ - #
 ifndef NON_STANDARD_RUN
 run: $(TARGET)
-	./$(TARGET) -DIR .\\ -SAVE $(TARGET_DIR)/
+	./$(TARGET) -DIR ./ -SAVE $(TARGET_DIR)/
 endif # NON_STANDARD_RUN #
 # - ------------------------------------------------------------------------ - #
 clean:

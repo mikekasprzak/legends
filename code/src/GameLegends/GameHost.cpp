@@ -2,9 +2,12 @@
 #include "GameHost.h"
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
+	Log("- Begin GameHost Constructor\n");
+
 	// Setup Texture Pool //
 	TexturePool::Init( "Content/Art/4444" );
 	TexturePool::AddDirectory( "" );
+
 /*
 	Log( "+ Setting Base Content Directory...\n" );
 #ifdef USES_TEXTURECOMPRESSION //
@@ -38,7 +41,7 @@ cGameHost::cGameHost() {
 	// Game is null //
 	Game = 0;
 	
-	Log("End of GameHost Constructor\n");
+	Log("+ End GameHost Constructor\n");
 }
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::~cGameHost() {
