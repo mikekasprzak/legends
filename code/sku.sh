@@ -32,7 +32,7 @@ usage () {
 if [ ! -n "$1" ]; then
 	usage
 	exit 1
-elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
+elif (([ "$1" = "checkout" ] || [ "$1" = "co" ])); then
 	shift 1
 
 	echo "$REPOS/custom/$PROJECT..."
@@ -55,7 +55,7 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 		echo $1>$CONFIGDIR/.sku
 		if [ "$WINDIR" != "" ]; then
 			attrib +h $CONFIGDIR/.sku
-		fi		
+		fi
 	elif [ -e "$CUSTOMDIR/.default" ]; then
 		# If project has a .default file, make that the current SKU #
 		cat $CUSTOMDIR/.default>$CONFIGDIR/.sku
@@ -63,11 +63,11 @@ elif [ "$1" == "checkout" ] || [ "$1" == "co" ]; then
 			attrib +h $CONFIGDIR/.sku
 		fi		
 	fi
-elif [ "$1" == "update" ] || [ "$1" == "up" ]; then
+elif (([ "$1" = "update" ] || [ "$1" = "up" ])); then
 	shift 1
 
 	svn up $CUSTOMDIR
-elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
+elif (([ "$1" = "commit" ] || [ "$1" = "checkin" ] || [ "$1" = "ci" ])); then
 	shift 1
 
 	if [ ! -n "$1" ]; then
@@ -77,7 +77,7 @@ elif [ "$1" == "commit" ] || [ "$1" == "checkin" ] || [ "$1" == "ci" ]; then
 	fi
 
 	svn ci $CUSTOMDIR --message "$*"
-elif [ "$1" == "set" ]; then
+elif [ "$1" = "set" ]; then
 	# Remove the old .sku file	
 	rm -f $CONFIGDIR/.sku
 
