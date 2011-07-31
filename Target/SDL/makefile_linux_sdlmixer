@@ -20,14 +20,17 @@ LIBRARIES			+=	`sdl-config --cflags --libs` \
 						-lSDL_mixer
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
-COPY_FILES			+=	/usr/local/bin/SDL.dll \
-						/usr/local/bin/SDL_mixer.dll \
-						/usr/local/bin/libvorbis-*.dll \
-						/usr/local/bin/libvorbisfile-*.dll \
-						/usr/local/bin/libogg-*.dll \
+COPY_FILES			+=	/usr/local/bin/libSDL.so \
+						/usr/local/bin/libSDL_mixer.so \
+#						/usr/local/bin/libvorbis-*.so \
+#						/usr/local/bin/libvorbisfile-*.so \
+#						/usr/local/bin/libogg-*.so \
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+CFLAGS				+=	`sdl-config --cflags`
+CPPFLAGS			+=	`sdl-config --cflags`
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #

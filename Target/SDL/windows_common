@@ -9,7 +9,7 @@ ifdef NDEBUG
 LDFLAGS				+=	-mwindows
 endif
 # - ------------------------------------------------------------------------ - #
-# Only on Windows, give out target a dot exe extension #
+# File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
 BINARY_SUFFIX		:=	.exe
 # - ------------------------------------------------------------------------ - #
 
