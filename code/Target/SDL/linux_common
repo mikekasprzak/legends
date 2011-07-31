@@ -1,33 +1,14 @@
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
-CFLAGS				+=	-I /usr/local/include
-CPPFLAGS			+=	-I /usr/local/include
-LDFLAGS				+=	-L /usr/local/lib -static-libgcc -static
+CFLAGS				+=	
+CPPFLAGS			+=	
+LDFLAGS				+=	-Wl,-rpath,$$ORIGIN
 # - ------------------------------------------------------------------------ - #
 # Release Build Only #
 ifdef NDEBUG
-LDFLAGS				+=	-mwindows
+
 endif
 # - ------------------------------------------------------------------------ - #
-# Only on Windows, give out target a dot exe extension #
-BINARY_SUFFIX		:=	.exe
-# - ------------------------------------------------------------------------ - #
-
-# - ------------------------------------------------------------------------ - #
-ifndef NO_SIXENSE
-# - ------------------------------------------------------------------------ - #
-# Places to ONLY include from #
-INCLUDE_FOLDERS		+=	src/External/Sixense/include \
-# - ------------------------------------------------------------------------ - #
-# Defines specific to this file #
-DEFINES				+=	USES_SIXENSE
-# - ------------------------------------------------------------------------ - #
-# Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	src/External/Sixense/lib/win32/release_dll/sixense.lib \
-# - ------------------------------------------------------------------------ - #
-# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
-COPY_FILES			+=	src/External/Sixense/bin/win32/DeviceDLL.dll \
-						src/External/Sixense/bin/win32/release_dll/sixense.dll \
-# - ------------------------------------------------------------------------ - #
-endif # NO_SIXENSE #
+# File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
+BINARY_SUFFIX		:=	.$(shell uname -m)
 # - ------------------------------------------------------------------------ - #

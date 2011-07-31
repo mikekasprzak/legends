@@ -5,5 +5,5 @@
 DEFINES				+=	USES_OPENGL USES_GLEE
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lopengl32
+LIBRARIES			+=	-lGL
 # - ------------------------------------------------------------------------ - #
