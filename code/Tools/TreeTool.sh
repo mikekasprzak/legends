@@ -15,6 +15,9 @@ if [ "$WINDIR" != "" ]; then
 else
 if [ "$SUBARCH" != "unknown" ]; then
 	EXE="$ROOT_NAME"_"$ARCH"_"$SUBARCH"
+	if [ ! -e $EXE ]; then
+		EXE="$ROOT_NAME"_"$ARCH"
+	fi
 else
 	EXE="$ROOT_NAME"_"$ARCH"
 fi
