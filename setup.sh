@@ -49,7 +49,7 @@ fi
 # Target Makefile #
 if [ ! -n "$2" ]; then
 	if [ -e "$CONFIGDIR/.target" ]; then
-		TARGET=`cat $CONFIGDIR/.target | awk '{print $2}'`
+		TARGET=`cat $CONFIGDIR/.target | awk '{print $1}'`
 	else
 		if [ "$WINDIR" != "" ]; then
 			TARGET="`cat $DEFAULTDIR/windows.target`"
