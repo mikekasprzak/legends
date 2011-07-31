@@ -36,7 +36,7 @@ usage () {
 if [ ! -n "$1" ]; then
 	usage
 	exit 1
-elif (([ "$1" = "checkout" ] || [ "$1" = "co" ])); then
+elif ([ "$1" = "checkout" ] || [ "$1" = "co" ]); then
 	shift 1
 
 	if [ ! -n "$1" ]; then
@@ -90,7 +90,7 @@ elif (([ "$1" = "checkout" ] || [ "$1" = "co" ])); then
 			attrib +h $CONFIGDIR/.content
 		fi
 	fi
-elif (([ "$1" = "update" ] || [ "$1" = "up" ])); then
+elif ([ "$1" = "update" ] || [ "$1" = "up" ]); then
 	shift 1
 
 #	if [ ! -n "$1" ]; then
@@ -118,7 +118,7 @@ elif (([ "$1" = "update" ] || [ "$1" = "up" ])); then
 		svn update Content/$arg
 	done
 	
-elif (([ "$1" = "commit" ] || [ "$1" = "checkin" ] || [ "$1" = "ci" ])); then
+elif ([ "$1" = "commit" ] || [ "$1" = "checkin" ] || [ "$1" = "ci" ]); then
 	shift 1
 	
 #	if [ ! -n "$1" ]; then
