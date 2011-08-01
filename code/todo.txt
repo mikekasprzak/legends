@@ -1,6 +1,18 @@
 
 TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 
+- Move Custom to SKU folder, no more weird share system!
+- OpenGL/ES 1 and OpenGL/ES 2 in a single code path merge!
+- Premake setup (i.e. MSVC and Xcode)
+  - Update to generate premake lua script based on the SKU and platform data
+  - place the msvc project in to obj folder, and write exe to output
+  - do xcode generator
+- Airplay setup (iOS, Android, etc)
+  - Do this
+- Palm webOS setup
+  - Do this
+- Smiles
+  - Do this
 - standard packaging method that creates a folder and copies all files in to
   - Then per platform code can be run on the package folder, such as palm and linux
   - should be generic enough to use for android (i.e. copy in to target)
