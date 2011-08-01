@@ -20,12 +20,11 @@ if [ ! -e "$CONFIGDIR/.content" ]; then
 fi
 
 if [ ! -e "$CONFIGDIR/.sku" ]; then
-	echo "ERROR: File \".sku\" does not exist!  Please run \"sku.sh co\" to generate."
+	echo "ERROR: File \".sku\" does not exist!  Please run \"setup.sh\" to generate."
 	exit 1
 fi
 
 ./content.sh update
 
-./sku.sh update
-
+echo ". (code)"
 svn update

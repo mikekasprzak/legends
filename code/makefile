@@ -26,7 +26,7 @@ ___default:
 else ifneq ($(__SKU_CHECK__),$(__SKU_FILE__))
 ___default:
 	@echo "*** ERROR: Makefile referenced in \".sku\" not found! ***"
-	@echo "Please run \"./sku.sh set\" and optionally pass a SKU name"
+	@echo "Please run \"./setup.sh set\" and specify a new SKU"
 endif
 # - ------------------------------------------------------------------------ - #
 -include $(SKU_FILE)
