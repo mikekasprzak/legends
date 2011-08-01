@@ -111,7 +111,7 @@ if [ ! -n "$3" ]; then
 	if [ -e "$CONFIGDIR/.sku" ]; then
 		SKU=`cat $CONFIGDIR/.sku | awk '{print $1}'`
 	else
-		SKU="SKU/""$PROJECT""`cat $DEFAULTDIR/default.sku`"
+		SKU="SKU/$PROJECT/`cat $DEFAULTDIR/default.sku`"
 	fi
 
 	while true; do
