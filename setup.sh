@@ -66,6 +66,8 @@ fi
 if [ ! -n "$2" ]; then
 	if [ -e "$CONFIGDIR/.sku" ]; then
 		SKU=`cat $CONFIGDIR/.sku | awk '{print $1}'`
+	elif [ -e "SKU/$PROJECT/.default" ]; then
+		SKU=`cat SKU/$PROJECT/.default | awk '{print $1}'`
 	else
 		SKU="SKU/$PROJECT/`cat $DEFAULTDIR/default.sku`"
 	fi
@@ -111,6 +113,8 @@ fi
 if [ ! -n "$3" ]; then
 	if [ -e "$CONFIGDIR/.target" ]; then
 		TARGET=`cat $CONFIGDIR/.target | awk '{print $1}'`
+	elif [ -e "SKU/$PROJECT/.target" ]; then
+		TARGET=`cat SKU/$PROJECT/.target | awk '{print $1}'`
 	else
 		if [ "$WINDIR" != "" ]; then
 			TARGET="`cat $DEFAULTDIR/windows.target`"
