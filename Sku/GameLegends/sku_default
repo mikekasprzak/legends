@@ -1,0 +1,28 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for GAME scope (no platform) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation \
+						src/External/Squirrel \
+						src/External/NVTriStrip \
+						src/External/Bullet \
+						src/External/cJSON \
+						src/External/TinyXML \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/External/Squirrel/include \
+						src/External/NVTriStrip/include \
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	PRODUCT_LEGENDS \
+						USES_GEL USES_FOUNDATION
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
