@@ -63,7 +63,7 @@ project "Legends"
 		"../../src/External/cJSON/",
 		"../../src/External/TinyXML/",
 		
-		"D:/Build/SDL/include",
+		(SDL_ROOT .. "/include"),
 	}		
 	
 	defines {
