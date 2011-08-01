@@ -3,6 +3,8 @@
 
 msbuild Build/MySolution.sln /property:Configuration=Debug
 
+:postbuild
+
 @if "%1" == "run"		goto :run
 @goto :end
 
@@ -11,7 +13,8 @@ msbuild Build/MySolution.sln /property:Configuration=Debug
 @cd ..\..
 %OLDDIR%\Build\Debug\Legends.exe -DIR .\
 @chdir /d %OLDDIR%
+@goto :end
 
-@rem if not "%2" == "" goto usage
+@rem if not "%2" == "" goto IDunnoGoSomewhere
 
 :end
