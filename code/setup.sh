@@ -3,9 +3,8 @@
 
 DEFAULTDIR=Tools/default
 CONFIGDIR=Config
-CUSTOMDIR=Custom
 
-echo "usage: `basename $0` [GameProjectName] [target_makefile]"
+echo "usage: `basename $0` [GameProjectName] [target_makefile] [target_sku]"
 echo ""
 
 if [ -e "$CONFIGDIR/.project" ]; then
@@ -24,8 +23,6 @@ echo ""
 if [ ! -n "$1" ]; then
 	if [ -e "$CONFIGDIR/.project" ]; then
 		PROJECT=`cat $CONFIGDIR/.project`
-	elif [ -e "$CUSTOMDIR/.project" ]; then
-		PROJECT=`cat $CUSTOMDIR/.project`
 	else
 		PROJECT=`cat $DEFAULTDIR/.project`
 	fi
@@ -75,6 +72,51 @@ if [ "$WINDIR" != "" ]; then
 fi
 
 
+# Target SKU Makefile #
+if [ ! -n "$3" ]; then
+	if [ -e "$CONFIGDIR/.sku" ]; then
+		SKU=`cat $CONFIGDIR/.sku | awk '{print $1}'`
+	else
+		SKU="Sku/""$PROJECT""`cat $DEFAULTDIR/default.sku`"
+	fi
+
+	while true; do
+		echo -n "Target SKU [$SKU]: "
+		read answer
+		if [ "$answer" != "" ]; then
+			if [ -e "$answer" ]; then
+				SKU="$answer"
+				break
+			elif [ -e "Sku/$PROJECT$answer" ]; then
+				SKU="Sku/$PROJECT/$answer"
+				break
+			else
+				echo "Error! $answer and Sku/$PROJECT/$answer not found!"
+				#exit -1
+			fi
+		else
+			break
+		fi
+	done
+else
+	if [ -e "$3" ]; then
+		SKU="$3"
+	elif [ -e "Sku/$PROJECT$3" ]; then
+		SKU="Sku/$PROJECT$3"
+	else
+		echo "Error! $3 not found!"
+		exit -1
+	fi
+fi
+
+echo "Target SKU: $SKU"
+rm -f $CONFIGDIR/.sku
+echo "$SKU">$CONFIGDIR/.sku
+if [ "$WINDIR" != "" ]; then
+	attrib +h $CONFIGDIR/.sku
+fi
+
+
 # SVN Root Directory #
 REPOS=`Tools/SVNRoot.sh`
 
@@ -85,9 +127,6 @@ if [ "$WINDIR" != "" ]; then
 	attrib +h $CONFIGDIR/.repos
 fi
 
-
-# Checkout some custom stuffs #
-./sku.sh co
 
 # End #
 echo "Done."
