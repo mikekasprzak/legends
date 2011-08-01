@@ -1,3 +1,6 @@
+-- Hello! I sync remote SVN, HG, and GIT repositories to a folder "Build".
+-- Inside Build, I compile things. In the case of MSVC, I used the included
+-- Solution file (VisualC/VC2008.sln), and left the files where they were.
 
 SDL_ROOT 		= "D:/Build/SDL/"
 SDL_LIB_ROOT	= SDL_ROOT .. "VisualC/SDL/"
@@ -12,7 +15,6 @@ solution "MySolution"
 		targetdir "Build/Debug"
 
 	configuration "Release"
-		targetdir "Build/bin"
 		targetdir "Build/Release"
 
 	if _ACTION == "clean" then
@@ -23,7 +25,6 @@ solution "MySolution"
 	
 project "Legends"
 	kind "WindowedApp"
-	--kind "ConsoleApp"
 	language "C++"
 	location "build"
 
@@ -39,11 +40,10 @@ project "Legends"
 		"../../src/External/cJSON/**.c*",
 		"../../src/External/TinyXML/**.c*",
 	}
+	-- In my build system, the rule is that all files beginning with . or _ are ignored.
 	excludes {
 		"../../src/**/_**",
 		"../../src/**/.**",
-		"../../src/GEL/Audio/_Legacy/**",
-		"../../src/GEL/Graphics/_Temp/**",
 	}
 	
 	links { 
@@ -70,11 +70,13 @@ project "Legends"
 	
 	defines {
 		"PRODUCT_LEGENDS",
-		"USES_GEL", "USES_FOUNDATION", "USES_SDL", "USES_SDL_1_3", "USES_IRRKLANG",
-		"USES_WINDOWS", "NO_STDIO_REDIRECT", "USES_OPENGL", "USES_GLEE",
-		"USES_MSVC", "NO_SDL_SUBDIR",
+		"USES_GEL", "USES_FOUNDATION", 
+		"USES_SDL", "USES_SDL_1_3", "NO_STDIO_REDIRECT", "NO_SDL_SUBDIR",
+		"USES_IRRKLANG",
+		"USES_OPENGL", "USES_GLEE",
+		"USES_WINDOWS", 
 		
-		"_CRT_SECURE_NO_WARNINGS",
+		"USES_MSVC", "_CRT_SECURE_NO_WARNINGS",
 	}
 	
 	configuration "Debug"
@@ -95,11 +97,9 @@ project "Legends"
 			(SDL_LIB_ROOT .. "Release/"),
 		}
 		postbuildcommands {
-			path.translate("copy " .. SDL_LIB_ROOT .. "Release/SDL.dll Release", "\\"),
+			path.translate("copy " .. SDL_LIB_ROOT .. "Release/SDL.dll Release",  "\\"),
 		}
 		defines {
 			"NDEBUG",
 		} 
 		flags { "Optimize" }
-
-	
