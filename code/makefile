@@ -10,6 +10,7 @@ SKU_FILE			=	$(shell cat $(__SKU_FILE__))
 TARGET_FILE			=	$(shell cat $(__TARGET_FILE__))
 REPOS_FILE			=	$(shell cat $(__REPOS_FILE__))
 # - ------------------------------------------------------------------------ - #
+PROJECT_NAME		:=	$(PROJECT_FILE)
 TARGET_NAME			:=	$(basename $(notdir $(SKU_FILE)))-$(basename $(notdir $(TARGET_FILE)))
 # - ------------------------------------------------------------------------ - #
 ifdef NDEBUG
@@ -39,6 +40,7 @@ ___default_missing:
 
 # - ------------------------------------------------------------------------ - #
 info:
+	@echo '* PROJECT_NAME * $(PROJECT_NAME)'
 	@echo '* TARGET_NAME * $(TARGET_NAME)'
 	@echo '----------'
 	@echo '* SRC_FOLDERS * $(SRC_FOLDERS)'
