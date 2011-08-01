@@ -15,7 +15,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_MAEMO) || defined(USES_PANDORA)
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef NO_SDL_SUBDIR
+#include <SDL.h>
+#else // NO_SDL_SUBDIR //
 #include <SDL/SDL.h>
+#endif // NO_SDL_SUBDIR //
+
 #include <GLES/gl.h>
 #include <GLES/glext.h>
 #ifdef USES_SDL_EGLPROXY
@@ -49,35 +54,25 @@
 // - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_SDL)
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef USES_WINDOWS
+	#include <windows.h>
+#endif // USES_WINDOWS //
 #ifdef USES_GLEE
-#include <External/GLEE/GLee.h>
+	#include <External/GLEE/GLee.h>
 #endif // USES_GLEE //
 
-#ifdef USES_SDL_1_3
-#if defined(USES_WINDOWS) && defined(USES_SDL_1_3_HACK)
-	#include <SDL13/SDL.h>
-	#ifndef USES_GLEE
-		#include <SDL13/SDL_opengl.h>
-	#endif // USES_GLEE //
-#else // USES_WINDOWS //
+#ifdef NO_SDL_SUBDIR
+	#include <SDL.h>
+#else // NO_SDL_SUBDIR //
 	#include <SDL/SDL.h>
-	#ifndef USES_GLEE
+#endif // NO_SDL_SUBDIR //
+#ifndef USES_GLEE
+	#ifdef NO_SDL_SUBDIR
+		#include <SDL_opengl.h>
+	#else // NO_SDL_SUBDIR //
 		#include <SDL/SDL_opengl.h>
-	#endif // USES_GLEE //
-#endif // USES_WINDOWS //
-#else // USES_SDL_1_3 //
-	#ifdef USES_SDL_BASEDIR
-		#include <SDL.h>
-		#ifndef USES_GLEE
-			#include <SDL_opengl.h>
-		#endif // USES_GLEE //
-	#else // USES_SDL_BASEDIR //
-		#include <SDL/SDL.h>
-		#ifndef USES_GLEE
-			#include <SDL/SDL_opengl.h>
-		#endif // USES_GLEE //
-	#endif // USES_SDL_BASEDIR //
-#endif // USES_SDL_1_3 //
+	#endif // NO_SDL_SUBDIR //
+#endif // USES_GLEE //
 // - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_AIRPLAY)
 // - ------------------------------------------------------------------------------------------ - //

@@ -30,8 +30,13 @@
 #endif
 
 /* Include the SDL main definition header */
-#include <SDL/SDL.h>
-#include <SDL/SDL_main.h>
+#ifdef NO_SDL_SUBDIR
+#include "SDL.h"
+#include "SDL_main.h"
+#else // NO_SDL_SUBDIR //
+#include "SDL/SDL.h"
+#include "SDL/SDL_main.h"
+#endif // NO_SDL_SUBDIR //
 
 #ifdef main
 # ifndef _WIN32_WCE_EMULATION
