@@ -1,5 +1,0 @@
-HEY!
-
-Use something like scons or cmake to generate a MSVC project file!
-
-Manual project making is a bitch!
