@@ -62,7 +62,7 @@ namespace System {
 					
 					bool HasNativeTC:1; // Has some native Texture Compression, and not one of the above standards //
 				};
-				bool HasTextureCompression:16;
+				int HasTextureCompression:16;
 			};
 			bool IsFullScreen:1;
 			bool HasScreenShape:1;

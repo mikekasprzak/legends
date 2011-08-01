@@ -17,13 +17,13 @@
 #include <windows.h>
 
 /* Include the SDL main definition header */
-#if defined(USES_WINDOWS) && defined(USES_SDL_1_3_DIR_HACK)
-#include "SDL13/SDL.h"
-#include "SDL13/SDL_main.h"
-#else // USES_WINDOWS //
+#ifdef NO_SDL_SUBDIR
+#include "SDL.h"
+#include "SDL_main.h"
+#else // NO_SDL_SUBDIR //
 #include "SDL/SDL.h"
 #include "SDL/SDL_main.h"
-#endif // USES_WINDOWS //
+#endif // NO_SDL_SUBDIR //
 
 #ifdef main
 # ifndef _WIN32_WCE_EMULATION
