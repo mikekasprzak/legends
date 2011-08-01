@@ -1,7 +1,7 @@
 #!/bin/sh
 # sku.sh - Script for changing the active SKU (sub-project of an active .target)
 
-#DEFAULTDIR=Tools/default
+DEFAULTDIR=Tools/default
 CONFIGDIR=Config
 CUSTOMDIR=Custom
 

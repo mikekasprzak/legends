@@ -1,5 +1,7 @@
 #!/bin/sh
 # setup.sh - Generate several useful files reqested of the build system
+#
+# TODO: Make the SKU complain if the directory doesn't contain the project
 
 DEFAULTDIR=Tools/default
 CONFIGDIR=Config
@@ -26,13 +28,30 @@ if [ ! -n "$1" ]; then
 	else
 		PROJECT=`cat $DEFAULTDIR/.project`
 	fi
-	echo -n "Project Name [$PROJECT]: "
-	read answer
-	if [ "$answer" != "" ]; then
-		PROJECT="$answer"
-	fi
+
+	while true; do
+		echo -n "Project Name [$PROJECT]: "
+		read answer
+		if [ "$answer" != "" ]; then
+			if [ -e "SKU/$answer" ]; then
+				PROJECT="$answer"
+				break
+			else
+				echo "Error! $answer not found!"
+				#exit -1
+			fi		
+		else
+			break
+		fi
+	done
 else
-	PROJECT=$1
+	if [ -e "SKU/$1" ]; then
+		PROJECT=$1
+	else
+		echo "Error! $1 not found!"
+		exit -1
+	fi
+
 fi  
 
 echo "Project Name:    $PROJECT"
@@ -55,13 +74,28 @@ if [ ! -n "$2" ]; then
 		fi
 	fi
 	
-	echo -n "Target Makefile [$TARGET]: "
-	read answer
-	if [ "$answer" != "" ]; then
-		TARGET="$answer"
-	fi
+	while true; do
+		echo -n "Target Makefile [$TARGET]: "
+		read answer
+		if [ "$answer" != "" ]; then
+			if [ -e "$answer" ]; then
+				TARGET="$answer"
+				break
+			else
+				echo "Error! $answer not found!"
+				#exit -1
+			fi
+		else
+			break
+		fi
+	done
 else
-	TARGET="$2"
+	if [ -e "$2" ]; then
+		TARGET="$2"
+	else
+		echo "Error! $2 not found!"
+		exit -1
+	fi
 fi
 
 echo "Target Makefile: $TARGET"
@@ -77,7 +111,7 @@ if [ ! -n "$3" ]; then
 	if [ -e "$CONFIGDIR/.sku" ]; then
 		SKU=`cat $CONFIGDIR/.sku | awk '{print $1}'`
 	else
-		SKU="Sku/""$PROJECT""`cat $DEFAULTDIR/default.sku`"
+		SKU="SKU/""$PROJECT""`cat $DEFAULTDIR/default.sku`"
 	fi
 
 	while true; do
@@ -87,11 +121,11 @@ if [ ! -n "$3" ]; then
 			if [ -e "$answer" ]; then
 				SKU="$answer"
 				break
-			elif [ -e "Sku/$PROJECT$answer" ]; then
-				SKU="Sku/$PROJECT/$answer"
+			elif [ -e "SKU/$PROJECT/$answer" ]; then
+				SKU="SKU/$PROJECT/$answer"
 				break
 			else
-				echo "Error! $answer and Sku/$PROJECT/$answer not found!"
+				echo "Error! $answer and SKU/$PROJECT/$answer not found!"
 				#exit -1
 			fi
 		else
@@ -101,10 +135,10 @@ if [ ! -n "$3" ]; then
 else
 	if [ -e "$3" ]; then
 		SKU="$3"
-	elif [ -e "Sku/$PROJECT$3" ]; then
-		SKU="Sku/$PROJECT$3"
+	elif [ -e "SKU/$PROJECT/$3" ]; then
+		SKU="SKU/$PROJECT/$3"
 	else
-		echo "Error! $3 not found!"
+		echo "Error! $3 and SKU/$PROJECT/$answer not found!"
 		exit -1
 	fi
 fi

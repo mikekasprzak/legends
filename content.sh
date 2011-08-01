@@ -156,7 +156,7 @@ elif ([ "$1" = "commit" ] || [ "$1" = "checkin" ] || [ "$1" = "ci" ]); then
 	for arg in $FILES
 	do
 		echo "Content/$arg"
-		svn ci Content/$arg --message "$*"
+		svn ci "Content/$arg" "$*"
 	done
 else
 	echo "ERROR: Unknown Command \"$1\""
