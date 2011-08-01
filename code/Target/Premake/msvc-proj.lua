@@ -12,6 +12,7 @@ solution "MySolution"
 		targetdir "Build/Debug"
 
 	configuration "Release"
+		targetdir "Build/bin"
 		targetdir "Build/Release"
 
 	if _ACTION == "clean" then
@@ -21,7 +22,8 @@ solution "MySolution"
 
 	
 project "Legends"
-	kind "ConsoleApp"
+	kind "WindowedApp"
+	--kind "ConsoleApp"
 	language "C++"
 	location "build"
 
@@ -76,16 +78,25 @@ project "Legends"
 	}
 	
 	configuration "Debug"
-		libdirs { (SDL_LIB_ROOT .. "Debug/") }
-		postbuildcommands { path.translate("copy " .. SDL_LIB_ROOT .. "Debug/SDL.dll Debug", "\\") }
+		kind "ConsoleApp"
+		libdirs { 
+			(SDL_LIB_ROOT .. "Debug/"),
+		}
+		postbuildcommands { 
+			path.translate("copy " .. SDL_LIB_ROOT .. "Debug/SDL.dll Debug", "\\"),
+		}
 		defines {
 			"DEBUG", "_DEBUG",
 		}
 		flags { "Symbols" }
 		
 	configuration "Release"
-		libdirs { (SDL_LIB_ROOT .. "Release/") }
-		postbuildcommands { path.translate("copy " .. SDL_LIB_ROOT .. "Release/SDL.dll Release", "\\") }
+		libdirs {
+			(SDL_LIB_ROOT .. "Release/"),
+		}
+		postbuildcommands {
+			path.translate("copy " .. SDL_LIB_ROOT .. "Release/SDL.dll Release", "\\"),
+		}
 		defines {
 			"NDEBUG",
 		} 

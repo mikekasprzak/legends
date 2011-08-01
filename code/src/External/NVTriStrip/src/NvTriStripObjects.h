@@ -10,7 +10,7 @@
 
 // MIKE EDIT //
 typedef unsigned int UINT;
-typedef signed int WORD;
+typedef unsigned int WORD;
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Types defined for stripification
