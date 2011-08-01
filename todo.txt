@@ -1,7 +1,8 @@
 
 TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 
-- Move Custom to SKU folder, no more weird share system!
+- Add Name, Short Name, Packed Name options to SKU's
+  - Have defaults if not set
 - OpenGL/ES 1 and OpenGL/ES 2 in a single code path merge!
 - Premake setup (i.e. MSVC and Xcode)
   - Update to generate premake lua script based on the SKU and platform data
@@ -35,3 +36,4 @@ Completed **
 - New Experiments Tree
   - Should be easy to add a new dummy app
     - Template!
+- Move Custom to SKU folder, no more weird share system!
