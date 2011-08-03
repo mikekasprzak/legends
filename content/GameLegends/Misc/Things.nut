@@ -1,8 +1,12 @@
 
+// TODO: Need a way (function) that can take 2 objects and combine their "tag clouds"
+
 print("Hello World!\n");
 print("AHOY!!\n");
 
 local Sugar = "Moister";
+
+print( format( "This is Wild (%s)\n", Sugar ) );
 
 // Illegal //
 //Sugar[0] = 'N';
@@ -13,6 +17,40 @@ if ( Sugar[0] == 'M' )
 	print( "Emm\n" );
 else
 	print( "Not Emm\n" );
+
+// - ------------------------------------------------------------------------------------------ - //
+Thinkers <- {};
+
+ScriptFile <- "Ob_Surge";
+Thinkers[ScriptFile] <- {};
+loadfile( "Content/Misc/" + ScriptFile + ".nut" ).bindenv( Thinkers[ScriptFile] )();
+Thinkers[ScriptFile].Name <- ScriptFile;
+
+ScriptFile <- "Ob_Condor";
+Thinkers[ScriptFile] <- {};
+loadfile( "Content/Misc/" + ScriptFile + ".nut" ).bindenv( Thinkers[ScriptFile] )();
+Thinkers[ScriptFile].Name <- ScriptFile;
+
+//Thinkers["Ob_Surge"] <- {};
+//Thinkers["Ob_Condor"] <- {};
+
+//loadfile( "Content/Misc/Ob_Surge.nut" ).bindenv( Thinkers["Ob_Surge"] )();
+//loadfile( "Content/Misc/Ob_Condor.nut" ).bindenv( Thinkers["Ob_Condor"] )();
+
+print( "Thinkers: " + Thinkers + "\n" );
+
+foreach( val in Thinkers ) {
+	print( "Executing " + val.Name + " " + val + "...\n" );
+	val.OnThink();
+}
+
+////Thinkers.OnThink();
+//Thinkers.Ob_Surge.OnThink();
+//Thinkers.Ob_Condor.OnThink();
+
+print( "\n" );
+
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 class BasicShaft {
@@ -98,6 +136,12 @@ class IgnoreList {
 	constructor() { };
 	MadeOf = null;
 };
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+function DoDamage( weapon, attacker, defender ) {
+	
+}
 // - ------------------------------------------------------------------------------------------ - //
 
 //local Object = Bone();
