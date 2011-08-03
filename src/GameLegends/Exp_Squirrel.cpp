@@ -8,10 +8,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <squirrel.h>
 
-#include <sqstdblob.h>
-#include <sqstdsystem.h>
 #include <sqstdio.h>
+#include <sqstdblob.h>
 #include <sqstdmath.h>	
+#include <sqstdsystem.h>
 #include <sqstdstring.h>
 #include <sqstdaux.h>
 // - ------------------------------------------------------------------------------------------ - //
