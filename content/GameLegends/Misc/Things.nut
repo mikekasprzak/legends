@@ -21,19 +21,19 @@ else
 // - ------------------------------------------------------------------------------------------ - //
 Thinkers <- {};
 
+// Add to the table, load it, and execute it //
 ScriptName <- "Ob_Surge";
-ScriptFileName <- "Content/Misc/" + ScriptName + ".nut";
 Thinkers[ScriptName] <- {};
-loadfile( ScriptFileName ).bindenv( Thinkers[ScriptName] )();
 Thinkers[ScriptName].Name <- ScriptName;
-Thinkers[ScriptName].FileName <- ScriptFileName;
+Thinkers[ScriptName].FileName <- "Content/Misc/" + ScriptName + ".nut";
+loadfile( Thinkers[ScriptName].FileName ).bindenv( Thinkers[ScriptName] )();
 
+// Add to the table, load it, and execute it //
 ScriptName <- "Ob_Condor";
-ScriptFileName <- "Content/Misc/" + ScriptName + ".nut";
 Thinkers[ScriptName] <- {};
-loadfile( ScriptFileName ).bindenv( Thinkers[ScriptName] )();
 Thinkers[ScriptName].Name <- ScriptName;
-Thinkers[ScriptName].FileName <- ScriptFileName;
+Thinkers[ScriptName].FileName <- "Content/Misc/" + ScriptName + ".nut";
+loadfile( Thinkers[ScriptName].FileName ).bindenv( Thinkers[ScriptName] )();
 
 
 print( "Thinkers: " + Thinkers + "\n" );
