@@ -21,32 +21,27 @@ else
 // - ------------------------------------------------------------------------------------------ - //
 Thinkers <- {};
 
-ScriptFile <- "Ob_Surge";
-Thinkers[ScriptFile] <- {};
-loadfile( "Content/Misc/" + ScriptFile + ".nut" ).bindenv( Thinkers[ScriptFile] )();
-Thinkers[ScriptFile].Name <- ScriptFile;
+ScriptName <- "Ob_Surge";
+ScriptFileName <- "Content/Misc/" + ScriptName + ".nut";
+Thinkers[ScriptName] <- {};
+loadfile( ScriptFileName ).bindenv( Thinkers[ScriptName] )();
+Thinkers[ScriptName].Name <- ScriptName;
+Thinkers[ScriptName].FileName <- ScriptFileName;
 
-ScriptFile <- "Ob_Condor";
-Thinkers[ScriptFile] <- {};
-loadfile( "Content/Misc/" + ScriptFile + ".nut" ).bindenv( Thinkers[ScriptFile] )();
-Thinkers[ScriptFile].Name <- ScriptFile;
+ScriptName <- "Ob_Condor";
+ScriptFileName <- "Content/Misc/" + ScriptName + ".nut";
+Thinkers[ScriptName] <- {};
+loadfile( ScriptFileName ).bindenv( Thinkers[ScriptName] )();
+Thinkers[ScriptName].Name <- ScriptName;
+Thinkers[ScriptName].FileName <- ScriptFileName;
 
-//Thinkers["Ob_Surge"] <- {};
-//Thinkers["Ob_Condor"] <- {};
-
-//loadfile( "Content/Misc/Ob_Surge.nut" ).bindenv( Thinkers["Ob_Surge"] )();
-//loadfile( "Content/Misc/Ob_Condor.nut" ).bindenv( Thinkers["Ob_Condor"] )();
 
 print( "Thinkers: " + Thinkers + "\n" );
 
 foreach( val in Thinkers ) {
-	print( "Executing " + val.Name + " " + val + "...\n" );
+	print( "Executing " + val.Name + " (" + val.FileName +") " + val + "...\n" );
 	val.OnThink();
 }
-
-////Thinkers.OnThink();
-//Thinkers.Ob_Surge.OnThink();
-//Thinkers.Ob_Condor.OnThink();
 
 print( "\n" );
 
