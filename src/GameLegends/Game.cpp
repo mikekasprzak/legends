@@ -61,14 +61,14 @@ void cGame::Init() {
 	extern void CallExp_Squirrel();
 	CallExp_Squirrel();
 
-	extern void CallExp_cJSON();
-	CallExp_cJSON();
-
-	extern void CallExp_TinyXML();
-	CallExp_TinyXML();
-	
-	extern void CallExp_Bullet();
-	CallExp_Bullet();
+//	extern void CallExp_cJSON();
+//	CallExp_cJSON();
+//
+//	extern void CallExp_TinyXML();
+//	CallExp_TinyXML();
+//	
+//	extern void CallExp_Bullet();
+//	CallExp_Bullet();
 
 
 //	typedef ABCSet<unsigned char> GType;
