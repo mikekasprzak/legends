@@ -8,6 +8,8 @@ SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation \
 						src/External/Bullet \
 						src/External/cJSON \
 						src/External/TinyXML \
+						src/External/PugiXML \
+						src/External/STB/STB \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Squirrel/include \

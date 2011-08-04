@@ -71,6 +71,13 @@ void cGame::Init() {
 //	CallExp_Bullet();
 
 
+	Log("+ Now Testing BMFont\n");
+	{
+		BMFont* MyFont = new_read_BMFont( "Content/Misc/CourierNew3.fnt" );
+	}
+	Log("- Done Testing BMFont\n");
+	Log("\n");
+
 //	typedef ABCSet<unsigned char> GType;
 //	typedef int GType;
 	typedef unsigned char GType;
