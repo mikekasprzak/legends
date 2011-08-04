@@ -73,7 +73,19 @@ void cGame::Init() {
 
 	Log("+ Now Testing BMFont\n");
 	{
-		BMFont* MyFont = new_read_BMFont( "Content/Misc/CourierNew3.fnt" );
+		BMFont* MyFont = new_read_BMFont( "Content/Misc/CourierNew.fnt" );
+		
+		// TODO: Do stuff with a font //
+		
+		delete_BMFont( MyFont );
+
+
+		BMFont* MyFont2 = new_read_BMFont( "Content/Misc/Fontin.fnt" );
+		
+		// TODO: Do stuff with a font //
+		
+		delete_BMFont( MyFont2 );
+
 	}
 	Log("- Done Testing BMFont\n");
 	Log("\n");
