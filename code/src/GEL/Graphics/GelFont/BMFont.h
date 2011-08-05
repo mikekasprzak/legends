@@ -13,13 +13,13 @@
 #include <Util/StreamReader/StreamReader.h>
 // - ------------------------------------------------------------------------------------------ - //
 enum {
-	//BMFONT_INFO_SIZE	= ??,
+	//BMFONT_INFO_SIZE	= ??,		// Not a constant size //
 	BMFONT_COMMON_SIZE	= 14,
-	//BMFONT_PAGES_SIZE	= ??,
+	//BMFONT_PAGES_SIZE	= ??,		// Not a constant size //
 	BMFONT_CHARS_SIZE	= 20,
 	BMFONT_KERNING_SIZE	= 10,
 	
-	BMFONT_INFO_SIZE_STATIC = 14,
+	BMFONT_INFO_SIZE_STATIC = 14,	// The part that isn't the FontName string //
 
 	BMFONT_SECTION_INFO		= 1,
 	BMFONT_SECTION_COMMON	= 2,
@@ -284,7 +284,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 				}
 			}
 		}
-		else if ( Section == BMFONT_SECTION_CHARS ) {
+		else if ( Section == BMFONT_SECTION_KERNING ) {
 			int KerningCount = DataSize / BMFONT_KERNING_SIZE;
 			
 			Log( "%i kerning instances found\n", KerningCount );

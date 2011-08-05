@@ -86,6 +86,12 @@ void cGame::Init() {
 		
 		delete_BMFont( MyFont2 );
 
+		BMFont* MyFont3 = new_read_BMFont( "Content/Misc/Arial.fnt" );
+		
+		// TODO: Do stuff with a font //
+		
+		delete_BMFont( MyFont3 );
+
 	}
 	Log("- Done Testing BMFont\n");
 	Log("\n");
