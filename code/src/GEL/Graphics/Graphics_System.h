@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Util/Bits.h>
 #include <Math/Real.h>
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 // Non resulotion globals //
 namespace System {

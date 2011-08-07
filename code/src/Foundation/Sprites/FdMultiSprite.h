@@ -29,7 +29,7 @@ public:
 	inline void Draw() {
 		gelDrawTexturedPolygons(
 			(float*)Vert.Data,
-			(UVType*)UV.Data,
+			(GelUV*)UV.Data,
 			Vert.Size()
 			);
 	}

@@ -110,19 +110,19 @@ inline void gelDrawIndexedTriangleFanColors_( const VertType* Poly, const unsign
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLinesColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLinesColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelDrawLinesColors_( Poly, Colors, PolyCount );
 	gelRestoreColor();
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLineStripColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLineStripColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelDrawLineStripColors_( Poly, Colors, PolyCount );
 	gelRestoreColor();
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLineLoopColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLineLoopColors( const VertType* Poly, const unsigned int* Colors, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelDrawLineLoopColors_( Poly, Colors, PolyCount );
 	gelRestoreColor();
 }

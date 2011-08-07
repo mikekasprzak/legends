@@ -45,31 +45,39 @@ namespace TexturePool {
 	unsigned int PalmGlitch;
 #endif // HACK_TEXTURE5_GLITCH //
 
-	class GelTextureInfo {
+	class GelTexture {
 	public:
 		// The different levels of texture usability status //
 		unsigned int GLTexture;		// Texture is in VRAM //
-//		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
-//		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
+		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
+		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
 		std::string FileName;		// All we have is a filename //
 
-		struct GelTextureDetail {
+		// TODO: Load policy above for whether to throw away current texture or not //
+
+		struct GelTexture_Detail {
 			int Width, Height;
-		};
-	
-		GelTextureDetail Detail;
+		};			
+		GelTexture_Detail Detail;
+
 	public:
-		GelTextureInfo() :
-			GLTexture( 0 )
+		GelTexture() :
+			GLTexture( 0 ),
+			Uncompressed( 0 ),
+			Compressed( 0 )
 		{
 		}
-		GelTextureInfo( const char* _FileName ) :
+		GelTexture( const char* _FileName ) :
 			GLTexture( 0 ),
+			Uncompressed( 0 ),
+			Compressed( 0 ),
 			FileName( _FileName )
 		{
 		}
-		GelTextureInfo( std::string _FileName ) :
+		GelTexture( std::string _FileName ) :
 			GLTexture( 0 ),
+			Uncompressed( 0 ),
+			Compressed( 0 ),
 			FileName( _FileName )
 		{
 		}
@@ -90,7 +98,7 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 	// Members //
 	std::string FilePrefix;	
-	std::vector< GelTextureInfo > TextureInfo;
+	std::vector< GelTexture > TextureInfo;
 	std::map<std::string, GelTextureID> TextureLookup;
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -139,7 +147,7 @@ namespace TexturePool {
 		{
 			// Initalize the TextureInfo //
 			TextureInfo.clear();
-			TextureInfo.push_back( cTextureInfo() );	// Dummy //
+			TextureInfo.push_back( GelTexture() );	// Dummy //
 			
 			// Initalize the TextureLookup //
 			TextureLookup.clear();
@@ -162,7 +170,7 @@ namespace TexturePool {
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = TEXTURE_POOL_SLASH;
 			SlashString += index_GelDirectory( Dir, idx );
-			TextureInfo.push_back( cTextureInfo( SlashString ) );
+			TextureInfo.push_back( GelTexture( SlashString ) );
 			
 			std::string NoExt = NoExtensions( SlashString );
 			TextureLookup[ NoExt.c_str() ] = TextureInfo.size() - 1;

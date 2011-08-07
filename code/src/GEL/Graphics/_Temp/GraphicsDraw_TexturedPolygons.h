@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "UV.h"
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawTexturedPolygon( const float* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset ) {
+inline void gelDrawTexturedPolygon( const float* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset ) {
     glEnable(GL_TEXTURE_2D);
     //glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -37,11 +37,11 @@ inline void gelDrawTexturedPolygon( const float* Vertex, const UVType* UV, const
 	glDisable(GL_TEXTURE_2D);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawTexturedPolygon( const Vector2D* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset ) {
+inline void gelDrawTexturedPolygon( const Vector2D* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset ) {
 	gelDrawTexturedPolygon( (const float*)Vertex, UV, VertexCount, Offset );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawScaledTexturedPolygon( const float* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const float Scale ) {
+inline void gelDrawScaledTexturedPolygon( const float* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const float Scale ) {
     glEnable(GL_TEXTURE_2D);
     //glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -74,11 +74,11 @@ inline void gelDrawScaledTexturedPolygon( const float* Vertex, const UVType* UV,
 	glDisable(GL_TEXTURE_2D);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawScaledTexturedPolygon( const Vector2D* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const float Scale ) {
+inline void gelDrawScaledTexturedPolygon( const Vector2D* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const float Scale ) {
 	gelDrawScaledTexturedPolygon( (const float*)Vertex, UV, VertexCount, Offset, Scale );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawScaledTexturedPolygon( const float* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale ) {
+inline void gelDrawScaledTexturedPolygon( const float* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale ) {
     glEnable(GL_TEXTURE_2D);
     //glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -111,13 +111,13 @@ inline void gelDrawScaledTexturedPolygon( const float* Vertex, const UVType* UV,
 	glDisable(GL_TEXTURE_2D);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawScaledTexturedPolygon( const Vector2D* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale ) {
+inline void gelDrawScaledTexturedPolygon( const Vector2D* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale ) {
 	gelDrawScaledTexturedPolygon( (const float*)Vertex, UV, VertexCount, Offset, Scale );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawTexturedPolygons( const float* Vertex, const UVType* UV, const size_t VertexCount ) {
+inline void gelDrawTexturedPolygons( const float* Vertex, const GelUV* UV, const size_t VertexCount ) {
 	glEnable(GL_TEXTURE_2D);
 	//glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -131,7 +131,7 @@ inline void gelDrawTexturedPolygons( const float* Vertex, const UVType* UV, cons
 	glDisable(GL_TEXTURE_2D);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawTexturedIndexedPolygons( const float* Vertex, const UVType* UV, const size_t VertexCount, const unsigned short* Indexes, const size_t IndexCount ) {
+inline void gelDrawTexturedIndexedPolygons( const float* Vertex, const GelUV* UV, const size_t VertexCount, const unsigned short* Indexes, const size_t IndexCount ) {
 	glEnable(GL_TEXTURE_2D);
 	//glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -145,7 +145,7 @@ inline void gelDrawTexturedIndexedPolygons( const float* Vertex, const UVType* U
 	glDisable(GL_TEXTURE_2D);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawTexturedIndexedPolygons( const float* Vertex, const UVType* UV, const unsigned int* Colors, const size_t VertexCount, const unsigned short* Indexes, const size_t IndexCount ) {
+inline void gelDrawTexturedIndexedPolygons( const float* Vertex, const GelUV* UV, const unsigned int* Colors, const size_t VertexCount, const unsigned short* Indexes, const size_t IndexCount ) {
 	glEnable(GL_TEXTURE_2D);
 	//glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

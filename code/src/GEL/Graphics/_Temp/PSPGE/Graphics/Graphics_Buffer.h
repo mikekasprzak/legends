@@ -2,15 +2,15 @@
 #ifndef __Graphics_Buffer_H__
 #define __Graphics_Buffer_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetClearColor( const ColorType Color ) {
+inline void gelSetClearColor( const GelColor Color ) {
 /*
 	glClearColor( 
-		((float)GET_R(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_G(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_B(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_A(Color)) * ( 1.0f / 255.0f )
+		((float)GEL_GET_R(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_G(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_B(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_A(Color)) * ( 1.0f / 255.0f )
 		);
 */
 }
@@ -50,7 +50,7 @@ inline void gelDisableColorWriting() {
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelClearColor( const ColorType Color = RGB_BLACK ) {
+inline void gelClearColor( const GelColor Color = GEL_RGB_BLACK ) {
 /*
 	gelSetClearColor( Color );
 	gelClear( true );

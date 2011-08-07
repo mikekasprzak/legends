@@ -8,7 +8,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Change allocation scheme //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelTransformedDrawTextured( const int Mode, const Vector2D* Vertex, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale = Vector2D::One ) {
+inline void gelTransformedDrawTextured( const int Mode, const Vector2D* Vertex, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const Vector2D& Scale = Vector2D::One ) {
 #ifdef _MSC_VER
 	float* Verts = (float*)_malloca( sizeof(float) * (VertexCount << 1) );
 #else // _MSC_VER //
@@ -29,11 +29,11 @@ inline void gelTransformedDrawTextured( const int Mode, const Vector2D* Vertex, 
 #endif // _MSC_VER //
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelTransformedDrawTextured( const int Mode, const Vector2D* Verts, const UVType* UV, const size_t VertexCount, const Vector2D& Offset, const Real& Scale ) {
+inline void gelTransformedDrawTextured( const int Mode, const Vector2D* Verts, const GelUV* UV, const size_t VertexCount, const Vector2D& Offset, const Real& Scale ) {
 	gelTransformedDrawTextured( Mode, Verts, UV, VertexCount, Offset, Vector2D(Scale,Scale) );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelTransformedDrawTextured( const int Mode, const Vector3D* Vertex, const UVType* UV, const size_t VertexCount, const Vector3D& Offset, const Vector3D& Scale = Vector3D::One ) {
+inline void gelTransformedDrawTextured( const int Mode, const Vector3D* Vertex, const GelUV* UV, const size_t VertexCount, const Vector3D& Offset, const Vector3D& Scale = Vector3D::One ) {
 #ifdef _MSC_VER
 	float* Verts = (float*)_malloca( sizeof(float) * (VertexCount * 3) );
 #else // _MSC_VER //
@@ -55,7 +55,7 @@ inline void gelTransformedDrawTextured( const int Mode, const Vector3D* Vertex, 
 #endif // _MSC_VER //
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelTransformedDrawTextured( const int Mode, const Vector3D* Verts, const UVType* UV, const size_t VertexCount, const Vector3D& Offset, const Real& Scale ) {
+inline void gelTransformedDrawTextured( const int Mode, const Vector3D* Verts, const GelUV* UV, const size_t VertexCount, const Vector3D& Offset, const Real& Scale ) {
 	gelTransformedDrawTextured( Mode, Verts, UV, VertexCount, Offset, Vector3D(Scale,Scale,Scale) );
 }
 // - ------------------------------------------------------------------------------------------ - //

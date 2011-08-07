@@ -2,7 +2,7 @@
 #ifndef __GEL_Graphics_Color_H__
 #define __GEL_Graphics_Color_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Native/OpenGL1/GELS_Color.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -10,7 +10,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // Apply changes the actual Color //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelApplyColor( const ColorType Color ) {
+inline void gelApplyColor( const GelColor Color ) {
 #ifdef GELS_APPLY_COLOR
 	gels_ApplyColor( Color );
 #endif // GELS_APPLY_COLOR //	
@@ -20,28 +20,28 @@ inline void gelApplyColor( const ColorType Color ) {
 // - ------------------------------------------------------------------------------------------ - //
 // Set applies the color and notes the color as the global color //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetColor( const ColorType Color ) {
+inline void gelSetColor( const GelColor Color ) {
 	Current::Color = Color;
 	gelApplyColor( Current::Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelSetColor( const int r, const int g, const int b, const int a = 255 ) {
-	gelSetColor( RGBA(r,g,b,a) );
+	gelSetColor( GEL_RGBA(r,g,b,a) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // SetOnly sets the value noted as the internal default color, but doesn't apply it //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetOnlyColor( const ColorType Color ) {
+inline void gelSetOnlyColor( const GelColor Color ) {
 	Current::Color = Color;
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelSetOnlyColor( const int r, const int g, const int b, const int a = 255 ) {
-	gelSetOnlyColor( RGBA(r,g,b,a) );
+	gelSetOnlyColor( GEL_RGBA(r,g,b,a) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Restore the global color previously set with gelSetColor or gelSetOnlyColor //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelRestoreColor( const ColorType Color ) {
+inline void gelRestoreColor( const GelColor Color ) {
 	// TODO: remove me //
 	gelApplyColor( Current::Color );
 }
@@ -52,7 +52,7 @@ inline void gelRestoreColor() {
 // - ------------------------------------------------------------------------------------------ - //
 // Return the global color //
 // - ------------------------------------------------------------------------------------------ - //
-inline ColorType gelGetColor() {
+inline GelColor gelGetColor() {
 	return Current::Color;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -60,12 +60,12 @@ inline ColorType gelGetColor() {
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Currently unused, so update these //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetNormalColor( const ColorType Color ) {
+inline void gelSetNormalColor( const GelColor Color ) {
 	Current::NormalColor = Color;
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelSetNormalColor( const int r, const int g, const int b, const int a = 255 ) {
-	Current::NormalColor = RGBA(r,g,b,a);
+	Current::NormalColor = GEL_RGBA(r,g,b,a);
 }
 // - ------------------------------------------------------------------------------------------ - //
 

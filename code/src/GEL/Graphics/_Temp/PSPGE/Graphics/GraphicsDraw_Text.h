@@ -248,7 +248,7 @@ inline const float gelTextHeight( const char*, const float Scale = 1.0f ) {
 	return *(Current::Font->PixelHeight) * Scale;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* Msg ) {
+inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Msg ) {
 	//const int _Length = strlen( Msg );
 	const int Length = 128;
 	
@@ -283,13 +283,13 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 		
 	}
 	
-	ColorType BackupColor = Current::Color;
+	GelColor BackupColor = Current::Color;
 	gelSetColor( Color );
 	
 	// Draw the string //
 	gelDrawTexturedIndexedPolygons(
 		(float*)Vert.Data,
-		(UVType*)UV.Data,
+		(GelUV*)UV.Data,
 		Vert.Size(),
 		Indexes.Data,
 		Indexes.Size()
@@ -298,7 +298,7 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 	gelSetColor( BackupColor );
 } 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* Msg, Real Scale ) {
+inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Msg, Real Scale ) {
 	//const int _Length = strlen( Msg );
 	const int Length = 128;
 	
@@ -333,13 +333,13 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 		
 	}
 	
-	ColorType BackupColor = Current::Color;
+	GelColor BackupColor = Current::Color;
 	gelSetColor( Color );
 	
 	// Draw the string //
 	gelDrawTexturedIndexedPolygons(
 		(float*)Vert.Data,
-		(UVType*)UV.Data,
+		(GelUV*)UV.Data,
 		Vert.Size(),
 		Indexes.Data,
 		Indexes.Size()
@@ -348,7 +348,7 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 	gelSetColor( BackupColor );
 } 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* Msg, const Vector2D& Scale ) {
+inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Msg, const Vector2D& Scale ) {
 	//const int _Length = strlen( Msg );
 	const int Length = 128;
 	
@@ -383,13 +383,13 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 		
 	}
 	
-	ColorType BackupColor = Current::Color;
+	GelColor BackupColor = Current::Color;
 	gelSetColor( Color );
 	
 	// Draw the string //
 	gelDrawTexturedIndexedPolygons(
 		(float*)Vert.Data,
-		(UVType*)UV.Data,
+		(GelUV*)UV.Data,
 		Vert.Size(),
 		Indexes.Data,
 		Indexes.Size()
@@ -398,7 +398,7 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 	gelSetColor( BackupColor );
 } 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* Msg, const Matrix2x2& Scale ) {
+inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Msg, const Matrix2x2& Scale ) {
 	//const int _Length = strlen( Msg );
 	const int Length = 128;
 	
@@ -433,13 +433,13 @@ inline void gelPrint( const Vector2D& _Pos, const ColorType Color, const char* M
 		
 	}
 	
-	ColorType BackupColor = Current::Color;
+	GelColor BackupColor = Current::Color;
 	gelSetColor( Color );
 	
 	// Draw the string //
 	gelDrawTexturedIndexedPolygons(
 		(float*)Vert.Data,
-		(UVType*)UV.Data,
+		(GelUV*)UV.Data,
 		Vert.Size(),
 		Indexes.Data,
 		Indexes.Size()

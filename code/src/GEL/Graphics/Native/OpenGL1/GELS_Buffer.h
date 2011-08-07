@@ -5,18 +5,18 @@
 #define __GEL_Graphics_OpenGL1_Buffer_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "API.h"
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_SET_CLEAR_COLOR
 // - ------------------------------------------------------------------------------------------ - //
-inline void gels_SetClearColor( const ColorType Color ) {
+inline void gels_SetClearColor( const GelColor Color ) {
 	glClearColor( 
-		((float)GET_R(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_G(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_B(Color)) * ( 1.0f / 255.0f ), 
-		((float)GET_A(Color)) * ( 1.0f / 255.0f )
+		((float)GEL_GET_R(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_G(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_B(Color)) * ( 1.0f / 255.0f ), 
+		((float)GEL_GET_A(Color)) * ( 1.0f / 255.0f )
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //

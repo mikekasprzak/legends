@@ -8,23 +8,23 @@
 #include <Types/ABCSet.h>
 #include <Math/Vector.h>
 
-#include <Graphics/UV.h>
-#include <Graphics/Color.h>
-#include <Graphics/TextureID.h>
+#include <Graphics/GelUV.h>
+#include <Graphics/GelColor.h>
+#include <Graphics/GelTextureID.h>
 // - ------------------------------------------------------------------------------------------ - //
 class cROMaterial {
 public:
-	TextureID Texture;
+	GelTextureID Texture;
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cROVertex {
 public:
-	typedef UVSet<UVType> tUVType;
+	typedef UVSet<GelUV> tUVType;
 	
 	Vector3D Pos;
 	Vector3D Normal;
 	tUVType UV;
-	ColorType Color;
+	GelColor Color;
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cROFaceGroup {

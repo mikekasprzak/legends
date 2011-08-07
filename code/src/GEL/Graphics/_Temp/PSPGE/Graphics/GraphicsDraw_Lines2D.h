@@ -3,7 +3,7 @@
 #define __GraphicsDraw_Lines2D_H__
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawLine( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color) {
+inline void gelDrawLine( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color) {
 /*
 	gelSetColor( Color );
 
@@ -19,7 +19,7 @@ inline void gelDrawLine( const Vector2D& P1, const Vector2D& P2, const ColorType
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawLineNormal( const Vector2D& P1, const Vector2D& P2, const Real Length = Current::NormalLength, const ColorType Color = Current::Color) {
+inline void gelDrawLineNormal( const Vector2D& P1, const Vector2D& P2, const Real Length = Current::NormalLength, const GelColor Color = Current::Color) {
 /*
 	gelSetColor( Color );
 	
@@ -43,7 +43,7 @@ inline void gelDrawLineNormal( const Vector2D& P1, const Vector2D& P2, const Rea
 // - ------------------------------------------------------------------------------------------ - //
 // Arrowheads on one end (B) //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawArrow( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
+inline void gelDrawArrow( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
 /*
 	gelSetColor( Color );
 
@@ -69,7 +69,7 @@ inline void gelDrawArrow( const Vector2D& P1, const Vector2D& P2, const ColorTyp
 // - ------------------------------------------------------------------------------------------ - //
 // Arrowheads on both ends //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawArrow2( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
+inline void gelDrawArrow2( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
 /*
 	gelSetColor( Color );
 

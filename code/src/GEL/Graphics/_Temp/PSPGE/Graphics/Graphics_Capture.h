@@ -57,7 +57,7 @@ inline void gelDrawCapture() {
 		int Height = UV_ONE;//((480 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
 		int Width = UV_ONE;//((320 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
 		
-		UVType UVs[] = {
+		GelUV UVs[] = {
 			UV_ZERO, Height,
 			UV_ZERO, UV_ZERO,
 			Width, Height,
@@ -80,7 +80,7 @@ inline void gelDrawCapture() {
 		int Width = ((480 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
 		int Height = ((320 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
 		
-		UVType UVs[] = {
+		GelUV UVs[] = {
 			UV_ZERO, Height,
 			UV_ZERO, UV_ZERO,
 			Width, Height,

@@ -3,7 +3,7 @@
 #define __GraphicsDraw_Lines3D_H__
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color) {
+inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color) {
 	gelSetColor( Color );
 	gelFlatShaded();
 
@@ -20,7 +20,7 @@ inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const ColorType
 // - ------------------------------------------------------------------------------------------ - //
 
 //// - ------------------------------------------------------------------------------------------ - //
-//inline void gelDrawArrow( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
+//inline void gelDrawArrow( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
 //	gelSetColor( Color );
 //
 //	Vector3D HeadPoint = P2 - P1;
@@ -51,7 +51,7 @@ inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const ColorType
 //	gelRestoreColor( Color );
 //}
 //// - ------------------------------------------------------------------------------------------ - //
-//inline void gelDrawArrow2( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
+//inline void gelDrawArrow2( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color, const Real HeadLength = Current::NormalLength ) {
 //	gelSetColor( Color );
 //
 //	Vector3D HeadPoint = P2 - P1;

@@ -3,14 +3,14 @@
 #define __GEL_Graphics_Current_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GelFont/GelFont.h>
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 #include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Current {
 	extern const ::GelFont* Font;
 
-	extern ColorType Color;
-	extern ColorType NormalColor;
+	extern GelColor Color;
+	extern GelColor NormalColor;
 	extern Real NormalLength;
 	
 	extern int DrawMode;

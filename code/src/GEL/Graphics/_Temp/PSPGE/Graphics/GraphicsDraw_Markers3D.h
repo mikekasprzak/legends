@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircle( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircle( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 /*
 	gelSetColor( Color );
 
@@ -24,17 +24,17 @@ inline void gelDrawCircle( const Vector3D& Center, const Vector3D& Radius, const
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircle( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircle( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 	gelDrawCircle( Center, Radius.ToVector3D(), Color, Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircle( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircle( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 	gelDrawCircle( Center, Vector3D(Radius,Radius,0), Color, Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircleFill( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircleFill( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 /*
 	gelSetColor( Color );
 
@@ -54,105 +54,105 @@ inline void gelDrawCircleFill( const Vector3D& Center, const Vector3D& Radius, c
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircleFill( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircleFill( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 	gelDrawCircleFill( Center, Radius.ToVector3D(), Color, Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCircleFill( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color, const int Steps = 16 ) {
+inline void gelDrawCircleFill( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color, const int Steps = 16 ) {
 	gelDrawCircleFill( Center, Vector3D(Radius,Radius,0), Color, Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquare( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquare( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRect( Vector3D( Center.x-Radius, Center.y-Radius, Center.z ), Vector3D( Center.x+Radius, Center.y+Radius, Center.z ), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquare( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquare( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRect( Center-Radius, Center+Radius, Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquare( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquare( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawSquare( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquareFill( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquareFill( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRectFill( Vector3D( Center.x-Radius, Center.y-Radius, Center.z ), Vector3D( Center.x+Radius, Center.y+Radius, Center.z ), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquareFill( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquareFill( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRectFill( Center-Radius, Center+Radius, Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawSquareFill( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawSquareFill( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawSquareFill( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamond( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamond( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircle( Center, Radius, Color, 4 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamond( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamond( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircle( Center, Radius, Color, 4 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamond( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamond( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawDiamond( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamondFill( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamondFill( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircleFill( Center, Radius, Color, 4 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamondFill( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamondFill( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircleFill( Center, Radius, Color, 4 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawDiamondFill( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawDiamondFill( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawDiamondFill( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangle( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangle( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircle( Center, Radius, Color, 3 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangle( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangle( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircle( Center, Radius, Color, 3 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangle( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangle( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRadiusTriangle( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircleFill( Center, Radius, Color, 3 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCircleFill( Center, Radius, Color, 3 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawRadiusTriangleFill( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawRadiusTriangleFill( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCross( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawCross( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
  
@@ -170,17 +170,17 @@ inline void gelDrawCross( const Vector3D& Center, const Vector3D& Radius, const 
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCross( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawCross( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCross( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCross( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawCross( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawCross( Center, Vector3D(Radius,Radius,0), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawX( const Vector3D& Center, const Vector3D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawX( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
 
@@ -198,11 +198,11 @@ inline void gelDrawX( const Vector3D& Center, const Vector3D& Radius, const Colo
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawX( const Vector3D& Center, const Vector2D& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawX( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
 	gelDrawX( Center, Radius.ToVector3D(), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawX( const Vector3D& Center, const Real& Radius, const ColorType Color = Current::Color ) {
+inline void gelDrawX( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
 	gelDrawX( Center, Vector3D(Radius,Radius,0), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //

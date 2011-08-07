@@ -3,7 +3,7 @@
 #define __GraphicsDraw_Rectangles3D_H__
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCube( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawCube( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
 //	gelSetColor( Color );
 
 	Vector3D Diff = P2-P1;
@@ -38,13 +38,13 @@ inline void gelDrawCube( const Vector3D& P1, const Vector3D& P2, const ColorType
 //	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawCube( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const ColorType Color = Current::Color ) {
+inline void gelDrawCube( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawCube( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRect( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawRect( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
 //	gelSetColor( Color );
 
 	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
@@ -64,7 +64,7 @@ inline void gelDrawRect( const Vector3D& P1, const Vector3D& P2, const ColorType
 //	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRect( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const ColorType Color = Current::Color ) {
+inline void gelDrawRect( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawRect( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
 
 //	gelSetColor( Color );
@@ -84,7 +84,7 @@ inline void gelDrawRect( const Real P1x, const Real P1y, const Real P1z, const R
 //	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
 //	gelSetColor( Color );
 
 	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
@@ -104,7 +104,7 @@ inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const Color
 //	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawRectFill( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
 
 //	gelSetColor( Color );
@@ -124,11 +124,11 @@ inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P1z, con
 //	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectNormals( const Vector3D& P1, const Vector3D& P2, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawRectNormals( const Vector3D& P1, const Vector3D& P2, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixRectNormals( Buffer, Matrix, Rect2D::Pair( P1, P2 ), NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectWithNormals( const Vector3D& P1, const Vector3D& P2, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawRectWithNormals( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawRect( P1, P2, Color );
 	gelDrawRectNormals( P1, P2, NormalLength, NormalColor );
 }
@@ -136,7 +136,7 @@ inline void gelDrawRectWithNormals( const Vector3D& P1, const Vector3D& P2, cons
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFillTextured( const Vector3D& P1, const Vector3D& P2, const Vector2D& UV1 = Vector2D(0,0), const Vector2D&UV2 = Vector2D(1,1), const ColorType Color = Current::Color ) {
+inline void gelDrawRectFillTextured( const Vector3D& P1, const Vector3D& P2, const Vector2D& UV1 = Vector2D(0,0), const Vector2D&UV2 = Vector2D(1,1), const GelColor Color = Current::Color ) {
 	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
 
     float Verts[] = {
@@ -146,11 +146,11 @@ inline void gelDrawRectFillTextured( const Vector3D& P1, const Vector3D& P2, con
 		(float)P2.x, (float)P2.y, (float)P2.z,
     };
 
-	UVType UVs[] = {
-		(UVType)(UV1.x * Real(UV_ONE_F)), (UVType)(UV1.y * Real(UV_ONE_F)),
-		(UVType)(UV1.x * Real(UV_ONE_F)), (UVType)(UV2.y * Real(UV_ONE_F)),
-		(UVType)(UV2.x * Real(UV_ONE_F)), (UVType)(UV1.y * Real(UV_ONE_F)),
-		(UVType)(UV2.x * Real(UV_ONE_F)), (UVType)(UV2.y * Real(UV_ONE_F)),
+	GelUV UVs[] = {
+		(GelUV)(UV1.x * Real(UV_ONE_F)), (GelUV)(UV1.y * Real(UV_ONE_F)),
+		(GelUV)(UV1.x * Real(UV_ONE_F)), (GelUV)(UV2.y * Real(UV_ONE_F)),
+		(GelUV)(UV2.x * Real(UV_ONE_F)), (GelUV)(UV1.y * Real(UV_ONE_F)),
+		(GelUV)(UV2.x * Real(UV_ONE_F)), (GelUV)(UV2.y * Real(UV_ONE_F)),
 	};
 
 	gelDrawTriangleStripTextured( (Vector3D*)Verts, UVs, 4, Color );    

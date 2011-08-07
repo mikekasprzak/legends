@@ -4,8 +4,8 @@
 namespace Current {
 	const ::GelFont* Font;
 
-	ColorType Color;
-	ColorType NormalColor;
+	GelColor Color;
+	GelColor NormalColor;
 	Real NormalLength;
 	
 	int DrawMode = 0;

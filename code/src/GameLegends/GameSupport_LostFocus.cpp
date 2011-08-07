@@ -22,7 +22,7 @@ void cGameSupport::LostFocusDraw() {
 	// Draw Overlay Darkness //
 	gelEnableAlphaBlending();
 	gelDrawModeFlat();
-	gelDrawRectFill( Vector2D(-HalfWidth,-HalfHeight ), Vector2D(HalfWidth,HalfHeight), RGBA(64,64,64,192) );
+	gelDrawRectFill( Vector2D(-HalfWidth,-HalfHeight ), Vector2D(HalfWidth,HalfHeight), GEL_RGBA(64,64,64,192) );
 	gelDrawModeRestore();
 
 	{
