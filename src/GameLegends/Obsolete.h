@@ -22,7 +22,7 @@
 		gelLoadMatrix( ViewMatrix );
 		gelMultMatrix( CameraMatrix );
 		gelMultMatrix( SpinMatrix );
-		gelDrawCircle( Vector2D(0,0), Real(200), RGB_RED );
+		gelDrawCircle( Vector2D(0,0), Real(200), GEL_RGB_RED );
 	}
 	
 	// -- //
@@ -37,7 +37,7 @@
 		);
 
 	gelLoadMatrix( SpinMatrix * CameraMatrix * ViewMatrix );
-	gelDrawCircle( Vector2D(0,0), Real(200), RGB_ORANGE );
+	gelDrawCircle( Vector2D(0,0), Real(200), GEL_RGB_ORANGE );
 
 	// -- //
 
@@ -51,7 +51,7 @@
 		);
 
 	gelLoadMatrix( SpinMatrix * CameraMatrix * ViewMatrix );
-	gelDrawCircle( Vector2D(0,0), Real(200), RGB_YELLOW );
+	gelDrawCircle( Vector2D(0,0), Real(200), GEL_RGB_YELLOW );
 
 	// -- //
 
@@ -64,7 +64,7 @@
 		);
 
 	gelLoadMatrix( SpinMatrix * CameraMatrix * ViewMatrix );
-	gelDrawCircle( Vector2D(0,0), Real(200), RGB_PINK );
+	gelDrawCircle( Vector2D(0,0), Real(200), GEL_RGB_PINK );
 */
 /*
 	// Waveform Stepping Draw Tests //
@@ -126,11 +126,11 @@
 //			Points[idx] = PointA + (Vector3D(0,100,0) * (Time*Real(2)).SmoothStep().SmoothStep().Expand()) + (Vector3D(200,0,0)*Time);
 		}
 		
-		gelDrawLineStrip( Points, PointCount, RGB_GREEN );
-//		gelDrawCircle( PointA, Real(2), RGB_WHITE );
-//		gelDrawCircle( PointB, Real(2), RGB_WHITE );
-//		gelDrawCircle( CenterPoint, Real(2), RGB_WHITE );
-//		gelDrawCircle( CenterPoint2, Real(2), RGB_WHITE );
+		gelDrawLineStrip( Points, PointCount, GEL_RGB_GREEN );
+//		gelDrawCircle( PointA, Real(2), GEL_RGB_WHITE );
+//		gelDrawCircle( PointB, Real(2), GEL_RGB_WHITE );
+//		gelDrawCircle( CenterPoint, Real(2), GEL_RGB_WHITE );
+//		gelDrawCircle( CenterPoint2, Real(2), GEL_RGB_WHITE );
 	}
 	*/
 	// -- //

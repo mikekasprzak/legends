@@ -36,7 +36,7 @@ cGameHost::cGameHost() {
 	GameSupport = new cGameSupport;
 	
 	// Set Fade Color //
-	GameSupport->FadeSetColor( RGB_WHITE );
+	GameSupport->FadeSetColor( GEL_RGB_WHITE );
 	
 	// Game is null //
 	Game = 0;

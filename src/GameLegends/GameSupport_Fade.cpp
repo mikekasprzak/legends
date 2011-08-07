@@ -3,7 +3,7 @@
 #include "GameSupport.h"
 // - ------------------------------------------------------------------------------------------ - //
 void cGameSupport::FadeInit() {
-	FadeColor = RGB_BLACK;
+	FadeColor = GEL_RGB_BLACK;
 	CurrentFade = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -20,13 +20,13 @@ void cGameSupport::FadeDraw() {
 		
 		gelEnableAlphaBlending();
 		gelDrawModeFlat();
-		ColorType Color = RGBA( GET_R(FadeColor), GET_G(FadeColor), GET_B(FadeColor), (int)(CurrentFade*((float)(GET_A(FadeColor)))) ); 
+		GelColor Color = GEL_RGBA( GEL_GET_R(FadeColor), GEL_GET_G(FadeColor), GEL_GET_B(FadeColor), (int)(CurrentFade*((float)(GEL_GET_A(FadeColor)))) ); 
 		gelDrawRectFill( Vector2D(-HalfWidth,-HalfHeight ), Vector2D(HalfWidth,HalfHeight), Color );
 		gelDrawModeRestore();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cGameSupport::FadeSetColor( const ColorType Color ) {
+void cGameSupport::FadeSetColor( const GelColor Color ) {
 	FadeColor = Color;
 }
 // - ------------------------------------------------------------------------------------------ - //

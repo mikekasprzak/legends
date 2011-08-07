@@ -11,8 +11,8 @@
 #include <Types/ABCSet.h>
 #include <Math/Vector.h>
 
-#include <Graphics/UV.h>
-#include <Graphics/Color.h>
+#include <Graphics/GelUV.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 class cPMEMaterial {
 public:
@@ -25,12 +25,12 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 class cPMEVertex {
 public:
-	typedef UVSet<UVType> tUVType;
+	typedef UVSet<GelUV> tUVType;
 	
 	Vector3D Pos;
 	Vector3D Normal;
 	tUVType UV;
-	ColorType Color;
+	GelColor Color;
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cPMEFaceGroup {

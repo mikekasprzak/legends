@@ -54,7 +54,7 @@ public:
 
 public:
 	// Fade In/Out //
-	ColorType FadeColor;
+	GelColor FadeColor;
 	float CurrentFade;
 
 	void FadeInit();
@@ -62,7 +62,7 @@ public:
 	void FadeStep();
 	void FadeDraw();
 	
-	void FadeSetColor( const ColorType Color );
+	void FadeSetColor( const GelColor Color );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GameSupport_H__ //

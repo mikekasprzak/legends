@@ -11,7 +11,7 @@
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderObject.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -27,7 +27,7 @@ public:
 //	cROVertex* Vertex;
 	
 	// Computed Colors - Software Vertex Lighting Only //
-	std::vector<ColorType> Color;
+	std::vector<GelColor> Color;
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cROIFaceGroup {

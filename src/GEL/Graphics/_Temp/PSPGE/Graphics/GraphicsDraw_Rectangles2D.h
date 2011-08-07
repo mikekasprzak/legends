@@ -3,7 +3,7 @@
 #define __GraphicsDraw_Rectangles2D_H__
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRect( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawRect( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
 
@@ -21,7 +21,7 @@ inline void gelDrawRect( const Vector2D& P1, const Vector2D& P2, const ColorType
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRect( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const ColorType Color = Current::Color ) {
+inline void gelDrawRect( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
 
@@ -39,7 +39,7 @@ inline void gelDrawRect( const Real P1x, const Real P1y, const Real P2x, const R
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFill( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFill( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
 
@@ -57,7 +57,7 @@ inline void gelDrawRectFill( const Vector2D& P1, const Vector2D& P2, const Color
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const GelColor Color = Current::Color ) {
 /*
 	gelSetColor( Color );
 
@@ -75,11 +75,11 @@ inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P2x, con
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectNormals( const Vector2D& P1, const Vector2D& P2, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawRectNormals( const Vector2D& P1, const Vector2D& P2, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixRectNormals( Buffer, Matrix, Rect2D::Pair( P1, P2 ), NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectWithNormals( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawRectWithNormals( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawRect( P1, P2, Color );
 	gelDrawRectNormals( P1, P2, NormalLength, NormalColor );
 }

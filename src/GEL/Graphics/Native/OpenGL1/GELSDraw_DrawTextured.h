@@ -11,7 +11,7 @@
 #define GELS_DRAW_TEXTURED
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gels_DrawTextured( const int Mode, const VertType* Poly, const UVType* UV, const size_t PolyCount ) {
+inline void gels_DrawTextured( const int Mode, const VertType* Poly, const GelUV* UV, const size_t PolyCount ) {
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
@@ -26,7 +26,7 @@ inline void gels_DrawTextured( const int Mode, const VertType* Poly, const UVTyp
 #define GELS_DRAW_INDEXED_TEXTURED
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gels_DrawIndexedTextured( const int Mode, const VertType* Poly, const UVType* UV, const unsigned short* Index, const size_t IndexCount ) {
+inline void gels_DrawIndexedTextured( const int Mode, const VertType* Poly, const GelUV* UV, const unsigned short* Index, const size_t IndexCount ) {
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );

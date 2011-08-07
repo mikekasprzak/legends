@@ -2,11 +2,11 @@
 #ifndef __SDLGraphics_GelFont_H__
 #define __SDLGraphics_GelFont_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/UV.h>
+#include <Graphics/GelUV.h>
 // - ------------------------------------------------------------------------------------------ - //
 struct GelFont {
 	const float** TriStripTable;
-	const UVType* UVStrip;
+	const GelUV* UVStrip;
 
 	const char* BlockWidth;
 	

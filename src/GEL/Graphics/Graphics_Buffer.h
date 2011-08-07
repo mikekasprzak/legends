@@ -2,13 +2,13 @@
 #ifndef __GEL_Graphics_Buffer_H__
 #define __GEL_Graphics_Buffer_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/Color.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Native/OpenGL1/GELS_Buffer.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetClearColor( const ColorType Color ) {
+inline void gelSetClearColor( const GelColor Color ) {
 #ifdef GELS_SET_CLEAR_COLOR
 	gels_SetClearColor( Color );
 #endif // GELS_SET_CLEAR_COLOR //
@@ -37,7 +37,7 @@ inline void gelDisableColorWriting() {
 	gelSetColorMask( false, false, false, false );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelClearColor( const ColorType Color = RGB_BLACK ) {
+inline void gelClearColor( const GelColor Color = GEL_RGB_BLACK ) {
 	gelSetClearColor( Color );
 	gelClear( true );
 }

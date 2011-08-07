@@ -352,7 +352,7 @@ public:
 //		gelDrawTexturedPolygons(
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
-			(UVType*)UV.Data,
+			(GelUV*)UV.Data,
 			Vert.Size()
 			);
 	}
@@ -409,7 +409,7 @@ public:
 //		gelDrawTexturedPolygons(
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
-			(UVType*)UV.Data,
+			(GelUV*)UV.Data,
 			Vert.Size()
 			);
 	}

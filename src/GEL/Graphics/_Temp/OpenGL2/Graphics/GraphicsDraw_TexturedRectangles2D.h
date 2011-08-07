@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "UV.h"
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFillTextured( const Vector2D& P1, const Vector2D& P2, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFillTextured( const Vector2D& P1, const Vector2D& P2, const GelColor Color = Current::Color ) {
     glEnable(GL_TEXTURE_2D);
 	gelSetColor( Color );
     gelTextureShaded();
@@ -17,7 +17,7 @@ inline void gelDrawRectFillTextured( const Vector2D& P1, const Vector2D& P2, con
 		(float)P2.x+0.5f, (float)P2.y+0.5f,
     };
 
-	UVType UV[] = {
+	GelUV UV[] = {
 		UV_ZERO,UV_ZERO,
 		UV_ZERO,UV_ONE,
 		UV_ONE, UV_ZERO,
@@ -33,7 +33,7 @@ inline void gelDrawRectFillTextured( const Vector2D& P1, const Vector2D& P2, con
     glDisable(GL_TEXTURE_2D);
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawRectFillTextured( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const ColorType Color = Current::Color ) {
+inline void gelDrawRectFillTextured( const Real P1x, const Real P1y, const Real P2x, const Real P2y, const GelColor Color = Current::Color ) {
     glEnable(GL_TEXTURE_2D);
 	gelSetColor( Color );
     gelTextureShaded();
@@ -46,7 +46,7 @@ inline void gelDrawRectFillTextured( const Real P1x, const Real P1y, const Real 
 		(float)P2x+0.5f, (float)P2y+0.5f,
 	};
 
-	UVType UV[] = {
+	GelUV UV[] = {
 		UV_ZERO,UV_ZERO,
 		UV_ZERO,UV_ONE,
 		UV_ONE, UV_ZERO,

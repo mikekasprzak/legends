@@ -110,7 +110,7 @@ inline void gelDrawIndexedTriangleFan_( const VertType* Poly, const unsigned sho
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLines( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLines( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawLines_( Poly, PolyCount );
@@ -119,7 +119,7 @@ inline void gelDrawLines( const VertType* Poly, const size_t PolyCount, const Co
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLineStrip( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLineStrip( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawLineStrip_( Poly, PolyCount );
@@ -128,7 +128,7 @@ inline void gelDrawLineStrip( const VertType* Poly, const size_t PolyCount, cons
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawLineLoop( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawLineLoop( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawLineLoop_( Poly, PolyCount );
@@ -139,7 +139,7 @@ inline void gelDrawLineLoop( const VertType* Poly, const size_t PolyCount, const
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedLines( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedLines( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedLines_( Poly, Index, IndexCount );
@@ -148,7 +148,7 @@ inline void gelDrawIndexedLines( const VertType* Poly, const unsigned short* Ind
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedLineStrip( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedLineStrip( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedLineStrip_( Poly, Index, IndexCount );
@@ -157,7 +157,7 @@ inline void gelDrawIndexedLineStrip( const VertType* Poly, const unsigned short*
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedLineLoop( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedLineLoop( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedLineLoop_( Poly, Index, IndexCount );
@@ -168,7 +168,7 @@ inline void gelDrawIndexedLineLoop( const VertType* Poly, const unsigned short* 
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawPoints( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawPoints( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
  	gelDrawPoints_( Poly, PolyCount );
@@ -179,7 +179,7 @@ inline void gelDrawPoints( const VertType* Poly, const size_t PolyCount, const C
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawTriangles( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawTriangles( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawTriangles_( Poly, PolyCount );
@@ -188,7 +188,7 @@ inline void gelDrawTriangles( const VertType* Poly, const size_t PolyCount, cons
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawTriangleStrip( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawTriangleStrip( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawTriangleStrip_( Poly, PolyCount );
@@ -197,7 +197,7 @@ inline void gelDrawTriangleStrip( const VertType* Poly, const size_t PolyCount, 
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawTriangleFan( const VertType* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawTriangleFan( const VertType* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawTriangleFan_( Poly, PolyCount );
@@ -208,7 +208,7 @@ inline void gelDrawTriangleFan( const VertType* Poly, const size_t PolyCount, co
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedTriangles( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedTriangles( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedTriangles_( Poly, Index, IndexCount );
@@ -217,7 +217,7 @@ inline void gelDrawIndexedTriangles( const VertType* Poly, const unsigned short*
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedTriangleStrip( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedTriangleStrip( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedTriangleStrip_( Poly, Index, IndexCount );
@@ -226,7 +226,7 @@ inline void gelDrawIndexedTriangleStrip( const VertType* Poly, const unsigned sh
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType >
-inline void gelDrawIndexedTriangleFan( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const ColorType Color = Current::Color ) {
+inline void gelDrawIndexedTriangleFan( const VertType* Poly, const unsigned short* Index, const size_t IndexCount, const GelColor Color = Current::Color ) {
 	gelApplyColor( Color );
         
 	gelDrawIndexedTriangleFan_( Poly, Index, IndexCount );

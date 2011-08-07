@@ -4,8 +4,8 @@
 using namespace std;
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
-#include <Graphics/Color.h>
-#include <Graphics/UV.h>
+#include <Graphics/GelColor.h>
+#include <Graphics/GelUV.h>
 #include "PMEFile.h"
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -53,7 +53,7 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Pos.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().Color = RGB_WHITE;
+			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexNorm" ) ) {
 			File.NextToken();
@@ -65,7 +65,7 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Normal.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().Color = RGB_WHITE;
+			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexNormUV" ) ) {
 			File.NextToken();
@@ -79,7 +79,7 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Normal.z = File.StepFloatToken();
 			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
 			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().Color = RGB_WHITE;
+			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexNormUVColor" ) ) {
 			File.NextToken();
@@ -97,7 +97,7 @@ void cPMEFile::TextLoad() {
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();
 			int a = File.StepIntegerToken();
-			Mesh.back().Vertex.back().Color = RGBA(r,g,b,a);
+			Mesh.back().Vertex.back().Color = GEL_RGBA(r,g,b,a);
 		}
 		else if ( File.IsStringToken( "VertexNormColor" ) ) {
 			File.NextToken();
@@ -113,7 +113,7 @@ void cPMEFile::TextLoad() {
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();
 			int a = File.StepIntegerToken();
-			Mesh.back().Vertex.back().Color = RGBA(r,g,b,a);
+			Mesh.back().Vertex.back().Color = GEL_RGBA(r,g,b,a);
 		}
 		else if ( File.IsStringToken( "VertexUV" ) ) {
 			File.NextToken();
@@ -124,7 +124,7 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Pos.z = File.StepFloatToken();
 			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
 			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().Color = RGB_WHITE;
+			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexUVColor" ) ) {
 			File.NextToken();
@@ -139,7 +139,7 @@ void cPMEFile::TextLoad() {
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();
 			int a = File.StepIntegerToken();
-			Mesh.back().Vertex.back().Color = RGBA(r,g,b,a);
+			Mesh.back().Vertex.back().Color = GEL_RGBA(r,g,b,a);
 		}
 		else if ( File.IsStringToken( "VertexColor" ) ) {
 			File.NextToken();
@@ -152,7 +152,7 @@ void cPMEFile::TextLoad() {
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();
 			int a = File.StepIntegerToken();
-			Mesh.back().Vertex.back().Color = RGBA(r,g,b,a);
+			Mesh.back().Vertex.back().Color = GEL_RGBA(r,g,b,a);
 		}
 		else if ( File.IsStringToken( "Faces" ) ) {
 			// Ignored //

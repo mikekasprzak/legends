@@ -27,8 +27,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 //// - ------------------------------------------------------------------------------------------ - //
-//inline void gelSetTexture( unsigned int TextureId ) {
-//	glBindTexture( GL_TEXTURE_2D, TextureId );
+//inline void gelSetTexture( unsigned int GelTextureId ) {
+//	glBindTexture( GL_TEXTURE_2D, GelTextureId );
 //}
 //// - ------------------------------------------------------------------------------------------ - //
 //extern unsigned int gelLoadTexture( const char* MyFile );

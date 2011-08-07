@@ -17,7 +17,7 @@ cRenderObjectInstance Instantiate( const cRenderObject& Object ) {
 	
 	// Software Lighting //
 	{
-		Instance.Vertex.Color.resize( Object.Vertex->Size, RGB_WHITE );
+		Instance.Vertex.Color.resize( Object.Vertex->Size, GEL_RGB_DEFAULT );
 	}
 	
 	Instance.CalculateLighting();
@@ -62,12 +62,12 @@ void cRenderObjectInstance::CalculateLighting() {
 		
 		int Lighter = ((float)Intensity * 0.8f);
 
-		extern ColorType Ambient;
+		extern GelColor Ambient;
 
-		Vertex.Color[idx] = RGB( 
-			GET_R(Ambient) > Intensity ? GET_R(Ambient) : Intensity, 
-			GET_G(Ambient) > Lighter ? GET_G(Ambient) : Lighter, 
-			GET_B(Ambient) > Intensity ? GET_B(Ambient) : Intensity
+		Vertex.Color[idx] = GEL_RGB( 
+			GEL_GET_R(Ambient) > Intensity ? GEL_GET_R(Ambient) : Intensity, 
+			GEL_GET_G(Ambient) > Lighter ? GEL_GET_G(Ambient) : Lighter, 
+			GEL_GET_B(Ambient) > Intensity ? GEL_GET_B(Ambient) : Intensity
 			);
 	}
 */
@@ -158,10 +158,10 @@ void cRenderObjectInstance::Draw() {
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-	gelDrawRect( Rect.P1(), Rect.P2(), RGBA(255,255,255,64) );
+	gelDrawRect( Rect.P1(), Rect.P2(), GEL_RGBA(255,255,255,64) );
 	
-	gelDrawCircleFill( Rect.P1(), Real(0.2), RGB_RED );
-	gelDrawCircleFill( Rect.P2(), Real(0.2), RGB_YELLOW );
+	gelDrawCircleFill( Rect.P1(), Real(0.2), GEL_RGB_RED );
+	gelDrawCircleFill( Rect.P2(), Real(0.2), GEL_RGB_YELLOW );
 
 	gelDisableBlending();
 	

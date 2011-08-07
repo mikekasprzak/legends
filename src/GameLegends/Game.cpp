@@ -58,17 +58,17 @@ void cGame::Init() {
 	CallExp_GelDate();
 #endif // USES_WINDOWS //
 
+	extern void CallExp_cJSON();
+	CallExp_cJSON();
+
+	extern void CallExp_TinyXML();
+	CallExp_TinyXML();
+	
+	extern void CallExp_Bullet();
+	CallExp_Bullet();
+
 	extern void CallExp_Squirrel();
 	CallExp_Squirrel();
-
-//	extern void CallExp_cJSON();
-//	CallExp_cJSON();
-//
-//	extern void CallExp_TinyXML();
-//	CallExp_TinyXML();
-//	
-//	extern void CallExp_Bullet();
-//	CallExp_Bullet();
 
 
 	Log("+ Now Testing BMFont\n");
@@ -245,15 +245,15 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 //			gelMultMatrix( SpinMatrix );
 			gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
 			
-			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, RGBA(0,255,0,64) );
-			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, RGBA(0,255,0,64) );
-			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, RGB_YELLOW );
+			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
+////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
+			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
+			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
 	
-//			gelDrawIndexedTriangleStrip( ThisRoom->Vert->Data, ThisRoom->Index->Data, 1024/*ThisRoom->Index->Size*/, RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, RGBA(0,255,0,64) );
-//			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, 1024/*ThisRoom->OutlineIndex->Size*/, RGBA(0,255,0,64) );
-//			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, RGB_YELLOW );
+//			gelDrawIndexedTriangleStrip( ThisRoom->Vert->Data, ThisRoom->Index->Data, 1024/*ThisRoom->Index->Size*/, GEL_RGBA(255,255,255,64) );
+////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
+//			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, 1024/*ThisRoom->OutlineIndex->Size*/, GEL_RGBA(0,255,0,64) );
+//			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
 	
 //			static int StripNum = 0;
 //			StripNum++;
@@ -262,12 +262,12 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 //				ThisRoom->Vert->Data,
 //				&ThisRoom->Index->Data[indexIndex_Optimized_TriangleStrips(65,StripNum,0)],
 //				indexStripSize_Optimized_TriangleStrips(65),
-//				RGBA(255,0,0,128)
+//				GEL_RGBA(255,0,0,128)
 //				);	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
-	gelSetClearColor( RGB_BLACK );
+	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
 
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
@@ -307,16 +307,16 @@ void cGame::Draw() {
 		// Monkey Head //
 		{
 			gelLoadMatrix( ModelViewMatrix );
-			gelSetColor( RGBA(255,0,0,64) );
+			gelSetColor( GEL_RGBA(255,0,0,64) );
 			Obj3[0]->Draw();
-			gelSetColor( RGB_WHITE );
+			gelSetColor( GEL_GEL_RGB_DEFAULT );
 
 //			gelMultMatrix( Matrix4x4::TranslationMatrix( Vector3D( 0, 0, 32+16 ) ) );
 //			gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( 16, 16, 16 ) ) );
 //
-//			gelSetColor( RGBA(255,0,0,64) );
+//			gelSetColor( GEL_RGBA(255,0,0,64) );
 //			gelDrawIndexedTriangles( &(Mesh->Mesh[0].Vertex[0]), (unsigned short*)&(Mesh->Mesh[0].FaceGroup[0].Face[0]), Mesh->Mesh[0].FaceGroup[0].Face.size()*3 );
-//			gelSetColor( RGB_WHITE );
+//			gelSetColor( GEL_RGB_DEFAULT );
 		}
 
 		DrawRoom( &(Room[1]), Vector3D(128,256,0) );

@@ -3,68 +3,68 @@
 #define __UVAllocator_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Types/UVSet.h>
-#include <Graphics/UV.h>
+#include <Graphics/GelUV.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-class UVAllocator: public Allocator< UVSet<UVType> > {
+class UVAllocator: public Allocator< UVSet<GelUV> > {
 public:
 //	inline UVAllocator()
 //	{
 //	}
 	
 	inline UVAllocator( const int MaxSize, const int Start = 0 ) :
-		Allocator< UVSet<UVType> >( MaxSize, Start )
+		Allocator< UVSet<GelUV> >( MaxSize, Start )
 	{
 	}
 public:
-	inline const int AddMany( const UVType* Src, const int Count ) {
-		int OldSize = Allocator< UVSet<UVType> >::_Size;
+	inline const int AddMany( const GelUV* Src, const int Count ) {
+		int OldSize = Allocator< UVSet<GelUV> >::_Size;
 		
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator< UVSet<UVType> >::Data[ Allocator< UVSet<UVType> >::_Size + idx ].u = Src[(idx<<1)+0];
-			Allocator< UVSet<UVType> >::Data[ Allocator< UVSet<UVType> >::_Size + idx ].v = Src[(idx<<1)+1];
+			Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size + idx ].u = Src[(idx<<1)+0];
+			Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size + idx ].v = Src[(idx<<1)+1];
 		}
 
-		Allocator< UVSet<UVType> >::_Size += Count;
+		Allocator< UVSet<GelUV> >::_Size += Count;
 
 		return OldSize;
 	}
 
 
-	inline void AddRect6( UVType U1, UVType V1, UVType U2, UVType V2 ) {
-		UVSet<UVType>* VP = &Allocator< UVSet<UVType> >::Data[ Allocator< UVSet<UVType> >::_Size ];
+	inline void AddRect6( GelUV U1, GelUV V1, GelUV U2, GelUV V2 ) {
+		UVSet<GelUV>* VP = &Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size ];
 		
-		VP[0] = UVSet<UVType>( U1, V1 );
-		VP[1] = UVSet<UVType>( U2, V1 );
-		VP[2] = UVSet<UVType>( U1, V2 );
-		VP[3] = UVSet<UVType>( U2, V1 );
-		VP[4] = UVSet<UVType>( U1, V2 );
-		VP[5] = UVSet<UVType>( U2, V2 );		
+		VP[0] = UVSet<GelUV>( U1, V1 );
+		VP[1] = UVSet<GelUV>( U2, V1 );
+		VP[2] = UVSet<GelUV>( U1, V2 );
+		VP[3] = UVSet<GelUV>( U2, V1 );
+		VP[4] = UVSet<GelUV>( U1, V2 );
+		VP[5] = UVSet<GelUV>( U2, V2 );		
 		
-		Allocator< UVSet<UVType> >::_Size += 6;
+		Allocator< UVSet<GelUV> >::_Size += 6;
 	}
 
 
-	inline void AddQuad6( const UVType* Src ) {
+	inline void AddQuad6( const GelUV* Src ) {
 		AddMany( &Src[0], 3 );
 		AddMany( &Src[2], 3 );
 	}
 
-	inline void AddQuad6( const UVSet<UVType>* Src ) {
-		AddMany( (UVType*)&Src[0], 3 );
-		AddMany( (UVType*)&Src[1], 3 );
+	inline void AddQuad6( const UVSet<GelUV>* Src ) {
+		AddMany( (GelUV*)&Src[0], 3 );
+		AddMany( (GelUV*)&Src[1], 3 );
 	}
 
 
-	inline void AddQuad4( const UVType* Src ) {
+	inline void AddQuad4( const GelUV* Src ) {
 		AddMany( &Src[0], 4 );
 	}
 
-	inline void AddQuad4( const UVSet<UVType>* Src ) {
-		AddMany( (UVType*)&Src[0], 4 );
+	inline void AddQuad4( const UVSet<GelUV>* Src ) {
+		AddMany( (GelUV*)&Src[0], 4 );
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -2,7 +2,7 @@
 #ifndef __GLGraphics_TexturePool_H__
 #define __GLGraphics_TexturePool_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/TextureID.h>
+#include <Graphics/GelTextureID.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
 #include <string>
@@ -15,11 +15,11 @@ namespace TexturePool {
 	void Exit();
 	void AddDirectory( const char* Directory );
 	
-	TextureID FindID( const char* FileName );
+	GelTextureID FindID( const char* FileName );
 	
-	TextureID Load( const char* FileName );
-	void Set( const TextureID Texture );
-	void Free( const TextureID Texture );
+	GelTextureID Load( const char* FileName );
+	void Set( const GelTextureID Texture );
+	void Free( const GelTextureID Texture );
 
 	void ReleaseTextures();
 	void ReloadTextures();
@@ -27,7 +27,7 @@ namespace TexturePool {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline TextureID gelLoadTexture( const char* FileName ) {
+inline GelTextureID gelLoadTexture( const char* FileName ) {
 	// TODO: Remove file extensions from the search string //
 #ifdef _MSC_VER
 	std::string Temp = String::WindowsSlash( std::string(FileName) );
@@ -38,11 +38,11 @@ inline TextureID gelLoadTexture( const char* FileName ) {
 #endif // _MSC_VER //
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetTexture( const TextureID Texture ) {
+inline void gelSetTexture( const GelTextureID Texture ) {
 	TexturePool::Set( Texture );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelFreeTexture( const TextureID Texture ) {
+inline void gelFreeTexture( const GelTextureID Texture ) {
 	TexturePool::Free( Texture );
 }
 // - ------------------------------------------------------------------------------------------ - //

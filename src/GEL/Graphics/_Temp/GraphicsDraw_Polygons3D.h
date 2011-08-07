@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 /*
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawClosedPolygon( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawClosedPolygon( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelSetColor( Color );
         
     glVertexPointer( 2, GL_FLOAT, 0, (const float*)Poly );
@@ -13,7 +13,7 @@ inline void gelDrawClosedPolygon( const Vector2D* Poly, const size_t PolyCount, 
     gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawOpenPolygon( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawOpenPolygon( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	gelSetColor( Color );
         
     glVertexPointer( 2, GL_FLOAT, 0, (const float*)Poly );
@@ -24,47 +24,47 @@ inline void gelDrawOpenPolygon( const Vector2D* Poly, const size_t PolyCount, co
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawClosedPolygonNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawClosedPolygonNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixClosedPolygonNormals( Buffer, Matrix, Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawOpenPolygonNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawOpenPolygonNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixOpenPolygonNormals( Buffer, Matrix, Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawClosedPolygonInvNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawClosedPolygonInvNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixClosedPolygonInvNormals( Buffer, Matrix, Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawOpenPolygonInvNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawOpenPolygonInvNormals( const Vector2D* Poly, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixOpenPolygonInvNormals( Buffer, Matrix, Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawClosedPolygonWithNormals( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawClosedPolygonWithNormals( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawClosedPolygon(Poly, PolyCount, Color );
 	gelDrawClosedPolygonNormals(Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawOpenPolygonWithNormals( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawOpenPolygonWithNormals( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawOpenPolygon(Poly, PolyCount, Color );
 	gelDrawOpenPolygonNormals(Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawClosedPolygonWithInvNormals( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawClosedPolygonWithInvNormals( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawClosedPolygon(Poly, PolyCount, Color );
 	gelDrawClosedPolygonInvNormals(Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawOpenPolygonWithInvNormals( const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawOpenPolygonWithInvNormals( const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 	gelDrawOpenPolygon(Poly, PolyCount, Color );
 	gelDrawOpenPolygonInvNormals(Poly, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawPolygonEdge( const int Index, const Vector2D* Poly, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawPolygonEdge( const int Index, const Vector2D* Poly, const size_t PolyCount, const GelColor Color = Current::Color ) {
 	int NextIndex = Index+1;
 	if ( NextIndex >= PolyCount ) 
 		NextIndex = 0;
@@ -73,25 +73,25 @@ inline void gelDrawPolygonEdge( const int Index, const Vector2D* Poly, const siz
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawEdgedPolygonNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawEdgedPolygonNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixEdgedPolygonNormals( Buffer, Matrix, Poly, PolygonEnabled, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawEdgedPolygonInvNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawEdgedPolygonInvNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixEdgedPolygonInvNormals( Buffer, Matrix, Poly, PolygonEnabled, PolyCount, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawEdgedPolygon( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const ColorType Color = Current::Color ) {
+inline void gelDrawEdgedPolygon( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const GelColor Color = Current::Color ) {
 //	MatrixEdgedPolygon( Buffer, Matrix, Poly, PolygonEnabled, PolyCount, Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawEdgedPolygonWithNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawEdgedPolygonWithNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixEdgedPolygonWithNormals( Buffer, Matrix, Poly, PolygonEnabled, PolyCount, Color, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawEdgedPolygonWithInvNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const ColorType Color = Current::Color, const Real NormalLength = Current::NormalLength, const ColorType NormalColor = Current::NormalColor ) {
+inline void gelDrawEdgedPolygonWithInvNormals( const Vector2D* Poly, const bool* PolygonEnabled, const size_t PolyCount, const GelColor Color = Current::Color, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {
 //	MatrixEdgedPolygonWithInvNormals( Buffer, Matrix, Poly, PolygonEnabled, PolyCount, Color, NormalLength, NormalColor );
 }
 // - ------------------------------------------------------------------------------------------ - //

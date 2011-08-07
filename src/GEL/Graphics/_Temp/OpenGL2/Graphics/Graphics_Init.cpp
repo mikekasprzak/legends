@@ -21,8 +21,8 @@ bool gelInit() {
 	System::DepthSize = 0;
 	
 	// Current //
-	Current::Color = RGB_WHITE;
-	Current::NormalColor = RGB_WHITE;
+	Current::Color = GEL_RGB_DEFAULT;
+	Current::NormalColor = GEL_RGB_DEFAULT;
 	
 	Current::NormalLength = 8;
 
@@ -238,8 +238,8 @@ bool gelPostSetup() {
 	
 	// Set the initial current color defaulting to white //
 	// (Note, makecol only works after set_gel_mode) //
-	Current::Color = RGB_WHITE;
-	Current::NormalColor = RGB_WHITE;
+	Current::Color = GEL_RGB_DEFAULT;
+	Current::NormalColor = GEL_RGB_DEFAULT;
 	
 	Current::NormalLength = 8;
 	
