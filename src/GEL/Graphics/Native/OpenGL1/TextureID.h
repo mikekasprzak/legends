@@ -1,8 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL_Graphics_OpenGL1_TextureID_H__
-#define __GEL_Graphics_OpenGL1_TextureID_H__
+#ifndef __GEL_Graphics_OpenGL_GelTextureID_H__
+#define __GEL_Graphics_OpenGL_GelTextureID_H__
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int TextureID;
+// A handle to a texture //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL_Graphics_OpenGL1_TextureID_H__ //
+typedef unsigned int		GelTextureID;
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __GEL_Graphics_OpenGL_GelTextureID_H__ //
 // - ------------------------------------------------------------------------------------------ - //

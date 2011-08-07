@@ -45,26 +45,30 @@ namespace TexturePool {
 	unsigned int PalmGlitch;
 #endif // HACK_TEXTURE5_GLITCH //
 
-	class cTextureInfo {
+	class GelTextureInfo {
 	public:
 		// The different levels of texture usability status //
 		unsigned int GLTexture;		// Texture is in VRAM //
 //		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
 //		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
 		std::string FileName;		// All we have is a filename //
+
+		struct GelTextureDetail {
+			int Width, Height;
+		};
 	
-		cTextureDetail Detail;
+		GelTextureDetail Detail;
 	public:
-		cTextureInfo() :
+		GelTextureInfo() :
 			GLTexture( 0 )
 		{
 		}
-		cTextureInfo( const char* _FileName ) :
+		GelTextureInfo( const char* _FileName ) :
 			GLTexture( 0 ),
 			FileName( _FileName )
 		{
 		}
-		cTextureInfo( std::string _FileName ) :
+		GelTextureInfo( std::string _FileName ) :
 			GLTexture( 0 ),
 			FileName( _FileName )
 		{
@@ -86,8 +90,8 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 	// Members //
 	std::string FilePrefix;	
-	std::vector< cTextureInfo > TextureInfo;
-	std::map<std::string, TextureID> TextureLookup;
+	std::vector< GelTextureInfo > TextureInfo;
+	std::map<std::string, GelTextureID> TextureLookup;
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
@@ -172,9 +176,9 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	TextureID FindID( const char* FileName ) {
+	GelTextureID FindID( const char* FileName ) {
 		// Search the map for the specific pattern //
-		std::map<std::string, TextureID>::iterator SearchIterator = TextureLookup.find( FileName );
+		std::map<std::string, GelTextureID>::iterator SearchIterator = TextureLookup.find( FileName );
 		Log( "- Searching for %s\n", FileName );
 		
 		// If it was found, return the Id //
@@ -200,7 +204,7 @@ namespace TexturePool {
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	void Set( const TextureID Texture ) {
+	void Set( const GelTextureID Texture ) {
 		glBindTexture( GL_TEXTURE_2D, TextureInfo[ Texture ].GLTexture );
 //		if ( Texture != 0 ) {
 //			if ( TextureInfo[ Texture ].GLTexture == 0 ) {
@@ -214,7 +218,7 @@ namespace TexturePool {
 //		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	void LoadTexture( const TextureID Texture ) {
+	void LoadTexture( const GelTextureID Texture ) {
 		// Bail if the dummy texture //
 		if ( Texture == 0 )
 			return;
@@ -253,7 +257,7 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	TextureID Load( const char* FileName ) {
+	GelTextureID Load( const char* FileName ) {
 #ifdef USES_SDL
 		MessageLoop();
 #endif // USES_SDL //
@@ -265,7 +269,7 @@ namespace TexturePool {
 		}
 
 		// Search for ID based on input string //
-		TextureID Texture = FindID( FileName );
+		GelTextureID Texture = FindID( FileName );
 		
 		// Loaded, so cache the texture in memory //
 		LoadTexture( Texture );
@@ -276,7 +280,7 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	void Free( const TextureID Texture ) {
+	void Free( const GelTextureID Texture ) {
 		if ( TextureInfo[ Texture ].GLTexture ) {
 			TexturePool::AllocCount--;
 			TexturePool::AllocSum -= TextureInfo[ Texture ].GLTexture;
