@@ -7,7 +7,7 @@
 #include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Current {
-	extern const ::GelFont* Font;
+	extern const GelFont* Font;
 
 	extern GelColor Color;
 	extern GelColor NormalColor;
