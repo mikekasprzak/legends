@@ -43,8 +43,8 @@ cRoom Room[4];
 cPMEFile* Mesh;
 // - ------------------------------------------------------------------------------------------ - //
 
-TextureID txPlayer;
-TextureID txSword;
+GelTextureID txPlayer;
+GelTextureID txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
@@ -309,7 +309,7 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			gelSetColor( GEL_RGBA(255,0,0,64) );
 			Obj3[0]->Draw();
-			gelSetColor( GEL_GEL_RGB_DEFAULT );
+			gelSetColor( GEL_RGB_DEFAULT );
 
 //			gelMultMatrix( Matrix4x4::TranslationMatrix( Vector3D( 0, 0, 32+16 ) ) );
 //			gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( 16, 16, 16 ) ) );

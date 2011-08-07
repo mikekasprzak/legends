@@ -2,10 +2,8 @@
 #ifndef __PVRTexture_Load_H__
 #define __PVRTexture_Load_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "TextureDetail.h"
-// - ------------------------------------------------------------------------------------------ - //
 
-unsigned int LoadGL_PVRTexture( const char* MyFile, cTextureDetail* Detail = 0 );
+unsigned int LoadGL_PVRTexture( const char* MyFile, GelTexture::GelTexture_Detail* Detail = 0 );
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PVRTexture_Load_H__ //

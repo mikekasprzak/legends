@@ -54,10 +54,10 @@ inline void gelDrawRectTextured( const Vector2D& P1, const Vector2D& P2, const G
     };
 
     GelUV UV[] = {
-		UV_ZERO, UV_ZERO,
-		UV_ZERO, UV_ONE,
-		UV_ONE, UV_ZERO,
-		UV_ONE, UV_ONE,
+		GEL_UV_ZERO, GEL_UV_ZERO,
+		GEL_UV_ZERO, GEL_UV_ONE,
+		GEL_UV_ONE, GEL_UV_ZERO,
+		GEL_UV_ONE, GEL_UV_ONE,
     };
     
 	gelDrawTriangleStripTextured( (Vector2D*)Verts, UV, 4, Color );    

@@ -18,10 +18,10 @@ inline void gelDrawRectFillTextured( const Vector2D& P1, const Vector2D& P2, con
     };
 
 	GelUV UV[] = {
-		UV_ZERO,UV_ZERO,
-		UV_ZERO,UV_ONE,
-		UV_ONE, UV_ZERO,
-		UV_ONE, UV_ONE,
+		GEL_UV_ZERO,GEL_UV_ZERO,
+		GEL_UV_ZERO,GEL_UV_ONE,
+		GEL_UV_ONE, GEL_UV_ZERO,
+		GEL_UV_ONE, GEL_UV_ONE,
     };
     
     gelVertexPointer( 2, GL_FLOAT, 0, Verts );
@@ -47,10 +47,10 @@ inline void gelDrawRectFillTextured( const Real P1x, const Real P1y, const Real 
 	};
 
 	GelUV UV[] = {
-		UV_ZERO,UV_ZERO,
-		UV_ZERO,UV_ONE,
-		UV_ONE, UV_ZERO,
-		UV_ONE, UV_ONE,
+		GEL_UV_ZERO,GEL_UV_ZERO,
+		GEL_UV_ZERO,GEL_UV_ONE,
+		GEL_UV_ONE, GEL_UV_ZERO,
+		GEL_UV_ONE, GEL_UV_ONE,
     };
         
     gelVertexPointer( 2, GL_FLOAT, 0, Verts );

@@ -1,8 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GLGraphics_TextureID_H__
-#define __GLGraphics_TextureID_H__
+#ifndef __GEL_Graphics_OpenGL_GelTexture_NativeHandle_H__
+#define __GEL_Graphics_OpenGL_GelTexture_NativeHandle_H__
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int GelTextureID;
+typedef unsigned int		GelTexture_NativeHandle;
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GLGraphics_TextureID_H__ //
+#endif // __GEL_Graphics_OpenGL_GelTexture_NativeHandle_H__ //
 // - ------------------------------------------------------------------------------------------ - //

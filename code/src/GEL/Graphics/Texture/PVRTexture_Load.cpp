@@ -14,7 +14,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-unsigned int LoadGL_PVRTexture( PVRTexture* Texture, cTextureDetail* Detail ) {
+unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Detail* Detail ) {
 #ifndef PRODUCT_PSP
 	// Texture ID we'll be returning //
 	unsigned int TextureID;

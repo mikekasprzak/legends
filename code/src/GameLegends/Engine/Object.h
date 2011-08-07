@@ -9,9 +9,9 @@ class cObject {
 public:
 	Vector3D Pos;
 	
-	TextureID Texture;
+	GelTextureID Texture;
 	
-	cObject( Vector3D _Pos, TextureID _Texture ) :
+	cObject( Vector3D _Pos, GelTextureID _Texture ) :
 		Pos( _Pos),
 		Texture( _Texture )
 	{	

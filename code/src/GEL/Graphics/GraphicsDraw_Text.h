@@ -2,8 +2,8 @@
 #ifndef __GEL_GraphicsDraw_Text_H__
 #define __GEL_GraphicsDraw_Text_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/GelFont/GelFont.h>
-#include <Graphics/GelFont/BMFont.h>
+#include <Graphics/GelFont.h>
+#include <Graphics/BMFont/BMFont.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

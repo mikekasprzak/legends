@@ -134,7 +134,7 @@ public:
 	int* GraphicBase;
 	int* TextBase;
 	
-	std::vector< TextureID > Texture;
+	std::vector< GelTextureID > Texture;
 	
 	PairView* View;
 	int* ElementView;
@@ -263,7 +263,7 @@ public:
 	void LoadTextures() {
 		for ( size_t idx = 0; idx < GraphicElementCount; idx++ ) {
 			char* FileName = &GraphicStrings[ GraphicElement[ idx ].StringOffset ];
-			TextureID Tx = gelLoadTexture( FileName );
+			GelTextureID Tx = gelLoadTexture( FileName );
 			Texture.push_back( Tx );
 		}
 	}
@@ -340,10 +340,10 @@ public:
 		// Add UV's //
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
-			(Graphic->x * UV_ONE / Graphic->Width),
-			(Graphic->y * UV_ONE / Graphic->Height),
-			((Graphic->x + Graphic->w) * UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * UV_ONE / Graphic->Height)
+			(Graphic->x * GEL_UV_ONE / Graphic->Width),
+			(Graphic->y * GEL_UV_ONE / Graphic->Height),
+			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
 			);
 
 		gelSetTexture( Texture[ Index ] );
@@ -398,10 +398,10 @@ public:
 		// Add UV's //
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
-			(Graphic->x * UV_ONE / Graphic->Width),
-			(Graphic->y * UV_ONE / Graphic->Height),
-			((Graphic->x + Graphic->w) * UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * UV_ONE / Graphic->Height)
+			(Graphic->x * GEL_UV_ONE / Graphic->Width),
+			(Graphic->y * GEL_UV_ONE / Graphic->Height),
+			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
 			);
 
 		gelSetTexture( Texture[ Index ] );

@@ -1,33 +1,18 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Object_H__
-#define __Object_H__
+#if defined(USES_OPENGL) || defined(USES_OPENGLES)
 // - ------------------------------------------------------------------------------------------ - //
-#include <Math/Vector.h>
-#include <Graphics/GraphicsDraw.h>
+#include <Graphics/GelTexture.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cObject {
-public:
-	Vector3D Pos;
-	
-	GelTextureID Texture;
-	
-	cObject( Vector3D _Pos, GelTextureID _Texture ) :
-		Pos( _Pos),
-		Texture( _Texture )
-	{	
-	}
-	
-	void Step() {
-		
-	}
-	
-	void Draw() {
-		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
+void GelTexture::Free() {
+	if ( Handle ) {
+//		TexturePool::AllocCount--;
+//		TexturePool::AllocSum -= Handle;
 
-		gelSetTexture( Texture );
-		gelDrawRectFillTextured( Vector3D(-12,-12,0), Vector3D(12,12,0) );
+		Log( "* GL Texture %i Free'd\n", Handle );
+		glDeleteTextures( 1, (const GLuint*)&Handle );
+		Handle = 0;
 	}
-};
+}
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Object_H__ //
+#endif // USES_OPENGL //
 // - ------------------------------------------------------------------------------------------ - //

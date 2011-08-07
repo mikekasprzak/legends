@@ -290,7 +290,7 @@ bool gelPostSetup() {
 	glMatrixMode( GL_TEXTURE );
 	glLoadIdentity();
 	//glScalef( 0.015625f, 0.015625f, 0.015625f );
-	glScalef( 1 / UV_ONE_F, 1 / UV_ONE_F, 1 / UV_ONE_F );
+	glScalef( 1 / GEL_UV_ONE_F, 1 / GEL_UV_ONE_F, 1 / GEL_UV_ONE_F );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();

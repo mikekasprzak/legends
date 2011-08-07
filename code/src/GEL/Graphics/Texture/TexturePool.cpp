@@ -45,54 +45,54 @@ namespace TexturePool {
 	unsigned int PalmGlitch;
 #endif // HACK_TEXTURE5_GLITCH //
 
-	class GelTexture {
-	public:
-		// The different levels of texture usability status //
-		unsigned int GLTexture;		// Texture is in VRAM //
-		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
-		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
-		std::string FileName;		// All we have is a filename //
-
-		// TODO: Load policy above for whether to throw away current texture or not //
-
-		struct GelTexture_Detail {
-			int Width, Height;
-		};			
-		GelTexture_Detail Detail;
-
-	public:
-		GelTexture() :
-			GLTexture( 0 ),
-			Uncompressed( 0 ),
-			Compressed( 0 )
-		{
-		}
-		GelTexture( const char* _FileName ) :
-			GLTexture( 0 ),
-			Uncompressed( 0 ),
-			Compressed( 0 ),
-			FileName( _FileName )
-		{
-		}
-		GelTexture( std::string _FileName ) :
-			GLTexture( 0 ),
-			Uncompressed( 0 ),
-			Compressed( 0 ),
-			FileName( _FileName )
-		{
-		}
-		
-		void Free() {
-			if ( GLTexture ) {
-				TexturePool::AllocCount--;
-				TexturePool::AllocSum -= GLTexture;
-
-				Log( "* GL Texture %i Free'd\n", GLTexture );
-				glDeleteTextures( 1, (const GLuint*)&GLTexture );
-				GLTexture = 0;
-			}
-		}
-	};
+//	class GelTexture {
+//	public:
+//		// The different levels of texture usability status //
+//		unsigned int GLTexture;		// Texture is in VRAM //
+//		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
+//		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
+//		std::string FileName;		// All we have is a filename //
+//
+//		// TODO: Load policy above for whether to throw away current texture or not //
+//
+//		struct GelTexture_Detail {
+//			int Width, Height;
+//		};			
+//		GelTexture_Detail Detail;
+//
+//	public:
+//		GelTexture() :
+//			GLTexture( 0 ),
+//			Uncompressed( 0 ),
+//			Compressed( 0 )
+//		{
+//		}
+//		GelTexture( const char* _FileName ) :
+//			GLTexture( 0 ),
+//			Uncompressed( 0 ),
+//			Compressed( 0 ),
+//			FileName( _FileName )
+//		{
+//		}
+//		GelTexture( std::string _FileName ) :
+//			GLTexture( 0 ),
+//			Uncompressed( 0 ),
+//			Compressed( 0 ),
+//			FileName( _FileName )
+//		{
+//		}
+//		
+//		void Free() {
+//			if ( GLTexture ) {
+//				TexturePool::AllocCount--;
+//				TexturePool::AllocSum -= GLTexture;
+//
+//				Log( "* GL Texture %i Free'd\n", GLTexture );
+//				glDeleteTextures( 1, (const GLuint*)&GLTexture );
+//				GLTexture = 0;
+//			}
+//		}
+//	};
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

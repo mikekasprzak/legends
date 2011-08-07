@@ -147,10 +147,10 @@ inline void gelDrawRectFillTextured( const Vector3D& P1, const Vector3D& P2, con
     };
 
 	GelUV UVs[] = {
-		(GelUV)(UV1.x * Real(UV_ONE_F)), (GelUV)(UV1.y * Real(UV_ONE_F)),
-		(GelUV)(UV1.x * Real(UV_ONE_F)), (GelUV)(UV2.y * Real(UV_ONE_F)),
-		(GelUV)(UV2.x * Real(UV_ONE_F)), (GelUV)(UV1.y * Real(UV_ONE_F)),
-		(GelUV)(UV2.x * Real(UV_ONE_F)), (GelUV)(UV2.y * Real(UV_ONE_F)),
+		(GelUV)(UV1.x * Real(GEL_UV_ONE_F)), (GelUV)(UV1.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV1.x * Real(GEL_UV_ONE_F)), (GelUV)(UV2.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV2.x * Real(GEL_UV_ONE_F)), (GelUV)(UV1.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV2.x * Real(GEL_UV_ONE_F)), (GelUV)(UV2.y * Real(GEL_UV_ONE_F)),
 	};
 
 	gelDrawTriangleStripTextured( (Vector3D*)Verts, UVs, 4, Color );    
