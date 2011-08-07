@@ -43,8 +43,8 @@ inline void gelDrawCapture() {
 //			160,240,
 //		};
 		
-//		int Height = ((480 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
-//		int Width = ((320 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
+//		int Height = ((480 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
+//		int Width = ((320 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
 
 
 	    float Verts[] = {
@@ -54,14 +54,14 @@ inline void gelDrawCapture() {
 			160,240,
 		};
 
-		int Height = UV_ONE;//((480 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
-		int Width = UV_ONE;//((320 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
+		int Height = GEL_UV_ONE;//((480 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
+		int Width = GEL_UV_ONE;//((320 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
 		
 		GelUV UVs[] = {
-			UV_ZERO, Height,
-			UV_ZERO, UV_ZERO,
+			GEL_UV_ZERO, Height,
+			GEL_UV_ZERO, GEL_UV_ZERO,
 			Width, Height,
-			Width, UV_ZERO,
+			Width, GEL_UV_ZERO,
 		};
 		glPushMatrix();
 		glRotatef(-90,0,0,1);
@@ -77,14 +77,14 @@ inline void gelDrawCapture() {
 			240,160,
 		};
 		
-		int Width = ((480 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
-		int Height = ((320 * RefScreen::Scalar) * UV_ONE) / (512 * RefScreen::Scalar);
+		int Width = ((480 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
+		int Height = ((320 * RefScreen::Scalar) * GEL_UV_ONE) / (512 * RefScreen::Scalar);
 		
 		GelUV UVs[] = {
-			UV_ZERO, Height,
-			UV_ZERO, UV_ZERO,
+			GEL_UV_ZERO, Height,
+			GEL_UV_ZERO, GEL_UV_ZERO,
 			Width, Height,
-			Width, UV_ZERO,
+			Width, GEL_UV_ZERO,
 		};
 		
 		glVertexPointer(2, GL_FLOAT, 0, Verts);

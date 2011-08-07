@@ -77,8 +77,8 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Normal.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
+			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * GEL_UV_ONE_F;
+			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * GEL_UV_ONE_F;
 			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexNormUVColor" ) ) {
@@ -91,8 +91,8 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Normal.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Normal.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
+			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * GEL_UV_ONE_F;
+			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * GEL_UV_ONE_F;
 			int r = File.StepIntegerToken();
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();
@@ -122,8 +122,8 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Pos.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
+			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * GEL_UV_ONE_F;
+			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * GEL_UV_ONE_F;
 			Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 		}
 		else if ( File.IsStringToken( "VertexUVColor" ) ) {
@@ -133,8 +133,8 @@ void cPMEFile::TextLoad() {
 			Mesh.back().Vertex.back().Pos.x = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.y = File.StepFloatToken();
 			Mesh.back().Vertex.back().Pos.z = File.StepFloatToken();
-			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * UV_ONE_F;
-			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * UV_ONE_F;
+			Mesh.back().Vertex.back().UV.u = File.StepFloatToken() * GEL_UV_ONE_F;
+			Mesh.back().Vertex.back().UV.v = File.StepFloatToken() * GEL_UV_ONE_F;
 			int r = File.StepIntegerToken();
 			int g = File.StepIntegerToken();
 			int b = File.StepIntegerToken();

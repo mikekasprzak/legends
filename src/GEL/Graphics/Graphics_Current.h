@@ -2,7 +2,7 @@
 #ifndef __GEL_Graphics_Current_H__
 #define __GEL_Graphics_Current_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/GelFont/GelFont.h>
+#include <Graphics/GelFont.h>
 #include <Graphics/GelColor.h>
 #include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //

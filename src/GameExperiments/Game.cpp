@@ -43,8 +43,8 @@ cRoom Room[4];
 cPMEFile* Mesh;
 // - ------------------------------------------------------------------------------------------ - //
 
-TextureID txPlayer;
-TextureID txSword;
+GelTextureID txPlayer;
+GelTextureID txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
