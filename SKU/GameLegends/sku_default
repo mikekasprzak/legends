@@ -10,13 +10,16 @@ SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation \
 						src/External/TinyXML \
 						src/External/PugiXML \
 						src/External/STB/STB \
+						src/External/AnimKit/Source \
+						src/External/AnimKit/Dependencies/Utils \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Squirrel/include \
 						src/External/NVTriStrip/include \
+						src/External/Bullet/vectormath \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
-IGNORE_LIST			+=	
+IGNORE_LIST			+=	src/External/AnimKit/Source/btAlignedAllocator.cpp \
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
 DEFINES				+=	PRODUCT_LEGENDS \
