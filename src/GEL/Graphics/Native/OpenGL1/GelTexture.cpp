@@ -18,7 +18,7 @@ bool GelTexture::FreePolicy_UnProcessed = false;
 int GelTexture::AllocCount = 0;
 int GelTexture::AllocSum = 0;
 // - ------------------------------------------------------------------------------------------ - //
-void GelTexture::Init( const bool _Processed = false, const bool _UnProcessed = false ) {
+void GelTexture::Init( const bool _Processed, const bool _UnProcessed ) {
 	AllocCount = 0;
 	AllocSum = 0;
 	SetFreePolicy( _Processed, _UnProcessed );
@@ -36,7 +36,7 @@ void GelTexture::Exit( ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GelTexture::SetFreePolicy( const bool _Processed = false, const bool _UnProcessed = false ) {
+void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed ) {
 	Log("* Free Policy set: %i %i\n", _Processed, _UnProcessed );
 	FreePolicy_Processed = _Processed;
 	FreePolicy_UnProcessed = _UnProcessed;
