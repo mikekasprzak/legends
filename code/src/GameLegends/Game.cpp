@@ -41,6 +41,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 cRoom Room[4];
 cPMEFile* Mesh;
+cPMEFile* Mesh2;
 // - ------------------------------------------------------------------------------------------ - //
 
 GelTextureID txPlayer;
@@ -148,6 +149,9 @@ void cGame::Init() {
 	}
 
 	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
+	Mesh2 = new cPMEFile();
+	
+	Mesh2->Import( "Content/Models/src/Chest.3ds" );
 	
 	txPlayer = gelLoadTexture( "/Player01" );
 //	txSword = gelLoadTexture( "/Sword01" );
@@ -156,7 +160,8 @@ void cGame::Init() {
 	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
 	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
 
-	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
+//	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
+	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh2 );
 	
 	CameraWorldPos = Vector3D(0,0,0);
 	
