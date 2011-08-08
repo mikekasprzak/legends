@@ -5,8 +5,9 @@ cGameHost::cGameHost() {
 	Log("- Begin GameHost Constructor\n");
 
 	// Setup Texture Pool //
-	TexturePool::Init( "Content/Art/4444" );
-	TexturePool::AddDirectory( "" );
+	TexturePool::Init( "Content" );
+	TexturePool::AddDirectory( "/Art/4444" );
+	TexturePool::AddDirectory( "/Misc" );
 
 /*
 	Log( "+ Setting Base Content Directory...\n" );
@@ -54,6 +55,8 @@ cGameHost::~cGameHost() {
 		delete GameSupport;
 		GameSupport = 0;
 	}
+	
+	TexturePool::Exit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGameHost::CreateGame() {		

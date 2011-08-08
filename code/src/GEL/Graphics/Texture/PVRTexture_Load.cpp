@@ -134,7 +134,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			break;
 #endif // USES_TEXTURECOMPRESSION //		
 		default:
-			ELog("Unknown PVR Format!\n");
+			ELog( "Unknown PVR Format (0x%x)!\n", Texture->Flags & PVR_TYPE_MASK );
 			break;
 	};
 	
@@ -243,7 +243,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 }
 // - ------------------------------------------------------------------------------------------ - //
 GelTexture_NativeHandle load_PVRTexture( GelTexture* Texture ) {
-	Texture->Handle = load_PVRTexture( (PVRTexture*)&(Texture->Processed.Data[0]), &(Texture->Detail) );
+	Texture->Handle = load_PVRTexture( (PVRTexture*)Texture->Processed.Data->Data, &(Texture->Detail) );
 	return Texture->Handle;
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -54,6 +54,8 @@ cGameHost::~cGameHost() {
 		delete GameSupport;
 		GameSupport = 0;
 	}
+	
+	TexturePool::Exit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGameHost::CreateGame() {		

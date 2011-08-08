@@ -14,9 +14,9 @@ class GelTexture {
 	static int AllocCount;
 	static int AllocSum;
 public:
-	static void Init( const bool, const bool );
+	static void Init( const bool = false, const bool = false );
 	static void Exit();
-	static void SetFreePolicy( const bool, const bool );
+	static void SetFreePolicy( const bool = false, const bool = false );
 	
 public:
 	GelTexture_NativeHandle Handle;			// Texture is in VRAM //

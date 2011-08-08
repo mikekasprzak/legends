@@ -64,7 +64,9 @@ namespace TexturePool {
 		}
 		
 		void Load( std::string Prefix ) {
-			Texture.Load( (Prefix + FileName).c_str() );
+			Prefix += FileName;
+			Log( "Caching %s...\n", Prefix.c_str() );
+			Texture.Load( Prefix.c_str() );
 		}
 
 		void Free() {
@@ -81,9 +83,8 @@ namespace TexturePool {
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	void Init( const char* BaseDirectory ) {
-		AllocCount = 0;
-		AllocSum = 0;
+	void Init( const char* BaseDirectory ) {		
+		GelTexture::Init();
 		
 #ifdef HACK_TEXTURE5_GLITCH
 		PalmGlitch = 0;
@@ -91,33 +92,13 @@ namespace TexturePool {
 		
 		// Create a string containing the base filename directory //
 		{
-			char _FilePrefix[2048];
-
-#ifdef USES_IOS
-
-// TODO: Update this //
-#define MY_APP_NAME "SmilesSE.app"
-
 			// If an empty string (i.e. first character is terminator) //
 			if ( BaseDirectory[0] == 0 )
-				sprintf(_FilePrefix,"%s/%s", getenv("HOME"), MY_APP_NAME );
+				FilePrefix = AppBaseDir;
 			else
-				sprintf(_FilePrefix,"%s/%s/%s", getenv("HOME"), MY_APP_NAME, BaseDirectory );
-#elif defined(USES_WINDOWSMOBILE)
-			if ( BaseDirectory[0] == 0 )
-				sprintf(_FilePrefix,"Program Files\\Smiles\\" );
-			else
-				sprintf(_FilePrefix,"Program Files\\Smiles\\%s", BaseDirectory );
-#else // USES //
-			// If an empty string (i.e. first character is terminator) //
-			if ( BaseDirectory[0] == 0 )
-				sprintf(_FilePrefix,"%s", AppBaseDir );
-			else
-				sprintf(_FilePrefix,"%s%s", AppBaseDir, BaseDirectory );			
-#endif // USES //
+				FilePrefix = std::string( AppBaseDir ) + BaseDirectory;
 
 			// Store the prefix (without trailing slash.  Slash will be part of search strings) //
-			FilePrefix = _FilePrefix;
 
 			VLog("FilePrefix: %s\n", FilePrefix.c_str());
 		}
@@ -137,7 +118,6 @@ namespace TexturePool {
 		// TODO: Be sure to remove file extensions in the search query //
 		std::string ReadDir = FilePrefix;
 		if ( Directory[0] != 0 ) {
-//			ReadDir += TEXTURE_POOL_SLASH;
 			ReadDir += Directory;
 		}
 		//ReadDir += TEXTURE_POOL_SLASH;
@@ -148,7 +128,7 @@ namespace TexturePool {
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = TEXTURE_POOL_SLASH;
 			SlashString += index_GelDirectory( Dir, idx );
-			TextureInfo.push_back( GelTexture_Instance( SlashString.c_str() ) );
+			TextureInfo.push_back( GelTexture_Instance( (std::string(Directory) + SlashString).c_str() ) );
 			
 			std::string NoExt = NoExtensions( SlashString );
 			TextureLookup[ NoExt.c_str() ] = TextureInfo.size() - 1;
@@ -222,27 +202,15 @@ namespace TexturePool {
 		
 		// If there is only a filename, load it //
 		{
-			std::string File = FilePrefix;
-			File += TextureInfo[ Texture ].FileName;
-			
-			Log( "Caching %s...\n", File.c_str() );
-			
-			TextureInfo[ Texture ].Texture.Load( File.c_str() );
-
-			// TODO: Figure out what kind of image this file is //
-			//TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
+			TextureInfo[ Texture ].Load( FilePrefix );
 
 #ifdef HACK_TEXTURE5_GLITCH
 			if ( TextureInfo[ Texture ].Texture.Handle == 5 ) {
 				Log( "** WebOS! ** : Working around 'Texture 5' glitch...\n" );
 				PalmGlitch = TextureInfo[ Texture ].Texture.Handle;				
-				TextureInfo[ Texture ].Texture.Load( File.c_str() );
-//				TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
+				TextureInfo[ Texture ].Load( FilePrefix );
 			}
 #endif // HACK_TEXTURE5_GLITCH //
-
-			TexturePool::AllocCount++;
-			TexturePool::AllocSum += TextureInfo[ Texture ].Texture.Handle;
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -272,14 +240,7 @@ namespace TexturePool {
 	
 	// - -------------------------------------------------------------------------------------- - //
 	void Free( const GelTextureID Texture ) {
-		if ( TextureInfo[ Texture ].Texture.Handle ) {
-			TexturePool::AllocCount--;
-			TexturePool::AllocSum -= TextureInfo[ Texture ].Texture.Handle;
-
-			Log( "* GL Texture %i Free'd\n", TextureInfo[ Texture ].Texture.Handle );
-			glDeleteTextures( 1, (const GLuint*)&TextureInfo[ Texture ].Texture.Handle );
-			TextureInfo[ Texture ].Texture.Handle = 0;
-		}
+		TextureInfo[ Texture ].Free();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -296,15 +257,7 @@ namespace TexturePool {
 		}
 #endif // HACK_TEXTURE5_GLITCH //
 		
-		Log("GL Allocations: %i  Sum: %i\n", AllocCount, AllocSum );
-		
-		if ( AllocCount != 0 ) {
-			Log("** TEXTUREPOOL EXIT ERROR ** : GL ALLOCATION MISSMATCHED!!\n" );
-		}
-		
-		if ( AllocSum != 0 ) {
-			Log("** TEXTUREPOOL EXIT ERROR ** : GL ALLOCATION SUM MISSMATCHED!!\n" );
-		}
+		GelTexture::Exit();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Free textures so we can reload them in to the new/current OpenGL Context //
