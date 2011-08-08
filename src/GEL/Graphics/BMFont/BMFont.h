@@ -336,6 +336,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline BMFont* new_read_BMFont( const char* InFile ) {
+	Log( "+ Reading BMFont File \"%s\"\n", InFile );
 	DataBlock* Data = new_read_DataBlock( InFile );
 	if ( Data == 0 ) {
 		ELog( "BMFont File Not Found!\n" );
@@ -344,6 +345,9 @@ inline BMFont* new_read_BMFont( const char* InFile ) {
 	
 	BMFont* FontData = new_read_BMFont( Data );
 	delete_DataBlock( Data );
+
+	Log( "- Done Reading BMFont File \"%s\"\n", InFile );
+
 	return FontData;
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -67,6 +67,9 @@ void cGame::Init() {
 	extern void CallExp_Bullet();
 	CallExp_Bullet();
 
+	extern void CallExp_AssImp();
+	CallExp_AssImp();
+
 	extern void CallExp_Squirrel();
 	CallExp_Squirrel();
 
