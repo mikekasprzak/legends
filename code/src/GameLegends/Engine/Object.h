@@ -25,7 +25,7 @@ public:
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
 		gelSetTexture( Texture );
-		gelDrawRectFillTextured( Vector3D(-12,-12,0), Vector3D(12,12,0) );
+		gelDrawRectFillTextured( Vector3D(-64,-64,0), Vector3D(64,64,0) );
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
