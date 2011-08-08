@@ -72,6 +72,8 @@ public:
 public:	
 	void TextLoad();
 	void TextSave();
+	
+	void Import( const char* _FileName );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GLGraphics_PMEFile_H__ //
