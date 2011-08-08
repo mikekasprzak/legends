@@ -178,7 +178,7 @@ bool GelTexture::Load( DataBlock* InData ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Load( const char* FileName ) {
-	Log( "- (Load) Reading file \"%s\"...\n", FileName );
+	Log( "* Reading file \"%s\"...\n", FileName );
 	DataBlock* InData = new_read_DataBlock( FileName );
 
 	if ( InData == 0 ) {

@@ -19,7 +19,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	Log("* Allocating GL Texture ID...\n" );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );
-	Log("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
+	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
 	glBindTexture( GL_TEXTURE_2D, TextureID );
 	Log("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
 	
@@ -236,7 +236,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 		Height >>= 1;
 	}
 	
-	Log("* %i Texture levels loaded.\n", Texture->MipMapCount+1 );
+	Log("- %i Texture levels loaded.\n", Texture->MipMapCount+1 );
 
 	// Return the Texture ID //
 	return TextureID;

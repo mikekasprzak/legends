@@ -126,12 +126,12 @@ void CallExp_Squirrel() {
 
 			// If the compile was a success, the stack contains a function //			
 			int StackTop = sq_gettop( v );
-			Log( "- Stack Top: %i\n", StackTop );
+			Log( "* Stack Top: %i\n", StackTop );
 
 			unsigned int Params = 0;
 			unsigned int FreeVars = 0;
 			sq_getclosureinfo( v, -1, &Params, &FreeVars );
-			Log( "- Function Info: Params: %i  FreeVars: %i\n", Params, FreeVars );
+			Log( "* Function Info: Params: %i  FreeVars: %i\n", Params, FreeVars );
 			
 			sq_pushroottable( v );
 			sq_call( v, 1, false, true );

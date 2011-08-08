@@ -65,7 +65,7 @@ namespace TexturePool {
 		
 		void Load( std::string Prefix ) {
 			Prefix += FileName;
-			Log( "Caching %s...\n", Prefix.c_str() );
+			Log( "* Caching %s...\n", Prefix.c_str() );
 			Texture.Load( Prefix.c_str() );
 		}
 
@@ -145,7 +145,7 @@ namespace TexturePool {
 	GelTextureID FindID( const char* FileName ) {
 		// Search the map for the specific pattern //
 		std::map<std::string, GelTextureID>::iterator SearchIterator = TextureLookup.find( FileName );
-		Log( "- Searching for %s\n", FileName );
+		Log( "+ Searching for %s\n", FileName );
 		
 		// If it was found, return the Id //
 		if ( SearchIterator != TextureLookup.end() ) {
