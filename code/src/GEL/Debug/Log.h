@@ -139,6 +139,13 @@
 	#define wLog( ___ARGS... ) \
 		wprintf( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
+	#define ELog( ___ARGS... ) \
+		printf( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
+		printf( ___ARGS )
+	#define wELog( ___ARGS... ) \
+		wprintf( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
+		wprintf( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
 	#define DLog( ___ARGS... ) \
 		Log( ___ARGS )
 	#define wDLog( ___ARGS... ) \
@@ -219,6 +226,13 @@
 		printf( ___ARGS )
 	#define wLog( ___ARGS... ) \
 		wprintf( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
+	#define ELog( ___ARGS... ) \
+		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
+		Log( ___ARGS )
+	#define wELog( ___ARGS... ) \
+		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
+		wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define DLog( ___ARGS... ) ;
 	#define wDLog( ___ARGS... ) ;

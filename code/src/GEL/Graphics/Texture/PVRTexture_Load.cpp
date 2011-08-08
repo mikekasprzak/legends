@@ -1,21 +1,18 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/API.h>
+#if defined(USES_OPENGL) || defined(USES_OPENGLES)
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
+#include <Core/DataBlock.h>
+// - ------------------------------------------------------------------------------------------ - //
+#include <Graphics/API.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Graphics_System.h>
 #include "PVRTexture.h"
 #include "PVRTexture_Load.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include <Core/DataBlock.h>
-#include <Core/DataBlock_LZMA.h>
-//#include <Core/DataBlock_ZLIB.h>
-//#include <Core/DataBlock_BZIP.h>
+#include <Graphics/GelTexture_NativeHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
-// - ------------------------------------------------------------------------------------------ - //
-unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Detail* Detail ) {
-/*
-#ifndef PRODUCT_PSP
+GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Detail* Detail ) {
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
@@ -27,11 +24,11 @@ unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Deta
 	Log("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
 	
 	if ( glGetError() != GL_NO_ERROR ) {
-		Log( "** ERROR ** : Texture Bind Failed!\n" );
+		ELog( "Texture Bind Failed!\n" );
 	}
 	
 	if ( !glIsTexture(TextureID) ) {
-		Log( "** ERROR ** : IsTexture Failed!\n" );	
+		ELog( "IsTexture Failed!\n" );	
 	}
 	
 	// Default Load Format //
@@ -137,7 +134,7 @@ unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Deta
 			break;
 #endif // USES_TEXTURECOMPRESSION //		
 		default:
-			Log("* Error!  Unknown PVR Format!\n");
+			ELog("Unknown PVR Format!\n");
 			break;
 	};
 	
@@ -229,7 +226,7 @@ unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Deta
 			
 			GLenum Err = glGetError();
 			if ( Err != GL_NO_ERROR ) {
-				Log("* GL ERROR: ???\n" );
+				ELog("GL ERROR: ???\n" );
 			}
 		}
 		
@@ -243,32 +240,12 @@ unsigned int LoadGL_PVRTexture( PVRTexture* Texture, GelTexture::GelTexture_Deta
 
 	// Return the Texture ID //
 	return TextureID;
-#endif // PRODUCT_PSP //
-*/
 }
 // - ------------------------------------------------------------------------------------------ - //
-unsigned int LoadGL_PVRTexture( const char* MyFile, GelTexture::GelTexture_Detail* Detail ) {
-/*
-#ifndef PRODUCT_PSP
-	// Loaded Texture Data and a useful pointer for accessing it's members //
-	DataBlock* TextureData;
-	PVRTexture* Texture;
-
-	// Load the compressed data //
-	{
-		DataBlock* Compressed = new_read_DataBlock( MyFile );
-		TextureData = unpack_LZMA_DataBlock( Compressed );
-		Texture = (PVRTexture*)TextureData->Data;
-		delete_DataBlock( Compressed );
-	}
-
-	unsigned int TextureID = LoadGL_PVRTexture( Texture, Detail );
-
-	delete_DataBlock( TextureData );
-
-	return TextureID;
-#endif // PRODUCT_PSP //
-*/
+GelTexture_NativeHandle load_PVRTexture( GelTexture* Texture ) {
+	Texture->Handle = load_PVRTexture( (PVRTexture*)&(Texture->Processed.Data[0]), &(Texture->Detail) );
+	return Texture->Handle;
 }
 // - ------------------------------------------------------------------------------------------ - //
-
+#endif // USES_OPENGL //
+// - ------------------------------------------------------------------------------------------ - //
