@@ -1040,29 +1040,32 @@ int main( int argc, char* argv[] ) {
 			Log( "\n-=======- Beginning GEL Application Shutdown... -=======-\n" );
 
 
-#ifndef PRODUCT_LEGACY_SMILES			
-			Log( "- Writing Save Data...\n" );
+#ifdef PRODUCT_LEGACY_SMILES			
+			Log( "+ Writing Save Data...\n" );
 			GameHost->Save();
-			Log( "+ Finished Writing Save Data.\n" );
+			Log( "- Finished Writing Save Data.\n" );
 			Log( "\n" );
 #endif // PRODUCT_LEGACY_SMILES //
 
 			delete GameHost;
+			Log( "\n" );
 		}
 
 #ifdef USES_SIXENSE
-		Log( "- Shutting down Sixense...\n" );
+		Log( "+ Shutting down Sixense...\n" );
 		sixenseExit();
+		Log( "- Done Sixense.\n" );
+		Log( "\n" );
 #endif // USES_SIXENSE //
 
 //		if ( Buffer ) { 
 //			SDL_FreeSurface( Buffer );
 //		}
 		
-		Log( "- Freeing audio resources...\n" );
+		Log( "+ Freeing audio resources...\n" );
 		musFree();
 		sndFree();
-		Log( "+ Audio resources released.\n" );
+		Log( "- Audio resources released.\n" );
 		Log( "\n" );
 
 #ifdef USES_STORE
@@ -1070,15 +1073,15 @@ int main( int argc, char* argv[] ) {
 #endif // USES_STORE //
 
 #ifdef USES_WEBOS
-		Log( "- Shutting Down PDL...\n" );
+		Log( "+ Shutting Down PDL...\n" );
 		PDL_Quit();
-		Log( "+ PDL Shut down complete.\n" );
+		Log( "- PDL Shut down complete.\n" );
 		Log( "\n" );
 #endif // USES_WEBOS //
 
-		Log( "- Shutting Down GEL Graphics...\n" );
+		Log( "+ Shutting Down GEL Graphics...\n" );
 		gelExit();
-		Log( "+ GEL Graphics Shut down complete.\n" );
+		Log( "- GEL Graphics Shut down complete.\n" );
 		Log( "\n" );
 	}
 

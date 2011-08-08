@@ -25,8 +25,12 @@ void GelTexture::Init( const bool _Processed, const bool _UnProcessed ) {
 	SetFreePolicy( _Processed, _UnProcessed );
 }
 // - ------------------------------------------------------------------------------------------ - //
+void GelTexture::LogAllocations() {
+	Log( "GelTextures GL Allocations: %i  Sum: %i\n", AllocCount, AllocSum );	
+}
+// - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Exit( ) {
-	Log("GelTextures GL Allocations: %i  Sum: %i\n", AllocCount, AllocSum );
+	LogAllocations();
 	
 	if ( AllocCount != 0 ) {
 		ELog( "GL ALLOCATION MISSMATCHED!!\n" );

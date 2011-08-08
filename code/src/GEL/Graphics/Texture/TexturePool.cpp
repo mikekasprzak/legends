@@ -246,6 +246,8 @@ namespace TexturePool {
 	
 	// - -------------------------------------------------------------------------------------- - //
 	void Exit() {
+		GelTexture::LogAllocations();
+		
 		for ( size_t idx = 0; idx < TextureInfo.size(); idx++ ) {
 			//Free( idx );
 			TextureInfo[ idx ].Free();

@@ -31,3 +31,21 @@ COPY_FILES			+=	src/External/Sixense/bin/win32/DeviceDLL.dll \
 # - ------------------------------------------------------------------------ - #
 endif # NO_SIXENSE #
 # - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
+ifndef NO_ASSIMP
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/External/Assimp/include \
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_ASSIMP
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	src/External/Assimp/mingw32/libassimp.dll.a \
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	src/External/Assimp/mingw32/libassimp.dll \
+# - ------------------------------------------------------------------------ - #
+endif # NO_ASSIMP #
+# - ------------------------------------------------------------------------ - #
