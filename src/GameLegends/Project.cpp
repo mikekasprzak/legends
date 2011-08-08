@@ -10,13 +10,17 @@
 // - ------------------------------------------------------------------------------------------ - //
 // OS SUFFIX //
 #if defined(USES_WINDOWS)
-#define OS_SUFFIX		"(for Windows)"
+#ifdef _MSC_VER
+#define OS_SUFFIX		"(Windows MSVC Build)"
+#else // _MSC_VER //
+#define OS_SUFFIX		"(Windows MinGW Build)"
+#endif // _MSC_VER //
 #elif defined(USES_LINUX)
 
 #ifdef USES_ATOMSTORE
-#define OS_SUFFIX		"(for Moblin)"
+#define OS_SUFFIX		"(Moblin Build)"
 #else // USES_ATOMSTORE //
-#define OS_SUFFIX		"(for Linux)"
+#define OS_SUFFIX		"(Linux Build)"
 #endif // USES_ATOMSTORE //
 
 #else // OS SUFFIX //

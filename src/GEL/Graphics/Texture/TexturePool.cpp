@@ -123,7 +123,7 @@ namespace TexturePool {
 		//ReadDir += TEXTURE_POOL_SLASH;
 		
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
-		Log( "Adding Directory \"%s\" (%i)\n", ReadDir.c_str(), size_GelDirectory( Dir ) );
+		Log( "Adding Directory \"%s\" (%i Total)\n", ReadDir.c_str(), size_GelDirectory( Dir ) );
 		
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = TEXTURE_POOL_SLASH;
