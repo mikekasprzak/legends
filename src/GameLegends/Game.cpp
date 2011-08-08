@@ -147,7 +147,8 @@ void cGame::Init() {
 	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
 	
 	txPlayer = gelLoadTexture( "/Player01" );
-	txSword = gelLoadTexture( "/Sword01" );
+//	txSword = gelLoadTexture( "/Sword01" );
+	txSword = gelLoadTexture( "/Fontin_0" );
 
 	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
 	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );

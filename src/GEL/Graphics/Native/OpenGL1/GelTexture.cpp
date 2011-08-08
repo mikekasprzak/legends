@@ -10,6 +10,7 @@
 #include <Core/DataBlock_LZMA.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Texture/PVRTexture_Load.h>
+#include <Graphics/Texture/STBTexture_Load.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -71,6 +72,17 @@ bool GelTexture::Process() {
 			Processed.Data = new_unpack_LZMA_DataBlock( UnProcessed.Data );
 			break;
 		}
+		case GEL_ASSET_STB_IMAGE: {
+			// Cheat! Move STB data over to processed, 'cause lazy! //
+			Processed.Data = UnProcessed.Data;
+			Processed.Asset.BitMask = UnProcessed.Asset.BitMask;
+			
+			UnProcessed.Data = 0;
+			UnProcessed.Asset.BitMask = GEL_ASSET_NULL;
+			
+			ProcessNextSection = false;
+			break;
+		}
 		default: {
 			ELog("Unknown Asset Format!\n" );
 			return false;
@@ -97,6 +109,10 @@ bool GelTexture::Load() {
 	switch ( Processed.Asset.Type ) {
 		case GEL_ASSET_PVR: {
 			load_PVRTexture( this );
+			break;
+		}
+		case GEL_ASSET_STB_IMAGE: {
+			load_STBTexture( this );
 			break;
 		}
 		default: {

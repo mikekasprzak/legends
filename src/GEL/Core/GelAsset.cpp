@@ -4,6 +4,7 @@
 #include <Core/GelString_Core.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Texture/PVRTexture.h>
+#include <Graphics/Texture/STBTexture.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -26,6 +27,9 @@ const char PNG_FILE_HEADER[] = { 0x89, 'P', 'N', 'G' };
 GelAsset_T is_Texture_GelAsset( const char* InData ) {
 	if ( IsPVR( InData ) ) {
 		return (GelAsset_T)(GEL_ASSET_PVR | GEL_ASSET_HAS_INFO);
+	}
+	else if ( IsSTB( InData ) ) {
+		return (GelAsset_T)(GEL_ASSET_STB_IMAGE | GEL_ASSET_HAS_INFO);
 	}
 	else if ( compare_String( PNG_FILE_HEADER, &(InData[0]), 4 ) ) {
 		return (GelAsset_T)(GEL_ASSET_PNG | GEL_ASSET_HAS_INFO);
