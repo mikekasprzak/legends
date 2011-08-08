@@ -2,6 +2,7 @@
 #ifndef __PVRTexture_Load_H__
 #define __PVRTexture_Load_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Graphics/GelTexture.h>
 
 unsigned int LoadGL_PVRTexture( const char* MyFile, GelTexture::GelTexture_Detail* Detail = 0 );
 
