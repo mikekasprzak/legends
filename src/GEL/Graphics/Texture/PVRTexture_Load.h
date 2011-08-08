@@ -1,11 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PVRTexture_Load_H__
-#define __PVRTexture_Load_H__
+#ifndef __GEL_GRAPHICS_TEXTURE_PVRTexture_Load_H__
+#define __GEL_GRAPHICS_TEXTURE_PVRTexture_Load_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GelTexture.h>
 
-unsigned int LoadGL_PVRTexture( const char* MyFile, GelTexture::GelTexture_Detail* Detail = 0 );
-
+extern GelTexture_NativeHandle load_PVRTexture( GelTexture* Texture );
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PVRTexture_Load_H__ //
+#endif // __GEL_GRAPHICS_TEXTURE_PVRTexture_Load_H__ //
 // - ------------------------------------------------------------------------------------------ - //

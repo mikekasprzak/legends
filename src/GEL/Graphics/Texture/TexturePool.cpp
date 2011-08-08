@@ -58,9 +58,13 @@ namespace TexturePool {
 		}
 		
 		GelTexture_Instance( const char* _FileName ) :
-			FileName( _FileName ),
-			Texture( _FileName )
+			FileName( _FileName )
 		{
+			// Note: I did not pass anythnig to Texture, that would cause a load //
+		}
+		
+		void Load( std::string Prefix ) {
+			Texture.Load( (Prefix + FileName).c_str() );
 		}
 
 		void Free() {
@@ -222,15 +226,18 @@ namespace TexturePool {
 			File += TextureInfo[ Texture ].FileName;
 			
 			Log( "Caching %s...\n", File.c_str() );
+			
+			TextureInfo[ Texture ].Texture.Load( File.c_str() );
 
 			// TODO: Figure out what kind of image this file is //
-			TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
+			//TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
 
 #ifdef HACK_TEXTURE5_GLITCH
 			if ( TextureInfo[ Texture ].Texture.Handle == 5 ) {
 				Log( "** WebOS! ** : Working around 'Texture 5' glitch...\n" );
 				PalmGlitch = TextureInfo[ Texture ].Texture.Handle;				
-				TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
+				TextureInfo[ Texture ].Texture.Load( File.c_str() );
+//				TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
 			}
 #endif // HACK_TEXTURE5_GLITCH //
 

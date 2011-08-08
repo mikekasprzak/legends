@@ -23,7 +23,7 @@ extern "C" {
 //namespace Data {
 // - ------------------------------------------------------------------------------------------ - //
 // Decode packed LZMA data to a new DataBlock //
-inline DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) {
+inline DataBlock* new_unpack_LZMA_DataBlock( const DataBlock* _Src ) {
 	// Take a copy of the File Header (for some reason) //
 	unsigned char header[LZMA_PROPS_SIZE + 8];
 	copy_Data( &_Src->Data[0], &header[0], sizeof( header ) );
@@ -121,6 +121,11 @@ inline DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) {
 	// Return our new LZMA decompressed data //
 	return UBuffer;
 */
+}
+// - ------------------------------------------------------------------------------------------ - //
+DEPRECATED( DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) );
+inline DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) {
+	return new_unpack_LZMA_DataBlock( _Src );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Decode packed LZMA data to a passed DataBlock //

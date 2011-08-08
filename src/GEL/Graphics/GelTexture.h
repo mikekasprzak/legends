@@ -3,50 +3,34 @@
 #define __GEL_GRAPHICS_GELTEXTURE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/DataBlock.h>
+#include <Core/GelAsset.h>
 #include <Graphics/GelTexture_NativeHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 class GelTexture {
 	// The Texture system supports a policy of freeing extra data upon start //
 	static bool FreePolicy_Processed;
 	static bool FreePolicy_UnProcessed;
+	
+	static int AllocCount;
+	static int AllocSum;
 public:
+	static void Init( const bool, const bool );
+	static void Exit();
 	static void SetFreePolicy( const bool, const bool );
 	
 public:
 	GelTexture_NativeHandle Handle;			// Texture is in VRAM //
 	
-	enum GelTexture_AssetType {
-		GEL_ASSET_NULL = 0,
-		
-		GEL_ASSET_RAW = 1,
-		GEL_ASSET_LZMA,
-		GEL_ASSET_GZIP,
-		GEL_ASSET_BZIP2,
-		
-		GEL_ASSET_PVR,
-		GEL_ASSET_DXT,
-		GEL_ASSET_PNG,
-		GEL_ASSET_TGA,
-		
-		GEL_ASSET_HAS_INFO		= 0x10000,
-		GEL_ASSET_SHARES_DATA	= 0x20000,
-	};
-	
 	struct GelTexture_Asset {
+		GelAssetType Asset;
 		union {
-			struct {
-				int Type:16;				// The type of the Asset //
-				bool HasInfo:1;				// Has info about the contents //
-				bool SharesData:1;			// Shares data with the other asset //
-			};
-			GelTexture_AssetType AssetType;	// Whole type of the asset //
+			DataBlock* Data;					// Data pointer //
+			void* RawPointer;
 		};
-		DataBlock* Data;					// Data pointer //
 		
-		GelTexture_Asset() :
-			Type( 0 ),
-			Data( 0 )
-		{
+		GelTexture_Asset() {
+			Asset.BitMask = GEL_ASSET_NULL;
+			Data = 0;
 		}
 	};
 	
