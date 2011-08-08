@@ -757,7 +757,7 @@ void ToggleGraphicsMode() {
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	Log( "-=======- GEL Application Started -- SDL Branch -- SKU: %s -=======-\n", PRODUCT_SKU );
-	Log( "GEL (C) Copyright 2008-2010 Mike Kasprzak and Sykhronics Entertainment\n" );
+	Log( "GEL (C) Copyright 2008-2012 Mike Kasprzak and Sykhronics Entertainment\n" );
 	Log( "\n" );
 	Log( "-=- SKU: %s -=- %s -=- \n", PRODUCT_SKU, FullProductName );
 	Log( "\n" );
