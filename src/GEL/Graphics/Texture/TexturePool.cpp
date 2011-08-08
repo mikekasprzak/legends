@@ -2,6 +2,7 @@
 #include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Graphics.h>
+#include <Graphics/GelTexture.h>
 #include "TexturePool.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <map>
@@ -45,60 +46,33 @@ namespace TexturePool {
 	unsigned int PalmGlitch;
 #endif // HACK_TEXTURE5_GLITCH //
 
-//	class GelTexture {
-//	public:
-//		// The different levels of texture usability status //
-//		unsigned int GLTexture;		// Texture is in VRAM //
-//		DataBlock* Uncompressed;	// Uncompressed Data Ready to be Transfered //
-//		DataBlock* Compressed;		// Compressed Data is Loaded, ready to be decompressed //
-//		std::string FileName;		// All we have is a filename //
-//
-//		// TODO: Load policy above for whether to throw away current texture or not //
-//
-//		struct GelTexture_Detail {
-//			int Width, Height;
-//		};			
-//		GelTexture_Detail Detail;
-//
-//	public:
-//		GelTexture() :
-//			GLTexture( 0 ),
-//			Uncompressed( 0 ),
-//			Compressed( 0 )
-//		{
-//		}
-//		GelTexture( const char* _FileName ) :
-//			GLTexture( 0 ),
-//			Uncompressed( 0 ),
-//			Compressed( 0 ),
-//			FileName( _FileName )
-//		{
-//		}
-//		GelTexture( std::string _FileName ) :
-//			GLTexture( 0 ),
-//			Uncompressed( 0 ),
-//			Compressed( 0 ),
-//			FileName( _FileName )
-//		{
-//		}
-//		
-//		void Free() {
-//			if ( GLTexture ) {
-//				TexturePool::AllocCount--;
-//				TexturePool::AllocSum -= GLTexture;
-//
-//				Log( "* GL Texture %i Free'd\n", GLTexture );
-//				glDeleteTextures( 1, (const GLuint*)&GLTexture );
-//				GLTexture = 0;
-//			}
-//		}
-//	};
+	// - -------------------------------------------------------------------------------------- - //
+	class GelTexture_Instance {
+	public:
+		std::string FileName;
+		GelTexture Texture;
+
+	public:
+		GelTexture_Instance()
+		{
+		}
+		
+		GelTexture_Instance( const char* _FileName ) :
+			FileName( _FileName ),
+			Texture( _FileName )
+		{
+		}
+
+		void Free() {
+			Texture.Free();
+		}
+	};
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Members //
 	std::string FilePrefix;	
-	std::vector< GelTexture > TextureInfo;
+	std::vector< GelTexture_Instance > TextureInfo;
 	std::map<std::string, GelTextureID> TextureLookup;
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -147,7 +121,7 @@ namespace TexturePool {
 		{
 			// Initalize the TextureInfo //
 			TextureInfo.clear();
-			TextureInfo.push_back( GelTexture() );	// Dummy //
+			TextureInfo.push_back( GelTexture_Instance() );	// Dummy //
 			
 			// Initalize the TextureLookup //
 			TextureLookup.clear();
@@ -170,7 +144,7 @@ namespace TexturePool {
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = TEXTURE_POOL_SLASH;
 			SlashString += index_GelDirectory( Dir, idx );
-			TextureInfo.push_back( GelTexture( SlashString ) );
+			TextureInfo.push_back( GelTexture_Instance( SlashString.c_str() ) );
 			
 			std::string NoExt = NoExtensions( SlashString );
 			TextureLookup[ NoExt.c_str() ] = TextureInfo.size() - 1;
@@ -213,17 +187,19 @@ namespace TexturePool {
 
 	// - -------------------------------------------------------------------------------------- - //
 	void Set( const GelTextureID Texture ) {
-		glBindTexture( GL_TEXTURE_2D, TextureInfo[ Texture ].GLTexture );
-//		if ( Texture != 0 ) {
-//			if ( TextureInfo[ Texture ].GLTexture == 0 ) {
-//				LoadTexture( Texture );
-//			}
-//			
-//			glBindTexture( GL_TEXTURE_2D, TextureInfo[ Texture ].GLTexture );
-//		}
-//		else {
-//			glBindTexture( GL_TEXTURE_2D, 0 );
-//		}
+		TextureInfo[ Texture ].Texture.Bind( 0 );
+		
+//		glBindTexture( GL_TEXTURE_2D, TextureInfo[ Texture ].Texture.Handle );
+////		if ( Texture != 0 ) {
+////			if ( TextureInfo[ Texture ].Texture.Handle == 0 ) {
+////				LoadTexture( Texture );
+////			}
+////			
+////			glBindTexture( GL_TEXTURE_2D, TextureInfo[ Texture ].Texture.Handle );
+////		}
+////		else {
+////			glBindTexture( GL_TEXTURE_2D, 0 );
+////		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	void LoadTexture( const GelTextureID Texture ) {
@@ -232,7 +208,7 @@ namespace TexturePool {
 			return;
 		
 		// If GL Texture is set, activate it //
-		if ( TextureInfo[ Texture ].GLTexture ) {
+		if ( TextureInfo[ Texture ].Texture.Handle ) {
 			Set( Texture );		
 			return;
 		}
@@ -248,18 +224,18 @@ namespace TexturePool {
 			Log( "Caching %s...\n", File.c_str() );
 
 			// TODO: Figure out what kind of image this file is //
-			TextureInfo[ Texture ].GLTexture = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Detail );
+			TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
 
 #ifdef HACK_TEXTURE5_GLITCH
-			if ( TextureInfo[ Texture ].GLTexture == 5 ) {
+			if ( TextureInfo[ Texture ].Texture.Handle == 5 ) {
 				Log( "** WebOS! ** : Working around 'Texture 5' glitch...\n" );
-				PalmGlitch = TextureInfo[ Texture ].GLTexture;				
-				TextureInfo[ Texture ].GLTexture = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Detail );
+				PalmGlitch = TextureInfo[ Texture ].Texture.Handle;				
+				TextureInfo[ Texture ].Texture.Handle = LoadGL_PVRTexture( File.c_str(), &TextureInfo[ Texture ].Texture.Detail );
 			}
 #endif // HACK_TEXTURE5_GLITCH //
 
 			TexturePool::AllocCount++;
-			TexturePool::AllocSum += TextureInfo[ Texture ].GLTexture;
+			TexturePool::AllocSum += TextureInfo[ Texture ].Texture.Handle;
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -289,13 +265,13 @@ namespace TexturePool {
 	
 	// - -------------------------------------------------------------------------------------- - //
 	void Free( const GelTextureID Texture ) {
-		if ( TextureInfo[ Texture ].GLTexture ) {
+		if ( TextureInfo[ Texture ].Texture.Handle ) {
 			TexturePool::AllocCount--;
-			TexturePool::AllocSum -= TextureInfo[ Texture ].GLTexture;
+			TexturePool::AllocSum -= TextureInfo[ Texture ].Texture.Handle;
 
-			Log( "* GL Texture %i Free'd\n", TextureInfo[ Texture ].GLTexture );
-			glDeleteTextures( 1, (const GLuint*)&TextureInfo[ Texture ].GLTexture );
-			TextureInfo[ Texture ].GLTexture = 0;
+			Log( "* GL Texture %i Free'd\n", TextureInfo[ Texture ].Texture.Handle );
+			glDeleteTextures( 1, (const GLuint*)&TextureInfo[ Texture ].Texture.Handle );
+			TextureInfo[ Texture ].Texture.Handle = 0;
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
