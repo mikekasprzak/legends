@@ -26,6 +26,7 @@ enum GelAsset_T {
 	GEL_ASSET_TGA,
 	GEL_ASSET_PSD,
 	GEL_ASSET_STB_IMAGE,					// Image loadable by STB_Image //
+	GEL_ASSET_STB_IMAGE_NATIVE,				// The native STB_Image format (what it gives me) //
 	
 	GEL_ASSET_IMAGE_MAX,
 	// - -------------------------------------------------------------------------------------- - //
@@ -37,6 +38,7 @@ enum GelAsset_T {
 	GEL_ASSET_BLENDER,
 	GEL_ASSET_WINGS,
 	GEL_ASSET_ASSIMP_MODEL,					// Model loadable by the Asset Import Library (ASSIMP) //
+	GEL_ASSET_ASSIMP_MODEL_NATIVE,			// The native Assimp_Model format (what it gives me) //
 	
 	GEL_ASSET_MODEL_MAX,
 	// - -------------------------------------------------------------------------------------- - //
@@ -66,9 +68,9 @@ enum GelAsset_T {
 	GEL_ASSET_C,
 	GEL_ASSET_C_PLUS_PLUS,
 
-	GEL_ASSET_GL_VERTEX_PROGRAM,
-	GEL_ASSET_GL_FRAGMENT_PROGRAM,
-	GEL_ASSET_GL_GEOMETRY_PROGRAM,
+	GEL_ASSET_GLSL_VERTEX_PROGRAM,
+	GEL_ASSET_GLSL_FRAGMENT_PROGRAM,
+	GEL_ASSET_GLSL_GEOMETRY_PROGRAM,
 	GEL_ASSET_CG_VERTEX_PROGRAM,
 	GEL_ASSET_CG_FRAGMENT_PROGRAM,
 	GEL_ASSET_CG_GEOMETRY_PROGRAM,

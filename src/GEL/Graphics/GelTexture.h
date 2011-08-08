@@ -15,6 +15,7 @@ class GelTexture {
 	static int AllocSum;
 public:
 	static void Init( const bool = false, const bool = false );
+	static void LogAllocations();
 	static void Exit();
 	static void SetFreePolicy( const bool = false, const bool = false );
 	
