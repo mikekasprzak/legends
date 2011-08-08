@@ -169,7 +169,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 		int Section = Read.GetInt(1);
 		int DataSize = Read.GetInt();
 
-		Log("- Section %i\n", Section );
+		Log("* Section %i\n", Section );
 		
 		if ( Section == BMFONT_SECTION_INFO ) {
 			int StringSize = (DataSize-BMFONT_INFO_SIZE_STATIC);
@@ -190,7 +190,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			
 			copy_Data( Read.GetString(StringSize), &MyFont->Info->FontName, StringSize );
 			
-			Log( "Source Font Name: %s\n", MyFont->Info->FontName );
+			Log( "** Source Font Name: %s\n", MyFont->Info->FontName );
 		}
 		else if ( Section == BMFONT_SECTION_COMMON ) {
 			MyFont->Common = new BMFont_Common;
@@ -210,7 +210,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			int PageNameLength = (int)length_String(Read.GetString(0)) + 1;
 			int PageCount = DataSize / PageNameLength;
 			
-			Log( "Pages: %i  Page Name Length: %i (%i)\n", PageCount, PageNameLength, DataSize );
+			Log( "** Texture Pages: %i  Page Name Length: %i (%i)\n", PageCount, PageNameLength, DataSize );
 			
 			MyFont->PageNameData = new_DataBlock( DataSize );
 			copy_Data( Read.GetString(DataSize), MyFont->PageNameData->Data, DataSize );
@@ -221,13 +221,13 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			for ( int idx = 0; idx < PageCount; idx++ ) {
 				MyFont->PageName->Data[idx] = PageOffset;
 				PageOffset += PageNameLength;
-				Log( "%i - %s\n", idx, MyFont->PageName->Data[idx] );
+				Log( "*** %i - %s\n", idx, MyFont->PageName->Data[idx] );
 			}
 		}
 		else if ( Section == BMFONT_SECTION_CHARS ) {
 			int CharCount = DataSize / BMFONT_CHARS_SIZE;
 			
-			Log( "%i characters found\n", CharCount );
+			Log( "** %i characters found\n", CharCount );
 			
 			MyFont->Chars = new_DataArray<BMFont_Chars>( CharCount );
 			
@@ -287,7 +287,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 		else if ( Section == BMFONT_SECTION_KERNING ) {
 			int KerningCount = DataSize / BMFONT_KERNING_SIZE;
 			
-			Log( "%i kerning instances found\n", KerningCount );
+			Log( "* %i kerning instances found\n", KerningCount );
 			
 			MyFont->Kerning = new_DataArray<BMFont_Kerning>( KerningCount );
 			
@@ -326,7 +326,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			}			
 		}
 		else {
-			Log( "ERROR! Unknown BMFont Section %i\n", Section );
+			ELog( "Unknown BMFont Section %i\n", Section );
 			delete_BMFont( MyFont );
 			return 0;
 		}
@@ -338,7 +338,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 inline BMFont* new_read_BMFont( const char* InFile ) {
 	DataBlock* Data = new_read_DataBlock( InFile );
 	if ( Data == 0 ) {
-		Log( "ERROR! BMFont File Not Found!\n" );
+		ELog( "BMFont File Not Found!\n" );
 		return 0;
 	}
 	

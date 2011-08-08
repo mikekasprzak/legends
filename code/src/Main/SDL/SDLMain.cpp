@@ -147,7 +147,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 	if ( event.type == SDL_WINDOWEVENT ) {
 		const SDL_WindowEvent* WindowEvent = (const SDL_WindowEvent*)&event;
 		
-		Log("- WindowEvent: %s\n", gels_SDLWindowEventName( WindowEvent->event ) );
+		Log("> WindowEvent: %s\n", gels_SDLWindowEventName( WindowEvent->event ) );
 		
 		switch ( WindowEvent->event ) {
 			case SDL_WINDOWEVENT_SHOWN: {
@@ -805,15 +805,16 @@ int main( int argc, char* argv[] ) {
 #endif // USES_WEBOS //
 
 
-	Log( "- ARGC: %i\n", argc );
+	Log( "+ Command Line Arguments: %i\n", argc );
 	for ( int idx = 0; idx < argc; idx++ ) {
 		Log( "+ \"%s\"\n", argv[idx] );	
 	}
+	Log( "- End of Command Line\n" );
 	Log( "\n" );
 
 	// Get Base Directory //
 	{	
-		Log( "- Content Path...\n" );
+		Log( "+ Content Path...\n" );
 		//set_Data( 0, AppBaseDir, sizeof(AppBaseDir) );
 		
 		bool CalculatePath = true;
@@ -834,7 +835,7 @@ int main( int argc, char* argv[] ) {
 			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
 		}
 		
-		Log( "+ Base Directory: %s\n\n", AppBaseDir );
+		Log( "- Base Directory: %s\n\n", AppBaseDir );
 	}
 
 	// Opening scope here, so that all variables created after now get destroyed by the end brace //
@@ -876,8 +877,9 @@ int main( int argc, char* argv[] ) {
 		SDL_ShowCursor( SDL_DISABLE );
 		
 #ifdef USES_SIXENSE
-		Log( "- Starting Sixense...\n" );
+		Log( "+ Starting Sixense...\n" );
 		sixenseInit();
+		Log( "- Sixense Initialized.\n" );
 #endif // USES_SIXENSE //
 		
 		{
@@ -984,7 +986,7 @@ int main( int argc, char* argv[] ) {
 						if ( Craw >= 64 ) {
 							Craw = 0;
 							int Active = sixenseGetNumActiveControllers();
-							Log( "Active Sixense Controllers: %i ( ", sixenseGetNumActiveControllers() );
+							Log( "> Active Sixense Controllers: %i ( ", sixenseGetNumActiveControllers() );
 
 							int MaxControllers = sixenseGetMaxControllers();
 							for ( int idx = 0; idx < MaxControllers; idx++ ) {
