@@ -160,8 +160,8 @@ void cGame::Init() {
 	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
 	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
 
-//	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
-	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh2 );
+	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh, Real(64) );
+	Obj3[1] = new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 );
 	
 	CameraWorldPos = Vector3D(0,0,0);
 	
@@ -170,6 +170,7 @@ void cGame::Init() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
 	delete Obj3[0];
+	delete Obj3[1];
 	
 	delete Mesh;
 	
@@ -318,6 +319,11 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			gelSetColor( GEL_RGBA(255,0,0,64) );
 			Obj3[0]->Draw();
+			gelSetColor( GEL_RGB_DEFAULT );
+
+			gelLoadMatrix( ModelViewMatrix );
+			gelSetColor( GEL_RGBA(255,0,0,64) );
+			Obj3[1]->Draw();
 			gelSetColor( GEL_RGB_DEFAULT );
 
 //			gelMultMatrix( Matrix4x4::TranslationMatrix( Vector3D( 0, 0, 32+16 ) ) );

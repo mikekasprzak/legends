@@ -24,7 +24,7 @@ public:
 	Vector3D CameraWorldPos;
 public:
 	cObject* Obj[2];
-	cObject3D* Obj3[1];
+	cObject3D* Obj3[2];
 
 public:
 	cGame() :
