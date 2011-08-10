@@ -1,6 +1,29 @@
 
 TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 
+PROJECT (Legends) **
+- Add multi-page BMFont renderer.
+- Push and Pull a content + EXE from the beta.sykhronics.net website.
+  - Keep a logs folder, store files per play session here
+  - Record inputs, and be able to reproduce them/play them back
+  - Squirrel as a configuration language (write a config file, Tag = Value)
+  - Offer to sync these files to me (private storage space) so I can watch them
+  - Text Interface
+    - Create an account name (chosen by the person)
+    - Must enter an access/promo key (provide 10 of these, one per judge)
+    - Keys are single use
+    - Offer to Login or Create.
+  - Updater frontend (runs the updater located in My Documents, or in the install folder)
+  - The updater then runs the game, if all updates are applied
+  - Store updated content in "All Users", and be able to set specific users
+
+PROJECT GOAL (Legends) **
+- A couple rooms
+- Fighting
+- Sound and Music
+
+
+TOOLCHAIN **
 - Add Name, Short Name, Packed Name options to SKU's
   - Have defaults if not set
 - OpenGL/ES 1 and OpenGL/ES 2 in a single code path merge!
