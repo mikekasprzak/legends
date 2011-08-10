@@ -67,7 +67,7 @@ bool GelTexture::Process() {
 	if ( UnProcessed.Data == 0 )
 		return false;
 
-	UnProcessed.Asset.BitMask = is_GelAsset( UnProcessed.Data->Data );
+	UnProcessed.Asset.BitMask = is_Data_GelAsset( UnProcessed.Data->Data );
 	
 	bool ProcessNextSection = true;
 	
@@ -95,7 +95,7 @@ bool GelTexture::Process() {
 	};
 	
 	if ( ProcessNextSection ) {
-		Processed.Asset.BitMask = is_GelAsset( Processed.Data->Data );
+		Processed.Asset.BitMask = is_Data_GelAsset( Processed.Data->Data );
 	}
 	
 	return Processed.Data != 0;

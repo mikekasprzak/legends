@@ -975,7 +975,7 @@ int main( int argc, char* argv[] ) {
 						int DrawLoop = 1;
 						if ( DoRefresh )
 							DrawLoop = 2;
-
+/*
 #ifdef USES_SIXENSE
 						sixenseSetActiveBase(0);
 						sixenseAllControllerData acd;
@@ -984,8 +984,13 @@ int main( int argc, char* argv[] ) {
 						static int Craw = 0;
 						Craw++;
 						if ( Craw >= 64 ) {
-							Craw = 0;
 							int Active = sixenseGetNumActiveControllers();
+
+							if ( Active > 0 )
+								Craw = 0;
+							else
+								Craw = -512;
+
 							Log( "> Active Sixense Controllers: %i ( ", sixenseGetNumActiveControllers() );
 
 							int MaxControllers = sixenseGetMaxControllers();
@@ -1008,7 +1013,7 @@ int main( int argc, char* argv[] ) {
 							
 						}
 #endif // USES_SIXENSE //
-							
+*/							
 						for ( ; DrawLoop--; ) {
 							// Draw the game //
 							GameHost->Draw();

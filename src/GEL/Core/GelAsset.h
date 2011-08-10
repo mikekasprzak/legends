@@ -6,7 +6,10 @@ enum GelAsset_T {
 	// - -------------------------------------------------------------------------------------- - //
 	GEL_ASSET_NULL = 0,						// NULL Asset //
 	// - -------------------------------------------------------------------------------------- - //
-	GEL_ASSET_RAW = 1,						// Asset is RAW data //
+	GEL_ASSET_UNKNOWN = 1,					// Asset is Unknown data //
+	GEL_ASSET_RAW = 2,						// Asset is RAW data //
+	// - -------------------------------------------------------------------------------------- - //
+	GEL_ASSET_KNOWN = 0x200,				// A known asset if equal or greater than this //
 	// - -------------------------------------------------------------------------------------- - //
 	// General Compressed Formats //
 	GEL_ASSET_COMPRESSION_BASE = 0x200,
@@ -103,13 +106,24 @@ struct GelAssetType {
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Asset Check operators //
 // - ------------------------------------------------------------------------------------------ - //
-extern GelAsset_T is_Compression_GelAsset( const char* InData );
-extern GelAsset_T is_Texture_GelAsset( const char* InData );
-extern GelAsset_T is_Model_GelAsset( const char* InData );
-extern GelAsset_T is_Audio_GelAsset( const char* InData );
-extern GelAsset_T is_Text_GelAsset( const char* InData );
+extern GelAsset_T is_Compression_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Texture_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Model_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Audio_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Text_Data_GelAsset( const char* InData );
 
-extern GelAsset_T is_GelAsset( const char* InData );
+extern GelAsset_T is_Compression_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Texture_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Model_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Audio_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Text_Name_GelAsset( const char* FileName );
+
+extern GelAsset_T is_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Name_GelAsset( const char* FileName );
+
+inline bool is_GelAsset( const GelAsset_T Asset ) {
+	return (Asset >= GEL_ASSET_KNOWN);
+}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_CORE_GELASSET_H__ //
 // - ------------------------------------------------------------------------------------------ - //
