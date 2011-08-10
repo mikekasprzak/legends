@@ -24,6 +24,10 @@ public:
 
 	void vm_Init();
 	void vm_Exit();
+	
+	struct vmScript {
+		
+	};
 
 public:
 	cFdoHeightMap HeightMap;
@@ -55,6 +59,9 @@ public:
 	void Exit();
 	void Step();
 	void Draw();
+	
+	void GotFocus();
+	void LostFocus();
 	
 	
 	void DrawRoom( cRoom* ThisRoom, const Vector3D& Offset );

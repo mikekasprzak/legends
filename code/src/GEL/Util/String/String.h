@@ -1,16 +1,21 @@
 // - ------------------------------------------------------------------------------------------ - //
 // String //
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Util_String_H__
-#define __Util_String_H__
+#ifndef __GEL_Util_String_H__
+#define __GEL_Util_String_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <string>
 #include <stdlib.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace String {
 // - ------------------------------------------------------------------------------------------ - //
+#if defined(_MSC_VER) || defined(USES_WINDOWS_SLASH)
+	const char Slash = '\\';
+	const char OtherSlash = '//';
+#else // USES_WINDOWS_SLASH //
 	const char Slash = '/';
 	const char OtherSlash = '\\';
+#endif // USES_WINDOWS_SLASH //
 	const char Dot = '.';
 	const char Dash = '-';
 	const std::string Empty("");
@@ -106,7 +111,7 @@ namespace String {
 		return WorkString.substr( DotPos );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Return all but the direct Extensions //
+	// Return all but the Extensions //
 	inline std::string NoExtensions( const std::string& _FileName ) {
 		// Return the entire string after excluding the file extensions //
 		return String::DirectorySlash( _FileName ) + String::BaseName( _FileName );
@@ -359,5 +364,5 @@ namespace String {
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace String //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Util_String_H__ //
+#endif // __GEL_Util_String_H__ //
 // - ------------------------------------------------------------------------------------------ - //
