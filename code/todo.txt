@@ -2,6 +2,34 @@
 TODO List for 2011 GEL and Foundation Project "Legends" Tree Restructure
 
 PROJECT (Legends) **
+- Create ContentPool classes
+  - DO NOT replace Texture Pool, but leave it there for legacy support (Smiles)
+  - Instead, update the way Legends and Experiments get content
+  - How to get content
+    - Ask ContentPool for a resource
+    - ContentPool returns a handle
+    - Content can be (optionally) requested Asyncronously
+      - Thusly, Content handles have a means of checknig if the content is loaded
+    - What might be useful is if Content handles supported proxy objects
+      - For textures, the dummy texture of "0" works as a "texture not loaded"
+      - A different color or pattern might be more helpful to identify textures
+        that are still in the process of being loaded. Undecided.
+      - But my point here is a proxy/dummy object, texture, thing could be loaded
+        instead of the actual object in the interm, as we wait for the real one
+        to load.
+        - An empty string
+        - A model with no geometry
+        - A blank WAV file
+      - Some assets make more sense to exist and not require "IsLoaded()" checks.
+      - Eventually, what may become useful is having a low-res or low-detail version
+        loaded.
+        - This may only apply to Textures
+        - Sounds, at least voice tracks and music tracks make more sense to be
+          played only once they are buffered enuogh (audio cut-outs are lame)
+        - 3D models are only useful when fully loaded, but LOD models may work.
+          - Still, an LOD model is ideally based off the vertices of the original
+          - Then the LOD model needs all the bone weight information... meh.
+          - I think Legends doesn't need LOD models, due to consistent viewport.
 - Add multi-page BMFont renderer.
 - Push and Pull a content + EXE from the beta.sykhronics.net website.
   - Keep a logs folder, store files per play session here

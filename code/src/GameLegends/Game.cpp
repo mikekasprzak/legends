@@ -49,77 +49,20 @@ GelTextureID txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
-#ifdef USES_PAWN
-	extern void CallExp_Pawn();
-	CallExp_Pawn();
-#endif // USES_PAWN //
+	// Run the Experiments ... //
+	extern void CallExp();
+//	CallExp();
+
+	// Initialize the Virtual Machine... //
+	vm_Init();
+
 	
-#ifdef USES_WINDOWS		
-	extern void CallExp_GelDate();
-	CallExp_GelDate();
-#endif // USES_WINDOWS //
-
-	extern void CallExp_cJSON();
-	CallExp_cJSON();
-
-	extern void CallExp_TinyXML();
-	CallExp_TinyXML();
-	
-	extern void CallExp_Bullet();
-	CallExp_Bullet();
-
-	extern void CallExp_AssImp();
-	CallExp_AssImp();
-
-	extern void CallExp_Squirrel();
-	CallExp_Squirrel();
-
-
-	Log("+ Now Testing BMFont\n");
-	{
-		BMFont* MyFont = new_read_BMFont( "Content/Misc/CourierNew.fnt" );
-		
-		// TODO: Do stuff with a font //
-		
-		delete_BMFont( MyFont );
-
-
-		BMFont* MyFont2 = new_read_BMFont( "Content/Misc/Fontin.fnt" );
-		
-		// TODO: Do stuff with a font //
-		
-		delete_BMFont( MyFont2 );
-
-		BMFont* MyFont3 = new_read_BMFont( "Content/Misc/Arial.fnt" );
-		
-		// TODO: Do stuff with a font //
-		
-		delete_BMFont( MyFont3 );
-
-	}
-	Log("- Done Testing BMFont\n");
-	Log("\n");
+	Vector3D RoomScale(128,128,64);
 
 //	typedef ABCSet<unsigned char> GType;
 //	typedef int GType;
 	typedef unsigned char GType;
 	Log( "%i\n", MaxValue<GType>() );
-/*	
-	//Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/TestFile.tga" );
-
-	Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
-
-//	save_BMP_Grid2D<GType>( MyGrid, "Content/Misc/Horse.bmp" );
-//	save_TGA_Grid2D<GType>( MyGrid, "Content/Misc/Horse.tga" );
-	
-	new_Optimized_TriangleStrips( MyGrid, &Vert, &Index, Vector3D(128,128,64) );
-	
-	delete_Grid2D( MyGrid );
-*/	
-//	Log( "%i %i %i %i %i/n", MaxValue<int>(), MaxValue<short>(), MaxValue<char>(), MaxValue<unsigned char>(), MaxValue<unsigned short>() );
-
-
-	Vector3D RoomScale(128,128,64);
 
 	{
 		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
@@ -185,6 +128,8 @@ void cGame::Exit() {
 	delete_OutlineList( Room[2].OutlineIndex );
 	delete_Triangles( Room[3].Vert, Room[3].Index );
 	delete_OutlineList( Room[3].OutlineIndex );
+
+	vm_Exit();
 
 }
 // - ------------------------------------------------------------------------------------------ - //

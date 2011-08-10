@@ -2,6 +2,8 @@
 #ifndef __Game_H__
 #define __Game_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <squirrel.h>
+// - ------------------------------------------------------------------------------------------ - //
 #include <Math/Matrix.h>
 #include <Object/FdoHeightMap.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -13,6 +15,15 @@ class cGame {
 public:
 	bool FirstRun;
 	bool Capture;
+
+public:
+	// Virtual Machine Section (Here, and not separate due to ties with rest of engine) //
+	HSQUIRRELVM vm;
+	static void vm_PrintFunc( HSQUIRRELVM v, const SQChar *s, ... );
+	static void vm_ErrorFunc( HSQUIRRELVM v, const SQChar *s, ... );
+
+	void vm_Init();
+	void vm_Exit();
 
 public:
 	cFdoHeightMap HeightMap;
