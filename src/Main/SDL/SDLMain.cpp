@@ -706,7 +706,9 @@ void System_SetGraphicsMode( const bool FullScreen = true ) {
 		cGameSupport::Current()->LostFocusDraw();
 		gelSwapBuffer();
 
+#ifdef PRODUCT_LEGACY_SMILES
 		TexturePool::ReleaseTextures();
+#endif // PRODUCT_LEGACY_SMILES //
 		gelGraphicsExit();
 	}
 	
@@ -735,7 +737,9 @@ void System_SetGraphicsMode( const bool FullScreen = true ) {
 	gelPostSetup();
 
 	if ( GraphicsModeSet ) {
+#ifdef PRODUCT_LEGACY_SMILES
 		TexturePool::ReloadTextures();
+#endif // PRODUCT_LEGACY_SMILES //
 
 		musResume();
 		musUpdate();

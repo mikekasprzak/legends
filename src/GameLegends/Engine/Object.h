@@ -4,14 +4,15 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
+#include <AssetPool/AssetPool.h>
 // - ------------------------------------------------------------------------------------------ - //
 class cObject {
 public:
 	Vector3D Pos;
 	
-	GelTextureID Texture;
+	GelAssetHandle Texture;
 	
-	cObject( Vector3D _Pos, GelTextureID _Texture ) :
+	cObject( Vector3D _Pos, GelAssetHandle _Texture ) :
 		Pos( _Pos),
 		Texture( _Texture )
 	{	
@@ -24,7 +25,7 @@ public:
 	void Draw() {
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
-		gelSetTexture( Texture );
+		AssetPool::Set( Texture );
 		gelDrawRectFillTextured( Vector3D(-64,-64,0), Vector3D(64,64,0) );
 	}
 };

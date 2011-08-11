@@ -3,7 +3,7 @@
 #include "PMEFile.h"
 #include <Util/String/String.h>
 
-#include <Graphics/Texture/TexturePool.h>
+#include <AssetPool/AssetPool.h>
 // - ------------------------------------------------------------------------------------------ - //
 cRenderObject LoadPME( const cPMEFile& PME ) {
 	cRenderObject Obj;
@@ -24,7 +24,7 @@ cRenderObject LoadPME( const cPMEFile& PME ) {
 			for ( size_t idx2 = 0; idx2 < PME.Mesh[idx].Material.size(); idx2++ ) {
 				std::string File = String::BaseName( String::SystemSlash( PME.Mesh[idx].Material[idx2].ImageFileName ));
 				
-				Obj.Material->Data[CurrentMaterial].Texture = gelLoadTexture( File.c_str() );
+				Obj.Material->Data[CurrentMaterial].Texture = AssetPool::Load( File.c_str() );
 				
 				CurrentMaterial++;
 			}

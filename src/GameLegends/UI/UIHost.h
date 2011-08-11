@@ -14,6 +14,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Graphics.h>
 #include <Graphics/GraphicsDraw.h>
+#include <AssetPool/AssetPool.h>
 
 #include <Graphics/Allocator/StaticVector2DAllocator.h>
 #include <Graphics/Allocator/StaticUVAllocator.h>
@@ -134,7 +135,7 @@ public:
 	int* GraphicBase;
 	int* TextBase;
 	
-	std::vector< GelTextureID > Texture;
+	std::vector< GelAssetHandle > Texture;
 	
 	PairView* View;
 	int* ElementView;
@@ -263,7 +264,7 @@ public:
 	void LoadTextures() {
 		for ( size_t idx = 0; idx < GraphicElementCount; idx++ ) {
 			char* FileName = &GraphicStrings[ GraphicElement[ idx ].StringOffset ];
-			GelTextureID Tx = gelLoadTexture( FileName );
+			GelAssetHandle Tx = AssetPool::Load( FileName );
 			Texture.push_back( Tx );
 		}
 	}
@@ -346,7 +347,7 @@ public:
 			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
 			);
 
-		gelSetTexture( Texture[ Index ] );
+		AssetPool::Set( Texture[ Index ] );
 		//gelSetSmoothTexturesMipMapped();
 					
 //		gelDrawTexturedPolygons(
@@ -404,7 +405,7 @@ public:
 			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
 			);
 
-		gelSetTexture( Texture[ Index ] );
+		AssetPool::Set( Texture[ Index ] );
 					
 //		gelDrawTexturedPolygons(
 		gelDrawTrianglesTextured(
