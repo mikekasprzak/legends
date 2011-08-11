@@ -16,11 +16,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NOLOGGING
 // - ------------------------------------------------------------------------------------------ - //
-#include <stdio.h>
-// - ------------------------------------------------------------------------------------------ - //
 extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
-
+/*
 // - ------------------------------------------------------------------------------------------ - //
 // Compiler Specific //
 // - ------------------------------------------------------------------------------------------ - //
@@ -73,42 +71,47 @@ extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 #else // Default Logging Via Printf //
 // - ------------------------------------------------------------------------------------------ - //
+	#define _Log( ___ARGS... ) \
+		printf( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
 	#define Log( ___ARGS... ) \
-		{ if ( LogLevel >= 1 ) printf( ___ARGS ); }
+		_Log( ___ARGS )
+//		{ if ( LogLevel >= 1 ) Log( ___ARGS ); }
 	#define wLog( ___ARGS... ) \
 		if ( LogLevel >= 1 ) \
 			wprintf( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define VLog( ___ARGS... ) \
-		{ if ( LogLevel >= 2 ) Log( ___ARGS ); }
+		_Log( ___ARGS )
+//		{ if ( LogLevel >= 2 ) Log( ___ARGS ); }
 	#define wVLog( ___ARGS... ) \
 		if ( LogLevel >= 2 ) \
 			wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define VVLog( ___ARGS... ) \
 		if ( LogLevel >= 2 ) \
-			Log( ___ARGS )
+			_Log( ___ARGS )
 	#define wVVLog( ___ARGS... ) \
 		if ( LogLevel >= 3 ) \
 			wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define VVVLog( ___ARGS... ) \
 		if ( LogLevel >= 4 ) \
-			Log( ___ARGS )
+			_Log( ___ARGS )
 	#define wVVVLog( ___ARGS... ) \
 		if ( LogLevel >= 4 ) \
 			wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define ELog( ___ARGS... ) \
-		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-		Log( ___ARGS )
+		_Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
+		_Log( ___ARGS )
 	#define wELog( ___ARGS... ) \
 		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
 		wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#ifndef NDEBUG
 		#define DLog( ___ARGS... ) \
-			Log( ___ARGS )
+			_Log( ___ARGS )
 		#define wDLog( ___ARGS... ) \
 			wLog( ___ARGS )
 	#else // NDEBUG //
@@ -133,6 +136,24 @@ extern int LogLevel;
 	#define DLogFlush() ;
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
+*/
+
+void _Log( const char* s, ... );
+void Log( const char* s, ... );
+void VLog( const char* s, ... );
+void VVLog( const char* s, ... );
+void VVVLog( const char* s, ... );
+
+#define ELog( ___ARGS... ) \
+	_Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
+	_Log( ___ARGS )
+
+#ifndef NDEBUG
+	#define DLog( ___ARGS... ) \
+		_Log( ___ARGS )
+#else // NDEBUG //
+	#define DLog( ... ) ;
+#endif // NDEBUG //
 
 // - ------------------------------------------------------------------------------------------ - //
 #else // NOLOGGING //
