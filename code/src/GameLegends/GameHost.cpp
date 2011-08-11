@@ -1,13 +1,19 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "GameHost.h"
+#include <AssetPool/AssetPool.h>
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
 	Log("- Begin GameHost Constructor\n");
 
 	// Setup Texture Pool //
-	TexturePool::Init( "Content" );
-	TexturePool::AddDirectory( "/Art/4444" );
-	TexturePool::AddDirectory( "/Misc" );
+//	TexturePool::Init( "Content" );
+//	TexturePool::AddDirectory( "/Art/4444" );
+//	TexturePool::AddDirectory( "/Misc" );
+		
+	// Setup Asset Pool //
+	AssetPool::Init( "Content" );
+	AssetPool::AddDirectory( "/Art/4444" );
+	AssetPool::AddDirectory( "/Misc" );
 
 /*
 	Log( "+ Setting Base Content Directory...\n" );
@@ -56,7 +62,8 @@ cGameHost::~cGameHost() {
 		GameSupport = 0;
 	}
 	
-	TexturePool::Exit();
+	AssetPool::Exit();
+//	TexturePool::Exit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGameHost::CreateGame() {		

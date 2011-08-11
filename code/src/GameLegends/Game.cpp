@@ -9,6 +9,7 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
+#include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
 #include <Geometry/Projection/Projection.h>
@@ -44,8 +45,8 @@ cPMEFile* Mesh;
 cPMEFile* Mesh2;
 // - ------------------------------------------------------------------------------------------ - //
 
-GelTextureID txPlayer;
-GelTextureID txSword;
+GelAssetHandle txPlayer;
+GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
@@ -96,9 +97,9 @@ void cGame::Init() {
 	
 	Mesh2->Import( "Content/Models/src/Chest.3ds" );
 	
-	txPlayer = gelLoadTexture( "/Player01" );
-//	txSword = gelLoadTexture( "/Sword01" );
-	txSword = gelLoadTexture( "/Fontin_0" );
+	txPlayer = AssetPool::Load( "/Player01" );
+//	txSword = AssetPool::Load( "/Sword01" );
+	txSword = AssetPool::Load( "/Fontin_0" );
 
 	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
 	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );

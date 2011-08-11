@@ -9,6 +9,7 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
+#include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
 #include <Geometry/Projection/Projection.h>
@@ -121,8 +122,8 @@ void cGame::Init() {
 
 	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
 	
-	txPlayer = gelLoadTexture( "/Player01" );
-	txSword = gelLoadTexture( "/Sword01" );
+	txPlayer = AssetPool::Load( "/Player01" );
+	txSword = AssetPool::Load( "/Sword01" );
 
 	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
 	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );

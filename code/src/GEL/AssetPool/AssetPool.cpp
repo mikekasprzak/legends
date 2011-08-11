@@ -279,24 +279,3 @@ namespace AssetPool {
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace AssetPool //
 // - ------------------------------------------------------------------------------------------ - //
-
-//// - ------------------------------------------------------------------------------------------ - //
-//inline GelAssetHandle gelLoadTexture( const char* FileName ) {
-//	// TODO: Remove file extensions from the search string //
-//#ifdef _MSC_VER
-//	std::string Temp = String::WindowsSlash( std::string(FileName) );
-//	VLog( "Loading %s...\n", Temp.c_str() );
-//	return TexturePool::Load( Temp.c_str() );
-//#else // _MSC_VER //
-//	return TexturePool::Load( FileName );
-//#endif // _MSC_VER //
-//}
-//// - ------------------------------------------------------------------------------------------ - //
-//inline void gelSetTexture( const GelAssetHandle Texture ) {
-//	TexturePool::Set( Texture );
-//}
-//// - ------------------------------------------------------------------------------------------ - //
-//inline void gelFreeTexture( const GelAssetHandle Texture ) {
-//	TexturePool::Free( Texture );
-//}
-//// - ------------------------------------------------------------------------------------------ - //

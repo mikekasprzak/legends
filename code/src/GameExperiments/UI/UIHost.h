@@ -14,6 +14,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Graphics.h>
 #include <Graphics/GraphicsDraw.h>
+#include <AssetPool/AssetPool.h>
 
 #include <Graphics/Allocator/StaticVector2DAllocator.h>
 #include <Graphics/Allocator/StaticUVAllocator.h>
@@ -263,7 +264,7 @@ public:
 	void LoadTextures() {
 		for ( size_t idx = 0; idx < GraphicElementCount; idx++ ) {
 			char* FileName = &GraphicStrings[ GraphicElement[ idx ].StringOffset ];
-			GelTextureID Tx = gelLoadTexture( FileName );
+			GelTextureID Tx = AssetPool::Load( FileName );
 			Texture.push_back( Tx );
 		}
 	}
