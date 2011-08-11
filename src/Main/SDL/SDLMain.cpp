@@ -147,7 +147,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 	if ( event.type == SDL_WINDOWEVENT ) {
 		const SDL_WindowEvent* WindowEvent = (const SDL_WindowEvent*)&event;
 		
-		Log("> WindowEvent: %s\n", gels_SDLWindowEventName( WindowEvent->event ) );
+		VLog("> WindowEvent: %s\n", gels_SDLWindowEventName( WindowEvent->event ) );
 		
 		switch ( WindowEvent->event ) {
 			case SDL_WINDOWEVENT_SHOWN: {
@@ -241,7 +241,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 #ifndef USES_SDL_1_3
 // - ------------------------------------------------------------------------------------------ - //
 void ActiveEventFilter( const SDL_Event& event ) {
-	Log( "ACTIVE_EVENT: %i %i (%i %i %i)\n", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
+	VLog( "ACTIVE_EVENT: %i %i (%i %i %i)\n", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
 	
 	// Store Active SDL states //
 	if ( (event.active.state & SDL_APPACTIVE) ) {
@@ -518,15 +518,15 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 #ifdef USES_SDL_1_3
 		// SDL Touch Code! Currently unsupported //
 //		case SDL_FINGERDOWN: {
-//			Log( "* Finger Down!\n" );
+//			VLog( "* Finger Down!\n" );
 //			break;
 //		}
 //		case SDL_FINGERUP: {
-//			Log( "* Finger Up!\n" );
+//			VLog( "* Finger Up!\n" );
 //			break;
 //		}
 //		case SDL_FINGERMOTION: {
-//			Log( "* Finger Motion!\n" );
+//			VLog( "* Finger Motion!\n" );
 //			break;
 //		}
 #endif // USES_SDL_1_3
@@ -543,7 +543,7 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 			// Note bits in the button mask //
 			if ( event.button.button > 0 ) {    			
 				int Bit = 1<<(event.button.button-1);
-				//Log("Click: %i\n", Bit );
+				//VVLog("Click: %i\n", Bit );
 				
 				mouse_b |= Bit;
 				mouse_b_new |= Bit;

@@ -101,7 +101,7 @@ namespace AssetPool {
 
 			// Store the prefix (without trailing slash.  Slash will be part of search strings) //
 
-			VLog("FilePrefix: %s\n", FilePrefix.c_str());
+			VVLog("FilePrefix: %s\n", FilePrefix.c_str());
 		}
 		
 		{
@@ -151,7 +151,7 @@ namespace AssetPool {
 		
 		// If it was found, return the Id //
 		if ( SearchIterator != AssetLookup.end() ) {
-			VLog( "+ %s found in lookup cache!\n", FileName );
+			VLog( "- %s found in lookup cache!\n", FileName );
 			return SearchIterator->second;
 		}
 
@@ -159,11 +159,11 @@ namespace AssetPool {
 		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
 			// Linear test strings if they contain the pattern passed //
 			if ( AssetInstance[idx].FileName.find( FileName ) != std::string::npos ) {
-				VLog( "+ Found %s!\n", FileName );
+				VLog( "- Found %s!\n", FileName );
 				return idx;
 			}
 		}
-		Log( "* %s not found\n", FileName );
+		Log( "- %s NOT FOUND!!\n", FileName );
 		
 		// Otherwise, no file was found.  Return the dummy Id (0). //
 		return 0;

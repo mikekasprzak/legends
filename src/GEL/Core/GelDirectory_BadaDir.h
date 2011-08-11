@@ -30,11 +30,11 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 	Osp::Io::Directory ThisDir;
 	ThisDir.Construct( Osp::Base::String(SearchDirectory) );
 
-	VLog("o %s - %s\n", SearchDirectory, Prefix );
-	VLog("o\n");
+	VVLog("o %s - %s\n", SearchDirectory, Prefix );
+	VVLog("o\n");
 	// Read the first entry in the directory //
 	Osp::Io::DirEnumerator* DirEnum = ThisDir.ReadN();
-	VLog("o\n");
+	VVLog("o\n");
 	
 	// While we still have entries left in this directory //
 	while( DirEnum->MoveNext() == E_SUCCESS ) {
@@ -51,7 +51,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 		cat_String( "/", CurrentFile );
 		cat_String( DataPtr, CurrentFile );
 
-		VLog("> %s\n", CurrentFile );
+		VVLog("* %s\n", CurrentFile );
 
 		// If it's a directory //
 		if ( Data.IsDirectory() ) {

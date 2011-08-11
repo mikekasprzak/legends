@@ -175,11 +175,11 @@ inline void gels_LogGraphicsDetails() {
 
 	{
 		int NumDisplayModes = SDL_GetNumDisplayModes(0);
-		Log( "- Number of Fullscreen Display Modes: \n", NumDisplayModes );
+		VLog( "- Number of Fullscreen Display Modes: \n", NumDisplayModes );
 		for (int idx = 0; idx < NumDisplayModes; idx++ ) {
 			SDL_DisplayMode DisplayMode;
 			SDL_GetDisplayMode( 0, idx, &DisplayMode );
-			Log("+ %i x %i at %i Hz -- %s\n", DisplayMode.w, DisplayMode.h, DisplayMode.refresh_rate, gels_SDLVideoModeName(DisplayMode.format) );
+			VLog("+ %i x %i at %i Hz -- %s\n", DisplayMode.w, DisplayMode.h, DisplayMode.refresh_rate, gels_SDLVideoModeName(DisplayMode.format) );
 		}
 	}
 

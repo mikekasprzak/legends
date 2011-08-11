@@ -31,7 +31,7 @@ inline GelTextureID gelLoadTexture( const char* FileName ) {
 	// TODO: Remove file extensions from the search string //
 #ifdef _MSC_VER
 	std::string Temp = String::WindowsSlash( std::string(FileName) );
-	VLog( "Loading %s...\n", Temp.c_str() );
+	VVLog( "Loading %s...\n", Temp.c_str() );
 	return TexturePool::Load( Temp.c_str() );
 #else // _MSC_VER //
 	return TexturePool::Load( FileName );
