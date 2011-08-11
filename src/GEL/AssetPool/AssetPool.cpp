@@ -54,6 +54,8 @@ namespace AssetPool {
 			GEL_ASSETCLASS_MODEL,
 			GEL_ASSETCLASS_AUDIO,
 			GEL_ASSETCLASS_SCRIPT,
+			GEL_ASSETCLASS_SHADER,
+			GEL_ASSETCLASS_TEXT,
 		};
 
 	public:
@@ -159,12 +161,25 @@ namespace AssetPool {
 				}
 				else {
 					// Do FileName Test //
+					AssetDataType.TestName( File.c_str() );
 					
-					
-					
-					ELog("Unknown Asset Type\n" );
-					Type = GEL_ASSETCLASS_NULL;
-					delete_DataBlock( UnProcessed );
+					if ( AssetDataType.IsScript() ) {
+						VLog("* Asset is a Script (0x%x)\n", Processed );
+						Type = GEL_ASSETCLASS_SCRIPT;
+					}
+					else if ( AssetDataType.IsShader() ) {
+						VLog("* Asset is a Shader Program (0x%x)\n", Processed );
+						Type = GEL_ASSETCLASS_SHADER;
+					}
+					else if ( AssetDataType.IsText() ) {
+						VLog("* Asset is Text (0x%x)\n", Processed );
+						Type = GEL_ASSETCLASS_TEXT;
+					}
+					else {
+						ELog("Unknown Asset Type\n" );
+						Type = GEL_ASSETCLASS_NULL;
+						delete_DataBlock( UnProcessed );
+					}
 				}
 			}
 		}
