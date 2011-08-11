@@ -50,6 +50,9 @@ void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed )
 
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Bind( const int /*Channel*/ ) {
+	if ( this == 0 )
+		return;
+	
 	// TODO: Use Channel //
 	
 	glBindTexture( GL_TEXTURE_2D, Handle );
@@ -142,6 +145,12 @@ bool GelTexture::Load() {
 
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Cache( DataBlock* InData ) {
+	if ( this == 0 )
+		return false;
+		
+	if ( InData == 0 )
+		return false;
+	
 	// If we get an explicity DataBlock, we should dispose of our data //
 	Free();
 	
@@ -227,13 +236,18 @@ void GelTexture::FreeHandle() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Free() {
-	FreeUnProcessed();
-	FreeProcessed();	
-	FreeHandle();
+	if ( this ) {
+		FreeUnProcessed();
+		FreeProcessed();	
+		FreeHandle();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Execute the "Free Policy", post Load or Cache //
 void GelTexture::FreePolicy() {
+	if ( this == 0 )
+		return;
+		
 	if ( FreePolicy_UnProcessed ) {
 		if ( UnProcessed.Asset.IsShare ) {
 			// Data sharing means the implementation is usable as-is, so the data is linked to //
