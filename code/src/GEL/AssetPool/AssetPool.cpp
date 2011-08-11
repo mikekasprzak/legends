@@ -2,11 +2,12 @@
 #include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelDirectory.h>
+#include <Util/String/String.h>
+// - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Graphics.h>
 #include <Graphics/GelTexture.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "AssetPool.h"
-#include "AssetPool_String.h"
 // - ------------------------------------------------------------------------------------------ - //
 // Use some STL, since I want to save time //
 #include <map>
@@ -19,12 +20,6 @@
 	#define TEXTURE_POOL_SLASH "\\"
 #else // _MSC_VER //
 	#define TEXTURE_POOL_SLASH "/"
-#endif // _MSC_VER //
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef _MSC_VER
-#include <string>
-#include <Util/String/String.h>
-#include <Debug/Log.h>
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -69,10 +64,10 @@ namespace AssetPool {
 			// Note: I did not pass anythnig to Texture, that would cause a load //
 		}
 		
-		void Load( std::string Prefix ) {
-			Prefix += FileName;
-			Log( "* Caching %s...\n", Prefix.c_str() );
-			Texture.Load( Prefix.c_str() );
+		void Load( const std::string Prefix ) {
+			std::string File = String::SystemSlash( Prefix + FileName );
+			Log( "* Caching \"%s\"...\n", File.c_str() );
+			Texture.Load( File.c_str() );
 		}
 
 		void Free() {
@@ -136,7 +131,7 @@ namespace AssetPool {
 			SlashString += index_GelDirectory( Dir, idx );
 			AssetInstance.push_back( GelAsset_Instance( (std::string(Directory) + SlashString).c_str() ) );
 			
-			std::string NoExt = NoExtensions( SlashString );
+			std::string NoExt = String::NoExtensions( SlashString );
 			AssetLookup[ NoExt.c_str() ] = AssetInstance.size() - 1;
 			
 			Log( "* %s (%i) [Pattern: %s]\n", SlashString.c_str(), idx, NoExt.c_str() );
