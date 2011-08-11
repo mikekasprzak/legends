@@ -16,12 +16,12 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
-	Log("* Allocating GL Texture ID...\n" );
+	VLog("* Allocating GL Texture ID...\n" );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );
-	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
+	VVLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
 	glBindTexture( GL_TEXTURE_2D, TextureID );
-	Log("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
+	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
 	
 	if ( glGetError() != GL_NO_ERROR ) {
 		ELog( "Texture Bind Failed!\n" );
@@ -47,37 +47,37 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// Switch the Load Format found inside the PVR File //
 	switch ( Texture->Flags & PVR_TYPE_MASK ) {
 		case PVR_RGBA_4444:
-			Log("* GL_UNSIGNED_SHORT_4_4_4_4 (RGBA_4444)\n");
+			VLog("* GL_UNSIGNED_SHORT_4_4_4_4 (RGBA_4444)\n");
 			RGBFormat = GL_UNSIGNED_SHORT_4_4_4_4;
 			break;
 		case PVR_RGBA_5551:
-			Log("* GL_UNSIGNED_SHORT_5_5_5_1 (RGBA_5551)\n");
+			VLog("* GL_UNSIGNED_SHORT_5_5_5_1 (RGBA_5551)\n");
 			RGBFormat = GL_UNSIGNED_SHORT_5_5_5_1;
 			break;
 		case PVR_RGBA_8888:
-			Log("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			break;
 		case PVR_RGB_565:
-			Log("* GL_UNSIGNED_SHORT_5_6_5 (RGB_565)\n");
+			VLog("* GL_UNSIGNED_SHORT_5_6_5 (RGB_565)\n");
 			RGBFormat = GL_UNSIGNED_SHORT_5_6_5;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case PVR_RGB_888:
-			Log("* GL_UNSIGNED_BYTE (RGB_888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGB_888)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case PVR_I_8:
-			Log("* GL_UNSIGNED_BYTE (I_8)\n");
+			VLog("* GL_UNSIGNED_BYTE (I_8)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_LUMINANCE;
 			InternalFormat = GL_LUMINANCE;
 			break;
 		case PVR_AI_88:
-			Log("* GL_UNSIGNED_SHORT (AI_88)\n");
+			VLog("* GL_UNSIGNED_SHORT (AI_88)\n");
 			RGBFormat = GL_UNSIGNED_SHORT;
 			ReadFormat = GL_LUMINANCE_ALPHA;
 			InternalFormat = GL_LUMINANCE_ALPHA;
@@ -89,12 +89,12 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			PVRTC = 2;
 			CompressFormat = 10;
 			if ( (Texture->Flags & PVR_ALPHA) == 0 ) {
-				Log("* GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG\n");
 				ReadFormat = GL_RGB;
 				InternalFormat = GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
 			}
 			else {
-				Log("* GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG\n");
 				InternalFormat = GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
 			}
 			break;
@@ -103,31 +103,31 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			PVRTC = 4;
 			CompressFormat = 10;
 			if ( (Texture->Flags & PVR_ALPHA) == 0 ) {
-				Log("* GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG\n");
 				ReadFormat = GL_RGB;
 				InternalFormat = GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
 			}
 			else {
-				Log("* GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG\n");
 				InternalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 			}
 			break;
 #endif // USES_PVRTC //
 		case PVR_DXT1:
-			Log("* COMPRESSED_RGB_S3TC_DXT1_EXT\n");
+			VLog("* COMPRESSED_RGB_S3TC_DXT1_EXT\n");
 			// NOTE: There is a DXT1 variant with a single bit of alpha -- that is code 0x83F1 //
 			CompressFormat = 1;
 			InternalFormat = 0x83F0; // COMPRESSED_RGB_S3TC_DXT1_EXT //
 			ReadFormat = GL_RGB;
 			break;
 		case PVR_DXT3:
-			Log("* COMPRESSED_RGBA_S3TC_DXT3_EXT\n");
+			VLog("* COMPRESSED_RGBA_S3TC_DXT3_EXT\n");
 			CompressFormat = 3;
 			InternalFormat = 0x83F2; // COMPRESSED_RGBA_S3TC_DXT3_EXT //
 			//ReadFormat = GL_RGBA;
 			break;
 		case PVR_DXT5:
-			Log("* COMPRESSED_RGBA_S3TC_DXT5_EXT\n");
+			VLog("* COMPRESSED_RGBA_S3TC_DXT5_EXT\n");
 			CompressFormat = 5;
 			InternalFormat = 0x83F3; // COMPRESSED_RGBA_S3TC_DXT5_EXT //
 			//ReadFormat = GL_RGBA;
@@ -153,7 +153,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// New feature.  If MaxTextureSize is greater than the current mipmap size, throw it away. //
 	int OmittedTexture = 0;
 	
-	Log("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, Texture->MipMapCount );
+	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, Texture->MipMapCount );
 
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < Texture->MipMapCount+1; MipMap++ ) {

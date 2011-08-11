@@ -1,25 +1,24 @@
 // - ------------------------------------------------------------------------------------------ - //
 // Log //
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Rebel_Log_H__
-#define __Rebel_Log_H__
+#ifndef __GEL_DEBUG_Log_H__
+#define __GEL_DEBUG_Log_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Logging Code. //
 // * Log and wLog always write to the console (except on game consoles).
 // * DLog and wDLong write only in the debug build.
-// * VLog and wVLog are only written when in Verbose Logging mode (#DEFINE VERBOSE).
-// * wLog, wDLog, wVLog are the w_char versions of Log.
+// * VLog and wVLog are only written when the Logging mode is 2 or higher.
+// * VVLog and wVVLog are only written when the Logging mode is 3 or higher.
+// * VVVLog and wVVVLog are only written when the Logging mode is 4 or higher.
+// * ELog and wELog do Error Logging - Print some extended debuging information.
+// * wLog, wDLog, wVLog, wELog are the w_char versions of Log.
 // * LogFlush() makes sure the log file is written to before continuing (in case of bluescreens)
-// - ------------------------------------------------------------------------------------------ - //
-#include <stdio.h>
-// - ------------------------------------------------------------------------------------------ - //
-
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NOLOGGING
 // - ------------------------------------------------------------------------------------------ - //
-
+#include <stdio.h>
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef NDEBUG
+extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -28,138 +27,97 @@
 #ifdef _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
 	#define Log( ... ) \
-		printf( __VA_ARGS__ )
+		if ( LogLevel >= 1 ) \
+			printf( __VA_ARGS__ )
 	#define wLog( ... ) \
-		wprintf( __VA_ARGS__ )
+		if ( LogLevel >= 1 ) \
+			wprintf( __VA_ARGS__ )
 	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) \
-		Log( __VA_ARGS__ )
-	#define wDLog( ... ) \
-		wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#ifdef VERBOSE
-		#define VLog( ... ) \
+	#define VLog( ... ) \
+		if ( LogLevel >= 2 ) \
 			Log( __VA_ARGS__ )
-		#define wVLog( ... ) \
+	#define wVLog( ... ) \
+		if ( LogLevel >= 2 ) \
 			wLog( __VA_ARGS__ )
-	#else // VERBOSE //
-		#define VLog( ... ) ;
-		#define wVLog( ... ) ;
-	#endif // VERBOSE //
-// - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_BADA)
-// - ------------------------------------------------------------------------------------------ - //
-	#include <FBase.h>
 	// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		AppLogDebug( ___ARGS )
-	#define wLog( ___ARGS... ) \
-	//	wprintf( ___ARGS )
+	#define VVLog( ... ) \
+		if ( LogLevel >= 3 ) \
+			Log( __VA_ARGS__ )
+	#define wVVLog( ... ) \
+		if ( LogLevel >= 3 ) \
+			wLog( __VA_ARGS__ )
 	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) \
-		Log( __VA_ARGS__ )
-	#define wDLog( ... ) \
-		wLog( __VA_ARGS__ )
+	#define VVVLog( ... ) \
+		if ( LogLevel >= 4 ) \
+			Log( __VA_ARGS__ )
+	#define wVVVLog( ... ) \
+		if ( LogLevel >= 4 ) \
+			wLog( __VA_ARGS__ )
 	// - ------------------------------------------------------------------------------------------ - //
-	#ifdef VERBOSE
-		#define VLog( ___ARGS... ) \
-			AppLogDebug( ___ARGS )
-		#define wVLog( ___ARGS... ) \
-			wLog( ___ARGS )
-	#else // VERBOSE //
-		#define VLog( ... ) ;
-		#define wVLog( ... ) ;
-	#endif // VERBOSE //
-// - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_ANDROID)
-// - ------------------------------------------------------------------------------------------ - //
-	void LogMsg ( const char* traceStr, ... );
+	#define ELog( ___ARGS... ) \
+		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
+		Log( ___ARGS )
+	#define wELog( ___ARGS... ) \
+		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
+		wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		LogMsg( ___ARGS )
-	#define wLog( ___ARGS... ) \
-	//	wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) \
-		Log( __VA_ARGS__ )
-	#define wDLog( ... ) \
-		wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#ifdef VERBOSE
-		#define VLog( ___ARGS... ) \
-			LogMsg( ___ARGS )
-		#define wVLog( ___ARGS... ) \
-		//	wLog( ___ARGS )
-	#else // VERBOSE //
-		#define VLog( ... ) ;
-		#define wVLog( ... ) ;
-	#endif // VERBOSE //
-// - ------------------------------------------------------------------------------------------ - //
-/*
-#elif defined(USES_AIRPLAY)
-// - ------------------------------------------------------------------------------------------ - //
-	//#include <s3eDebug.h>
-	#include <stdio.h>
-	// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		{ \
-			FILE* Out = fopen( "ram://GameLog.txt", "a" ); \
-			fprintf( Out, ___ARGS ); \
-			fflush( Out ); \
-			fclose( Out ); \
-		}
-//			char DUMMYSTR[8096]; \
-//			sprintf( DUMMYSTR, ___ARGS ); \
-//			s3eDebugOutputString( DUMMYSTR ); \
-//		}
-//		s3eDebugTracePrintf( ___ARGS )
-	#define wLog( ___ARGS... ) \
-	//	wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) \
-		Log( __VA_ARGS__ )
-	#define wDLog( ... ) \
-		wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#ifdef VERBOSE
-		#define VLog( ___ARGS... ) \
-			LogMsg( ___ARGS )
-		#define wVLog( ___ARGS... ) \
-		//	wLog( ___ARGS )
-	#else // VERBOSE //
-		#define VLog( ... ) ;
-		#define wVLog( ... ) ;
-	#endif // VERBOSE //
-*/
+	#ifndef NDEBUG
+		#define DLog( ... ) \
+			Log( __VA_ARGS__ )
+		#define wDLog( ... ) \
+			wLog( __VA_ARGS__ )
+	#else // NDEBUG //
+		#define DLog( ... ) ;
+		#define wDLog( ... ) ;
+	#endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 #else // Default Logging Via Printf //
 // - ------------------------------------------------------------------------------------------ - //
 	#define Log( ___ARGS... ) \
-		printf( ___ARGS )
+		if ( LogLevel >= 1 ) \
+			printf( ___ARGS )
 	#define wLog( ___ARGS... ) \
-		wprintf( ___ARGS )
+		if ( LogLevel >= 1 ) \
+			wprintf( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
+	#define VLog( ___ARGS... ) \
+		if ( LogLevel >= 2 ) \
+			Log( ___ARGS )
+	#define wVLog( ___ARGS... ) \
+		if ( LogLevel >= 2 ) \
+			wLog( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
+	#define VVLog( ___ARGS... ) \
+		if ( LogLevel >= 2 ) \
+			Log( ___ARGS )
+	#define wVVLog( ___ARGS... ) \
+		if ( LogLevel >= 3 ) \
+			wLog( ___ARGS )
+	// - ------------------------------------------------------------------------------------------ - //
+	#define VVVLog( ___ARGS... ) \
+		if ( LogLevel >= 4 ) \
+			Log( ___ARGS )
+	#define wVVVLog( ___ARGS... ) \
+		if ( LogLevel >= 4 ) \
+			wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define ELog( ___ARGS... ) \
-		printf( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-		printf( ___ARGS )
-	#define wELog( ___ARGS... ) \
-		wprintf( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-		wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ___ARGS... ) \
+		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
 		Log( ___ARGS )
-	#define wDLog( ___ARGS... ) \
+	#define wELog( ___ARGS... ) \
+		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
 		wLog( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
-	#ifdef VERBOSE
-		#define VLog( ___ARGS... ) \
+	#ifndef NDEBUG
+		#define DLog( ___ARGS... ) \
 			Log( ___ARGS )
-		#define wVLog( ___ARGS... ) \
+		#define wDLog( ___ARGS... ) \
 			wLog( ___ARGS )
-	#else // VERBOSE //
-		#define VLog( ... ) ;
-		#define wVLog( ... ) ;
-	#endif // VERBOSE //
+	#else // NDEBUG //
+		#define DLog( ... ) ;
+		#define wDLog( ... ) ;
+	#endif // NDEBUG //
+	// - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
@@ -170,90 +128,11 @@
 #define LogFlush() \
 	fflush(0)
 // - ------------------------------------------------------------------------------------------ - //
-#define DLogFlush() \
-	LogFlush()
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef VERBOSE
-	#define VLogFlush() \
+#ifndef NDEBUG
+	#define DLogFlush() \
 		LogFlush()
-#else // VERBOSE //
-	#define VLogFlush() ;
-#endif // VERBOSE //
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
 #else // NDEBUG //
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-// Compiler Specific //
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef _MSC_VER
-// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ... ) \
-		printf( __VA_ARGS__ )
-	#define wLog( ... ) \
-		wprintf( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) ;
-	#define wDLog( ... ) ;
 	#define DLogFlush() ;
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VLog( ... ) ;
-	#define wVLog( ... ) ;
-	#define VLogFlush() ;
-// - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_ANDROID)
-// - ------------------------------------------------------------------------------------------ - //
-	void LogMsg ( const char* traceStr, ... );
-	// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		LogMsg( ___ARGS )
-	#define wLog( ___ARGS... ) \
-	//	wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ... ) ;
-	#define wDLog( ... ) ;
-	#define DLogFlush() ;
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VLog( ... ) ;
-	#define wVLog( ... ) ;
-	#define VLogFlush() ;
-// - ------------------------------------------------------------------------------------------ - //
-#else // _MSC_VER //
-// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		printf( ___ARGS )
-	#define wLog( ___ARGS... ) \
-		wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define ELog( ___ARGS... ) \
-		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
-		Log( ___ARGS )
-	#define wELog( ___ARGS... ) \
-		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
-		wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define DLog( ___ARGS... ) ;
-	#define wDLog( ___ARGS... ) ;
-	#define DLogFlush() ;
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VLog( ___ARGS... ) ;
-	#define wVLog( ___ARGS... ) ;
-	#define VLogFlush() ;
-// - ------------------------------------------------------------------------------------------ - //
-#endif // _MSC_VER //
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-// Shared Logging Features //
-// - ------------------------------------------------------------------------------------------ - //
-#define LogFlush() \
-	if ( !fflush(0) ) \
-		Log( "ERROR: Log flushing failed (which makes getting this message unlikely)!\n" )
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -262,19 +141,26 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 #define Log( ... ) ;
-#define wLog( ... ) ;
-#define LogFlush() ;
-#define DLog( ... ) ;
-#define wDLog( ... ) ;
-#define DLogFlush() ;
 #define VLog( ... ) ;
+#define VVLog( ... ) ;
+#define VVVLog( ... ) ;
+#define ELog( ... ) ;
+#define DLog( ... ) ;
+
+#define wLog( ... ) ;
 #define wVLog( ... ) ;
-#define VLogFlush() ;
+#define wVVLog( ... ) ;
+#define wVVVLog( ... ) ;
+#define wELog( ... ) ;
+#define wDLog( ... ) ;
+
+#define LogFlush() ;
+#define DLogFlush() ;
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NOLOGGING //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Rebel_Log_H__ //
+#endif // __GEL_DEBUG_Log_H__ //
 // - ------------------------------------------------------------------------------------------ - //

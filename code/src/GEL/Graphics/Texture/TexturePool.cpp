@@ -100,7 +100,7 @@ namespace TexturePool {
 
 			// Store the prefix (without trailing slash.  Slash will be part of search strings) //
 
-			VLog("FilePrefix: %s\n", FilePrefix.c_str());
+			VVLog("FilePrefix: %s\n", FilePrefix.c_str());
 		}
 		
 		{
@@ -133,8 +133,7 @@ namespace TexturePool {
 			std::string NoExt = NoExtensions( SlashString );
 			TextureLookup[ NoExt.c_str() ] = TextureInfo.size() - 1;
 			
-			Log( "* %s (%i)\n", SlashString.c_str(), idx );
-			VLog( "  %s\n", NoExt.c_str() );
+			VLog( "* %s (%i) [Pattern: %s]\n", SlashString.c_str(), idx, NoExt.c_str() );
 		}
 		
 		delete_GelDirectory( Dir );
@@ -149,7 +148,7 @@ namespace TexturePool {
 		
 		// If it was found, return the Id //
 		if ( SearchIterator != TextureLookup.end() ) {
-			VLog( "+ %s found in lookup cache!\n", FileName );
+			Log( "- %s found in lookup cache!\n", FileName );
 			return SearchIterator->second;
 		}
 
@@ -157,11 +156,11 @@ namespace TexturePool {
 		for ( size_t idx = 0; idx < TextureInfo.size(); idx++ ) {
 			// Linear test strings if they contain the pattern passed //
 			if ( TextureInfo[idx].FileName.find( FileName ) != std::string::npos ) {
-				VLog( "+ Found %s!\n", FileName );
+				Log( "- Found %s!\n", FileName );
 				return idx;
 			}
 		}
-		Log( "* %s not found\n", FileName );
+		Log( "- %s not found!!\n", FileName );
 		
 		// Otherwise, no file was found.  Return the dummy Id (0). //
 		return 0;

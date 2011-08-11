@@ -39,12 +39,12 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
-	Log("* Allocating GL Texture ID...\n" );
+	VLog("* Allocating GL Texture ID...\n" );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );
-	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
+	VVLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
 	glBindTexture( GL_TEXTURE_2D, TextureID );
-	Log("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
+	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
 	
 	if ( glGetError() != GL_NO_ERROR ) {
 		ELog( "Texture Bind Failed!\n" );
@@ -64,23 +64,23 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// Switch the Load Format found inside the PVR File //
 	switch ( Texture->Info ) {
 		case 4:
-			Log("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			break;
 		case 3:
-			Log("* GL_UNSIGNED_BYTE (RGB_888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGB_888)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case 1:
-			Log("* GL_UNSIGNED_BYTE (I_8)\n");
+			VLog("* GL_UNSIGNED_BYTE (I_8)\n");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_LUMINANCE;
 			InternalFormat = GL_LUMINANCE;
 			break;
 		case 2:
-			Log("* GL_UNSIGNED_SHORT (AI_88)\n");
+			VLog("* GL_UNSIGNED_SHORT (AI_88)\n");
 			RGBFormat = GL_UNSIGNED_SHORT;
 			ReadFormat = GL_LUMINANCE_ALPHA;
 			InternalFormat = GL_LUMINANCE_ALPHA;
@@ -106,7 +106,7 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// New feature.  If MaxTextureSize is greater than the current mipmap size, throw it away. //
 	int OmittedTexture = 0;
 	
-	Log("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, MipMapCount );
+	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, MipMapCount );
 
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < MipMapCount+1; MipMap++ ) {

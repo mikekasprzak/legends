@@ -36,7 +36,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 	std::string SearchPath(SearchDirectory);
 	SearchPath += "\\*.*";
 
-	VLog( "- populate_GelDirectory: %s - %s - %s\n", SearchDirectory, Prefix, SearchPath.c_str() );
+	VVLog( "- populate_GelDirectory: %s - %s - %s\n", SearchDirectory, Prefix, SearchPath.c_str() );
 	
 	// Extract the directory part, and open the directory //
 	// Read the first entry in the directory //
@@ -52,16 +52,16 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 			cat_String( "\\", CurrentFile );
 			cat_String( Data.name, CurrentFile );
 
-			VLog("> %s (%i) (%i) ", CurrentFile, Data.attrib, Data.size );
+			VVLog("* %s (%i) (%i) ", CurrentFile, Data.attrib, Data.size );
 			
 			// If it's a directory //
 			if ( Data.attrib & _A_SUBDIR ) {
-				VLog("*");
+				VVLog("*");
 				// Recursively do this again, if not a dot file or folder //
 				if( Data.name[0] != '.' ) {
-					VLog("*");
+					VVLog("*");
 					if( Data.name[0] != '_' ) {
-						VLog("* DIRECTORY ADDED\n");
+						VVLog("* DIRECTORY ADDED\n");
 						// Build our prefix string //
 						char* PrefixString = new char[ length_String(Prefix) + length_String(Data.name) + 2 ];
 						copy_String( Prefix, PrefixString );
@@ -79,11 +79,11 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 			// If it's a regular file //
 			else
 			{
-				VLog("#");
+				VVLog("#");
 				if( Data.name[0] != '.' ) {
-					VLog("#");
+					VVLog("#");
 					if( Data.name[0] != '_' ) {
-						VLog("# FILE ADDED");
+						VVLog("# FILE ADDED");
 						// Build our filename string //
 						char* NewFile = new char[ length_String(Prefix) + length_String(Data.name) + 1 ];
 						copy_String( Prefix, NewFile );
@@ -98,7 +98,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 				}
 			}
 
-			VLog("\n");
+			VVLog("\n");
 			
 			// Remove our string //
 			delete_String( CurrentFile );

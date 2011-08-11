@@ -30,11 +30,11 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 	// Extract the directory part, and open the directory //
 	DIR* ThisDir = opendir( SearchDirectory );
 
-	VLog("o %s - %s\n", SearchDirectory, Prefix );
-	VLog("o\n");
+	VVLog("o %s - %s\n", SearchDirectory, Prefix );
+	VVLog("o\n");
 	// Read the first entry in the directory //
 	dirent* Data = readdir( ThisDir );
-	VLog("o\n");
+	VVLog("o\n");
 	
 	// While we still have entries left in this directory //
 	while( Data != 0 ) {
@@ -48,7 +48,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 		struct stat DIRStatus;
 		stat( CurrentFile, &DIRStatus );
 
-		VLog("> %s\n", CurrentFile );
+		VVLog("> Populated: %s\n", CurrentFile );
 
 		// If it's a directory //
 		if ( S_ISDIR( DIRStatus.st_mode ) ) {
