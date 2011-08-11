@@ -130,7 +130,7 @@ void CallExp_Squirrel() {
 
 			unsigned int Params = 0;
 			unsigned int FreeVars = 0;
-			sq_getclosureinfo( v, -1, &Params, &FreeVars );
+			sq_getclosureinfo( v, -1, (SQUnsignedInteger*)&Params, (SQUnsignedInteger*)&FreeVars );
 			Log( "* Function Info: Params: %i  FreeVars: %i\n", Params, FreeVars );
 			
 			sq_pushroottable( v );

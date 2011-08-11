@@ -26,9 +26,11 @@ void CallExp() {
 	extern void CallExp_Bullet();
 	CallExp_Bullet();
 
+#ifdef USES_ASSIMP
 	extern void CallExp_AssImp();
 	CallExp_AssImp();
-
+#endif // USES_ASSIMP //
+	
 	extern void CallExp_Squirrel();
 	CallExp_Squirrel();
 
