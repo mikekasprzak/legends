@@ -133,10 +133,11 @@ struct GelAssetType {
 			bool IsProxy:1;				// References other data. DO NOT DELETE ME! //
 		};
 		GelAsset_T BitMask;				// Whole type of the asset //
+		int AsInt;
 	};
 	
 	// Constructor //
-	GelAssetType() {
+	inline GelAssetType() {
 		BitMask = GEL_ASSET_NULL;
 	}		
 	

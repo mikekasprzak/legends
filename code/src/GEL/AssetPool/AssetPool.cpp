@@ -127,9 +127,6 @@ namespace AssetPool {
 				GelAssetType AssetType;
 				AssetType.TestCompressionData( UnProcessed->Data );
 
-				Log("**\n");
-	
-				VLog( "* File Data Code: 0x%x\n", AssetType.Type );
 				if ( AssetType.IsCompression() ) {
 					VLog( "* File Data Code: 0x%x\n", AssetType.Type );
 					// If Compressed, figure out the compression scheme and decompress //
