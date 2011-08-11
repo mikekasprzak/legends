@@ -60,6 +60,7 @@ void cGame::Init() {
 	extern int LogLevel;
 	LogLevel = 2;
 
+	GelAssetHandle CoreScript = AssetPool::Load( "/Things.nut" );
 	
 	Vector3D RoomScale(128,128,64);
 
