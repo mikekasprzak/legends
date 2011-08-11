@@ -89,21 +89,6 @@ namespace AssetPool {
 		inline bool HasData() {
 			return (Data != 0) || (UnProcessed != 0);
 		}
-
-//		void LoadTexture( const std::string Prefix ) {
-//			// Build a Path to the file, and adapt to system specific slashes. //
-//			std::string File = String::SystemSlash( Prefix + FileName );
-//
-//			// Clean up if re-used //
-//			if ( HasData() ) {
-//				Log( "* Freeing old Data...\n" );
-//				Free();
-//			}
-//			
-//			Log( "* Caching \"%s\"...\n", File.c_str() );
-//			
-//			Texture = new GelTexture( File.c_str() );
-//		}
 		
 		void Load( const std::string Prefix ) {
 			// Build a Path to the file, and adapt to system specific slashes. //
@@ -153,22 +138,23 @@ namespace AssetPool {
 				}
 			}
 			
-			{
+			if ( Processed ) {
 				// Now, determine what the data REALLY is //
 				GelAssetType AssetDataType;
 				AssetDataType.TestData( Processed->Data );
 				
 				if ( AssetDataType.IsTexture() ) {
-					VLog("* Asset is a Texture\n" );
+					VLog("* Asset is a Texture (0x%x)\n", Processed );
 					Type = GEL_ASSETCLASS_TEXTURE;
+					Texture = new GelTexture();
 					Texture->Load( Processed );
 				}
 				else if ( AssetDataType.IsModel() ) {
-					VLog("* Asset is a Model\n" );
+					VLog("* Asset is a Model (0x%x)\n", Processed );
 					Type = GEL_ASSETCLASS_MODEL;
 				}
 				else if ( AssetDataType.IsAudio() ) {
-					VLog("* Asset is a Audio\n" );
+					VLog("* Asset is a Audio (0x%x)\n", Processed );
 					Type = GEL_ASSETCLASS_AUDIO;
 				}
 				else {
