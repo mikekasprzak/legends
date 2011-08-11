@@ -50,6 +50,7 @@ void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed )
 
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Bind( const int /*Channel*/ ) {
+	// TODO: Assert //
 	if ( this == 0 )
 		return;
 	
@@ -145,6 +146,7 @@ bool GelTexture::Load() {
 
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Cache( DataBlock* InData ) {
+	// TODO: Assert //
 	if ( this == 0 )
 		return false;
 		
