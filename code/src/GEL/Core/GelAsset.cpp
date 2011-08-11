@@ -100,7 +100,7 @@ GelAsset_T is_Data_GelAsset( const char* InData ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Compression_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Compression_Name_GelAsset( const char* FileName ) {
 	if ( find_String( ".lzma", FileName ) ) {
 		return GEL_ASSET_LZMA;
 	}
@@ -115,7 +115,7 @@ GelAsset_T is_Compression_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Texture_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Texture_Name_GelAsset( const char* FileName ) {
 	if ( find_String( ".png", FileName ) ) {
 		return GEL_ASSET_PNG;
 	}
@@ -136,7 +136,7 @@ GelAsset_T is_Texture_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Model_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Model_Name_GelAsset( const char* FileName ) {
 	if ( find_String( ".pme", FileName ) ) {
 		return GEL_ASSET_PME;
 	}
@@ -160,7 +160,7 @@ GelAsset_T is_Model_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Audio_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Audio_Name_GelAsset( const char* FileName ) {
 	if ( find_String( ".wav", FileName ) ) {
 		return GEL_ASSET_WAV;
 	}
@@ -178,7 +178,7 @@ GelAsset_T is_Audio_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Text_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Text_Name_GelAsset( const char* FileName ) {
 	// NOTE: Text formats can only be detected from filenames. //
 	if ( find_String( ".txt", FileName ) ) {
 		return GEL_ASSET_TXT;
@@ -242,8 +242,8 @@ GelAsset_T is_Text_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Script_Text_GelAsset( const char* FileName ) {
-	GelAsset_T Out = is_Text_Text_GelAsset( FileName );
+GelAsset_T is_Script_Name_GelAsset( const char* FileName ) {
+	GelAsset_T Out = is_Text_Name_GelAsset( FileName );
 	if ( ((Out & GEL_ASSET_TYPE_MASK) >= GEL_ASSET_SCRIPT_BASE) && ((Out & GEL_ASSET_TYPE_MASK) <= GEL_ASSET_SCRIPT_MAX) ) {
 		return Out;
 	}
@@ -252,8 +252,8 @@ GelAsset_T is_Script_Text_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Shader_Text_GelAsset( const char* FileName ) {
-	GelAsset_T Out = is_Text_Text_GelAsset( FileName );
+GelAsset_T is_Shader_Name_GelAsset( const char* FileName ) {
+	GelAsset_T Out = is_Text_Name_GelAsset( FileName );
 	if ( ((Out & GEL_ASSET_TYPE_MASK) >= GEL_ASSET_SHADER_BASE) && ((Out & GEL_ASSET_TYPE_MASK) <= GEL_ASSET_SHADER_MAX) ) {
 		return Out;
 	}
@@ -264,27 +264,27 @@ GelAsset_T is_Shader_Text_GelAsset( const char* FileName ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Text_GelAsset( const char* FileName ) {
+GelAsset_T is_Name_GelAsset( const char* FileName ) {
 	GelAsset_T Type = GEL_ASSET_NULL;
 	
-	Type = is_Texture_Text_GelAsset( FileName );
+	Type = is_Texture_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
-	Type = is_Model_Text_GelAsset( FileName );
+	Type = is_Model_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
-	Type = is_Audio_Text_GelAsset( FileName );
+	Type = is_Audio_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
-	Type = is_Text_Text_GelAsset( FileName );
+	Type = is_Text_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
 	// Check if a compression last, as I will often combine formats //
-	Type = is_Compression_Text_GelAsset( FileName );
+	Type = is_Compression_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 	

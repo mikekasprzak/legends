@@ -180,6 +180,30 @@ struct GelAssetType {
 	}
 	
 	// Name Tests //
+	inline void TestCompressionName( const char* FileName ) {
+		BitMask = is_Compression_Name_GelAsset( FileName );
+	}
+	inline void TestTextureName( const char* FileName ) {
+		BitMask = is_Texture_Name_GelAsset( FileName );
+	}
+	inline void TestAudioName( const char* FileName ) {
+		BitMask = is_Audio_Name_GelAsset( FileName );
+	}
+	inline void TestModelName( const char* FileName ) {
+		BitMask = is_Model_Name_GelAsset( FileName );
+	}
+	inline void TestTextName( const char* FileName ) {
+		BitMask = is_Text_Name_GelAsset( FileName );
+	}
+	inline void TestScriptName( const char* FileName ) {
+		BitMask = is_Script_Name_GelAsset( FileName );
+	}
+	inline void TestShaderName( const char* FileName ) {
+		BitMask = is_Shader_Name_GelAsset( FileName );
+	}
+	inline void TestName( const char* FileName ) {
+		BitMask = is_Name_GelAsset( FileName );
+	}
 
 	// Am I an Asset? //
 	inline bool IsCompression() {
