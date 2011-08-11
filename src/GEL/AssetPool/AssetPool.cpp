@@ -1,30 +1,26 @@
 // - ------------------------------------------------------------------------------------------ - //
+// NOTE: GelAsset_Instance is a little weird. You construct with a filename, and pass a prefix to 
+//   the load.  This is very odd. Change this.
+// - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include <Core/DataBlock.h>
+#include <Core/DataBlock_LZMA.h>
+
 #include <Core/GelDirectory.h>
 #include <Util/String/String.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/Graphics.h>
-#include <Graphics/GelTexture.h>
-// - ------------------------------------------------------------------------------------------ - //
+#include <Core/GelAsset.h>
 #include "AssetPool.h"
+// - ------------------------------------------------------------------------------------------ - //
+#include <Graphics/Graphics_System.h>
+// - ------------------------------------------------------------------------------------------ - //
+#include <Graphics/GelTexture.h>
 // - ------------------------------------------------------------------------------------------ - //
 // Use some STL, since I want to save time //
 #include <map>
 #include <vector>
 #include <string>
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-#if defined(_MSC_VER) || defined(USES_WINDOWS_SLASH)
-	#define TEXTURE_POOL_SLASH "\\"
-#else // _MSC_VER //
-	#define TEXTURE_POOL_SLASH "/"
-#endif // _MSC_VER //
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-extern char AppBaseDir[];
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -38,6 +34,11 @@ extern void MessageLoop();
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+// Up here, so this isn't considered part of the namespace //
+extern char AppBaseDir[];
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 namespace AssetPool {
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef HACK_TEXTURE5_GLITCH	
@@ -47,31 +48,168 @@ namespace AssetPool {
 	// - -------------------------------------------------------------------------------------- - //
 	class GelAsset_Instance {
 	public:
-		std::string FileName;
-		
-		
-		
-		GelTexture Texture;
+		enum AssetClass {
+			GEL_ASSETCLASS_NULL = 0,
+			GEL_ASSETCLASS_TEXTURE = 1,
+			GEL_ASSETCLASS_MODEL,
+			GEL_ASSETCLASS_AUDIO,
+			GEL_ASSETCLASS_SCRIPT,
+		};
 
 	public:
-		GelAsset_Instance()
+		std::string FileName;
+
+		AssetClass Type;
+
+		DataBlock* UnProcessed;
+
+		union {
+			GelTexture* Texture;
+			char* Data;
+		};
+
+	public:
+		GelAsset_Instance() :
+			Type( GEL_ASSETCLASS_NULL ),
+			UnProcessed( 0 )
 		{
+			// Null the pointer //
+			Data = 0;
 		}
 		
 		GelAsset_Instance( const char* _FileName ) :
-			FileName( _FileName )
+			FileName( _FileName ),
+			Type( GEL_ASSETCLASS_NULL ),
+			UnProcessed( 0 )
 		{
-			// Note: I did not pass anythnig to Texture, that would cause a load //
+			// Null the pointer //
+			Data = 0;
 		}
 		
+		inline bool HasData() {
+			return (Data != 0) || (UnProcessed != 0);
+		}
+
+//		void LoadTexture( const std::string Prefix ) {
+//			// Build a Path to the file, and adapt to system specific slashes. //
+//			std::string File = String::SystemSlash( Prefix + FileName );
+//
+//			// Clean up if re-used //
+//			if ( HasData() ) {
+//				Log( "* Freeing old Data...\n" );
+//				Free();
+//			}
+//			
+//			Log( "* Caching \"%s\"...\n", File.c_str() );
+//			
+//			Texture = new GelTexture( File.c_str() );
+//		}
+		
 		void Load( const std::string Prefix ) {
+			// Build a Path to the file, and adapt to system specific slashes. //
 			std::string File = String::SystemSlash( Prefix + FileName );
-			Log( "* Caching \"%s\"...\n", File.c_str() );
-			Texture.Load( File.c_str() );
+
+			// Clean up if re-used //
+			if ( HasData() ) {
+				Log( "* Freeing old Data...\n" );
+				Free();
+			}
+
+			// A place to hold the processed data //			
+			DataBlock* Processed = 0;
+
+			{
+				// Bulk-Load the data //
+				Log( "* Caching \"%s\"...\n", File.c_str() );
+				UnProcessed = new_read_DataBlock( File.c_str() );
+	
+				// Check if the incoming data is compressed //
+				GelAssetType AssetType;
+				AssetType.TestCompressionData( UnProcessed->Data );
+
+				Log("**\n");
+	
+				VLog( "* File Data Code: 0x%x\n", AssetType.Type );
+				if ( AssetType.IsCompression() ) {
+					VLog( "* File Data Code: 0x%x\n", AssetType.Type );
+					// If Compressed, figure out the compression scheme and decompress //
+					switch ( AssetType.Type ) {
+						case GEL_ASSET_LZMA: {
+							VLog("* Compressed Data (LZMA). Uncompressing...\n" );
+							Processed = new_unpack_LZMA_DataBlock( UnProcessed );
+							break;
+						}
+						default: {
+							ELog("Unknown or Unsupported Asset Compression Format!\n" );
+							delete_DataBlock( UnProcessed );
+							return;
+							break;
+						}
+					};
+				}
+				else {
+					// If not compressed //
+					VLog( "* Not Compressed\n" );
+					
+					Processed = UnProcessed;
+					UnProcessed = 0;
+				}
+			}
+			
+			{
+				// Now, determine what the data REALLY is //
+				GelAssetType AssetDataType;
+				AssetDataType.TestData( Processed->Data );
+				
+				if ( AssetDataType.IsTexture() ) {
+					VLog("* Asset is a Texture\n" );
+					Type = GEL_ASSETCLASS_TEXTURE;
+					Texture->Load( Processed );
+				}
+				else if ( AssetDataType.IsModel() ) {
+					VLog("* Asset is a Model\n" );
+					Type = GEL_ASSETCLASS_MODEL;
+				}
+				else if ( AssetDataType.IsAudio() ) {
+					VLog("* Asset is a Audio\n" );
+					Type = GEL_ASSETCLASS_AUDIO;
+				}
+				else {
+					// Do FileName Test //
+					
+					
+					
+					ELog("Unknown Asset Type\n" );
+					Type = GEL_ASSETCLASS_NULL;
+					delete_DataBlock( UnProcessed );
+				}
+			}
 		}
 
 		void Free() {
-			Texture.Free();
+			if ( HasData() ) {
+				if ( Data != 0 ) {
+					switch ( Type ) {
+						case GEL_ASSETCLASS_TEXTURE: {
+							Texture->Free();
+							break;
+						}
+						case GEL_ASSETCLASS_MODEL:
+						break;
+						case GEL_ASSETCLASS_AUDIO:
+						break;
+						case GEL_ASSETCLASS_SCRIPT:
+						break;
+					};
+					
+					// Reset to zero //
+					Data = 0;
+				}
+				
+				if ( UnProcessed != 0 ) {
+					delete_DataBlock( UnProcessed );
+				}
+			}
 		}
 	};
 	// - -------------------------------------------------------------------------------------- - //
@@ -92,7 +230,7 @@ namespace AssetPool {
 #endif // HACK_TEXTURE5_GLITCH //
 		
 		// Create a string containing the base filename directory //
-		{
+		{			
 			// If an empty string (i.e. first character is terminator) //
 			if ( BaseDirectory[0] == 0 )
 				FilePrefix = AppBaseDir;
@@ -121,20 +259,20 @@ namespace AssetPool {
 		if ( Directory[0] != 0 ) {
 			ReadDir += Directory;
 		}
-		//ReadDir += TEXTURE_POOL_SLASH;
+		//ReadDir += String::Slash;
 		
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
 		Log( "+ Adding Asset Directory \"%s\" (%i Total)\n", ReadDir.c_str(), size_GelDirectory( Dir ) );
 		
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
-			std::string SlashString = TEXTURE_POOL_SLASH;
+			std::string SlashString = String::Slash;
 			SlashString += index_GelDirectory( Dir, idx );
 			AssetInstance.push_back( GelAsset_Instance( (std::string(Directory) + SlashString).c_str() ) );
 			
 			std::string NoExt = String::NoExtensions( SlashString );
 			AssetLookup[ NoExt.c_str() ] = AssetInstance.size() - 1;
 			
-			Log( "* %s (%i) [Pattern: %s]\n", SlashString.c_str(), idx, NoExt.c_str() );
+			Log( "* %s [%s] (%i)\n", SlashString.c_str(), NoExt.c_str(), idx );
 		}
 		
 		delete_GelDirectory( Dir );
@@ -151,7 +289,7 @@ namespace AssetPool {
 		
 		// If it was found, return the Id //
 		if ( SearchIterator != AssetLookup.end() ) {
-			VLog( "- %s found in lookup cache!\n", FileName );
+			Log( "- %s found in lookup cache!\n", FileName );
 			return SearchIterator->second;
 		}
 
@@ -159,7 +297,7 @@ namespace AssetPool {
 		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
 			// Linear test strings if they contain the pattern passed //
 			if ( AssetInstance[idx].FileName.find( FileName ) != std::string::npos ) {
-				VLog( "- Found %s!\n", FileName );
+				Log( "- Found %s!\n", FileName );
 				return idx;
 			}
 		}
@@ -172,45 +310,38 @@ namespace AssetPool {
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	void Set( const GelAssetHandle Texture ) {
-		AssetInstance[ Texture ].Texture.Bind( 0 );
-		
-//		glBindTexture( GL_TEXTURE_2D, AssetInstance[ Texture ].Texture.Handle );
-////		if ( Texture != 0 ) {
-////			if ( AssetInstance[ Texture ].Texture.Handle == 0 ) {
-////				LoadTexture( Texture );
-////			}
-////			
-////			glBindTexture( GL_TEXTURE_2D, AssetInstance[ Texture ].Texture.Handle );
-////		}
-////		else {
-////			glBindTexture( GL_TEXTURE_2D, 0 );
-////		}
+	void Set( const GelAssetHandle Asset ) {
+		if ( AssetInstance[ Asset ].HasData() ) {	
+			AssetInstance[ Asset ].Texture->Bind( 0 );
+		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	void LoadTexture( const GelAssetHandle Texture ) {
-		// Bail if the dummy texture //
-		if ( Texture == 0 )
+	void LoadAsset( const GelAssetHandle Asset ) {
+		// Bail if the dummy asset //
+		if ( Asset == 0 )
 			return;
 		
-		// If GL Texture is set, activate it //
-		if ( AssetInstance[ Texture ].Texture.Handle ) {
-			Set( Texture );		
-			return;
+		// If this Instance has data //
+		if ( AssetInstance[ Asset ].HasData() ) {
+			// If a Texture Handle is available, activate it //
+			if ( AssetInstance[ Asset ].Texture->Handle ) {
+				Set( Asset );		
+				return;
+			}
 		}
-						
+		
 		// TODO: If there is uncompressed data, load it in to memory //
 		// TODO: If there is compressed data, decompress it, then load in to memory //
 		
 		// If there is only a filename, load it //
 		{
-			AssetInstance[ Texture ].Load( FilePrefix );
+			AssetInstance[ Asset ].Load( FilePrefix );
 
 #ifdef HACK_TEXTURE5_GLITCH
-			if ( AssetInstance[ Texture ].Texture.Handle == 5 ) {
+			if ( AssetInstance[ Asset ].Texture->Handle == 5 ) {
 				Log( "** WebOS! ** : Working around 'Texture 5' glitch...\n" );
-				PalmGlitch = AssetInstance[ Texture ].Texture.Handle;				
-				AssetInstance[ Texture ].Load( FilePrefix );
+				PalmGlitch = AssetInstance[ Asset ].Texture->Handle;				
+				AssetInstance[ Asset ].Load( FilePrefix );
 			}
 #endif // HACK_TEXTURE5_GLITCH //
 		}
@@ -225,18 +356,18 @@ namespace AssetPool {
 
 		// Bail if we're in the middle of shutting down //
 		if ( System::ShutdownGame || System::CloseButtonPressed ) {
-			Log( "> Shutdown Detected!  Aborting Texture Load...\n");
+			Log( "> Shutdown Detected!  Aborting Asset Load...\n");
 			return 0;
 		}
 
 		// Search for ID based on input string //
-		GelAssetHandle Texture = Find( FileName );
+		GelAssetHandle Asset = Find( FileName );
 		
 		// Loaded, so cache the texture in memory //
-		LoadTexture( Texture );
+		LoadAsset( Asset );
 		
 		// Return the Id //
-		return Texture;	
+		return Asset;	
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -262,20 +393,18 @@ namespace AssetPool {
 		
 		GelTexture::Exit();
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Free textures so we can reload them in to the new/current OpenGL Context //
-	void ReleaseTextures() {
-		Exit();
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Reload all the previously released textures //
-	void ReloadTextures() {
-		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
-			LoadTexture( idx );
-		}
-	}
-// - ------------------------------------------------------------------------------------------ - //
-#undef TEXTURE_POOL_SLASH
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Free textures so we can reload them in to the new/current OpenGL Context //
+//	void ReleaseTextures() {
+//		Exit();
+//	}
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Reload all the previously released textures //
+//	void ReloadTextures() {
+//		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
+//			LoadAsset( idx );
+//		}
+//	}
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace AssetPool //
 // - ------------------------------------------------------------------------------------------ - //

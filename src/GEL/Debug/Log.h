@@ -74,15 +74,13 @@ extern int LogLevel;
 #else // Default Logging Via Printf //
 // - ------------------------------------------------------------------------------------------ - //
 	#define Log( ___ARGS... ) \
-		if ( LogLevel >= 1 ) \
-			printf( ___ARGS )
+		{ if ( LogLevel >= 1 ) printf( ___ARGS ); }
 	#define wLog( ___ARGS... ) \
 		if ( LogLevel >= 1 ) \
 			wprintf( ___ARGS )
 	// - ------------------------------------------------------------------------------------------ - //
 	#define VLog( ___ARGS... ) \
-		if ( LogLevel >= 2 ) \
-			Log( ___ARGS )
+		{ if ( LogLevel >= 2 ) Log( ___ARGS ); }
 	#define wVLog( ___ARGS... ) \
 		if ( LogLevel >= 2 ) \
 			wLog( ___ARGS )

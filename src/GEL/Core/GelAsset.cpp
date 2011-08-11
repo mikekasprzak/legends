@@ -52,6 +52,26 @@ GelAsset_T is_Text_Data_GelAsset( const char* InData ) {
 	return GEL_ASSET_NULL;
 }
 // - ------------------------------------------------------------------------------------------ - //
+GelAsset_T is_Script_Data_GelAsset( const char* InData ) {
+	GelAsset_T Out = is_Text_Data_GelAsset( InData );
+	if ( ((Out & GEL_ASSET_TYPE_MASK) >= GEL_ASSET_SCRIPT_BASE) && ((Out & GEL_ASSET_TYPE_MASK) <= GEL_ASSET_SCRIPT_MAX) ) {
+		return Out;
+	}
+	else {
+		return GEL_ASSET_NULL;
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+GelAsset_T is_Shader_Data_GelAsset( const char* InData ) {
+	GelAsset_T Out = is_Text_Data_GelAsset( InData );
+	if ( ((Out & GEL_ASSET_TYPE_MASK) >= GEL_ASSET_SHADER_BASE) && ((Out & GEL_ASSET_TYPE_MASK) <= GEL_ASSET_SHADER_MAX) ) {
+		return Out;
+	}
+	else {
+		return GEL_ASSET_NULL;
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 GelAsset_T is_Data_GelAsset( const char* InData ) {
