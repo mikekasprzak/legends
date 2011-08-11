@@ -147,11 +147,15 @@ bool GelTexture::Load() {
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Cache( DataBlock* InData ) {
 	// TODO: Assert //
-	if ( this == 0 )
+	if ( this == 0 ) {
+		ELog( "Null pointer GelTexture\n" );
 		return false;
+	}
 		
-	if ( InData == 0 )
+	if ( InData == 0 ) {
+		ELog( "Null pointer DataBlock\n" );
 		return false;
+	}
 	
 	// If we get an explicity DataBlock, we should dispose of our data //
 	Free();
