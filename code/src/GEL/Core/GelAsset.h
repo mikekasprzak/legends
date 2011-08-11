@@ -21,9 +21,9 @@ enum GelAsset_T {
 	GEL_ASSET_COMPRESSION_MAX,
 	// - -------------------------------------------------------------------------------------- - //
 	// Image/Texture Formats //
-	GEL_ASSET_IMAGE_BASE = 0x400,
+	GEL_ASSET_TEXTURE_BASE = 0x400,
 	
-	GEL_ASSET_PVR = GEL_ASSET_IMAGE_BASE,
+	GEL_ASSET_PVR = GEL_ASSET_TEXTURE_BASE,
 	GEL_ASSET_DXT,
 	GEL_ASSET_PNG,
 	GEL_ASSET_TGA,
@@ -31,7 +31,7 @@ enum GelAsset_T {
 	GEL_ASSET_STB_IMAGE,					// Image loadable by STB_Image //
 	GEL_ASSET_STB_IMAGE_NATIVE,				// The native STB_Image format (what it gives me) //
 	
-	GEL_ASSET_IMAGE_MAX,
+	GEL_ASSET_TEXTURE_MAX,
 	// - -------------------------------------------------------------------------------------- - //
 	// 3D Model Formats //
 	GEL_ASSET_MODEL_BASE = 0x600,
@@ -65,13 +65,16 @@ enum GelAsset_T {
 	GEL_ASSET_JSON,
 	GEL_ASSET_CSV,							// CSV Spreadsheet //
 
-	GEL_ASSET_SQUIRREL,
+	GEL_ASSET_SCRIPT_BASE,
+	GEL_ASSET_SQUIRREL = GEL_ASSET_SCRIPT_BASE,
 	GEL_ASSET_LUA,
-	GEL_ASSET_PYTHON,
+	GEL_ASSET_PYTHON,	
 	GEL_ASSET_C,
 	GEL_ASSET_C_PLUS_PLUS,
+	GEL_ASSET_SCRIPT_MAX,
 
-	GEL_ASSET_GLSL_VERTEX_PROGRAM,
+	GEL_ASSET_SHADER_BASE,
+	GEL_ASSET_GLSL_VERTEX_PROGRAM = GEL_ASSET_SHADER_BASE,
 	GEL_ASSET_GLSL_FRAGMENT_PROGRAM,
 	GEL_ASSET_GLSL_GEOMETRY_PROGRAM,
 	GEL_ASSET_CG_VERTEX_PROGRAM,
@@ -80,9 +83,13 @@ enum GelAsset_T {
 	GEL_ASSET_HLSL_VERTEX_PROGRAM,
 	GEL_ASSET_HLSL_FRAGMENT_PROGRAM,
 	GEL_ASSET_HLSL_GEOMETRY_PROGRAM,
+	GEL_ASSET_SHADER_MAX,
 	
 	GEL_ASSET_TEXT_MAX,
 	// - -------------------------------------------------------------------------------------- - //
+	
+	GEL_ASSET_TYPE_MASK		= 0xffff,		// Mask for the type part //
+	GEL_ASSET_INFO_MASK		= 0xffff0000,	// Mask for the Info part //
 	
 	// - -------------------------------------------------------------------------------------- - //
 	// General Properties //
@@ -92,6 +99,31 @@ enum GelAsset_T {
 	// - -------------------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //
+extern GelAsset_T is_Compression_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Texture_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Model_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Audio_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Text_Data_GelAsset( const char* InData );
+// Subsections of Text //
+extern GelAsset_T is_Script_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Shader_Data_GelAsset( const char* InData );
+
+extern GelAsset_T is_Compression_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Texture_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Model_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Audio_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Text_Name_GelAsset( const char* FileName );
+// Subsections of Text //
+extern GelAsset_T is_Script_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Shader_Name_GelAsset( const char* FileName );
+
+extern GelAsset_T is_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Name_GelAsset( const char* FileName );
+
+inline bool is_GelAsset( const GelAsset_T Asset ) {
+	return (Asset >= GEL_ASSET_KNOWN);
+}
+// - ------------------------------------------------------------------------------------------ - //
 struct GelAssetType {
 	union {
 		struct {
@@ -100,30 +132,69 @@ struct GelAssetType {
 			bool IsShare:1;				// Shares data with the a proxy asset //
 			bool IsProxy:1;				// References other data. DO NOT DELETE ME! //
 		};
-		GelAsset_T BitMask;			// Whole type of the asset //
+		GelAsset_T BitMask;				// Whole type of the asset //
 	};
+	
+	// Constructor //
+	GelAssetType() {
+		BitMask = GEL_ASSET_NULL;
+	}		
+	
+	// Data Tests //
+	inline void TestCompressionData( const char* InData ) {
+		BitMask = is_Compression_Data_GelAsset( InData );
+	}
+	inline void TestTextureData( const char* InData ) {
+		BitMask = is_Texture_Data_GelAsset( InData );
+	}
+	inline void TestAudioData( const char* InData ) {
+		BitMask = is_Audio_Data_GelAsset( InData );
+	}
+	inline void TestModelData( const char* InData ) {
+		BitMask = is_Model_Data_GelAsset( InData );
+	}
+	inline void TestTextData( const char* InData ) {
+		BitMask = is_Text_Data_GelAsset( InData );
+	}
+	inline void TestScriptData( const char* InData ) {
+		BitMask = is_Script_Data_GelAsset( InData );
+	}
+	inline void TestShaderData( const char* InData ) {
+		BitMask = is_Shader_Data_GelAsset( InData );
+	}
+	inline void TestData( const char* InData ) {
+		BitMask = is_Data_GelAsset( InData );
+	}
+	
+	// Name Tests //
+
+	// Am I an Asset? //
+	inline bool IsCompression() {
+		return (Type >= GEL_ASSET_COMPRESSION_BASE) && (Type <= GEL_ASSET_COMPRESSION_MAX);
+	}
+	inline bool IsTexture() {
+		return (Type >= GEL_ASSET_TEXTURE_BASE) && (Type <= GEL_ASSET_TEXTURE_MAX);
+	}
+	inline bool IsModel() {
+		return (Type >= GEL_ASSET_MODEL_BASE) && (Type <= GEL_ASSET_MODEL_MAX);
+	}
+	inline bool IsAudio() {
+		return (Type >= GEL_ASSET_AUDIO_BASE) && (Type <= GEL_ASSET_AUDIO_MAX);
+	}
+	inline bool IsText() {
+		return (Type >= GEL_ASSET_TEXT_BASE) && (Type <= GEL_ASSET_TEXT_MAX);
+	}
+	inline bool IsScript() {
+		return (Type >= GEL_ASSET_SCRIPT_BASE) && (Type <= GEL_ASSET_SCRIPT_MAX);
+	}
+	inline bool IsShader() {
+		return (Type >= GEL_ASSET_SHADER_BASE) && (Type <= GEL_ASSET_SHADER_MAX);
+	}
+	
+	inline bool IsAsset() {
+		return is_GelAsset( BitMask );
+	}
 };
-// - ------------------------------------------------------------------------------------------ - //
-// TODO: Asset Check operators //
-// - ------------------------------------------------------------------------------------------ - //
-extern GelAsset_T is_Compression_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Texture_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Model_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Audio_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Text_Data_GelAsset( const char* InData );
-
-extern GelAsset_T is_Compression_Name_GelAsset( const char* FileName );
-extern GelAsset_T is_Texture_Name_GelAsset( const char* FileName );
-extern GelAsset_T is_Model_Name_GelAsset( const char* FileName );
-extern GelAsset_T is_Audio_Name_GelAsset( const char* FileName );
-extern GelAsset_T is_Text_Name_GelAsset( const char* FileName );
-
-extern GelAsset_T is_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Name_GelAsset( const char* FileName );
-
-inline bool is_GelAsset( const GelAsset_T Asset ) {
-	return (Asset >= GEL_ASSET_KNOWN);
-}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_CORE_GELASSET_H__ //
 // - ------------------------------------------------------------------------------------------ - //

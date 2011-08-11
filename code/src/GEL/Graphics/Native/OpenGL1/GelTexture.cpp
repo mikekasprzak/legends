@@ -76,8 +76,10 @@ bool GelTexture::Process() {
 			Processed.Data = new_unpack_LZMA_DataBlock( UnProcessed.Data );
 			break;
 		}
-		case GEL_ASSET_STB_IMAGE: {
-			// Cheat! Move STB data over to processed, 'cause lazy! //
+		case GEL_ASSET_STB_IMAGE:
+		case GEL_ASSET_PVR:
+		{
+			// Cheat! Move data over to processed, 'cause I am lazy! //
 			Processed.Data = UnProcessed.Data;
 			Processed.Asset.BitMask = UnProcessed.Asset.BitMask;
 			

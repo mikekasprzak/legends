@@ -56,6 +56,9 @@ void cGame::Init() {
 
 	// Initialize the Virtual Machine... //
 	vm_Init();
+	
+	extern int LogLevel;
+	LogLevel = 2;
 
 	
 	Vector3D RoomScale(128,128,64);
