@@ -9,13 +9,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace String {
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(_MSC_VER) || defined(USES_WINDOWS_SLASH)
-	const char Slash = '\\';
-	const char OtherSlash = '//';
-#else // USES_WINDOWS_SLASH //
-	const char Slash = '/';
-	const char OtherSlash = '\\';
-#endif // USES_WINDOWS_SLASH //
+	const char SlashChar = '/';
+	const char OtherSlashChar = '\\';
+	
+	const char Slash[] = "/";
+	const char OtherSlash[] = "\\";
+	
 	const char Dot = '.';
 	const char Dash = '-';
 	const std::string Empty("");
@@ -24,7 +23,7 @@ namespace String {
 	// Return the File-Name part of a string //
 	inline std::string FileName( const std::string& _FileName ) {
 		// Find the last slash //
-		size_t SlashPos = _FileName.rfind( Slash );
+		size_t SlashPos = _FileName.rfind( SlashChar );
 		
 		if ( SlashPos == std::string::npos ) {
 			// Slash not found //
@@ -38,7 +37,7 @@ namespace String {
 	// Return the Directory part of a string, excluding the slash //
 	inline std::string Directory( const std::string& _FileName ) {
 		// Find the last slash //
-		size_t SlashPos = _FileName.rfind( Slash );
+		size_t SlashPos = _FileName.rfind( SlashChar );
 		
 		if ( SlashPos == std::string::npos ) {
 			// Slash not found //
@@ -52,7 +51,7 @@ namespace String {
 	// Return the Directory part of a string, including the slash //
 	inline std::string DirectorySlash( const std::string& _FileName ) {
 		// Find the last slash //
-		size_t SlashPos = _FileName.rfind( Slash );
+		size_t SlashPos = _FileName.rfind( SlashChar );
 		
 		if ( SlashPos == std::string::npos ) {
 			// Slash not found //
@@ -155,8 +154,13 @@ namespace String {
 		
 		// For all characters in the string, replace all "Other" slashes with the system slashes //
 		for( size_t idx = 0; idx < WorkString.size(); idx++ ) {
-			if ( WorkString[ idx ] == OtherSlash )
-				WorkString[ idx ] = Slash;
+#if defined(_MSC_VER) || defined(USES_WINDOWS_SLASH)
+			if ( WorkString[ idx ] == SlashChar )
+				WorkString[ idx ] = OtherSlashChar;
+#else // USES_WINDOWS_SLASH //
+			if ( WorkString[ idx ] == OtherSlashChar )
+				WorkString[ idx ] = SlashChar;
+#endif // USES_WINDOWS_SLASH //
 		}
 		
 		// Return our slash updated string //
@@ -169,8 +173,13 @@ namespace String {
 		
 		// For all characters in the string, replace all system slashes with the "Other" slashes //
 		for( size_t idx = 0; idx < WorkString.size(); idx++ ) {
-			if ( WorkString[ idx ] == Slash )
-				WorkString[ idx ] = OtherSlash;
+#if defined(_MSC_VER) || defined(USES_WINDOWS_SLASH)
+			if ( WorkString[ idx ] == OtherSlashChar )
+				WorkString[ idx ] = SlashChar;
+#else // USES_WINDOWS_SLASH //
+			if ( WorkString[ idx ] == SlashChar )
+				WorkString[ idx ] = OtherSlashChar;
+#endif // USES_WINDOWS_SLASH //
 		}
 		
 		// Return our slash updated string //
@@ -250,7 +259,7 @@ namespace String {
 			return true;
 		if ( _FileName.find( _Pattern + Dot ) != std::string::npos )
 			return true;
-		if ( _FileName.find( _Pattern + Slash ) != std::string::npos )
+		if ( _FileName.find( _Pattern + SlashChar ) != std::string::npos )
 			return true;
 		return false;
 	}
@@ -283,7 +292,7 @@ namespace String {
 			if ( (NewEnd = _FileName.find( Dot, Pos )) != std::string::npos ) {
 				End = NewEnd;
 			}
-			if ( (NewEnd = _FileName.find( Slash, Pos )) != std::string::npos ) {
+			if ( (NewEnd = _FileName.find( SlashChar, Pos )) != std::string::npos ) {
 				if ( NewEnd < End )
 					End = NewEnd;
 			}
@@ -335,9 +344,9 @@ namespace String {
 		std::string Pattern = _Pattern;
 
 		// If the last character in the pattern isn't a slash //
-		if ( _Pattern[ _Pattern.size() - 1 ] != Slash )
+		if ( _Pattern[ _Pattern.size() - 1 ] != SlashChar )
 			// Append a slash //
-			Pattern += Slash;
+			Pattern += SlashChar;
 		
 		// Find the directory name pattern //
 		size_t DirPos = _FileName.find( Pattern );
@@ -351,7 +360,7 @@ namespace String {
 			return true;
 		
 		// If the previous character is a slash, then our pattern was matched in full //
-		if ( _FileName[DirPos - 1] == Slash )
+		if ( _FileName[DirPos - 1] == SlashChar )
 			return true;
 		
 		// Not a full match //
