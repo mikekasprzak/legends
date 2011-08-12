@@ -72,7 +72,7 @@
 //    *stdin = *consoleIn;
 //    *stdout = *consoleOut;
 //    
-//    fprintf( consoleOut, "Hey\n" );
+//    fprintf( consoleOut, "Hey" );
 //}
 //#endif // USES_MINGW //
 
@@ -147,7 +147,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 	if ( event.type == SDL_WINDOWEVENT ) {
 		const SDL_WindowEvent* WindowEvent = (const SDL_WindowEvent*)&event;
 		
-		VLog("> WindowEvent: %s\n", gels_SDLWindowEventName( WindowEvent->event ) );
+		VLog("> WindowEvent: %s", gels_SDLWindowEventName( WindowEvent->event ) );
 		
 		switch ( WindowEvent->event ) {
 			case SDL_WINDOWEVENT_SHOWN: {
@@ -255,7 +255,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 #ifndef USES_SDL_1_3
 // - ------------------------------------------------------------------------------------------ - //
 void ActiveEventFilter( const SDL_Event& event ) {
-	VLog( "ACTIVE_EVENT: %i %i (%i %i %i)\n", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
+	VLog( "ACTIVE_EVENT: %i %i (%i %i %i)", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
 	
 	// Store Active SDL states //
 	if ( (event.active.state & SDL_APPACTIVE) ) {
@@ -545,15 +545,15 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 #ifdef USES_SDL_1_3
 		// SDL Touch Code! Currently unsupported //
 //		case SDL_FINGERDOWN: {
-//			VLog( "* Finger Down!\n" );
+//			VLog( "* Finger Down!" );
 //			break;
 //		}
 //		case SDL_FINGERUP: {
-//			VLog( "* Finger Up!\n" );
+//			VLog( "* Finger Up!" );
 //			break;
 //		}
 //		case SDL_FINGERMOTION: {
-//			VLog( "* Finger Motion!\n" );
+//			VLog( "* Finger Motion!" );
 //			break;
 //		}
 #endif // USES_SDL_1_3
@@ -570,7 +570,7 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 			// Note bits in the button mask //
 			if ( event.button.button > 0 ) {    			
 				int Bit = 1<<(event.button.button-1);
-				//VVLog("Click: %i\n", Bit );
+				//VVLog("Click: %i", Bit );
 				
 				mouse_b |= Bit;
 				mouse_b_new |= Bit;
@@ -787,40 +787,42 @@ void ToggleGraphicsMode() {
 
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
-	Log( "-=======- GEL Application Started -- SDL Branch -- SKU: %s -=======-\n", PRODUCT_SKU );
-	Log( "GEL (C) Copyright 2008-2012 Mike Kasprzak and Sykhronics Entertainment\n" );
-	Log( "\n" );
-	Log( "-=- SKU: %s -=- %s -=- \n", PRODUCT_SKU, FullProductName );
-	Log( "\n" );
+	Log( "-=======- GEL Application Started -- SDL Branch -- SKU: %s -=======-", PRODUCT_SKU );
+	Log( "GEL (C) Copyright 2008-2012 Mike Kasprzak and Sykhronics Entertainment" );
+	Log( "" );
+	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
+	Log( "" );
 
 #ifdef USES_STORE
+	Log( "+ Authorizing Store..." );
 	if ( gelStoreAuthorize() ) {
-		Log( "+ Store Authorized\n\n" );
+		Log( "- Store Authorized" );
 	}
 	else {
-		Log( "* ERROR: Store Authorization Failed\n\n" );
+		Log( "- ERROR: Store Authorization Failed" );
 		return gelStoreGetExitCode();
 	}
+	Log("");
 #endif // USES_STORE //
 
 	// Report SDL Version //
 	{
 		SDL_version ver;
 		SDL_VERSION(&ver);
-		Log( "SDL (core) - v%u.%u.%u -- Compiled Version\n", ver.major, ver.minor, ver.patch );
+		Log( "SDL (core) - v%u.%u.%u -- Compiled Version", ver.major, ver.minor, ver.patch );
 
 		const SDL_version* pver = SDL_Linked_Version();
-		Log( "SDL (core) - v%u.%u.%u -- Linked Version (DLL or Shared Library)\n", pver->major, pver->minor, pver->patch );
-		Log( "\n" );
+		Log( "SDL (core) - v%u.%u.%u -- Linked Version (DLL or Shared Library)", pver->major, pver->minor, pver->patch );
+		Log( "" );
 
 		int LinkVer = (ver.major << 16) | (ver.minor << 8) | (ver.patch << 0);
 		int DLLVer = (pver->major << 16) | (pver->minor << 8) | (pver->patch << 0);
 
 		if ( LinkVer > DLLVer ) {
-			Log( "* WARNING: Linked version is older than Compiled version!!\n" );
-			Log( "  If you have problems starting the game, this may be why.\n" );
-			Log( "  Upgrade to a newer SDL version to resolve this.\n" );
-			Log( "\n" );
+			Log( "* WARNING: Linked version is older than Compiled version!!" );
+			Log( "  If you have problems starting the game, this may be why." );
+			Log( "  Upgrade to a newer SDL version to resolve this." );
+			Log( "" );
 		}
 	}
 
@@ -836,16 +838,16 @@ int main( int argc, char* argv[] ) {
 #endif // USES_WEBOS //
 
 
-	Log( "+ Command Line Arguments: %i\n", argc );
+	Log( "+ Command Line Arguments: %i", argc );
 	for ( int idx = 0; idx < argc; idx++ ) {
-		Log( "+ \"%s\"\n", argv[idx] );	
+		Log( "* \"%s\"", argv[idx] );	
 	}
-	Log( "- End of Command Line\n" );
-	Log( "\n" );
+	Log( "- End of Command Line" );
+	Log( "" );
 
 	// Get Base Directory //
 	{	
-		Log( "+ Content Path...\n" );
+		Log( "+ Getting Content Path..." );
 		//set_Data( 0, AppBaseDir, sizeof(AppBaseDir) );
 		
 		bool CalculatePath = true;
@@ -866,7 +868,8 @@ int main( int argc, char* argv[] ) {
 			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
 		}
 		
-		Log( "- Base Directory: %s\n\n", AppBaseDir );
+		Log( "- Base Directory: %s", AppBaseDir );
+		Log( "" );
 	}
 
 	// Opening scope here, so that all variables created after now get destroyed by the end brace //
@@ -908,13 +911,13 @@ int main( int argc, char* argv[] ) {
 		SDL_ShowCursor( SDL_DISABLE );
 		
 #ifdef USES_SIXENSE
-		Log( "+ Starting Sixense...\n" );
+		Log( "+ Starting Sixense..." );
 		sixenseInit();
-		Log( "- Sixense Initialized.\n" );
+		Log( "- Sixense Initialized." );
 #endif // USES_SIXENSE //
 		
 		{
-			Log( "\n" );
+			Log( "" );
 #ifdef PRODUCT_LEGACY_SMILES
 			// Populate Product Info, based on Compiled Arguments //
 			ProductInfo = cProductInfo::DecodeEmbeddedInfo();
@@ -926,10 +929,10 @@ int main( int argc, char* argv[] ) {
 			ProductInfo.LogInfo();
 #endif // PRODUCT_LEGACY_SMILES //
 			
-			Log("+ Creating GameHost Instance...\n");
+			Log("+ Creating GameHost Instance...");
 			WorkTime = GetTimeNow();
 			GameHost = new cGameHost;
-			Log("- GameHost Created.\n");
+			Log("- GameHost Created.");
 
 			// Clear the screen //
 			gelDisableBlending();
@@ -948,7 +951,7 @@ int main( int argc, char* argv[] ) {
 			// Explicitly Create Game //
 			GameHost->CreateGame();
 			
-			Log("+ Main: Game Created\n");
+			Log("+ Main: Game Created");
 
 			WorkTime = GetTimeNow();
 
@@ -1029,7 +1032,7 @@ int main( int argc, char* argv[] ) {
 								Log( "%i ", sixenseIsControllerEnabled( idx ) );	
 							}
 							
-							Log( ")\n" );
+							Log( ")" );
 							
 							for ( int idx = 0; idx < MaxControllers; idx++ ) {
 								if ( sixenseIsControllerEnabled( idx ) ) {
@@ -1075,55 +1078,56 @@ int main( int argc, char* argv[] ) {
 				}
 			}
 
-			Log( "\n-=======- Beginning GEL Application Shutdown... -=======-\n" );
+			Log( "" );
+			Log( "-=======- Beginning GEL Application Shutdown... -=======-" );
 
 
 #ifdef PRODUCT_LEGACY_SMILES			
-			Log( "+ Writing Save Data...\n" );
+			Log( "+ Writing Save Data..." );
 			GameHost->Save();
-			Log( "- Finished Writing Save Data.\n" );
-			Log( "\n" );
+			Log( "- Finished Writing Save Data." );
+			Log( "" );
 #endif // PRODUCT_LEGACY_SMILES //
 
 			delete GameHost;
-			Log( "\n" );
+			Log( "" );
 		}
 
 #ifdef USES_SIXENSE
-		Log( "+ Shutting down Sixense...\n" );
+		Log( "+ Shutting down Sixense..." );
 		sixenseExit();
-		Log( "- Done Sixense.\n" );
-		Log( "\n" );
+		Log( "- Done Sixense." );
+		Log( "" );
 #endif // USES_SIXENSE //
 
 //		if ( Buffer ) { 
 //			SDL_FreeSurface( Buffer );
 //		}
 		
-		Log( "+ Freeing audio resources...\n" );
+		Log( "+ Freeing audio resources..." );
 		musFree();
 		sndFree();
-		Log( "- Audio resources released.\n" );
-		Log( "\n" );
+		Log( "- Audio resources released." );
+		Log( "" );
 
 #ifdef USES_STORE
 		gelStoreExit();
 #endif // USES_STORE //
 
 #ifdef USES_WEBOS
-		Log( "+ Shutting Down PDL...\n" );
+		Log( "+ Shutting Down PDL..." );
 		PDL_Quit();
-		Log( "- PDL Shut down complete.\n" );
-		Log( "\n" );
+		Log( "- PDL Shut down complete." );
+		Log( "" );
 #endif // USES_WEBOS //
 
-		Log( "+ Shutting Down GEL Graphics...\n" );
+		Log( "+ Shutting Down GEL Graphics..." );
 		gelExit();
-		Log( "- GEL Graphics Shut down complete.\n" );
-		Log( "\n" );
+		Log( "- GEL Graphics Shut down complete." );
+		Log( "" );
 	}
 
-	Log( "-=======- GEL Application Exited Successfully -=======-\n" );
+	Log( "-=======- GEL Application Exited Successfully -=======-" );
 	return 0;
 }
 // - ------------------------------------------------------------------------------------------ - //

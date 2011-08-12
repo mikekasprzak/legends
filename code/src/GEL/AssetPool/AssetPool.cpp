@@ -100,7 +100,7 @@ namespace AssetPool {
 
 			// Clean up if re-used //
 			if ( HasData() ) {
-				Log( "* Freeing old Data...\n" );
+				Log( "* Freeing old Data..." );
 				Free();
 			}
 
@@ -109,7 +109,7 @@ namespace AssetPool {
 
 			{
 				// Bulk-Load the data //
-				Log( "* Caching \"%s\"...\n", File.c_str() );
+				Log( "* Caching \"%s\"...", File.c_str() );
 				UnProcessed = new_read_DataBlock( File.c_str() );
 				FileInfo.Test( File.c_str() );
 	
@@ -118,16 +118,16 @@ namespace AssetPool {
 				AssetType.TestCompressionData( UnProcessed->Data );
 
 				if ( AssetType.IsCompression() ) {
-					VLog( "* File Data Code: 0x%x\n", AssetType.Type );
+					VLog( "* File Data Code: 0x%x", AssetType.Type );
 					// If Compressed, figure out the compression scheme and decompress //
 					switch ( AssetType.Type ) {
 						case GEL_ASSET_LZMA: {
-							VLog("* Compressed Data (LZMA). Uncompressing...\n" );
+							VLog("* Compressed Data (LZMA). Uncompressing..." );
 							Processed = new_unpack_LZMA_DataBlock( UnProcessed );
 							break;
 						}
 						default: {
-							ELog("Unknown or Unsupported Asset Compression Format!\n" );
+							ELog("Unknown or Unsupported Asset Compression Format!" );
 							delete_DataBlock( UnProcessed );
 							return;
 							break;
@@ -136,7 +136,7 @@ namespace AssetPool {
 				}
 				else {
 					// If not compressed //
-					VLog( "* Not Compressed\n" );
+					VLog( "* Not Compressed" );
 					
 					Processed = UnProcessed;
 					UnProcessed = 0;
@@ -149,17 +149,17 @@ namespace AssetPool {
 				AssetDataType.TestData( Processed->Data );
 				
 				if ( AssetDataType.IsTexture() ) {
-					VLog("* Asset is a Texture (0x%x)\n", Processed );
+					VLog("* Asset is a Texture (0x%x)", Processed );
 					Type = GEL_ASSETCLASS_TEXTURE;
 					Texture = new GelTexture();
 					Texture->Load( Processed );
 				}
 				else if ( AssetDataType.IsModel() ) {
-					VLog("* Asset is a Model (0x%x)\n", Processed );
+					VLog("* Asset is a Model (0x%x)", Processed );
 					Type = GEL_ASSETCLASS_MODEL;
 				}
 				else if ( AssetDataType.IsAudio() ) {
-					VLog("* Asset is a Audio (0x%x)\n", Processed );
+					VLog("* Asset is a Audio (0x%x)", Processed );
 					Type = GEL_ASSETCLASS_AUDIO;
 				}
 				else {
@@ -167,22 +167,22 @@ namespace AssetPool {
 					AssetDataType.TestName( File.c_str() );
 					
 					if ( AssetDataType.IsScript() ) {
-						VLog("* Asset is a Script, %i bytes (0x%x)\n", Processed->Size, Processed );
+						VLog("* Asset is a Script, %i bytes (0x%x)", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_SCRIPT;
 						Data = Processed;
 					}
 					else if ( AssetDataType.IsShader() ) {
-						VLog("* Asset is a Shader Program, %i bytes (0x%x)\n", Processed->Size, Processed );
+						VLog("* Asset is a Shader Program, %i bytes (0x%x)", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_SHADER;
 						Data = Processed;
 					}
 					else if ( AssetDataType.IsText() ) {
-						VLog("* Asset is Text, %i bytes (0x%x)\n", Processed->Size, Processed );
+						VLog("* Asset is Text, %i bytes (0x%x)", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_TEXT;
 						Data = Processed;
 					}
 					else {
-						ELog("Unknown Asset Type\n" );
+						ELog("Unknown Asset Type" );
 						Type = GEL_ASSETCLASS_NULL;
 
 						if ( UnProcessed )
@@ -236,7 +236,7 @@ namespace AssetPool {
 					switch ( Type ) {
 						case GEL_ASSETCLASS_TEXTURE: {
 							Texture->Free();
-							VLog( "* Texture Asset Freed\n" );
+							VLog( "* Texture Asset Freed" );
 							break;
 						}
 						case GEL_ASSETCLASS_MODEL: {
@@ -249,7 +249,7 @@ namespace AssetPool {
 						case GEL_ASSETCLASS_SHADER:
 						case GEL_ASSETCLASS_TEXT: {
 							delete_DataBlock( Data );
-							VLog( "* Text Asset Freed\n" );
+							VLog( "* Text Asset Freed" );
 							break;
 						}
 					};
@@ -293,7 +293,7 @@ namespace AssetPool {
 
 			// Store the prefix (without trailing slash.  Slash will be part of search strings) //
 
-			VVLog("FilePrefix: %s\n", FilePrefix.c_str());
+			VVLog("FilePrefix: %s", FilePrefix.c_str());
 		}
 		
 		{
@@ -316,7 +316,7 @@ namespace AssetPool {
 		//ReadDir += String::Slash;
 		
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
-		Log( "+ Adding Asset Directory \"%s\" (%i Total)\n", ReadDir.c_str(), size_GelDirectory( Dir ) );
+		Log( "+ Adding Asset Directory \"%s\" (%i Total)", ReadDir.c_str(), size_GelDirectory( Dir ) );
 		
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = String::Slash;
@@ -326,12 +326,12 @@ namespace AssetPool {
 			std::string NoExt = String::NoExtensions( SlashString );
 			AssetLookup[ NoExt.c_str() ] = AssetInstance.size() - 1;
 			
-			Log( "* %s [%s] (%i)\n", SlashString.c_str(), NoExt.c_str(), idx );
+			Log( "* %s [%s] (%i)", SlashString.c_str(), NoExt.c_str(), idx );
 		}
 		
 		delete_GelDirectory( Dir );
 		
-		Log( "- Asset Directory added.\n" );
+		Log( "- Asset Directory added." );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -339,11 +339,11 @@ namespace AssetPool {
 	GelAssetHandle Find( const char* FileName ) {
 		// Search the map for the specific pattern //
 		std::map<std::string, GelAssetHandle>::iterator SearchIterator = AssetLookup.find( FileName );
-		Log( "+ Searching for %s\n", FileName );
+		Log( "+ Searching for %s", FileName );
 		
 		// If it was found, return the Id //
 		if ( SearchIterator != AssetLookup.end() ) {
-			Log( "- %s found in lookup cache!\n", FileName );
+			Log( "- %s found in lookup cache!", FileName );
 			return SearchIterator->second;
 		}
 
@@ -351,11 +351,11 @@ namespace AssetPool {
 		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
 			// Linear test strings if they contain the pattern passed //
 			if ( AssetInstance[idx].FileName.find( FileName ) != std::string::npos ) {
-				Log( "- Found %s!\n", FileName );
+				Log( "- Found %s!", FileName );
 				return idx;
 			}
 		}
-		Log( "- %s NOT FOUND!!\n", FileName );
+		Log( "- %s NOT FOUND!!", FileName );
 		
 		// Otherwise, no file was found.  Return the dummy Id (0). //
 		return 0;
@@ -397,7 +397,7 @@ namespace AssetPool {
 
 #ifdef HACK_TEXTURE5_GLITCH
 			if ( AssetInstance[ Asset ].Texture->Handle == 5 ) {
-				Log( "** WebOS! ** : Working around 'Texture 5' glitch...\n" );
+				Log( "** WebOS! ** : Working around 'Texture 5' glitch..." );
 				PalmGlitch = AssetInstance[ Asset ].Texture->Handle;				
 				AssetInstance[ Asset ].Load( FilePrefix );
 			}
@@ -414,7 +414,7 @@ namespace AssetPool {
 
 		// Bail if we're in the middle of shutting down //
 		if ( System::ShutdownGame || System::CloseButtonPressed ) {
-			Log( "> Shutdown Detected!  Aborting Asset Load...\n");
+			Log( "> Shutdown Detected!  Aborting Asset Load...");
 			return 0;
 		}
 

@@ -6,6 +6,8 @@
 // - Make the new_DataBlock call a bit more obvious that it reads a file
 // - Also, give an option to load a datablock with a trailing zero (cJSON wanted this)
 // - ------------------------------------------------------------------------------------------ - //
+// - Make the F12 key dump the Game Instance (or the GameHost), causing a re-search for asset files
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
@@ -57,39 +59,41 @@ void cGame::InitScripts() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::LoadScripts() {
-	Log( "+ Loading Scripts...\n" );
+	Log( "+ Loading Scripts..." );
 
 	for ( int idx = 0; idx < Script.size(); idx++ ) {
 		vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );	
 	}
 	vm_ScriptsLoaded = true;
 
-	Log( "- Done Loading Scripts.\n" );
+	Log( "- Done Loading Scripts." );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::ReloadScripts() {
 	if ( vm_ScriptsLoaded ) {				
-		Log( "+ Scanning %i Scripts...\n", Script.size() );
+		Log( "+ Scanning %i Scripts for changes...", Script.size() );
 
 		for ( int idx = 0; idx < Script.size(); idx++ ) {
 			if ( AssetPool::HasChanged( Script[idx].Handle ) ) {
-				Log( "* Change detected in \"%s\". Reloading...\n", Script[idx].FileName );
+				Log( "* Change detected in \"%s\". Reloading...", Script[idx].FileName );
 				AssetPool::Free( Script[idx].Handle );
 				Script[idx].Handle = AssetPool::Load( Script[idx].FileName );
 				vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );
 			}
 		}
 
-		Log( "- Done Scanning Scripts.\n" );
+		Log( "- Done Scanning Scripts." );
 	}
 	else {
-		ELog( "Scipts haven't been loaded yet!\n" );
+		ELog( "Scipts haven't been loaded yet!" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
+	Log( "+ Start of Init..." );
+	
 	// Run the Experiments ... //
 	extern void CallExp();
 //	CallExp();
@@ -108,7 +112,7 @@ void cGame::Init() {
 //	typedef ABCSet<unsigned char> GType;
 //	typedef int GType;
 	typedef unsigned char GType;
-	Log( "%i\n", MaxValue<GType>() );
+	Log( "%i", MaxValue<GType>() );
 
 	{
 		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
@@ -154,7 +158,7 @@ void cGame::Init() {
 	
 	CameraWorldPos = Vector3D(0,0,0);
 	
-	Log("End of Init\n");
+	Log("- End of Init");
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {

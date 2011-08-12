@@ -26,23 +26,23 @@ void GelTexture::Init( const bool _Processed, const bool _UnProcessed ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::LogAllocations() {
-	Log( "GelTextures GL Allocations: %i  Sum: %i\n", AllocCount, AllocSum );	
+	Log( "GelTextures GL Allocations: %i  Sum: %i", AllocCount, AllocSum );	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Exit( ) {
 	LogAllocations();
 	
 	if ( AllocCount != 0 ) {
-		ELog( "GL ALLOCATION MISSMATCHED!!\n" );
+		ELog( "GL ALLOCATION MISSMATCHED!!" );
 	}
 	
 	if ( AllocSum != 0 ) {
-		ELog( "GL ALLOCATION SUM MISSMATCHED!!\n" );
+		ELog( "GL ALLOCATION SUM MISSMATCHED!!" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed ) {
-	Log("* Free Policy set: %i %i\n", _Processed, _UnProcessed );
+	Log("* Free Policy set: %i %i", _Processed, _UnProcessed );
 	FreePolicy_Processed = _Processed;
 	FreePolicy_UnProcessed = _UnProcessed;
 }
@@ -94,7 +94,7 @@ bool GelTexture::Process() {
 			break;
 		}
 		default: {
-			ELog("Unknown Asset Format!\n" );
+			ELog("Unknown Asset Format!" );
 			return false;
 			break;
 		}
@@ -126,7 +126,7 @@ bool GelTexture::Load() {
 			break;
 		}
 		default: {
-			ELog( "Unknown Asset Format (%i)!\n", Processed.Asset.Type );
+			ELog( "Unknown Asset Format (%i)!", Processed.Asset.Type );
 			return false;
 			break;
 		}
@@ -148,12 +148,12 @@ bool GelTexture::Load() {
 bool GelTexture::Cache( DataBlock* InData ) {
 	// TODO: Assert //
 	if ( this == 0 ) {
-		ELog( "Null pointer GelTexture\n" );
+		ELog( "Null pointer GelTexture" );
 		return false;
 	}
 		
 	if ( InData == 0 ) {
-		ELog( "Null pointer DataBlock\n" );
+		ELog( "Null pointer DataBlock" );
 		return false;
 	}
 	
@@ -176,7 +176,7 @@ bool GelTexture::Cache( const char* FileName ) {
 	DataBlock* InData = new_read_DataBlock( FileName );
 
 	if ( InData == 0 ) {
-		ELog( "Unable to load \"%s\"\n", FileName );
+		ELog( "Unable to load \"%s\"", FileName );
 		return false;
 	}
 		
@@ -195,11 +195,11 @@ bool GelTexture::Load( DataBlock* InData ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Load( const char* FileName ) {
-	Log( "* Reading file \"%s\"...\n", FileName );
+	Log( "* Reading file \"%s\"...", FileName );
 	DataBlock* InData = new_read_DataBlock( FileName );
 
 	if ( InData == 0 ) {
-		ELog( "Unable to Read \"%s\"!!\n", FileName );
+		ELog( "Unable to Read \"%s\"!!", FileName );
 		return false;
 	}
 		
@@ -234,7 +234,7 @@ void GelTexture::FreeHandle() {
 		AllocCount--;
 		AllocSum -= Handle;
 
-		Log( "* GL Texture %i Free'd\n", Handle );
+		Log( "* GL Texture %i Free'd", Handle );
 		glDeleteTextures( 1, (const GLuint*)&Handle );
 		
 		Handle = 0;
@@ -263,7 +263,7 @@ void GelTexture::FreePolicy() {
 				FreeUnProcessed();
 			}
 			else {
-				ELog( "This File Format shares data with Processed!\n" );
+				ELog( "This File Format shares data with Processed!" );
 			}
 		}
 		else {

@@ -138,26 +138,43 @@ extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 */
 
-void _Log( const char* s, ... );
+// The "Forcefully Always Log" version // 
+void LogAlways( const char* s, ... );
+void _LogAlways( const char* s, ... );
+
+// Standard Logging, with newline //
 void Log( const char* s, ... );
 void VLog( const char* s, ... );
 void VVLog( const char* s, ... );
 void VVVLog( const char* s, ... );
 
+// Logging, without newline //
+void _Log( const char* s, ... );
+void _VLog( const char* s, ... );
+void _VVLog( const char* s, ... );
+void _VVVLog( const char* s, ... );
+
+// Error Logging //
 #define ELog( ___ARGS... ) \
-	_Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-	_Log( ___ARGS )
+	_LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
+	LogAlways( ___ARGS )
 
 #ifndef NDEBUG
 	#define DLog( ___ARGS... ) \
-		_Log( ___ARGS )
+		LogAlways( ___ARGS )
+	#define _DLog( ___ARGS... ) \
+		_LogAlways( ___ARGS )
 #else // NDEBUG //
 	#define DLog( ... ) ;
+	#define _DLog( ... ) ;
 #endif // NDEBUG //
 
 // - ------------------------------------------------------------------------------------------ - //
 #else // NOLOGGING //
 // - ------------------------------------------------------------------------------------------ - //
+
+#define LogAlways( ... ) ;
+#define _LogAlways( ... ) ;
 
 #define Log( ... ) ;
 #define VLog( ... ) ;
@@ -166,6 +183,13 @@ void VVVLog( const char* s, ... );
 #define ELog( ... ) ;
 #define DLog( ... ) ;
 
+#define _Log( ... ) ;
+#define _VLog( ... ) ;
+#define _VVLog( ... ) ;
+#define _VVVLog( ... ) ;
+#define _ELog( ... ) ;
+#define _DLog( ... ) ;
+
 #define wLog( ... ) ;
 #define wVLog( ... ) ;
 #define wVVLog( ... ) ;
@@ -173,8 +197,8 @@ void VVVLog( const char* s, ... );
 #define wELog( ... ) ;
 #define wDLog( ... ) ;
 
-#define LogFlush() ;
-#define DLogFlush() ;
+//#define LogFlush() ;
+//#define DLogFlush() ;
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NOLOGGING //

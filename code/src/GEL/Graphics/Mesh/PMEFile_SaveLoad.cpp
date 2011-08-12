@@ -20,7 +20,7 @@ using namespace std;
 // - ------------------------------------------------------------------------------------------ - //
 void cPMEFile::TextLoad() {
 	int Lines = 0;
-	Log( "+ Loading %s\n", FileName.c_str() );
+	Log( "+ Loading %s", FileName.c_str() );
 
 	// TODO: Support compressed reading //
 	cWhitespaceTokenizer File( FileName.c_str() );
@@ -191,12 +191,12 @@ void cPMEFile::TextLoad() {
 		}
 		else {
 #ifndef _MSC_VER
-			Log( "%s (%s): Unknown Command\n", __PRETTY_FUNCTION__, __FILE__ );
+			Log( "%s (%s): Unknown Command", __PRETTY_FUNCTION__, __FILE__ );
 #endif // _MSC_VER //
 		}
 		Lines++;
 	} while ( File.NextLine() );
-	Log("- Done. %i lines processed\n", Lines );
+	Log("- Done. %i lines processed", Lines );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cPMEFile::TextSave() {
@@ -218,25 +218,25 @@ void cPMEFile::Import( const char* FileName ) {
 	if ( Scene ) {
 		// Success! //
 		if ( Scene->HasAnimations() ) {
-			Log( "* Scene has %i Animations\n", Scene->mNumAnimations );
+			Log( "* Scene has %i Animations", Scene->mNumAnimations );
 		}
 		if ( Scene->HasCameras() ) {
-			Log( "* Scene has %i Camerass\n", Scene->mNumCameras );
+			Log( "* Scene has %i Camerass", Scene->mNumCameras );
 		}
 		if ( Scene->HasLights() ) {
-			Log( "* Scene has %i Lights\n", Scene->mNumLights );
+			Log( "* Scene has %i Lights", Scene->mNumLights );
 		}
 		if ( Scene->HasMaterials() ) {
-			Log( "* Scene has %i Materials\n", Scene->mNumMaterials );
+			Log( "* Scene has %i Materials", Scene->mNumMaterials );
 		}
 		if ( Scene->HasMeshes() ) {
-			Log( "* Scene has %i Meshes\n", Scene->mNumMeshes );
+			Log( "* Scene has %i Meshes", Scene->mNumMeshes );
 			
 			for ( int Meshes = 0; Meshes < Scene->mNumMeshes; Meshes++ ) {
-				Log( "** Mesh Name: %s\n", Scene->mMeshes[Meshes]->mName.data );
+				Log( "** Mesh Name: %s", Scene->mMeshes[Meshes]->mName.data );
 				Mesh.push_back( cPMEMesh() );
 				
-				Log( "**\n" );
+				VVVLog( "**" );
 
 				for ( int idx = 0; idx < Scene->mMeshes[Meshes]->mNumVertices; idx++ ) {
 					Mesh.back().Vertex.push_back( cPMEVertex() );
@@ -246,7 +246,7 @@ void cPMEFile::Import( const char* FileName ) {
 					Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 				}
 
-				Log( "**\n" );
+				VVVLog( "**" );
 				
 				Mesh.back().FaceGroup.push_back( cPMEFaceGroup() );
 				for ( int idx = 0; idx < Scene->mMeshes[Meshes]->mNumFaces; idx++ ) {
@@ -255,25 +255,25 @@ void cPMEFile::Import( const char* FileName ) {
 					Mesh.back().FaceGroup.back().Face.back().b = Scene->mMeshes[Meshes]->mFaces[idx].mIndices[1];
 					Mesh.back().FaceGroup.back().Face.back().c = Scene->mMeshes[Meshes]->mFaces[idx].mIndices[2];
 				}	
-				Log( "**\n" );
+				VVVLog( "**" );
 			}
 		}
 		if ( Scene->HasTextures() ) {
-			Log( "* Scene has %i Textures\n", Scene->mNumTextures );
+			Log( "* Scene has %i Textures", Scene->mNumTextures );
 		}
 		
 		aiReleaseImport( Scene );
 	}	
 	else {
-		ELog( "Scene load failed!\n" );
-		Log( "%s\n", aiGetErrorString() );
+		ELog( "Scene load failed!" );
+		Log( "%s", aiGetErrorString() );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 #else // USES_ASSIMP //
 // - ------------------------------------------------------------------------------------------ - //
 void cPMEFile::Import( const char* FileName ) {
-	ELog("WARNING: Assimp not available.\n" );
+	ELog("WARNING: Assimp not available." );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES_ASSIMP //

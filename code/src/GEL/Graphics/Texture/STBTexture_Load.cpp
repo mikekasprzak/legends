@@ -39,19 +39,19 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
-	VLog("* Allocating GL Texture ID...\n" );
+	VLog("* Allocating GL Texture ID..." );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );
-	VVLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
+	VVLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );	
 	glBindTexture( GL_TEXTURE_2D, TextureID );
-	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
+	VLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );
 	
 	if ( glGetError() != GL_NO_ERROR ) {
-		ELog( "Texture Bind Failed!\n" );
+		ELog( "Texture Bind Failed!" );
 	}
 	
 	if ( !glIsTexture(TextureID) ) {
-		ELog( "IsTexture Failed!\n" );	
+		ELog( "IsTexture Failed!" );	
 	}
 	
 	// Default Load Format //
@@ -64,29 +64,29 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// Switch the Load Format found inside the PVR File //
 	switch ( Texture->Info ) {
 		case 4:
-			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			break;
 		case 3:
-			VLog("* GL_UNSIGNED_BYTE (RGB_888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGB_888)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case 1:
-			VLog("* GL_UNSIGNED_BYTE (I_8)\n");
+			VLog("* GL_UNSIGNED_BYTE (I_8)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_LUMINANCE;
 			InternalFormat = GL_LUMINANCE;
 			break;
 		case 2:
-			VLog("* GL_UNSIGNED_SHORT (AI_88)\n");
+			VLog("* GL_UNSIGNED_SHORT (AI_88)");
 			RGBFormat = GL_UNSIGNED_SHORT;
 			ReadFormat = GL_LUMINANCE_ALPHA;
 			InternalFormat = GL_LUMINANCE_ALPHA;
 			break;	
 		default:
-			ELog( "Unknown STB Format (0x%x)!\n", Texture->Info );
+			ELog( "Unknown STB Format (0x%x)!", Texture->Info );
 			break;
 	};
 	
@@ -106,7 +106,7 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// New feature.  If MaxTextureSize is greater than the current mipmap size, throw it away. //
 	int OmittedTexture = 0;
 	
-	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, MipMapCount );
+	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, MipMapCount );
 
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < MipMapCount+1; MipMap++ ) {
@@ -121,7 +121,7 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 		
 		// A new check. If texture is larger than our max allowed size, keep omitting textures until they fit. //
 		if ( TextureSize > System::MaxTextureSize ) {
-			Log( "* NOTE: Mipmap %i omitted (TextureSize: %i | MaxTextureSize: %i)\n", MipMap, TextureSize, System::MaxTextureSize );
+			Log( "* NOTE: Mipmap %i omitted (TextureSize: %i | MaxTextureSize: %i)", MipMap, TextureSize, System::MaxTextureSize );
 			OmittedTexture++;
 		}
 		else {
@@ -142,7 +142,7 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 			
 			GLenum Err = glGetError();
 			if ( Err != GL_NO_ERROR ) {
-				ELog("GL ERROR: ???\n" );
+				ELog("GL ERROR: ???" );
 			}
 		}
 		
@@ -152,7 +152,7 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 		Height >>= 1;
 	}
 	
-	Log("- %i Texture levels loaded.\n", MipMapCount+1 );
+	Log("- %i Texture levels loaded.", MipMapCount+1 );
 
 	// Return the Texture ID //
 	return TextureID;
