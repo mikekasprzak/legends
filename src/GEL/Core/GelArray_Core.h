@@ -116,6 +116,17 @@ inline void delete_GelArray( GelArray<Type>* p ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline Type& index_GelArray( GelArray<Type>* p, const size_t _Index ) {
+	return (p->Data[ _Index ]);
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline const st32 size_GelArray( GelArray<Type>* p ) {
+	return p->Size;
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // New that set the maximum size //
@@ -193,10 +204,10 @@ inline GelArray<Type>* copy_GelArray( GelArray<Type>* _Src ) {
 	return NewBlock;
 }
 // - ------------------------------------------------------------------------------------------ - //
-template< class Type >
-inline GelArray<Type>* new_GelArray( GelArray<Type>* _Src ) {
-	return copy_GelArray<Type>( _Src );
-}
+//template< class Type >
+//inline GelArray<Type>* new_GelArray( GelArray<Type>* _Src ) {
+//	return copy_GelArray<Type>( _Src );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -215,10 +226,10 @@ inline GelArray<Type>* copy_GelArray( DataBlock* _Src ) {
 	return NewBlock;
 }
 // - ------------------------------------------------------------------------------------------ - //
-template< class Type >
-inline GelArray<Type>* new_GelArray( DataBlock* _Src ) {
-	return copy_GelArray<Type>( _Src );
-}
+//template< class Type >
+//inline GelArray<Type>* new_GelArray( DataBlock* _Src ) {
+//	return copy_GelArray<Type>( _Src );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -418,6 +429,10 @@ inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize, const Typ
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushback_GelArray( GelArray<Type>** p, const Type& _InitValue ) {
+	Log( "> 0x%x %x\n", p, *p );
+	Log( "> 0x%x %i 0x%x\n", p, (*p)->Size, &_InitValue );
+	Log( "> 0x%x %i 0x%x 0x%x\n", p, (*p)->Size, _InitValue, &_InitValue );
+
 	resize2_GelArray( p, (*p)->Size + 1, _InitValue );
 } 
 // - ------------------------------------------------------------------------------------------ - //

@@ -28,8 +28,8 @@ inline GelHeap* new_GelHeap( const char* _FileName ) {
 	//   and write a stored GelHeap in much the same way as we would to a FILE*. //
 	GelHeap* p = new GelHeap;
 	
-	p->Index = new_GelArray<size_t>( fp );
-	p->Data = new_GelArray<char>( fp );
+	p->Index = new_read_GelArray<size_t>( fp );
+	p->Data = new_read_GelArray<char>( fp );
 
 	
 	// Close file //
@@ -42,8 +42,8 @@ inline GelHeap* new_GelHeap( const char* _FileName ) {
 inline GelHeap* new_GelHeap( GelFile* fp ) {
 	GelHeap* p = new GelHeap;
 	
-	p->Index = new_GelArray<size_t>( fp );
-	p->Data = new_GelArray<char>( fp );
+	p->Index = new_read_GelArray<size_t>( fp );
+	p->Data = new_read_GelArray<char>( fp );
 	
 	// Return data //
 	return p;
@@ -52,8 +52,8 @@ inline GelHeap* new_GelHeap( GelFile* fp ) {
 inline GelHeap* new_GelHeap( GelVFile* fp ) {
 	GelHeap* p = new GelHeap;
 	
-	p->Index = new_GelArray<size_t>( fp );
-	p->Data = new_GelArray<char>( fp );
+	p->Index = new_read_GelArray<size_t>( fp );
+	p->Data = new_read_GelArray<char>( fp );
 	
 	// Return data //
 	return p;

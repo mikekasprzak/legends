@@ -8,6 +8,8 @@
 #include "GelString_File.h"
 #include "GelHeap_Core.h"
 #include "GelHeap_File.h"
+
+#include "GelFileInfo.h"
 // - ------------------------------------------------------------------------------------------ - //
 // Directories are lists of file names.  They can be populated manually, or be polled from disk
 //   and other sources.  The next step up from a Directory is an Archive, which contains data too.
@@ -21,15 +23,26 @@ struct GelDirectory {
 	char* BaseName;
 	// A GelHeap of filenames //
 	GelHeap* FileName;
+	
+	GelArray<GelFileInfo>* FileInfo;
 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline const size_t add_GelDirectory( GelDirectory* p, const char* _String ) {
+inline const size_t add_GelDirectory( GelDirectory* p, const char* _String, const GelFileInfo* _FileInfo ) {
 	size_t StringLength = length_String( _String ) + 1;
+	
+	Log( "Mem: 0x%x  0x%x\n", _FileInfo, *_FileInfo );
+	pushback_GelArray<GelFileInfo>( &p->FileInfo, *_FileInfo );
 	
 	return allocate_GelHeap( p->FileName, _String, StringLength );
 }
+// - ------------------------------------------------------------------------------------------ - //
+//inline const size_t add_GelDirectory( GelDirectory* p, const char* _String ) {
+//	size_t StringLength = length_String( _String ) + 1;
+//		
+//	return allocate_GelHeap( p->FileName, _String, StringLength );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 inline const size_t size_GelDirectory( const GelDirectory* p ) {
 	return size_GelHeap( p->FileName );
@@ -37,6 +50,10 @@ inline const size_t size_GelDirectory( const GelDirectory* p ) {
 // - ------------------------------------------------------------------------------------------ - //
 inline const char* index_GelDirectory( const GelDirectory* p, const size_t Index ) { 
 	return index_GelHeap( p->FileName, Index );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline const GelFileInfo& info_GelDirectory( const GelDirectory* p, const size_t Index ) { 
+	return index_GelArray<GelFileInfo>( p->FileInfo, Index );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -50,6 +67,8 @@ inline GelDirectory* new_GelDirectory() {
 	
 	NewDir->FileName = new_GelHeap(0, 0);
 	
+	NewDir->FileInfo = new_GelArray<GelFileInfo>( 0 );
+	
 	return NewDir;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -59,6 +78,9 @@ inline void delete_GelDirectory( GelDirectory* p ) {
 		
 	if ( p->FileName )
 		delete_GelHeap( p->FileName );
+	
+	if ( p->FileInfo )
+		delete_GelArray( p->FileInfo );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -71,7 +93,7 @@ inline GelDirectory* new_GelDirectory( GelDirectory* p, const char* Pattern ) {
 	
 	for (size_t idx = 0; idx < size_GelDirectory( p ); idx++ ) {
 		if ( find_String( Pattern, index_GelDirectory( p, idx ) ) )
-			add_GelDirectory( NewDir, index_GelDirectory( p, idx ) );
+			add_GelDirectory( NewDir, index_GelDirectory( p, idx ), &info_GelDirectory( p, idx ) );
 	}
 	
 	return NewDir;

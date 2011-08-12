@@ -17,7 +17,7 @@
 // Use this alternative "new" function when you don't know how big it is //
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline GelArray<Type>* new_GelArray( const char* _FileName ) {
+inline GelArray<Type>* new_read_GelArray( const char* _FileName ) {
 	// Open File //
 	GelFile* fp = open_readonly_GelFile( _FileName );
 	if ( fp == 0 ) {
@@ -45,7 +45,7 @@ inline GelArray<Type>* new_GelArray( const char* _FileName ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline GelArray<Type>* new_GelArray( GelFile* fp ) {
+inline GelArray<Type>* new_read_GelArray( GelFile* fp ) {
 	// Read Size (in bytes) //
 	size_t Size = read_GelFile<size_t>( fp );
 	
@@ -60,7 +60,7 @@ inline GelArray<Type>* new_GelArray( GelFile* fp ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline GelArray<Type>* new_GelArray( GelVFile* fp ) {
+inline GelArray<Type>* new_read_GelArray( GelVFile* fp ) {
 	// Read Size (in bytes) //
 	size_t Size = read_GelVFile<size_t>( fp );
 	
@@ -76,12 +76,12 @@ inline GelArray<Type>* new_GelArray( GelVFile* fp ) {
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline GelArray<Type>* read_GelArray( GelFile* fp ) {
-	return new_GelArray<Type>( fp );
+	return new_read_GelArray<Type>( fp );
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline GelArray<Type>* read_GelArray( GelVFile* fp ) {
-	return new_GelArray<Type>( fp );
+	return new_read_GelArray<Type>( fp );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
