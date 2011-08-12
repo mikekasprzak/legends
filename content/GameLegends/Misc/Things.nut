@@ -3,7 +3,7 @@
 function DoAwesome() {
 	local MyVar = "Saxaphone";
 	
-	print( format("This function doos AMAZING things! -> %s\n", MyVar) );
+	print( format("This function does AMAZING things! -> %s\n", MyVar) );
 }
 
 
