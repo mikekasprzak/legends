@@ -79,3 +79,36 @@ void cGame::vm_Exit() {
 	Log( "\n" );
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// NOTE: FileName is for better Errors only //
+SQRESULT cGame::vm_CompileAndRun( DataBlock* InFile, const char* FileName ) {
+	Log( "+ Compiling \"%s\"...\n", FileName );
+	SQRESULT Error = sq_compilebuffer( vm, InFile->Data, InFile->Size, FileName, true );
+
+	if ( Error ) {
+		ELog( "- Squirrel Compile Error! %i\n", Error );
+	}
+	else {
+		Log( "- Compiled Successfully!\n" );
+		Log( "+ Executing \"%s\"...\n", FileName );
+
+		int StackTop = sq_gettop( vm );
+		VVLog( "* Stack Top: %i\n", StackTop );
+
+		unsigned int Params = 0;
+		unsigned int FreeVars = 0;
+		
+		sq_getclosureinfo( vm, -1, (SQUnsignedInteger*)&Params, (SQUnsignedInteger*)&FreeVars );
+		VLog( "* Function Info: Params: %i  FreeVars: %i\n", Params, FreeVars );
+		
+		sq_pushroottable( vm );
+		Error = sq_call( vm, 1, false, true );
+		
+		sq_settop( vm, StackTop );
+		Log( "- Finished running \"%s\"\n", FileName );
+	}
+	
+	return Error;
+}
+// - ------------------------------------------------------------------------------------------ - //
