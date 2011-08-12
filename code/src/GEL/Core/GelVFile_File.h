@@ -15,10 +15,10 @@
 // These functions are required by this code, but since VFile relies on GelArray, it's a circle.  //
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline GelArray<Type>* new_GelArray( const char* _FileName );
+inline GelArray<Type>* new_read_GelArray( const char* _FileName );
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline GelArray<Type>* new_GelArray( GelFile* fp );
+inline GelArray<Type>* new_read_GelArray( GelFile* fp );
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline const size_t read_GelArray( GelArray<Type>* p, const char* _FileName );
@@ -31,23 +31,23 @@ inline const size_t write_GelArray( const GelArray<Type>* p, const char* _FileNa
 // - ------------------------------------------------------------------------------------------ - //
 // Use this alternative "new" function when you don't know how big a file is //
 // - ------------------------------------------------------------------------------------------ - //
-inline GelVFile* new_GelVFile( const char* _FileName ) {
+inline GelVFile* new_read_GelVFile( const char* _FileName ) {
 	// GelVFile is too complicated a type to rely on the file size alone, so we need to read //
 	//   and write a stored heap in much the same way as we would to a FILE*. //
 	GelVFile* p = new GelVFile;
 	
 	p->Position = 0;
-	p->Data = new_GelArray<char>( _FileName );
+	p->Data = new_read_GelArray<char>( _FileName );
 	
 	// Return data //
 	return p;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline GelVFile* new_GelVFile( GelFile* fp ) {
+inline GelVFile* new_read_GelVFile( GelFile* fp ) {
 	GelVFile* p = new GelVFile;
 	
 	p->Position = 0;
-	p->Data = new_GelArray<char>( fp );
+	p->Data = new_read_GelArray<char>( fp );
 	
 	// Return data //
 	return p;
@@ -78,7 +78,7 @@ inline const size_t writefile_GelVFile( const GelVFile* p, const char* _FileName
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline GelVFile* readfile_GelVFile( const char* _FileName ) {
-	return new_GelVFile( _FileName );
+	return new_read_GelVFile( _FileName );
 }
 // - ------------------------------------------------------------------------------------------ - //
 

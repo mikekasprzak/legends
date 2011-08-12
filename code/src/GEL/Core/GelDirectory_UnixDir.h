@@ -45,13 +45,13 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 		cat_String( Data->d_name, CurrentFile );
 
 		// Get the status of the file //
-		struct stat DIRStatus;
-		stat( CurrentFile, &DIRStatus );
+		GelFileInfo DIRStatus;
+		DIRStatus.Test( CurrentFile );
 
 		VVLog("> Populated: %s\n", CurrentFile );
 
 		// If it's a directory //
-		if ( S_ISDIR( DIRStatus.st_mode ) ) {
+		if ( DIRStatus.IsDirectory() ) {
 			// Recursively do this again, if not a dot file or folder //
 			if( Data->d_name[0] != '.' ) 
 				if( Data->d_name[0] != '_' ) {
@@ -69,16 +69,16 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 				}
 		}
 		// If it's a regular file //
-		else if ( S_ISREG( DIRStatus.st_mode ) ) {
+		else if ( DIRStatus.IsFile() ) {
 			if( Data->d_name[0] != '.' ) {
 				if( Data->d_name[0] != '_' ) {
 					// Build our filename string //
 					char* NewFile = new char[ length_String(Prefix) + length_String(Data->d_name) + 1 ];
 					copy_String( Prefix, NewFile );
 					cat_String( Data->d_name, NewFile );
-		
+				
 					// Add the file //
-					add_GelDirectory( p, NewFile );
+					add_GelDirectory( p, NewFile, &DIRStatus );
 					
 					// Delet our filename string //
 					delete_String( NewFile );
