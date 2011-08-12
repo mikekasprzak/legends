@@ -50,39 +50,41 @@ GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::InitScripts() {
-	CoreScript = 0;
+	vm_ScriptsLoaded = false;
+
+	Script.push_back( vmScript( "/Things.nut" ) );
+	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::LoadScripts() {
 	Log( "+ Loading Scripts...\n" );
-	
-	// HACK: Free the core script, to make reloading work //
-	if ( CoreScript != 0 ) {
-		AssetPool::Free( CoreScript );
+
+	for ( int idx = 0; idx < Script.size(); idx++ ) {
+		vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );	
 	}
-	
-	const char* ScriptFile = "/Things.nut";
-	CoreScript = AssetPool::Load( ScriptFile );
-	vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
-		
 	vm_ScriptsLoaded = true;
 
 	Log( "- Done Loading Scripts.\n" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::ReloadScripts() {
-	Log( "+ Reloading Scripts...\n" );
+	if ( vm_ScriptsLoaded ) {				
+		Log( "+ Scanning %i Scripts...\n", Script.size() );
 
-	const char* ScriptFile = "/Things.nut";
-	CoreScript = AssetPool::Load( ScriptFile );
-	if ( AssetPool::HasChanged( CoreScript ) ) {
-		Log( "* Change detected in \"%s\". Reloading...\n", ScriptFile );
-		AssetPool::Free( CoreScript );
-		CoreScript = AssetPool::Load( ScriptFile );
-		vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
+		for ( int idx = 0; idx < Script.size(); idx++ ) {
+			if ( AssetPool::HasChanged( Script[idx].Handle ) ) {
+				Log( "* Change detected in \"%s\". Reloading...\n", Script[idx].FileName );
+				AssetPool::Free( Script[idx].Handle );
+				Script[idx].Handle = AssetPool::Load( Script[idx].FileName );
+				vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );
+			}
+		}
+
+		Log( "- Done Scanning Scripts.\n" );
 	}
-	
-	Log( "- Done Reloading Scripts.\n" );
+	else {
+		ELog( "Scipts haven't been loaded yet!\n" );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
