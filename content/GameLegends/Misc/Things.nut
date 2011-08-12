@@ -1,4 +1,13 @@
 
+
+function DoAwesome() {
+	local MyVar = "Saxaphone";
+	
+	print( format("This function does AMAZING things! -> %s\n", MyVar) );
+}
+
+
+
 // TODO: Need a way (function) that can take 2 objects and combine their "tag clouds"
 
 print("Hello World!\n");
