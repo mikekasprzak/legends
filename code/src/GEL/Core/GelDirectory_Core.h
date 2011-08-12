@@ -25,15 +25,21 @@ struct GelDirectory {
 	GelHeap* FileName;
 	
 	GelArray<GelFileInfo>* FileInfo;
+	
+	GelDirectory() :
+		BaseName( 0 ),
+		FileName( 0 ),
+		FileInfo( 0 )
+	{
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline const size_t add_GelDirectory( GelDirectory* p, const char* _String, const GelFileInfo* _FileInfo ) {
+inline const size_t add_GelDirectory( GelDirectory* p, const char* _String, const GelFileInfo& _FileInfo ) {
 	size_t StringLength = length_String( _String ) + 1;
 	
-	Log( "Mem: 0x%x  0x%x\n", _FileInfo, *_FileInfo );
-	pushback_GelArray<GelFileInfo>( &p->FileInfo, *_FileInfo );
+	pushback_GelArray<GelFileInfo>( &p->FileInfo, _FileInfo );
 	
 	return allocate_GelHeap( p->FileName, _String, StringLength );
 }
@@ -57,6 +63,7 @@ inline const GelFileInfo& info_GelDirectory( const GelDirectory* p, const size_t
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+
 // - ------------------------------------------------------------------------------------------ - //
 // Create a dummy empty File Name list //
 inline GelDirectory* new_GelDirectory() {
@@ -64,10 +71,10 @@ inline GelDirectory* new_GelDirectory() {
 	
 	// Create and initalize an empty name string //
 	NewDir->BaseName = new_String("");
-	
 	NewDir->FileName = new_GelHeap(0, 0);
-	
-	NewDir->FileInfo = new_GelArray<GelFileInfo>( 0 );
+	NewDir->FileInfo = newmax_GelArray<GelFileInfo>( 0 );
+
+	VVVLog("* NEWDIR: \"%s\"  0x%x  0x%x\n", NewDir->BaseName, NewDir->FileName, NewDir->FileInfo );
 	
 	return NewDir;
 }
@@ -93,7 +100,7 @@ inline GelDirectory* new_GelDirectory( GelDirectory* p, const char* Pattern ) {
 	
 	for (size_t idx = 0; idx < size_GelDirectory( p ); idx++ ) {
 		if ( find_String( Pattern, index_GelDirectory( p, idx ) ) )
-			add_GelDirectory( NewDir, index_GelDirectory( p, idx ), &info_GelDirectory( p, idx ) );
+			add_GelDirectory( NewDir, index_GelDirectory( p, idx ), info_GelDirectory( p, idx ) );
 	}
 	
 	return NewDir;

@@ -16,6 +16,7 @@
 #include <Util/String/String.h>
 
 #include "GelDirectory_Core.h"
+#include "GelFileInfo.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -124,6 +125,7 @@ inline GelDirectory* new_GelDirectory( const char* _BaseName ) {
 
 	NewDir->BaseName = new_String( _BaseName );
 	NewDir->FileName = new_GelHeap(0, 0);
+	NewDir->FileInfo = newmax_GelArray<GelFileInfo>( 0 );
 	
 	// Work //
 	populate_GelDirectory( NewDir );
