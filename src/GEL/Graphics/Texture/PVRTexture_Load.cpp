@@ -16,19 +16,19 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
-	VLog("* Allocating GL Texture ID...\n" );
+	VLog("* Allocating GL Texture ID..." );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );
-	VVLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );	
+	VVLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );	
 	glBindTexture( GL_TEXTURE_2D, TextureID );
-	VLog("* GL Texture ID: %i (IsTexture: %i)\n", TextureID, glIsTexture(TextureID) );
+	VLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );
 	
 	if ( glGetError() != GL_NO_ERROR ) {
-		ELog( "Texture Bind Failed!\n" );
+		ELog( "Texture Bind Failed!" );
 	}
 	
 	if ( !glIsTexture(TextureID) ) {
-		ELog( "IsTexture Failed!\n" );	
+		ELog( "IsTexture Failed!" );	
 	}
 	
 	// Default Load Format //
@@ -47,37 +47,37 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// Switch the Load Format found inside the PVR File //
 	switch ( Texture->Flags & PVR_TYPE_MASK ) {
 		case PVR_RGBA_4444:
-			VLog("* GL_UNSIGNED_SHORT_4_4_4_4 (RGBA_4444)\n");
+			VLog("* GL_UNSIGNED_SHORT_4_4_4_4 (RGBA_4444)");
 			RGBFormat = GL_UNSIGNED_SHORT_4_4_4_4;
 			break;
 		case PVR_RGBA_5551:
-			VLog("* GL_UNSIGNED_SHORT_5_5_5_1 (RGBA_5551)\n");
+			VLog("* GL_UNSIGNED_SHORT_5_5_5_1 (RGBA_5551)");
 			RGBFormat = GL_UNSIGNED_SHORT_5_5_5_1;
 			break;
 		case PVR_RGBA_8888:
-			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			break;
 		case PVR_RGB_565:
-			VLog("* GL_UNSIGNED_SHORT_5_6_5 (RGB_565)\n");
+			VLog("* GL_UNSIGNED_SHORT_5_6_5 (RGB_565)");
 			RGBFormat = GL_UNSIGNED_SHORT_5_6_5;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case PVR_RGB_888:
-			VLog("* GL_UNSIGNED_BYTE (RGB_888)\n");
+			VLog("* GL_UNSIGNED_BYTE (RGB_888)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_RGB;
 			InternalFormat = GL_RGB;
 			break;
 		case PVR_I_8:
-			VLog("* GL_UNSIGNED_BYTE (I_8)\n");
+			VLog("* GL_UNSIGNED_BYTE (I_8)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			ReadFormat = GL_LUMINANCE;
 			InternalFormat = GL_LUMINANCE;
 			break;
 		case PVR_AI_88:
-			VLog("* GL_UNSIGNED_SHORT (AI_88)\n");
+			VLog("* GL_UNSIGNED_SHORT (AI_88)");
 			RGBFormat = GL_UNSIGNED_SHORT;
 			ReadFormat = GL_LUMINANCE_ALPHA;
 			InternalFormat = GL_LUMINANCE_ALPHA;
@@ -89,12 +89,12 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			PVRTC = 2;
 			CompressFormat = 10;
 			if ( (Texture->Flags & PVR_ALPHA) == 0 ) {
-				VLog("* GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG");
 				ReadFormat = GL_RGB;
 				InternalFormat = GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
 			}
 			else {
-				VLog("* GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG");
 				InternalFormat = GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
 			}
 			break;
@@ -103,38 +103,38 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			PVRTC = 4;
 			CompressFormat = 10;
 			if ( (Texture->Flags & PVR_ALPHA) == 0 ) {
-				VLog("* GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG");
 				ReadFormat = GL_RGB;
 				InternalFormat = GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
 			}
 			else {
-				VLog("* GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG\n");
+				VLog("* GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG");
 				InternalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 			}
 			break;
 #endif // USES_PVRTC //
 		case PVR_DXT1:
-			VLog("* COMPRESSED_RGB_S3TC_DXT1_EXT\n");
+			VLog("* COMPRESSED_RGB_S3TC_DXT1_EXT");
 			// NOTE: There is a DXT1 variant with a single bit of alpha -- that is code 0x83F1 //
 			CompressFormat = 1;
 			InternalFormat = 0x83F0; // COMPRESSED_RGB_S3TC_DXT1_EXT //
 			ReadFormat = GL_RGB;
 			break;
 		case PVR_DXT3:
-			VLog("* COMPRESSED_RGBA_S3TC_DXT3_EXT\n");
+			VLog("* COMPRESSED_RGBA_S3TC_DXT3_EXT");
 			CompressFormat = 3;
 			InternalFormat = 0x83F2; // COMPRESSED_RGBA_S3TC_DXT3_EXT //
 			//ReadFormat = GL_RGBA;
 			break;
 		case PVR_DXT5:
-			VLog("* COMPRESSED_RGBA_S3TC_DXT5_EXT\n");
+			VLog("* COMPRESSED_RGBA_S3TC_DXT5_EXT");
 			CompressFormat = 5;
 			InternalFormat = 0x83F3; // COMPRESSED_RGBA_S3TC_DXT5_EXT //
 			//ReadFormat = GL_RGBA;
 			break;
 #endif // USES_TEXTURECOMPRESSION //		
 		default:
-			ELog( "Unknown PVR Format (0x%x)!\n", Texture->Flags & PVR_TYPE_MASK );
+			ELog( "Unknown PVR Format (0x%x)!", Texture->Flags & PVR_TYPE_MASK );
 			break;
 	};
 	
@@ -153,7 +153,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// New feature.  If MaxTextureSize is greater than the current mipmap size, throw it away. //
 	int OmittedTexture = 0;
 	
-	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1\n", Width, Height, Texture->MipMapCount );
+	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, Texture->MipMapCount );
 
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < Texture->MipMapCount+1; MipMap++ ) {
@@ -197,7 +197,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 		
 		// A new check. If texture is larger than our max allowed size, keep omitting textures until they fit. //
 		if ( TextureSize > System::MaxTextureSize ) {
-			Log( "* NOTE: Mipmap %i omitted (TextureSize: %i | MaxTextureSize: %i)\n", MipMap, TextureSize, System::MaxTextureSize );
+			Log( "* NOTE: Mipmap %i omitted (TextureSize: %i | MaxTextureSize: %i)", MipMap, TextureSize, System::MaxTextureSize );
 			OmittedTexture++;
 		}
 		else {
@@ -226,7 +226,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 			
 			GLenum Err = glGetError();
 			if ( Err != GL_NO_ERROR ) {
-				ELog("GL ERROR: ???\n" );
+				ELog("GL ERROR: ???" );
 			}
 		}
 		
@@ -236,7 +236,7 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 		Height >>= 1;
 	}
 	
-	Log("- %i Texture levels loaded.\n", Texture->MipMapCount+1 );
+	Log("- %i Texture levels loaded.", Texture->MipMapCount+1 );
 
 	// Return the Texture ID //
 	return TextureID;

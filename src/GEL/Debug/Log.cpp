@@ -20,33 +20,61 @@ extern int LogLevel;
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 
-#define LogFunc vfprintf
-#define FlushFunc fflush(0)
+//#define FlushFunc fflush(0)
+#define LOG_FUNC		vfprintf
+#define LOG_TARGET		stdout
 
 // - ------------------------------------------------------------------------------------------ - //
-void _Log( const char* s, ... ) {
+void LogAlways( const char* s, ... ) {
 	va_list vl;
 	va_start( vl, s );
 
-	LogFunc( stdout, s, vl );
+	LOG_FUNC( LOG_TARGET, s, vl );
+
+	va_end( vl );
+
+	LOG_FUNC( LOG_TARGET, (char*)"\n", "" );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void _LogAlways( const char* s, ... ) {
+	va_list vl;
+	va_start( vl, s );
+
+	LOG_FUNC( LOG_TARGET, s, vl );
 
 	va_end( vl );
 }
+// - ------------------------------------------------------------------------------------------ - //
+#define GEN_LOG_FUNCTION_CRLF( _NAME, _LEVEL ) \
+	void _NAME( const char* s, ... ) { \
+		if ( LogLevel >= _LEVEL ) { \
+			va_list vl; \
+			va_start( vl, s ); \
+			LOG_FUNC( LOG_TARGET, s, vl ); \
+			va_end( vl ); \
+			LOG_FUNC( LOG_TARGET, (char*)"\n", "" ); \
+		} \
+	}
 // - ------------------------------------------------------------------------------------------ - //
 #define GEN_LOG_FUNCTION( _NAME, _LEVEL ) \
 	void _NAME( const char* s, ... ) { \
 		if ( LogLevel >= _LEVEL ) { \
 			va_list vl; \
 			va_start( vl, s ); \
-			LogFunc( stdout, s, vl ); \
+			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
 		} \
 	}
 // - ------------------------------------------------------------------------------------------ - //
-GEN_LOG_FUNCTION( Log, 1 )
-GEN_LOG_FUNCTION( VLog, 2 )
-GEN_LOG_FUNCTION( VVLog, 3 )
-GEN_LOG_FUNCTION( VVVLog, 4 )
+GEN_LOG_FUNCTION_CRLF( Log, 1 )
+GEN_LOG_FUNCTION_CRLF( VLog, 2 )
+GEN_LOG_FUNCTION_CRLF( VVLog, 3 )
+GEN_LOG_FUNCTION_CRLF( VVVLog, 4 )
+// - ------------------------------------------------------------------------------------------ - //
+GEN_LOG_FUNCTION( _Log, 1 )
+GEN_LOG_FUNCTION( _VLog, 2 )
+GEN_LOG_FUNCTION( _VVLog, 3 )
+GEN_LOG_FUNCTION( _VVVLog, 4 )
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

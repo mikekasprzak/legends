@@ -3,7 +3,7 @@
 #include <AssetPool/AssetPool.h>
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
-	Log("- Begin GameHost Constructor\n");
+	Log("- Begin GameHost Constructor");
 
 	// Setup Texture Pool //
 //	TexturePool::Init( "Content" );
@@ -16,19 +16,19 @@ cGameHost::cGameHost() {
 	AssetPool::AddDirectory( "/Misc" );
 
 /*
-	Log( "+ Setting Base Content Directory...\n" );
+	Log( "+ Setting Base Content Directory..." );
 #ifdef USES_TEXTURECOMPRESSION //
 	if ( System::InfoFlags.HasTextureCompression ) {
-		Log( "- Texture Compression Found -- Using DXT5\n" );
+		Log( "- Texture Compression Found -- Using DXT5" );
 		TexturePool::Init( "Content/DXT5" );
 	}
 	else
 #else // USES_TEXTURECOMPRESSION //
-	Log( "* Build Flag \"USES_TEXTURECOMPRESSION\" not set. Defaulting to RGBA4444\n" );
+	Log( "* Build Flag \"USES_TEXTURECOMPRESSION\" not set. Defaulting to RGBA4444" );
 #endif // USES_TEXTURECOMPRESSION //
 	{
 		// Fallback, no compression //
-		Log( "- Texture Compression Not Found -- Using RGBA4444\n" );
+		Log( "- Texture Compression Not Found -- Using RGBA4444" );
 		TexturePool::Init( "Content/4444" );
 	}
 	TexturePool::AddDirectory( "" );
@@ -48,7 +48,7 @@ cGameHost::cGameHost() {
 	// Game is null //
 	Game = 0;
 	
-	Log("+ End GameHost Constructor\n");
+	Log("+ End GameHost Constructor");
 }
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::~cGameHost() {
@@ -68,9 +68,9 @@ cGameHost::~cGameHost() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGameHost::CreateGame() {		
 	// Create Game //
-	Log("+ Creating Game Instance...\n");	
+	Log("+ Creating Game Instance...");	
 	Game = new cGame;
-	Log("- Game Create.\n");
+	Log("- Game Create.");
 
 //	if ( FirstRun() ) {
 //		Game->PlayMusic();
@@ -88,7 +88,7 @@ void cGameHost::Step() {
 	}
 	else {
 		// Backup! This should never be called! //
-		Log( "WARNING! GAME STEPPED WITHOUT CreateGame call! Creating...\n" );
+		Log( "WARNING! GAME STEPPED WITHOUT CreateGame call! Creating..." );
 		CreateGame();
 	}
 }
@@ -115,7 +115,7 @@ void cGameHost::Draw() {
 	}
 	else {
 		// Backup! This should never be called! //
-		Log( "WARNING! GAME DRAWN WITHOUT CreateGame call! Creating...\n" );
+		Log( "WARNING! GAME DRAWN WITHOUT CreateGame call! Creating..." );
 		CreateGame();
 	}
 		
