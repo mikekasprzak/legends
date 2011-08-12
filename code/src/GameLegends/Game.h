@@ -21,17 +21,19 @@ public:
 	HSQUIRRELVM vm;
 	static void vm_PrintFunc( HSQUIRRELVM v, const SQChar *s, ... );
 	static void vm_ErrorFunc( HSQUIRRELVM v, const SQChar *s, ... );
+	
+	bool vm_ScriptsLoaded;
 
 	void vm_Init();
 	void vm_Exit();
 	SQRESULT vm_CompileAndRun( DataBlock* InData, const char* FileName = "" );
 	SQRESULT vm_CallFunc( const char* FuncName );
-	
-//	struct vmScript {
-//		
-//	};
-	
+
+	// Script Loading (make this better) //	
+	void InitScripts();
 	void LoadScripts();
+	
+	GelAssetHandle CoreScript;
 
 public:
 	cFdoHeightMap HeightMap;
@@ -49,6 +51,7 @@ public:
 	cGame() :
 		FirstRun( true ),
 		Capture( false ),
+		vm_ScriptsLoaded( false ),
 		
 		HeightMap(4,4)
 	{
