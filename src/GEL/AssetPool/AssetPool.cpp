@@ -67,7 +67,7 @@ namespace AssetPool {
 
 		union {
 			GelTexture* Texture;
-			char* Data;
+			DataBlock* Data;
 		};
 
 	public:
@@ -164,24 +164,57 @@ namespace AssetPool {
 					AssetDataType.TestName( File.c_str() );
 					
 					if ( AssetDataType.IsScript() ) {
-						VLog("* Asset is a Script (0x%x)\n", Processed );
+						VLog("* Asset is a Script, %i bytes (0x%x)\n", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_SCRIPT;
+						Data = Processed;
 					}
 					else if ( AssetDataType.IsShader() ) {
-						VLog("* Asset is a Shader Program (0x%x)\n", Processed );
+						VLog("* Asset is a Shader Program, %i bytes (0x%x)\n", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_SHADER;
+						Data = Processed;
 					}
 					else if ( AssetDataType.IsText() ) {
-						VLog("* Asset is Text (0x%x)\n", Processed );
+						VLog("* Asset is Text, %i bytes (0x%x)\n", Processed->Size, Processed );
 						Type = GEL_ASSETCLASS_TEXT;
+						Data = Processed;
 					}
 					else {
 						ELog("Unknown Asset Type\n" );
 						Type = GEL_ASSETCLASS_NULL;
-						delete_DataBlock( UnProcessed );
+
+						if ( UnProcessed )
+							delete_DataBlock( UnProcessed );
+
+						if ( Processed )
+							delete_DataBlock( Processed );
 					}
 				}
 			}
+		}
+		
+		inline DataBlock* Get() {
+			if ( HasData() ) {
+				if ( Data != 0 ) {
+					switch ( Type ) {
+						case GEL_ASSETCLASS_TEXTURE: {
+							break;
+						}
+						case GEL_ASSETCLASS_MODEL: {
+							break;
+						}
+						case GEL_ASSETCLASS_AUDIO: {
+							break;
+						}
+						case GEL_ASSETCLASS_SCRIPT:
+						case GEL_ASSETCLASS_SHADER:
+						case GEL_ASSETCLASS_TEXT: {
+							return Data;
+							break;
+						}
+					};
+				}
+			}
+			return 0;
 		}
 
 		void Free() {
@@ -190,14 +223,22 @@ namespace AssetPool {
 					switch ( Type ) {
 						case GEL_ASSETCLASS_TEXTURE: {
 							Texture->Free();
+							VLog( "* Texture Asset Freed\n" );
 							break;
 						}
-						case GEL_ASSETCLASS_MODEL:
-						break;
-						case GEL_ASSETCLASS_AUDIO:
-						break;
+						case GEL_ASSETCLASS_MODEL: {
+							break;
+						}
+						case GEL_ASSETCLASS_AUDIO: {
+							break;
+						}
 						case GEL_ASSETCLASS_SCRIPT:
-						break;
+						case GEL_ASSETCLASS_SHADER:
+						case GEL_ASSETCLASS_TEXT: {
+							delete_DataBlock( Data );
+							VLog( "* Text Asset Freed\n" );
+							break;
+						}
 					};
 					
 					// Reset to zero //
@@ -312,6 +353,10 @@ namespace AssetPool {
 		if ( AssetInstance[ Asset ].HasData() ) {	
 			AssetInstance[ Asset ].Texture->Bind( 0 );
 		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	DataBlock* Get( const GelAssetHandle Asset ) {
+		return AssetInstance[ Asset ].Get();	
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	void LoadAsset( const GelAssetHandle Asset ) {

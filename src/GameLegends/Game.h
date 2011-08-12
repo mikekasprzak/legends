@@ -24,6 +24,7 @@ public:
 
 	void vm_Init();
 	void vm_Exit();
+	SQRESULT vm_CompileAndRun( DataBlock* InData, const char* FileName = "" );
 	
 	struct vmScript {
 		

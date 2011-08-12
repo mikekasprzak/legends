@@ -10,9 +10,11 @@ namespace AssetPool {
 	void AddDirectory( const char* Directory );
 	
 	GelAssetHandle Find( const char* FileName );
-	
 	GelAssetHandle Load( const char* FileName );
+
 	void Set( const GelAssetHandle Asset );
+	DataBlock* Get( const GelAssetHandle Asset );
+
 	void Free( const GelAssetHandle Asset );
 
 //	void ReleaseTextures();
