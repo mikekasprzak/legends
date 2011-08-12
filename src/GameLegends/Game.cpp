@@ -70,6 +70,21 @@ void cGame::LoadScripts() {
 	Log( "- Done Loading Scripts.\n" );
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::ReloadScripts() {
+	Log( "+ Reloading Scripts...\n" );
+
+	const char* ScriptFile = "/Things.nut";
+	CoreScript = AssetPool::Load( ScriptFile );
+	if ( AssetPool::HasChanged( CoreScript ) ) {
+		Log( "* Change detected in \"%s\". Reloading...\n", ScriptFile );
+		AssetPool::Free( CoreScript );
+		CoreScript = AssetPool::Load( ScriptFile );
+		vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
+	}
+	
+	Log( "- Done Reloading Scripts.\n" );
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
@@ -166,7 +181,7 @@ void cGame::Exit() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::GotFocus() {
 	if ( vm_ScriptsLoaded ) {
-		LoadScripts();
+		ReloadScripts();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

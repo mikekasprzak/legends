@@ -429,9 +429,10 @@ inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize, const Typ
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushback_GelArray( GelArray<Type>** p, const Type& _InitValue ) {
-	Log( "> 0x%x %x\n", p, *p );
-	Log( "> 0x%x %i 0x%x\n", p, (*p)->Size, &_InitValue );
-	Log( "> 0x%x %i 0x%x 0x%x\n", p, (*p)->Size, _InitValue, &_InitValue );
+//	Log( "> 0x%x %x\n", p, *p );
+//	Log( "> 0x%x %i\n", p, (*p)->Size );
+//	Log( "> 0x%x %i 0x%x\n", p, (*p)->Size, &_InitValue );
+//	Log( "> 0x%x %i 0x%x 0x%x\n", p, (*p)->Size, _InitValue, &_InitValue );
 
 	resize2_GelArray( p, (*p)->Size + 1, _InitValue );
 } 

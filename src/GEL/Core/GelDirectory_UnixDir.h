@@ -30,11 +30,11 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 	// Extract the directory part, and open the directory //
 	DIR* ThisDir = opendir( SearchDirectory );
 
-	VVLog("o %s - %s\n", SearchDirectory, Prefix );
-	VVLog("o\n");
+	VLog("o %s - %s\n", SearchDirectory, Prefix );
+	VVVLog("o\n");
 	// Read the first entry in the directory //
 	dirent* Data = readdir( ThisDir );
-	VVLog("o\n");
+	VVVLog("o\n");
 	
 	// While we still have entries left in this directory //
 	while( Data != 0 ) {
@@ -78,7 +78,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 					cat_String( Data->d_name, NewFile );
 				
 					// Add the file //
-					add_GelDirectory( p, NewFile, &DIRStatus );
+					add_GelDirectory( p, NewFile, DIRStatus );
 					
 					// Delet our filename string //
 					delete_String( NewFile );
@@ -102,6 +102,23 @@ inline void populate_GelDirectory( GelDirectory* p ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+inline const bool haschanged_GelDirectory( const GelDirectory* p, const size_t Index ) { 
+	// Build the full path name of the file //
+	char* CurrentFile = new char[ length_String(p->BaseName) + 1 + length_String( index_GelDirectory(p,Index) ) + 1 ];
+	copy_String( p->BaseName, CurrentFile );
+	cat_String( "/", CurrentFile );
+	cat_String( index_GelDirectory(p,Index), CurrentFile );
+
+	// Get the status of the file //
+	GelFileInfo FileStatus;
+	FileStatus.Test( CurrentFile );
+	
+	// Compare the modified time //
+	return FileStatus.Status.st_mtime != info_GelDirectory(p,Index).Status.st_mtime;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 inline GelDirectory* new_GelDirectory( const char* _BaseName ) {
@@ -109,6 +126,7 @@ inline GelDirectory* new_GelDirectory( const char* _BaseName ) {
 	
 	NewDir->BaseName = new_String( _BaseName );
 	NewDir->FileName = new_GelHeap(0, 0);
+	NewDir->FileInfo = newmax_GelArray<GelFileInfo>( 0 );
 	
 	// Work //
 	populate_GelDirectory( NewDir );

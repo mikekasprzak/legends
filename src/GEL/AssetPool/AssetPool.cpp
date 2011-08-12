@@ -7,6 +7,7 @@
 #include <Core/DataBlock.h>
 #include <Core/DataBlock_LZMA.h>
 
+#include <Core/GelFileInfo.h>
 #include <Core/GelDirectory.h>
 #include <Util/String/String.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -60,6 +61,7 @@ namespace AssetPool {
 
 	public:
 		std::string FileName;
+		GelFileInfo FileInfo;
 
 		AssetClass Type;
 
@@ -109,6 +111,7 @@ namespace AssetPool {
 				// Bulk-Load the data //
 				Log( "* Caching \"%s\"...\n", File.c_str() );
 				UnProcessed = new_read_DataBlock( File.c_str() );
+				FileInfo.Test( File.c_str() );
 	
 				// Check if the incoming data is compressed //
 				GelAssetType AssetType;
@@ -216,6 +219,16 @@ namespace AssetPool {
 			}
 			return 0;
 		}
+		
+		inline bool HasChanged( const std::string Prefix ) const {
+			// Build a Path to the file, and adapt to system specific slashes. //
+			std::string File = String::SystemSlash( Prefix + FileName );
+
+			GelFileInfo Vs;
+			Vs.Test( File.c_str() );
+	
+			return FileInfo.HasChanged( Vs );
+		}
 
 		void Free() {
 			if ( HasData() ) {
@@ -248,6 +261,8 @@ namespace AssetPool {
 				if ( UnProcessed != 0 ) {
 					delete_DataBlock( UnProcessed );
 				}
+				
+				FileInfo.Clear();
 			}
 		}
 	};
@@ -417,6 +432,12 @@ namespace AssetPool {
 	// - -------------------------------------------------------------------------------------- - //
 	void Free( const GelAssetHandle Asset ) {
 		AssetInstance[ Asset ].Free();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	bool HasChanged( const GelAssetHandle Asset ) {
+		return AssetInstance[ Asset ].HasChanged( FilePrefix );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	

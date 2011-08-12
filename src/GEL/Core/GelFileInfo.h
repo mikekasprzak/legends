@@ -27,6 +27,14 @@ struct GelFileInfo {
 	inline const bool IsFile() const {
 		return S_ISREG( Status.st_mode ) != 0;
 	}
+	
+	inline const bool HasChanged( const GelFileInfo& Vs ) const {
+		return Status.st_mtime != Vs.Status.st_mtime;	
+	}
+	
+	inline void Clear() {
+		set_Data( 0, this, sizeof( GelFileInfo ) );
+	}
 };
 
 // - ------------------------------------------------------------------------------------------ - //

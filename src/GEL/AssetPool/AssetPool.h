@@ -11,6 +11,8 @@ namespace AssetPool {
 	
 	GelAssetHandle Find( const char* FileName );
 	GelAssetHandle Load( const char* FileName );
+	
+	bool HasChanged( const GelAssetHandle Asset );
 
 	void Set( const GelAssetHandle Asset );
 	DataBlock* Get( const GelAssetHandle Asset );

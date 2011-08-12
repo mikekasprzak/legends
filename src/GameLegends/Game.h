@@ -32,6 +32,7 @@ public:
 	// Script Loading (make this better) //	
 	void InitScripts();
 	void LoadScripts();
+	void ReloadScripts();
 	
 	GelAssetHandle CoreScript;
 
