@@ -49,10 +49,25 @@ GelAssetHandle txPlayer;
 GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::InitScripts() {
+	CoreScript = 0;
+}
+// - ------------------------------------------------------------------------------------------ - //
 void cGame::LoadScripts() {
+	Log( "+ Loading Scripts...\n" );
+	
+	// HACK: Free the core script, to make reloading work //
+	if ( CoreScript != 0 ) {
+		AssetPool::Free( CoreScript );
+	}
+	
 	const char* ScriptFile = "/Things.nut";
-	GelAssetHandle CoreScript = AssetPool::Load( ScriptFile );
+	CoreScript = AssetPool::Load( ScriptFile );
 	vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
+		
+	vm_ScriptsLoaded = true;
+
+	Log( "- Done Loading Scripts.\n" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -68,6 +83,7 @@ void cGame::Init() {
 	extern int LogLevel;
 	LogLevel = 2;
 
+	InitScripts();
 	LoadScripts();
 	
 	Vector3D RoomScale(128,128,64);
@@ -149,7 +165,9 @@ void cGame::Exit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::GotFocus() {
-	
+	if ( vm_ScriptsLoaded ) {
+		LoadScripts();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::LostFocus() {

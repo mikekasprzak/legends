@@ -205,15 +205,29 @@ void WindowEventFilter( const SDL_Event& event ) {
 #endif // PRODUCT_NOMOUSECURSOR //
 				musResume();
 				musUpdate();
+
+#ifndef PRODUCT_LEGACY_SMILES
+				if ( GameHost ) {
+					GameHost->GotFocus();
+				}
+#endif // PRODUCT_LEGACY_SMILES //
 				
 				break;
 			}
 			case SDL_WINDOWEVENT_FOCUS_LOST: {
 				// Window has lost keyboard focus //
+#ifndef PRODUCT_LEGACY_SMILES
+				if ( GameHost ) {
+					GameHost->LostFocus();
+				}
+#endif // PRODUCT_LEGACY_SMILES //
+
 				if ( GameHost )
 					GameHost->ForcePaused();
+
 				if ( IsActive )
 					RefreshScreen = true;
+
 				IsActive = false;
 #ifndef PRODUCT_NOMOUSECURSOR
 				SDL_ShowCursor( SDL_ENABLE );
@@ -273,8 +287,21 @@ void ActiveEventFilter( const SDL_Event& event ) {
 #endif // PRODUCT_NOMOUSECURSOR //
 			musResume();
 			musUpdate();
+
+#ifndef PRODUCT_LEGACY_SMILES
+			if ( GameHost ) {
+				GameHost->GotFocus();
+			}
+#endif // PRODUCT_LEGACY_SMILES //
+
 		}
 		else {
+#ifndef PRODUCT_LEGACY_SMILES
+			if ( GameHost ) {
+				GameHost->LostFocus();
+			}
+#endif // PRODUCT_LEGACY_SMILES //
+
 			if ( GameHost )
 				GameHost->ForcePaused();
 			if ( IsActive )
