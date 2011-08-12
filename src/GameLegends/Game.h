@@ -28,13 +28,30 @@ public:
 	void vm_Exit();
 	SQRESULT vm_CompileAndRun( DataBlock* InData, const char* FileName = "" );
 	SQRESULT vm_CallFunc( const char* FuncName );
+	
+	struct vmScript {
+		const char* FileName;
+		GelAssetHandle Handle;
+		
+		vmScript() :
+			FileName( 0 ),
+			Handle( 0 )
+		{
+		}
+
+		vmScript( const char* _FileName ) :
+			FileName( _FileName ),
+			Handle( AssetPool::Load( _FileName ) )
+		{
+		}
+	};
 
 	// Script Loading (make this better) //	
 	void InitScripts();
 	void LoadScripts();
 	void ReloadScripts();
-	
-	GelAssetHandle CoreScript;
+
+	std::vector< vmScript > Script;
 
 public:
 	cFdoHeightMap HeightMap;
