@@ -49,6 +49,14 @@ GelAssetHandle txPlayer;
 GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::LoadScripts() {
+	const char* ScriptFile = "/Things.nut";
+	GelAssetHandle CoreScript = AssetPool::Load( ScriptFile );
+	vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	// Run the Experiments ... //
 	extern void CallExp();
@@ -60,11 +68,7 @@ void cGame::Init() {
 	extern int LogLevel;
 	LogLevel = 2;
 
-	{
-		const char* ScriptFile = "/Things.nut";
-		GelAssetHandle CoreScript = AssetPool::Load( ScriptFile );
-		vm_CompileAndRun( AssetPool::Get( CoreScript ), ScriptFile );
-	}
+	LoadScripts();
 	
 	Vector3D RoomScale(128,128,64);
 
@@ -189,6 +193,11 @@ void cGame::Step() {
 		if ( keystate[SDL_SCANCODE_PAGEDOWN] ) {
 			CameraWorldPos += Vector3D(0,0,-2.5f);
 		}
+		
+		if ( keystate[SDL_SCANCODE_SPACE] ) {
+			vm_CallFunc( "DoAwesome" );
+		}
+		
 
 #ifdef USES_ICADE
 		// iCade (Joystick Emulation via Keyboard) //

@@ -112,3 +112,26 @@ SQRESULT cGame::vm_CompileAndRun( DataBlock* InFile, const char* FileName ) {
 	return Error;
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// Calls a single function //
+SQRESULT cGame::vm_CallFunc( const char* FuncName ) {
+	int StackTop = sq_gettop( vm );
+	
+	// Push the function name to the stack //
+	sq_pushroottable( vm );
+	sq_pushstring( vm, FuncName, -1 );	// -1: Calculate string length for me //
+	sq_get( vm, -2 ); 					// ?? //
+
+	sq_pushroottable( vm );	
+	SQRESULT Error = sq_call( vm, 1, false, true );	
+	
+	sq_settop( vm, StackTop );
+	
+	if ( Error ) {
+		Log( "> Error executing \"%s\" on VM.\n", FuncName ); 
+	}
+	
+	return Error;
+}
+// - ------------------------------------------------------------------------------------------ - //
