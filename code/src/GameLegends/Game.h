@@ -25,10 +25,13 @@ public:
 	void vm_Init();
 	void vm_Exit();
 	SQRESULT vm_CompileAndRun( DataBlock* InData, const char* FileName = "" );
+	SQRESULT vm_CallFunc( const char* FuncName );
 	
-	struct vmScript {
-		
-	};
+//	struct vmScript {
+//		
+//	};
+	
+	void LoadScripts();
 
 public:
 	cFdoHeightMap HeightMap;
