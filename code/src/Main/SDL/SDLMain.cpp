@@ -840,8 +840,7 @@ int main( int argc, char* argv[] ) {
 
 		// Color Code Test //
 		
-//		int Constant = 0x1B;
-		int Constant = 33;
+		int Constant = 0x1B;	// Octal 33
 		int attr = 0;
 		int fg = 1;
 		Log("* %c[%d;%dm!!!", Constant, attr, fg + 30);
