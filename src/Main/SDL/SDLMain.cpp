@@ -827,16 +827,25 @@ int main( int argc, char* argv[] ) {
 	}
 	
 	{
+//		// Color Code Test //
+//		int attr = 1;
+//		int fg = 1;
+//		int bg = 0;
+//		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
+//
+//		attr = 0;
+//		fg = 7;
+//		bg = 0;
+//		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
+
 		// Color Code Test //
 		int attr = 1;
 		int fg = 1;
-		int bg = 0;
-		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
+		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 
-		attr = 0;
+		attr = 1;
 		fg = 7;
-		bg = 0;
-		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
+		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 	}
 	
 #ifdef USES_WEBOS
