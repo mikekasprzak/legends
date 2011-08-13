@@ -839,12 +839,15 @@ int main( int argc, char* argv[] ) {
 //		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
 
 		// Color Code Test //
+		
+//		int Constant = 0x1B;
+		int Constant = 33;
 		int attr = 0;
 		int fg = 1;
-		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
+		Log("* %c[%d;%dm!!!", Constant, attr, fg + 30);
 
 		attr = 0;
-		Log("* %c[%dm!!!", 0x1B, attr);
+		Log("* %c[%dm!!!", Constant, attr);
 	}
 	
 #ifdef USES_WEBOS
