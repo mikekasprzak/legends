@@ -843,7 +843,7 @@ int main( int argc, char* argv[] ) {
 		int fg = 1;
 		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 
-		attr = 2;
+		attr = 7;
 		fg = 7;
 		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 	}
