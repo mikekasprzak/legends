@@ -38,7 +38,8 @@ GelAssetHandle txSword;
 void cGame::InitScripts() {
 	vm_ScriptsLoaded = false;
 
-	Script.push_back( vmScript( "/Things.nut" ) );
+	// TODO: Compiled Version is ".nut.cnut"
+	Script.push_back( vmScript( "/Main.nut" ) );
 	
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -98,34 +99,34 @@ void cGame::Init() {
 	Log( "%i", MaxValue<GType>() );
 
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Tests/Room01.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[0].Vert, &Room[0].Index, RoomScale );
 		new_Triangles_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room02.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Tests/Room02.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[1].Vert, &Room[1].Index, RoomScale );
 		new_Triangles_OutlineList( Room[1].Index, &Room[1].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room03.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Tests/Room03.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[2].Vert, &Room[2].Index, RoomScale );
 		new_Triangles_OutlineList( Room[2].Index, &Room[2].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room04.tga" );
+		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Tests/Room04.tga" );
 		new_Optimized_Triangles( MyGrid, &Room[3].Vert, &Room[3].Index, RoomScale );
 		new_Triangles_OutlineList( Room[3].Index, &Room[3].OutlineIndex );
 		delete_Grid2D( MyGrid );
 	}
 
-	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
+	Mesh = new cPMEFile( "Content/Models/Native/Monkey.pme" );
 	Mesh2 = new cPMEFile();
 	
-	Mesh2->Import( "Content/Models/src/Chest.3ds" );
+	Mesh2->Import( "Content/Models/Native/Chest.3ds" );
 	
 	txPlayer = AssetPool::Load( "/Player01" );
 //	txSword = AssetPool::Load( "/Sword01" );

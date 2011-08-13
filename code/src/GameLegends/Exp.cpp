@@ -37,20 +37,20 @@ void CallExp() {
 
 	Log("+ Now Testing BMFont\n");
 	{
-		BMFont* MyFont = new_read_BMFont( "Content/Misc/CourierNew.fnt" );
+		BMFont* MyFont = new_read_BMFont( "Content/Misc/Fonts/CourierNew.fnt" );
 		
 		// TODO: Do stuff with a font //
 		
 		delete_BMFont( MyFont );
 
 
-		BMFont* MyFont2 = new_read_BMFont( "Content/Misc/Fontin.fnt" );
+		BMFont* MyFont2 = new_read_BMFont( "Content/Misc/Fonts/Fontin.fnt" );
 		
 		// TODO: Do stuff with a font //
 		
 		delete_BMFont( MyFont2 );
 
-		BMFont* MyFont3 = new_read_BMFont( "Content/Misc/Arial.fnt" );
+		BMFont* MyFont3 = new_read_BMFont( "Content/Misc/Fonts/Arial.fnt" );
 		
 		// TODO: Do stuff with a font //
 		
