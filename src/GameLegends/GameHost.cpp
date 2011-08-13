@@ -4,40 +4,42 @@
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
 	Log("- Begin GameHost Constructor");
-
-	// Setup Texture Pool //
-//	TexturePool::Init( "Content" );
-//	TexturePool::AddDirectory( "/Art/4444" );
-//	TexturePool::AddDirectory( "/Misc" );
 		
 	// Setup Asset Pool //
 	AssetPool::Init( "Content" );
-	AssetPool::AddDirectory( "/Art/4444" );
-	AssetPool::AddDirectory( "/Misc" );
 
-/*
-	Log( "+ Setting Base Content Directory..." );
+	// Add (optional) compressed formats to the search first //
 #ifdef USES_TEXTURECOMPRESSION //
-	if ( System::InfoFlags.HasTextureCompression ) {
-		Log( "- Texture Compression Found -- Using DXT5" );
-		TexturePool::Init( "Content/DXT5" );
+	if ( System::InfoFlags.HasDXT5 ) {
+		Log( "* Texture Compression Found -- Using DXT5" );
+		AssetPool::Init( "/Art/DXT5" );
 	}
-	else
-#else // USES_TEXTURECOMPRESSION //
-	Log( "* Build Flag \"USES_TEXTURECOMPRESSION\" not set. Defaulting to RGBA4444" );
+	if ( System::InfoFlags.HasPVRTC ) {
+		Log( "* Texture Compression Found -- Using PVRTC" );
+		AssetPool::Init( "/Art/PVRTC" );
+	}
 #endif // USES_TEXTURECOMPRESSION //
-	{
-		// Fallback, no compression //
-		Log( "- Texture Compression Not Found -- Using RGBA4444" );
-		TexturePool::Init( "Content/4444" );
-	}
-	TexturePool::AddDirectory( "" );
-*/
-	
+
+	// Add Baseline/Required Search Paths //
+	AssetPool::AddDirectory( "/Art/4444" );
+	AssetPool::AddDirectory( "/Models/Native" );
+	AssetPool::AddDirectory( "/Scripts" );
+	AssetPool::AddDirectory( "/Misc" );			// Extra Things (Fonts) //
+
+#ifndef USES_NO_CONTENT_SRC_PATHS
+	// Add Backup Search Directories (Source Folders) //
+	AssetPool::AddDirectory( "/Art/src" );
+	AssetPool::AddDirectory( "/Models/src" );
+#endif // USES_NO_CONTENT_SRC_PATHS //
+
+
+#ifdef PRODUCT_SMILES_LEGACY
 	// Set a new Initial Reference Screen (So Smiles does a weird zoom) //
-//	gelSetupRefScreenShape( 64, 64 );
-//	gelCalculateScreenShape();
-//	gelCalculateViewMatrix();
+	gelSetupRefScreenShape( 64, 64 );
+	gelCalculateScreenShape();
+	gelCalculateViewMatrix();
+#endif // PRODUCT_SMILES_LEGACY //
+
 
 	// Create GameSupport //
 	GameSupport = new cGameSupport;
