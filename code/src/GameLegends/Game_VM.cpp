@@ -100,7 +100,7 @@ SQRESULT cGame::vm_CompileAndRun( DataBlock* InFile, const char* FileName ) {
 		unsigned int FreeVars = 0;
 		
 		sq_getclosureinfo( vm, -1, (SQUnsignedInteger*)&Params, (SQUnsignedInteger*)&FreeVars );
-		VLog( "* Function Info: Params: %i  FreeVars: %i", Params, FreeVars );
+		VVLog( "* Function Info: Params: %i  FreeVars: %i", Params, FreeVars );
 		
 		sq_pushroottable( vm );
 		Error = sq_call( vm, 1, false, true );

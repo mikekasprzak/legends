@@ -147,7 +147,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 	if ( event.type == SDL_WINDOWEVENT ) {
 		const SDL_WindowEvent* WindowEvent = (const SDL_WindowEvent*)&event;
 		
-		VLog("> WindowEvent: %s", gels_SDLWindowEventName( WindowEvent->event ) );
+		VVLog("> WindowEvent: %s", gels_SDLWindowEventName( WindowEvent->event ) );
 		
 		switch ( WindowEvent->event ) {
 			case SDL_WINDOWEVENT_SHOWN: {
@@ -255,7 +255,7 @@ void WindowEventFilter( const SDL_Event& event ) {
 #ifndef USES_SDL_1_3
 // - ------------------------------------------------------------------------------------------ - //
 void ActiveEventFilter( const SDL_Event& event ) {
-	VLog( "ACTIVE_EVENT: %i %i (%i %i %i)", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
+	VVLog( "ACTIVE_EVENT: %i %i (%i %i %i)", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
 	
 	// Store Active SDL states //
 	if ( (event.active.state & SDL_APPACTIVE) ) {
