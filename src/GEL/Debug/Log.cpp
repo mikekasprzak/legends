@@ -33,7 +33,7 @@ void LogAlways( const char* s, ... ) {
 
 	va_end( vl );
 
-	LOG_FUNC( LOG_TARGET, (char*)"\n", "" );
+	LOG_FUNC( LOG_TARGET, (char*)"\n", 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _LogAlways( const char* s, ... ) {
@@ -52,7 +52,7 @@ void _LogAlways( const char* s, ... ) {
 			va_start( vl, s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
-			LOG_FUNC( LOG_TARGET, (char*)"\n", "" ); \
+			LOG_FUNC( LOG_TARGET, (char*)"\n", 0 ); \
 		} \
 	}
 // - ------------------------------------------------------------------------------------------ - //
