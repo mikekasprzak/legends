@@ -38,7 +38,9 @@ GelAssetHandle txSword;
 void cGame::InitScripts() {
 	vm_ScriptsLoaded = false;
 
-	// TODO: Compiled Version is ".nut.cnut"
+	// TODO: Compiled Version is ".nut.cnut", or ".nut.cnut.lzma"
+	// Can probably make a call to the GelDirectory and get all the .nut files //
+	
 	Script.push_back( vmScript( "/Main.nut" ) );
 	
 }

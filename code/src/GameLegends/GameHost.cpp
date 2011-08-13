@@ -12,38 +12,39 @@ cGameHost::cGameHost() {
 	// Setup Asset Pool //
 	AssetPool::Init( "Content" );
 
+	#ifndef RELEASE_MODE
+	// Add source folders first //
+	AssetPool::AddDirectory( "/Art/src" );
+	AssetPool::AddDirectory( "/Models/src" );
+	AssetPool::AddDirectory( "/Scripts/src" );
+	#endif // RELEASE_MODE //
 
 	#ifdef USES_TEXTURECOMPRESSION //
 	// Add (optional) compressed formats to the search first //
 	if ( System::InfoFlags.HasDXT5 ) {
 		Log( "* Texture Compression Found -- Using DXT5" );
-		AssetPool::Init( "/Art/DXT5" );
+		AssetPool::AddDirectory( "/Art/DXT5" );
 	}
 	if ( System::InfoFlags.HasPVRTC ) {
 		Log( "* Texture Compression Found -- Using PVRTC" );
-		AssetPool::Init( "/Art/PVRTC" );
+		AssetPool::AddDirectory( "/Art/PVRTC" );
 	}
 	#endif // USES_TEXTURECOMPRESSION //
-
 
 	// Add Baseline/Required Search Paths //
 	AssetPool::AddDirectory( "/Art/4444" );
 	AssetPool::AddDirectory( "/Models/Native" );
-	AssetPool::AddDirectory( "/Misc" );				// Extra Things (Fonts) //
 
-
-	#ifndef USES_NO_CONTENT_SRC_PATHS
-	// Add Script Source folder first //
-	AssetPool::AddDirectory( "/Scripts/src" );
-
-	// Add Backup Content Search Directories (Source Folders) //
+	#ifdef RELEASE_MODE
+	// Add source folders last, as a backup //
 	AssetPool::AddDirectory( "/Art/src" );
 	AssetPool::AddDirectory( "/Models/src" );
-	#endif // USES_NO_CONTENT_SRC_PATHS //
+	AssetPool::AddDirectory( "/Scripts/src" );
+	#endif // RELEASE_MODE //
 
-
-	// Add Compiled Script folder last (because we want to work & use src) //
+	// Add Compiled scripts and Misc things VERY last, to still be MOD friendly //
 	AssetPool::AddDirectory( "/Scripts/Compiled" );
+	AssetPool::AddDirectory( "/Misc" );				// Extra Things (Fonts) //
 
 
 	// * * * * * //
