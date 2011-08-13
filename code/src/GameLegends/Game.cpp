@@ -25,22 +25,6 @@
 #include "Engine/Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 
-
-
-
-// - ------------------------------------------------------------------------------------------ - //
-//struct VertType {
-//	Vector3D Pos;
-//};
-// - ------------------------------------------------------------------------------------------ - //
-//class cRoom {
-//public:
-//	GelArray<VertType>* Vert;
-//	GelArray<unsigned short>* Index;
-//	GelArray<unsigned short>* OutlineIndex;
-//};
-// - ------------------------------------------------------------------------------------------ - //
-
 // - ------------------------------------------------------------------------------------------ - //
 cRoom Room[4];
 cPMEFile* Mesh;
@@ -76,8 +60,7 @@ void cGame::ReloadScripts() {
 		for ( int idx = 0; idx < Script.size(); idx++ ) {
 			if ( AssetPool::HasChanged( Script[idx].Handle ) ) {
 				Log( "* Change detected in \"%s\". Reloading...", Script[idx].FileName );
-				AssetPool::Free( Script[idx].Handle );
-				Script[idx].Handle = AssetPool::Load( Script[idx].FileName );
+				AssetPool::Reload( Script[idx].Handle );
 				vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );
 			}
 		}
@@ -95,7 +78,7 @@ void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
 	// Run the Experiments ... //
-	extern void CallExp();
+//	extern void CallExp();
 //	CallExp();
 
 	// Initialize the Virtual Machine... //
@@ -116,8 +99,6 @@ void cGame::Init() {
 
 	{
 		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
-////		new_Optimized_TriangleStrips( MyGrid, &Room[0].Vert, &Room[0].Index, Vector3D(128,128,64) );
-////		new_TriangleStrip_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
 		new_Optimized_Triangles( MyGrid, &Room[0].Vert, &Room[0].Index, RoomScale );
 		new_Triangles_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
 		delete_Grid2D( MyGrid );
