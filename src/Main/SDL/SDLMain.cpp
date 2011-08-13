@@ -825,7 +825,15 @@ int main( int argc, char* argv[] ) {
 			Log( "" );
 		}
 	}
-
+	
+	{
+		// Color Code Test //
+		int attr = 1;
+		int fg = 1;
+		int bg = 0;
+		Log("* %c[%d;%d;%dm !!!", 0x1B, attr, fg + 30, bg + 40);
+	}
+	
 #ifdef USES_WEBOS
 	// Need to call this before making any PDL calls //
 	WebOS_PDL_Init(0);
