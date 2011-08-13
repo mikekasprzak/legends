@@ -88,6 +88,8 @@ namespace AssetPool {
 		{
 			// Null the pointer //
 			Data = 0;
+			
+			FileInfo.Clear();
 		}
 		
 		inline bool HasData() {
@@ -232,6 +234,9 @@ namespace AssetPool {
 
 		void Free() {
 			if ( HasData() ) {
+				// DO NOT FREE FILENAME //
+				
+				// Free Loaded Data //
 				if ( Data != 0 ) {
 					switch ( Type ) {
 						case GEL_ASSETCLASS_TEXTURE: {
@@ -258,10 +263,12 @@ namespace AssetPool {
 					Data = 0;
 				}
 				
+				// Free Unprocessed Data //
 				if ( UnProcessed != 0 ) {
 					delete_DataBlock( UnProcessed );
 				}
 				
+				// Reset the FileInfo //
 				FileInfo.Clear();
 			}
 		}
@@ -435,6 +442,11 @@ namespace AssetPool {
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	void Reload( const GelAssetHandle Asset ) {
+		AssetInstance[ Asset ].Free();
+		LoadAsset( Asset );
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	bool HasChanged( const GelAssetHandle Asset ) {
 		return AssetInstance[ Asset ].HasChanged( FilePrefix );
