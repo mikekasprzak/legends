@@ -839,11 +839,11 @@ int main( int argc, char* argv[] ) {
 //		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
 
 		// Color Code Test //
-		int attr = 1;
+		int attr = 0;
 		int fg = 1;
 		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 
-		attr = 1;
+		attr = 0;
 		fg = 7;
 		Log("* %c[%d;%dm!!!", 0x1B, attr, fg + 30);
 	}
