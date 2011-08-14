@@ -1,6 +1,6 @@
 
 function DoAwesome() {
-	local MyVar = "Saxaphone";
+	local MyVar = "TOMbone";
 	
-	print( format("This function does AMAZING things! -> %s\n", MyVar) );
+	print( format("This function does SILLY things! -> %s\n", MyVar) );
 }
