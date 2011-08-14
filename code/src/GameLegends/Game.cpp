@@ -25,24 +25,6 @@
 #include "Engine/Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 
-#include "mongoose.h"
-
-static void *goose_callback( enum mg_event event, struct mg_connection *conn, const struct mg_request_info *request_info ) {
-	if (event == MG_NEW_REQUEST) {
-		// Echo requested URI back to the client
-		mg_printf(conn, "HTTP/1.1 200 OK\r\n" "Content-Type: text/plain\r\n\r\n" "%s\n", request_info->uri);
-		mg_printf(conn, "Request Method: %s\n", request_info->request_method );
-		mg_printf(conn, "Remote User: %s\n", request_info->remote_user );
-		return (void*)"";  // Mark as processed
-	} 
-	else {
-		return NULL;
-	}
-}
-
-struct mg_context *ctx = 0;
-
-
 // - ------------------------------------------------------------------------------------------ - //
 cRoom Room[4];
 cPMEFile* Mesh;
@@ -117,6 +99,8 @@ void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
 	// Run the Experiments ... //
+	extern void ExpInit();
+	ExpInit();
 //	extern void CallExp();
 //	CallExp();
 
@@ -131,11 +115,6 @@ void cGame::Init() {
 	
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
-
-
-
-	const char *options[] = {"listening_ports", "8080", NULL};	
-	ctx = mg_start( &goose_callback, NULL, options );
 
 	
 	// ??? //
@@ -209,10 +188,11 @@ void cGame::Exit() {
 	delete_Triangles( Room[3].Vert, Room[3].Index );
 	delete_OutlineList( Room[3].OutlineIndex );
 
+	// Kill Experiments //
+	extern void ExpExit();
+	ExpExit();
 
-	mg_stop(ctx);
-
-
+	// Kill VM //
 	vm_Exit();
 }
 // - ------------------------------------------------------------------------------------------ - //

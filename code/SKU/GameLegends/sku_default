@@ -12,7 +12,6 @@ SRC_FOLDERS			+=	src/GEL src/GameLegends src/Foundation \
 						src/External/STB/STB \
 						src/External/AnimKit/Source \
 						src/External/AnimKit/Dependencies/Utils \
-						src/External/Mongoose \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Squirrel/include \
@@ -27,8 +26,7 @@ DEFINES				+=	PRODUCT_LEGENDS \
 						USES_GEL USES_FOUNDATION
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	\
-						-lws2_32 #-ladvapi32
+LIBRARIES			+=	
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
