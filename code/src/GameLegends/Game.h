@@ -2,6 +2,8 @@
 #ifndef __Game_H__
 #define __Game_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Timer/Timer.h>
+// - ------------------------------------------------------------------------------------------ - //
 #include <squirrel.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Matrix.h>
@@ -52,6 +54,9 @@ public:
 	void ReloadScripts();
 
 	std::vector< vmScript > Script;
+
+	TIMEVALUE LastContentScan;
+	void ContentScan();
 
 public:
 	cFdoHeightMap HeightMap;

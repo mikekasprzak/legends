@@ -25,6 +25,24 @@
 #include "Engine/Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 
+#include "mongoose.h"
+
+static void *goose_callback( enum mg_event event, struct mg_connection *conn, const struct mg_request_info *request_info ) {
+	if (event == MG_NEW_REQUEST) {
+		// Echo requested URI back to the client
+		mg_printf(conn, "HTTP/1.1 200 OK\r\n" "Content-Type: text/plain\r\n\r\n" "%s\n", request_info->uri);
+		mg_printf(conn, "Request Method: %s\n", request_info->request_method );
+		mg_printf(conn, "Remote User: %s\n", request_info->remote_user );
+		return (void*)"";  // Mark as processed
+	} 
+	else {
+		return NULL;
+	}
+}
+
+struct mg_context *ctx = 0;
+
+
 // - ------------------------------------------------------------------------------------------ - //
 cRoom Room[4];
 cPMEFile* Mesh;
@@ -77,6 +95,24 @@ void cGame::ReloadScripts() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::ContentScan() {
+	TIMEVALUE CurrentScan = GetTimeNow();
+	TIMEVALUE Diff = SubtractTime(CurrentScan, LastContentScan);
+	
+	// Refresh content only if the time that has passed is greater than a small minimum of frames //
+	if ( GetFrames( &Diff ) >= 4 ) {
+		ReloadScripts();
+		
+		// Get a fresh clock, so that in case the refresh took a while, it wont again //
+		LastContentScan = GetTimeNow();
+	}
+	else {
+		VVLog("* Scanned again too soon!");
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
@@ -93,6 +129,16 @@ void cGame::Init() {
 	InitScripts();
 	LoadScripts();
 	
+	// Store the current clock, so the content scanner can know to disregard extra scans //
+	LastContentScan = GetTimeNow();
+
+
+
+	const char *options[] = {"listening_ports", "8080", NULL};	
+	ctx = mg_start( &goose_callback, NULL, options );
+
+	
+	// ??? //
 	Vector3D RoomScale(128,128,64);
 
 //	typedef ABCSet<unsigned char> GType;
@@ -163,16 +209,17 @@ void cGame::Exit() {
 	delete_Triangles( Room[3].Vert, Room[3].Index );
 	delete_OutlineList( Room[3].OutlineIndex );
 
-	vm_Exit();
 
+	mg_stop(ctx);
+
+
+	vm_Exit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::GotFocus() {
-	if ( vm_ScriptsLoaded ) {
-		ReloadScripts();
-	}
+	ContentScan();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::LostFocus() {
