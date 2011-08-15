@@ -11,7 +11,7 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
-#include <Debug/TweakValue.h>
+#include <Debug/GelDebug.h>
 
 #include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
@@ -172,8 +172,6 @@ void cGame::Init() {
 	Obj3[1] = new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 );
 	
 	CameraWorldPos = Vector3D(0,0,0);
-	
-	Log("GCC Ver: %i %i %i", GCC_VERSION, TV_HAS_COUNTER, TV_USE_TWEAKVAL );
 	
 	Log( "- End of Init" );
 }
