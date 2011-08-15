@@ -11,6 +11,8 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
+#include <Debug/TweakValue.h>
+
 #include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
@@ -83,7 +85,11 @@ void cGame::ContentScan() {
 	
 	// Refresh content only if the time that has passed is greater than a small minimum of frames //
 	if ( GetFrames( &Diff ) >= 4 ) {
+		// Reload one of my game scripts //
 		ReloadScripts();
+		
+		// Scan source code for changes //
+		ReloadChangedTweakableValues();
 		
 		// Get a fresh clock, so that in case the refresh took a while, it wont again //
 		LastContentScan = GetTimeNow();
@@ -167,7 +173,9 @@ void cGame::Init() {
 	
 	CameraWorldPos = Vector3D(0,0,0);
 	
-	Log("- End of Init");
+	Log("GCC Ver: %i %i %i", GCC_VERSION, TV_HAS_COUNTER, TV_USE_TWEAKVAL );
+	
+	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
@@ -214,6 +222,8 @@ void cGame::Step() {
 	static float Angle = 0;
 	Angle += 0.3f;
 	
+	float CameraSpeed = _TV(1.0f);
+	
 //	SpinMatrix = Matrix4x4::RotationMatrixXZ( Angle );
 	SpinMatrix = Matrix4x4::RotationMatrixXY( Angle );
 
@@ -226,16 +236,16 @@ void cGame::Step() {
 	{
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_UP] ) {
-			Stick.y = 1.0f;
+			Stick.y = CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_DOWN] ) {
-			Stick.y = -1.0f;
+			Stick.y = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_LEFT] ) {
-			Stick.x = -1.0f;
+			Stick.x = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_RIGHT] ) {
-			Stick.x = 1.0f;
+			Stick.x = CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_PAGEUP] ) {
 			CameraWorldPos += Vector3D(0,0,2.5f);
