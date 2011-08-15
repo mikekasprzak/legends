@@ -154,11 +154,6 @@ void _VLog( const char* s, ... );
 void _VVLog( const char* s, ... );
 void _VVVLog( const char* s, ... );
 
-// Error Logging //
-#define ELog( ___ARGS... ) \
-	_LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-	LogAlways( ___ARGS )
-
 #ifndef NDEBUG
 	#define DLog( ___ARGS... ) \
 		LogAlways( ___ARGS )
@@ -168,6 +163,25 @@ void _VVVLog( const char* s, ... );
 	#define DLog( ... ) ;
 	#define _DLog( ... ) ;
 #endif // NDEBUG //
+
+// Log and Return //
+#define return_Log( ___ARGS... ) \
+	{ Log( __ARGS ); return; }
+#define return_VLog( ___ARGS... ) \
+	{ VLog( __ARGS ); return; }
+#define return_VVLog( ___ARGS... ) \
+	{ VVLog( __ARGS ); return; }
+#define return_VVVLog( ___ARGS... ) \
+	{ VVVLog( __ARGS ); return; }
+
+#define return_value_Log( ___VAL, ___ARGS... ) \
+	{ Log( __ARGS ); return ___VAL; }
+#define return_value_VLog( ___VAL, ___ARGS... ) \
+	{ VLog( __ARGS ); return ___VAL; }
+#define return_value_VVLog( ___VAL, ___ARGS... ) \
+	{ VVLog( __ARGS ); return ___VAL; }
+#define return_value_VVVLog( ___VAL, ___ARGS... ) \
+	{ VVVLog( __ARGS ); return ___VAL; }
 
 // - ------------------------------------------------------------------------------------------ - //
 #else // NOLOGGING //
@@ -180,25 +194,22 @@ void _VVVLog( const char* s, ... );
 #define VLog( ... ) ;
 #define VVLog( ... ) ;
 #define VVVLog( ... ) ;
-#define ELog( ... ) ;
 #define DLog( ... ) ;
 
 #define _Log( ... ) ;
 #define _VLog( ... ) ;
 #define _VVLog( ... ) ;
 #define _VVVLog( ... ) ;
-#define _ELog( ... ) ;
 #define _DLog( ... ) ;
 
-#define wLog( ... ) ;
-#define wVLog( ... ) ;
-#define wVVLog( ... ) ;
-#define wVVVLog( ... ) ;
-#define wELog( ... ) ;
-#define wDLog( ... ) ;
-
-//#define LogFlush() ;
-//#define DLogFlush() ;
+#define return_Log( ... ) ;
+#define return_VLog( ... ) ;
+#define return_VVLog( ... ) ;
+#define return_VVVLog( ... ) ;
+#define return_value_Log( ... ) ;
+#define return_value_VLog( ... ) ;
+#define return_value_VVLog( ... ) ;
+#define return_value_VVVLog( ... ) ;
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NOLOGGING //
