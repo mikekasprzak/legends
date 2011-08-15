@@ -4,8 +4,6 @@
 #ifndef __Library_GELCore_DataBlock_File_H__
 #define __Library_GELCore_DataBlock_File_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "GelCore_Util.h"
-// - ------------------------------------------------------------------------------------------ - //
 #include "GelFile.h"
 #include "GelVFile.h"
 #include "GelContentHandle.h"
@@ -66,10 +64,10 @@ inline DataBlock* new_read_nullterminate_DataBlock( const char* _FileName ) {
 	return p;
 }
 // - ------------------------------------------------------------------------------------------ - //
-DEPRECATED( DataBlock* new_DataBlock( const char* _FileName ) );
-inline DataBlock* new_DataBlock( const char* _FileName ) {
-	return new_read_DataBlock( _FileName );
-}
+//DEPRECATED( DataBlock* new_DataBlock( const char* _FileName ) );
+//inline DataBlock* new_DataBlock( const char* _FileName ) {
+//	return new_read_DataBlock( _FileName );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -143,15 +141,15 @@ inline DataBlock* new_read_nullterminate_DataBlock( GelVFile* fp ) {
 //	return new_DataBlock( fp );
 //}
 // - ------------------------------------------------------------------------------------------ - //
-DEPRECATED( DataBlock* new_DataBlock( GelFile* fp ) );
-inline DataBlock* new_DataBlock( GelFile* fp ) {
-	return new_read_DataBlock( fp );
-}
+//DEPRECATED( DataBlock* new_DataBlock( GelFile* fp ) );
+//inline DataBlock* new_DataBlock( GelFile* fp ) {
+//	return new_read_DataBlock( fp );
+//}
 // - ------------------------------------------------------------------------------------------ - //
-DEPRECATED( DataBlock* new_DataBlock( GelVFile* fp ) );
-inline DataBlock* new_DataBlock( GelVFile* fp ) {
-	return new_read_DataBlock( fp );
-}
+//DEPRECATED( DataBlock* new_DataBlock( GelVFile* fp ) );
+//inline DataBlock* new_DataBlock( GelVFile* fp ) {
+//	return new_read_DataBlock( fp );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 
 
