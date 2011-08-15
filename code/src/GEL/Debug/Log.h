@@ -154,34 +154,51 @@ void _VLog( const char* s, ... );
 void _VVLog( const char* s, ... );
 void _VVVLog( const char* s, ... );
 
-#ifndef NDEBUG
-	#define DLog( ___ARGS... ) \
-		LogAlways( ___ARGS )
-	#define _DLog( ___ARGS... ) \
-		_LogAlways( ___ARGS )
-#else // NDEBUG //
-	#define DLog( ... ) ;
-	#define _DLog( ... ) ;
-#endif // NDEBUG //
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef _MSC_VER
+// - ------------------------------------------------------------------------------------------ - //
+// Log and Return //
+#define return_Log( ... ) \
+	{ Log( __VA_ARGS__ ); return; }
+#define return_VLog( ... ) \
+	{ VLog( __VA_ARGS__ ); return; }
+#define return_VVLog( ... ) \
+	{ VVLog( __VA_ARGS__ ); return; }
+#define return_VVVLog( ... ) \
+	{ VVVLog( __VA_ARGS__ ); return; }
 
+#define return_value_Log( ___VAL, ... ) \
+	{ Log( __VA_ARGS__ ); return ___VAL; }
+#define return_value_VLog( ___VAL, ... ) \
+	{ VLog( __VA_ARGS__ ); return ___VAL; }
+#define return_value_VVLog( ___VAL, ... ) \
+	{ VVLog( __VA_ARGS__ ); return ___VAL; }
+#define return_value_VVVLog( ___VAL, ... ) \
+	{ VVVLog( __VA_ARGS__ ); return ___VAL; }
+// - ------------------------------------------------------------------------------------------ - //
+#else // _MSC_VER //
+// - ------------------------------------------------------------------------------------------ - //
 // Log and Return //
 #define return_Log( ___ARGS... ) \
-	{ Log( __ARGS ); return; }
+	{ Log( ___ARGS ); return; }
 #define return_VLog( ___ARGS... ) \
-	{ VLog( __ARGS ); return; }
+	{ VLog( ___ARGS ); return; }
 #define return_VVLog( ___ARGS... ) \
-	{ VVLog( __ARGS ); return; }
+	{ VVLog( ___ARGS ); return; }
 #define return_VVVLog( ___ARGS... ) \
-	{ VVVLog( __ARGS ); return; }
+	{ VVVLog( ___ARGS ); return; }
 
 #define return_value_Log( ___VAL, ___ARGS... ) \
-	{ Log( __ARGS ); return ___VAL; }
+	{ Log( ___ARGS ); return ___VAL; }
 #define return_value_VLog( ___VAL, ___ARGS... ) \
-	{ VLog( __ARGS ); return ___VAL; }
+	{ VLog( ___ARGS ); return ___VAL; }
 #define return_value_VVLog( ___VAL, ___ARGS... ) \
-	{ VVLog( __ARGS ); return ___VAL; }
+	{ VVLog( ___ARGS ); return ___VAL; }
 #define return_value_VVVLog( ___VAL, ___ARGS... ) \
-	{ VVVLog( __ARGS ); return ___VAL; }
+	{ VVVLog( ___ARGS ); return ___VAL; }
+// - ------------------------------------------------------------------------------------------ - //
+#endif // _MSC_VER //
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #else // NOLOGGING //

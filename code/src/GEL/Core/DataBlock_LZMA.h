@@ -123,10 +123,10 @@ inline DataBlock* new_unpack_LZMA_DataBlock( const DataBlock* _Src ) {
 */
 }
 // - ------------------------------------------------------------------------------------------ - //
-DEPRECATED( DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) );
-inline DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) {
-	return new_unpack_LZMA_DataBlock( _Src );
-}
+//DEPRECATED( DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) );
+//inline DataBlock* unpack_LZMA_DataBlock( const DataBlock* _Src ) {
+//	return new_unpack_LZMA_DataBlock( _Src );
+//}
 // - ------------------------------------------------------------------------------------------ - //
 // Decode packed LZMA data to a passed DataBlock //
 inline const SizeT unpack_LZMA_DataBlock( const DataBlock* _Src, DataBlock* _Dest ) {
