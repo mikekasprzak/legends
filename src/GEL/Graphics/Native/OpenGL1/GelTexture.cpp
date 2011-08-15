@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL) || defined(USES_OPENGLES)
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <Graphics/Graphics.h>
 #include <Graphics/GelTexture.h>

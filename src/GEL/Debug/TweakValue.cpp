@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <sys/stat.h>
 

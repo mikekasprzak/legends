@@ -1,6 +1,6 @@
 #ifdef USES_ASSIMP
 
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
 
 #include <assimp.h>        // Plain-C interface

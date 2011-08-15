@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_SDL_MIXER
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #ifdef USES_SDL_BASEDIR
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -74,7 +74,7 @@ void sndFree() {
 // - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_IRRKLANG)
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <irrKlang.h>
 
 #include "SoundPlayer.h"
@@ -119,7 +119,7 @@ void sndFree() {
 #include "SoundPlayer.h"
 #include <Audio/AudioMixer.h>
 #include <Audio/WAVFile_Load.h>
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 int sndSoundEnabled;
 AudioMixer* MyMixer;
@@ -168,7 +168,7 @@ void sndFree() {
 #include <windows.h>
 #include <mmsystem.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Audio/AudioMixer.h>
 //#include <Audio/AudioSource.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -451,7 +451,7 @@ void sndFree() {
 #include <windows.h>
 #include <soundfile.h>
 #include "SoundPlayer.h"
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 // - ------------------------------------------------------------------------------------------ - //
 int sndSoundEnabled;
 HSOUND SoundFile[SND_MAX];

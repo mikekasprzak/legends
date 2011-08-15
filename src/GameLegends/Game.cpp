@@ -3,8 +3,6 @@
 // - Hey cool, I saw inside TinyXML a suggestion that a handle can be used to simplify if (0) checks.
 //   My theroy, implement a member function you use for access, and check the "this" variable if it's
 //   zero.  If it's zero, then assume a failed lookup occured and do nothing.
-// - Make the new_DataBlock call a bit more obvious that it reads a file
-// - Also, give an option to load a datablock with a trailing zero (cJSON wanted this)
 // - ------------------------------------------------------------------------------------------ - //
 // - Make the F12 key dump the Game Instance (or the GameHost), causing a re-search for asset files
 // - ------------------------------------------------------------------------------------------ - //

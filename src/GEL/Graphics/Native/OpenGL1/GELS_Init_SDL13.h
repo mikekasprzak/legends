@@ -7,7 +7,7 @@
 #ifdef USES_SDL
 #ifdef USES_SDL_1_3
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Graphics/Graphics_System.h>
 #include <Graphics/Graphics_Screen.h>
 // - ------------------------------------------------------------------------------------------ - //

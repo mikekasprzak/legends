@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_SDL_MIXER
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #ifdef USES_SDL_BASEDIR
 #include <SDL.h>
 #include <SDL_mixer.h>

@@ -2,7 +2,7 @@
 #ifndef __GEL_H__
 #define __GEL_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <Graphics/Graphics.h>
 #include <Graphics/GraphicsDraw.h>

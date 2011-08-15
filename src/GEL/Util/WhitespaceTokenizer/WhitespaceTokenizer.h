@@ -45,7 +45,7 @@ public:
 	inline bool Load( const char* FileName ) {
 		CurrentLine = 0;
 		
-		DataBlock* Block = new_DataBlock( FileName );
+		DataBlock* Block = new_read_DataBlock( FileName );
 		if ( Block == 0 )
 			return false;
 		Data.clear();

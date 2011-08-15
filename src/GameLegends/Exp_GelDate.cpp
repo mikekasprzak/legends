@@ -1,5 +1,5 @@
 #ifdef USES_WINDOWS
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Timer/GelDate.h>
 #include <Timer/GelTime.h>
 

@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include "WAVFile.h"
 #include "WAVFile_Load.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -8,7 +8,7 @@
 AudioSource* Load_WAVFile( const char* File ) {
 	AudioSource* Source = new AudioSource;
 	
-	Source->FileData = new_DataBlock( File );
+	Source->FileData = new_read_DataBlock( File );
 
 	if ( Source->FileData == 0 ) {
 		Log("* WAV READ FAILED\n");

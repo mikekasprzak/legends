@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include "IMAFile.h"
 #include "IMAFile_Load.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -11,7 +11,7 @@ AudioSource* Load_IMAFile( const char* File ) {
 	AudioSource* Source = new AudioSource;
 	
 	// NOTE: This is only temporary. Read 
-	DataBlock* InputFile = new_DataBlock( File );
+	DataBlock* InputFile = new_read_DataBlock( File );
 
 	if ( InputFile == 0 ) {
 		Log("* IMA READ FAILED\n");
@@ -20,7 +20,7 @@ AudioSource* Load_IMAFile( const char* File ) {
 	}
 
 /*	
-	Source->FileData = new_DataBlock( File );
+	Source->FileData = new_read_DataBlock( File );
 
 	if ( Source->FileData == 0 ) {
 		Log("* WAV READ FAILED\n");

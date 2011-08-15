@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <Types/UVSet.h>
 #include <Types/ABCSet.h>

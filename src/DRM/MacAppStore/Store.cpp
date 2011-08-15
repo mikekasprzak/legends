@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_MACAPPSTORE
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Core/GelString.h>
 #include <Project.h>
 #include "Store.h"
