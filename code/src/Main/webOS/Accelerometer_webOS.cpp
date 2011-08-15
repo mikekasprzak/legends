@@ -2,7 +2,7 @@
 #ifdef USES_WEBOS
 // - ------------------------------------------------------------------------------------------ - //
 #include <math.h>
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <SDL/SDL.h>
 #include <PDL.h>

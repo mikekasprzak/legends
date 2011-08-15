@@ -1,6 +1,6 @@
 
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
 
 // TODO: replace this with the var-args giving header... I dunno what that is... net is down //

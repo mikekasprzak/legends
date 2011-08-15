@@ -9,7 +9,7 @@
 #ifdef _MSC_VER
 #include <string>
 #include <Util/String/String.h>
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
 namespace TexturePool {

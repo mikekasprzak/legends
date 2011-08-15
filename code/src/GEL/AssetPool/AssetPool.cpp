@@ -2,7 +2,7 @@
 // NOTE: GelAsset_Instance is a little weird. You construct with a filename, and pass a prefix to 
 //   the load.  This is very odd. Change this.
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/DataBlock.h>
 #include <Core/DataBlock_LZMA.h>

@@ -6,7 +6,7 @@
 #pragma warning (disable : 4200) // Nonstandard Extension: Zero Sized Array in Struct/Union
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 // - ------------------------------------------------------------------------------------------ - //
 struct PVRTexture {
 	int HeaderSize;			// Always 52 (bytes) //

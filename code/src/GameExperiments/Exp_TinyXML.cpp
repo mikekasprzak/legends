@@ -1,5 +1,5 @@
 
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 #include <tinyxml.h>
 

@@ -2,7 +2,7 @@
 #ifndef __Grid_Grid2D_Image_H__
 #define __Grid_Grid2D_Image_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include "Grid2D_Core.h"
 #include <External/STB/stb_image.h>
 // - ------------------------------------------------------------------------------------------ - //

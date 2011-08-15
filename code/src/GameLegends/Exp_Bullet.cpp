@@ -2,7 +2,7 @@
 // Include this first, as I know how the rest of the code works... well, most of it. Later didn't work //
 #include <btBulletDynamicsCommon.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 
 extern void CallExp_Bullet();
 void CallExp_Bullet() {

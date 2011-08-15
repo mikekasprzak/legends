@@ -3,7 +3,7 @@
 
 using namespace std;
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Graphics/GelColor.h>
 #include <Graphics/GelUV.h>
 #include "PMEFile.h"

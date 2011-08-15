@@ -2,7 +2,7 @@
 #ifndef __UIHost_H__
 #define __UIHost_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Debug/GelDebug.h>
 #include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/DataBlock.h>
@@ -183,7 +183,7 @@ public:
 	
 //	void Load( const char* FileName ) {
 //		Log( "Loading Screen: \"%s\"...\n", FileName );
-//		Load( new_DataBlock( FileName ) );
+//		Load( new_read_DataBlock( FileName ) );
 //	}
 
 	void Load( DataBlock* _Data ) {
