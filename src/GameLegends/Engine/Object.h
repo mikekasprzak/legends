@@ -13,15 +13,22 @@ public:
 	
 	GelAssetHandle Texture;
 	
+	cPhysicsObject* PhysicsObject;
+
+	
 	cObject( Vector3D _Pos, GelAssetHandle _Texture, const Real _Scalar = Real(12) ) :
 		Pos( _Pos),
 		Scalar( _Scalar ),
-		Texture( _Texture )
+		Texture( _Texture ),
+		PhysicsObject( 0 )
 	{	
 	}
 	
 	void Step() {
-		
+		if ( PhysicsObject ) {
+			PhysicsObject->Step();
+			Pos = PhysicsObject->GetPos();
+		}
 	}
 	
 	void Draw() {

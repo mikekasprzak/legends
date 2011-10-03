@@ -20,7 +20,7 @@ void cPhysics::Init() {
 	dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
 
 	// Set Gravity //
-	dynamicsWorld->setGravity( btVector3(0,-10,0) );
+	dynamicsWorld->setGravity( btVector3(0,0,-10) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cPhysics::Exit() {
@@ -34,4 +34,9 @@ void cPhysics::Exit() {
 	Log("- Done Bullet Simulation\n");
 	Log("\n");
 }
+// - ------------------------------------------------------------------------------------------ - //
+void cPhysics::Step() {
+	dynamicsWorld->stepSimulation( 1/60.f, 10 );
+}
+// - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //

@@ -169,17 +169,23 @@ void cGame::Init() {
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
-	Obj.push_back( new cObject( Vector3D(128+64,256+32,32+16), txSword ) );
+	Obj.push_back( new cObject( Vector3D(64,32,32+16), txSword ) );
 
 	Obj3.push_back( new cObject3D( Vector3D( 256, 256, 32+16 ), Mesh, Real(64) ) );
 	Obj3.push_back( new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 ) );
 		
 	CameraFollow = Obj[0];
 	
+	Obj[1]->PhysicsObject = Physics.AddBall( Obj[1]->Pos );
+	Room[0].PhysicsObject = Physics.AddPlane();
+	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
+	Physics.Remove( Obj[1]->PhysicsObject );
+	Physics.Remove( Room[0].PhysicsObject );
+	
 	for ( int idx = 0; idx < Obj.size(); idx++ ) {
 		delete Obj[idx];
 	}
@@ -224,20 +230,10 @@ void cGame::LostFocus() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Step() {
-	static float Angle = 0;
-	Angle += 0.3f;
-	
-	float CameraSpeed = _TV(1.0f);
-	
-//	SpinMatrix = Matrix4x4::RotationMatrixXZ( Angle );
-	SpinMatrix = Matrix4x4::RotationMatrixXY( Angle );
+	float CameraSpeed = _TV(1.0f);	
 
-//	static int Xer = 0;
-//	Xer++;
-//	Vert->Data[indexVertex_Optimized_TriangleStrips(64,Xer&63,Xer&63)].Pos.z+=4;
-
+	// Input //
 	Vector2D Stick(0,0);
-
 	{
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_UP] ) {
@@ -290,6 +286,17 @@ void cGame::Step() {
 		CameraWorldPos += (CameraFollow->Pos - CameraWorldPos) * Real(0.1f);//Stick.ToVector3D() * Real( 2.5f );
 		
 		CameraFollow->Pos -= Input_MoveStick.ToVector3D();
+	}
+	
+	// Step Physics //
+	Physics.Step();
+	
+	// Step Objects //
+	for ( int idx = 0; idx < Obj.size(); idx++ ) {
+		Obj[idx]->Step();
+	}
+	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+		Obj3[idx]->Step();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
