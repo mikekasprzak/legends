@@ -10,6 +10,9 @@ struct VertType {
 // - ------------------------------------------------------------------------------------------ - //
 class cRoom {
 public:
+	typedef unsigned char GType;
+	Grid2D<GType>* Grid;
+	
 	GelArray<VertType>* Vert;
 	GelArray<unsigned short>* Index;
 	GelArray<unsigned short>* OutlineIndex;
