@@ -117,6 +117,8 @@ void cGame::Init() {
 	InitScripts();
 	LoadScripts();
 	
+	Physics.Init();
+	
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
 
@@ -196,9 +198,12 @@ void cGame::Exit() {
 	delete_Triangles( Room[3].Vert, Room[3].Index );
 	delete_OutlineList( Room[3].OutlineIndex );
 
+	// Shut Down Physics //
+	Physics.Exit();
+
 	// Kill Experiments //
-	extern void ExpExit();
-	ExpExit();
+//	extern void ExpExit();
+//	ExpExit();
 
 	// Kill VM //
 	vm_Exit();

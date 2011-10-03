@@ -9,6 +9,7 @@
 #include <Math/Matrix.h>
 #include <Object/FdoHeightMap.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include "Physics.h"
 #include "Engine/Room.h"
 #include "Engine/Object.h"
 #include "Engine/Object3D.h"
@@ -71,6 +72,8 @@ public:
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
 public:
+	cPhysics Physics;
+	
 	std::vector< cObject* > Obj;
 	std::vector< cObject3D* > Obj3;
 
