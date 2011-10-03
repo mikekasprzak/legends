@@ -37,6 +37,15 @@ public:
 		AssetPool::Set( Texture );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
+	
+	void DrawDebug() {
+		if ( PhysicsObject ) {
+			btVector3 Min, Max;
+			PhysicsObject->shape->getAabb( PhysicsObject->trans, Min, Max );
+			
+			gelDrawCube( *((Vector3D*)&Min), *((Vector3D*)&Max), GEL_RGB_RED );
+		}
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Object_H__ //
