@@ -97,17 +97,17 @@ public:
 			Grid.w,
 			Grid.h,
 			&Grid.Data[0],
-			0.25f,				// Scale //
-			0, 64,			// MIN, MAX //
+			0.128f,				// Scale //
+			0, 32,			// MIN, MAX //
 			2, 				// Up Axis (x=0,y=1,z=2),
 			PHY_UCHAR, 		// PHY_SHORT, PHY_FLOAT
 			false
 			);
 
-		obj->shape->setLocalScaling( btVector3(256/64.0,256/64.0,128/64.0) );
+		obj->shape->setLocalScaling( btVector3( 256/64.0, 256/64.0, 128/64.0 ) );
 
 		// Heightmap Orientation (quaternion) and position (vector) //
-		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, 32.0f+Pos.z ) ) );
 		// Configure construction: Mass, MotionState, Shape, Inertia //
 		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
 		// Create //
