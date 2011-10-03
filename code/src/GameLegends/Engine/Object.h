@@ -9,11 +9,13 @@
 class cObject {
 public:
 	Vector3D Pos;
+	Real Scalar;
 	
 	GelAssetHandle Texture;
 	
-	cObject( Vector3D _Pos, GelAssetHandle _Texture ) :
+	cObject( Vector3D _Pos, GelAssetHandle _Texture, const Real _Scalar = Real(12) ) :
 		Pos( _Pos),
+		Scalar( _Scalar ),
 		Texture( _Texture )
 	{	
 	}
@@ -26,7 +28,7 @@ public:
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
 		AssetPool::Set( Texture );
-		gelDrawRectFillTextured( Vector3D(-64,-64,0), Vector3D(64,64,0) );
+		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
