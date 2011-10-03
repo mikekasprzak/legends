@@ -4,8 +4,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 // Include this first, as I know how the rest of the code works... well, most of it. Later didn't work //
 #include <btBulletDynamicsCommon.h>
+#include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
+#include <Grid/Grid2D.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -68,6 +70,34 @@ public:
 
 		// Ground Plane Orientation (quaternion) and position (vector) //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3(0,0,-1) ) );
+		// Configure construction: Mass, MotionState, Shape, Inertia //
+		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
+		// Create //
+		obj->rigidBody = new btRigidBody( groundRigidBodyCI );
+		
+		// Add to the world //
+		dynamicsWorld->addRigidBody( obj->rigidBody );
+		
+		return obj;
+	}
+
+	cPhysicsObject* AddHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid ) {
+		cPhysicsObject* obj = new cPhysicsObject;
+
+		// Create a Plane (directional vector and ?? (length?)) //
+		obj->shape = new btHeightfieldTerrainShape( 
+			Grid.w,
+			Grid.h,
+			&Grid.Data[0],
+			1024,			// Scale //
+			0, 255,			// MIN, MAX //
+			2, 				// Up Axis (x=0,y=1,z=2),
+			PHY_UCHAR, 		// PHY_SHORT, PHY_FLOAT
+			false
+			);
+
+		// Ground Plane Orientation (quaternion) and position (vector) //
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
 		// Configure construction: Mass, MotionState, Shape, Inertia //
 		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
 		// Create //

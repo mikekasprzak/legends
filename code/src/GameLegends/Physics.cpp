@@ -20,7 +20,7 @@ void cPhysics::Init() {
 	dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration );
 
 	// Set Gravity //
-	dynamicsWorld->setGravity( btVector3(0,0,-10) );
+	dynamicsWorld->setGravity( btVector3(0,0,-40) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cPhysics::Exit() {
