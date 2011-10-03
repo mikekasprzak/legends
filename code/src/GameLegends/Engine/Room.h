@@ -2,7 +2,7 @@
 #ifndef __Room_H__
 #define __Room_H__
 // - ------------------------------------------------------------------------------------------ - //
-
+#include "../Physics.h"
 // - ------------------------------------------------------------------------------------------ - //
 struct VertType {
 	Vector3D Pos;
@@ -13,6 +13,18 @@ public:
 	GelArray<VertType>* Vert;
 	GelArray<unsigned short>* Index;
 	GelArray<unsigned short>* OutlineIndex;
+
+	cPhysicsObject* PhysicsObject;
+
+public:
+	cRoom() :
+		PhysicsObject( 0 )
+	{
+	}
+	
+	void Step() {
+		
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Room_H__ //
