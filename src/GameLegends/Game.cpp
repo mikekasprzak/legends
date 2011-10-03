@@ -103,8 +103,8 @@ void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
 	// Run the Experiments ... //
-	extern void ExpInit();
-	ExpInit();
+//	extern void ExpInit();
+//	ExpInit();
 //	extern void CallExp();
 //	CallExp();
 
@@ -120,6 +120,8 @@ void cGame::Init() {
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
 
+	CameraWorldPos = Vector3D(0,0,0);
+	CameraFollow = 0;
 	
 	// ??? //
 	Vector3D RoomScale(128,128,64);
@@ -160,29 +162,31 @@ void cGame::Init() {
 	Mesh2->Import( "Content/Models/Native/Chest.3ds" );
 	
 	txPlayer = AssetPool::Load( "/Player01" );
-//	txSword = AssetPool::Load( "/Sword01" );
-	txSword = AssetPool::Load( "/Fontin_0" );
+	txSword = AssetPool::Load( "/Sword01" );
 
-	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
-	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
+//	txSword = AssetPool::Load( "/Fontin_0" );
 
-	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh, Real(64) );
-	Obj3[1] = new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 );
-	
-	CameraWorldPos = Vector3D(0,0,0);
+	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
+	Obj.push_back( new cObject( Vector3D(128+64,256+32,32+16), txSword ) );
+
+	Obj3.push_back( new cObject3D( Vector3D( 256, 256, 32+16 ), Mesh, Real(64) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 ) );
+		
+	CameraFollow = Obj[0];
 	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
-	delete Obj3[0];
-	delete Obj3[1];
+	for ( int idx = 0; idx < Obj.size(); idx++ ) {
+		delete Obj[idx];
+	}
+	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+		delete Obj3[idx];
+	}
 	
 	delete Mesh;
 	
-	delete Obj[0];
-	delete Obj[1];
-
 	delete_Triangles( Room[0].Vert, Room[0].Index );
 	delete_OutlineList( Room[0].OutlineIndex );
 	delete_Triangles( Room[1].Vert, Room[1].Index );
@@ -275,8 +279,13 @@ void cGame::Step() {
 #endif // USES_ICADE //
 	}
 	
-	CameraWorldPos += Stick.ToVector3D() * Real( 2.5f );
-
+	Input_MoveStick = Stick;
+	
+	if ( CameraFollow != 0 ) {
+		CameraWorldPos += (CameraFollow->Pos - CameraWorldPos) * Real(0.1f);//Stick.ToVector3D() * Real( 2.5f );
+		
+		CameraFollow->Pos -= Input_MoveStick.ToVector3D();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
@@ -339,7 +348,7 @@ void cGame::Draw() {
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( CameraWorldPos ) * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
 	
 		gelDrawModeFlat();
 		

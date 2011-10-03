@@ -66,9 +66,13 @@ public:
 	Matrix4x4 ModelViewMatrix;
 	
 	Vector3D CameraWorldPos;
+	cObject* CameraFollow;
+	
+	Vector2D Input_MoveStick;
+	Vector3D Input_MoveTarget; // ?? //
 public:
-	cObject* Obj[2];
-	cObject3D* Obj3[2];
+	std::vector< cObject* > Obj;
+	std::vector< cObject3D* > Obj3;
 
 public:
 	cGame() :
