@@ -350,45 +350,32 @@ void cGame::Draw() {
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
 	
-		gelDrawModeFlat();
-		
+		gelDrawModeFlat();		
 		DrawRoom( &(Room[0]), Vector3D(0,0,0) );
-
-		// Monkey Head //
-		{
-			gelLoadMatrix( ModelViewMatrix );
-			gelSetColor( GEL_RGBA(255,0,0,64) );
-			Obj3[0]->Draw();
-			gelSetColor( GEL_RGB_DEFAULT );
-
-			gelLoadMatrix( ModelViewMatrix );
-			gelSetColor( GEL_RGBA(255,0,0,64) );
-			Obj3[1]->Draw();
-			gelSetColor( GEL_RGB_DEFAULT );
-
-//			gelMultMatrix( Matrix4x4::TranslationMatrix( Vector3D( 0, 0, 32+16 ) ) );
-//			gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( 16, 16, 16 ) ) );
-//
-//			gelSetColor( GEL_RGBA(255,0,0,64) );
-//			gelDrawIndexedTriangles( &(Mesh->Mesh[0].Vertex[0]), (unsigned short*)&(Mesh->Mesh[0].FaceGroup[0].Face[0]), Mesh->Mesh[0].FaceGroup[0].Face.size()*3 );
-//			gelSetColor( GEL_RGB_DEFAULT );
-		}
-
 		DrawRoom( &(Room[1]), Vector3D(128,256,0) );
-
-		gelDrawModeTextured();
-		{
-			gelLoadMatrix( ModelViewMatrix );
-			Obj[0]->Draw();
-
-			gelLoadMatrix( ModelViewMatrix );
-			Obj[1]->Draw();
-		}
-		
-		gelDrawModeFlat();
-
 		DrawRoom( &(Room[2]), Vector3D(128,512,0) );
 		DrawRoom( &(Room[3]), Vector3D(256+128,512,0) );
+
+		gelDrawModeFlat();
+		// Monkey Head //
+		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			gelSetColor( GEL_RGBA(255,0,0,64) );
+			Obj3[idx]->Draw();
+			gelSetColor( GEL_RGB_DEFAULT );
+		}
+
+		gelDrawModeTextured();		
+		for ( int idx = 0; idx < Obj.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj[idx]->Draw();
+		}
+		
+		if ( CameraFollow ) {
+			gelDrawModeFlat();
+			gelLoadMatrix( ModelViewMatrix );
+			gelDrawCircle( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(20), Real(4), GEL_RGB_WHITE );
+		}		
 	}
 
 
