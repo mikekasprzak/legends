@@ -2,6 +2,7 @@
 #ifndef __Room_H__
 #define __Room_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Graphics/GraphicsDraw.h>
 #include "../Physics.h"
 // - ------------------------------------------------------------------------------------------ - //
 struct VertType {
@@ -27,6 +28,15 @@ public:
 	
 	void Step() {
 		
+	}
+	
+	void DrawDebug() {
+		if ( PhysicsObject ) {
+			btVector3 Min, Max;
+			PhysicsObject->shape->getAabb( PhysicsObject->trans, Min, Max );
+			
+			gelDrawCube( *((Vector3D*)&Min), *((Vector3D*)&Max), GEL_RGB_RED );
+		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

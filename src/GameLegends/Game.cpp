@@ -160,15 +160,15 @@ void cGame::Init() {
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
-	Obj.push_back( new cObject( Vector3D(64,32,32+16), txSword ) );
+	Obj.push_back( new cObject( Vector3D(64+26,32,32+16+64), txSword ) );
 
 	Obj3.push_back( new cObject3D( Vector3D( 256, 256, 32+16 ), Mesh, Real(64) ) );
 	Obj3.push_back( new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 ) );
-		
+	
 	CameraFollow = Obj[0];
 	
-	Obj[1]->PhysicsObject = Physics.AddBall( Obj[1]->Pos );
-	Vector3D Room0Pos(0,0,-100);
+	Obj[1]->PhysicsObject = Physics.AddBall( Obj[1]->Pos, Obj[1]->Scalar );
+	Vector3D Room0Pos(0,0,0);
 	Room[0].PhysicsObject = Physics.AddHeightMap( Room0Pos, *Room[0].Grid );
 	
 	Log( "- End of Init" );
@@ -378,6 +378,16 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->Draw();
 		}
+
+		gelDrawModeFlat();		
+		for ( int idx = 0; idx < Obj.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj[idx]->DrawDebug();
+		}
+		Room[0].DrawDebug();
+		Room[1].DrawDebug();
+		Room[2].DrawDebug();
+		Room[3].DrawDebug();
 		
 		if ( CameraFollow ) {
 			gelDrawModeFlat();

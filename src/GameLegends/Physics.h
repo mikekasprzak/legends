@@ -19,8 +19,12 @@ public:
 	
 	btTransform trans;
 	
-	void Step() {
+	inline void UpdateTransform() {
 		rigidBody->getMotionState()->getWorldTransform(trans);
+	}
+	
+	void Step() {
+		UpdateTransform();
 	}
 	
 	inline Vector3D GetPos() const {
@@ -41,11 +45,11 @@ public:
 	
 	void Step();
 	
-	cPhysicsObject* AddBall( Vector3D& Pos ) {
+	cPhysicsObject* AddBall( Vector3D& Pos, Real Radius ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 		
 		// Create a ball (radius) //
-		obj->shape = new btSphereShape(1);
+		obj->shape = new btSphereShape( Radius );
 		
 		// Ball Orientation //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
@@ -58,6 +62,8 @@ public:
 		obj->rigidBody = new btRigidBody( ballRigidBodyCI );
 		
 		dynamicsWorld->addRigidBody( obj->rigidBody );
+		
+		obj->UpdateTransform();
 		
 		return obj;
 	}
@@ -77,6 +83,8 @@ public:
 		
 		// Add to the world //
 		dynamicsWorld->addRigidBody( obj->rigidBody );
+
+		obj->UpdateTransform();
 		
 		return obj;
 	}
@@ -84,19 +92,21 @@ public:
 	cPhysicsObject* AddHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 
-		// Create a Plane (directional vector and ?? (length?)) //
+		// Create a Heightmap //
 		obj->shape = new btHeightfieldTerrainShape( 
 			Grid.w,
 			Grid.h,
 			&Grid.Data[0],
-			1024,			// Scale //
-			0, 255,			// MIN, MAX //
+			0.25f,				// Scale //
+			0, 64,			// MIN, MAX //
 			2, 				// Up Axis (x=0,y=1,z=2),
 			PHY_UCHAR, 		// PHY_SHORT, PHY_FLOAT
 			false
 			);
 
-		// Ground Plane Orientation (quaternion) and position (vector) //
+		obj->shape->setLocalScaling( btVector3(256/64.0,256/64.0,128/64.0) );
+
+		// Heightmap Orientation (quaternion) and position (vector) //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
 		// Configure construction: Mass, MotionState, Shape, Inertia //
 		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
@@ -105,6 +115,8 @@ public:
 		
 		// Add to the world //
 		dynamicsWorld->addRigidBody( obj->rigidBody );
+
+		obj->UpdateTransform();
 		
 		return obj;
 	}
