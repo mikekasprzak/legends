@@ -22,11 +22,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#include "Engine/Room.h"
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-cRoom Room[4];
 cPMEFile* Mesh;
 cPMEFile* Mesh2;
 // - ------------------------------------------------------------------------------------------ - //
@@ -129,24 +124,32 @@ void cGame::Init() {
 	Vector3D RoomScale(128,128,64);
 
 	{
-		Room[0].Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room01.tga" );
-		new_Optimized_Triangles( Room[0].Grid, &Room[0].Vert, &Room[0].Index, RoomScale );
-		new_Triangles_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
+		Room.push_back( new cRoom( Vector3D(0,0,0) ) );
+		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room01.tga" );
+		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
+		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
+		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 	}
 	{
-		Room[1].Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room02.tga" );
-		new_Optimized_Triangles( Room[1].Grid, &Room[1].Vert, &Room[1].Index, RoomScale );
-		new_Triangles_OutlineList( Room[1].Index, &Room[1].OutlineIndex );
+		Room.push_back( new cRoom( Vector3D(128,256,0) ) );
+		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room02.tga" );
+		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
+		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
+		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 	}
 	{
-		Room[2].Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room03.tga" );
-		new_Optimized_Triangles( Room[2].Grid, &Room[2].Vert, &Room[2].Index, RoomScale );
-		new_Triangles_OutlineList( Room[2].Index, &Room[2].OutlineIndex );
+		Room.push_back( new cRoom( Vector3D(128,512,0) ) );
+		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room03.tga" );
+		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
+		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
+		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 	}
 	{
-		Room[3].Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room04.tga" );
-		new_Optimized_Triangles( Room[3].Grid, &Room[3].Vert, &Room[3].Index, RoomScale );
-		new_Triangles_OutlineList( Room[3].Index, &Room[3].OutlineIndex );
+		Room.push_back( new cRoom( Vector3D(256+128,512,0) ) );
+		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room04.tga" );
+		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
+		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
+		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 	}
 
 	Mesh = new cPMEFile( "Content/Models/Native/Monkey.pme" );
@@ -167,16 +170,14 @@ void cGame::Init() {
 	
 	CameraFollow = Obj[0];
 	
+	Obj[0]->PhysicsObject = Physics.AddBall( Obj[0]->Pos, Obj[0]->Scalar );
 	Obj[1]->PhysicsObject = Physics.AddBall( Obj[1]->Pos, Obj[1]->Scalar );
-	Vector3D Room0Pos(0,0,0);
-	Room[0].PhysicsObject = Physics.AddHeightMap( Room0Pos, *Room[0].Grid );
 	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
 	Physics.Remove( Obj[1]->PhysicsObject );
-	Physics.Remove( Room[0].PhysicsObject );
 	
 	for ( int idx = 0; idx < Obj.size(); idx++ ) {
 		delete Obj[idx];
@@ -186,20 +187,15 @@ void cGame::Exit() {
 	}
 	
 	delete Mesh;
-	
-	delete_Triangles( Room[0].Vert, Room[0].Index );
-	delete_OutlineList( Room[0].OutlineIndex );
-	delete_Grid2D( Room[0].Grid );
-	delete_Triangles( Room[1].Vert, Room[1].Index );
-	delete_OutlineList( Room[1].OutlineIndex );
-	delete_Grid2D( Room[1].Grid );
-	delete_Triangles( Room[2].Vert, Room[2].Index );
-	delete_OutlineList( Room[2].OutlineIndex );
-	delete_Grid2D( Room[2].Grid );
-	delete_Triangles( Room[3].Vert, Room[3].Index );
-	delete_OutlineList( Room[3].OutlineIndex );
-	delete_Grid2D( Room[3].Grid );
 
+	for ( int idx = 0; idx < Room.size(); idx++ ) {
+		Physics.Remove( Room[idx]->PhysicsObject );
+		
+		delete_Triangles( Room[idx]->Vert, Room[idx]->Index );
+		delete_OutlineList( Room[idx]->OutlineIndex );
+		delete_Grid2D( Room[idx]->Grid );
+	}
+	
 	// Shut Down Physics //
 	Physics.Exit();
 
@@ -281,7 +277,10 @@ void cGame::Step() {
 	if ( CameraFollow != 0 ) {
 		CameraWorldPos += (CameraFollow->Pos - CameraWorldPos) * Real(0.1f);//Stick.ToVector3D() * Real( 2.5f );
 		
-		CameraFollow->Pos -= Input_MoveStick.ToVector3D();
+		//CameraFollow->Pos -= Input_MoveStick.ToVector3D();
+		CameraFollow->PhysicsObject->rigidBody->applyForce( 
+			btVector3( 32.0 * -Input_MoveStick.x, 32.0 * -Input_MoveStick.y, 0 ), 
+			btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
 	}
 	
 	// Step Physics //
@@ -358,11 +357,15 @@ void cGame::Draw() {
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
 	
-		gelDrawModeFlat();		
-		DrawRoom( &(Room[0]), Vector3D(0,0,0) );
-		DrawRoom( &(Room[1]), Vector3D(128,256,0) );
-		DrawRoom( &(Room[2]), Vector3D(128,512,0) );
-		DrawRoom( &(Room[3]), Vector3D(256+128,512,0) );
+		gelDrawModeFlat();	
+		for ( int idx = 0; idx < Room.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Room[idx]->Draw();
+		}
+//		DrawRoom( &(Room[0]), Vector3D(0,0,0) );
+//		DrawRoom( &(Room[1]), Vector3D(128,256,0) );
+//		DrawRoom( &(Room[2]), Vector3D(128,512,0) );
+//		DrawRoom( &(Room[3]), Vector3D(256+128,512,0) );
 
 		gelDrawModeFlat();
 		// Monkey Head //
@@ -384,10 +387,10 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->DrawDebug();
 		}
-		Room[0].DrawDebug();
-		Room[1].DrawDebug();
-		Room[2].DrawDebug();
-		Room[3].DrawDebug();
+		for ( int idx = 0; idx < Room.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Room[idx]->DrawDebug();
+		}
 		
 		if ( CameraFollow ) {
 			gelDrawModeFlat();

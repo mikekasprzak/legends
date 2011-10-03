@@ -11,6 +11,8 @@ struct VertType {
 // - ------------------------------------------------------------------------------------------ - //
 class cRoom {
 public:
+	Vector3D Pos;
+	
 	typedef unsigned char GType;
 	Grid2D<GType>* Grid;
 	
@@ -25,9 +27,23 @@ public:
 		PhysicsObject( 0 )
 	{
 	}
+
+	cRoom( const Vector3D& _Pos ) :
+		Pos( _Pos ),
+		PhysicsObject( 0 )
+	{
+	}
 	
 	void Step() {
 		
+	}
+	
+	void Draw() {
+		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
+		
+		gelDrawIndexedTriangles( Vert->Data, Index->Data, Index->Size, GEL_RGBA(255,255,255,64) );
+		gelDrawIndexedLines( Vert->Data, OutlineIndex->Data, OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
+		gelDrawPoints( Vert->Data, Vert->Size, GEL_RGB_YELLOW );		
 	}
 	
 	void DrawDebug() {

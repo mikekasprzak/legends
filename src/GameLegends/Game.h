@@ -76,6 +76,8 @@ public:
 	
 	std::vector< cObject* > Obj;
 	std::vector< cObject3D* > Obj3;
+		
+	std::vector< cRoom* > Room;
 
 public:
 	cGame() :
