@@ -163,26 +163,33 @@ void cGame::Init() {
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
+	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	Obj.push_back( new cObject( Vector3D(64+26,32,32+16+64), txSword ) );
+	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 
-	Obj3.push_back( new cObject3D( Vector3D( 256, 256, 32+16 ), Mesh, Real(64) ) );
-	Obj3.push_back( new cObject3D( Vector3D( 256+128, 256, 32+16 ), Mesh2 ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh, Real(16) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( -108, 32, 64+16 ), Mesh2, Real(20) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( 0, -48, 64+16 ), Mesh2, Real(10) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+//	Obj3.push_back( new cObject3D( Vector3D( 128, 256+128, 256 ), Mesh, Real(20) ) );
+//	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	
 	CameraFollow = Obj[0];
 	
-	Obj[0]->PhysicsObject = Physics.AddBall( Obj[0]->Pos, Obj[0]->Scalar );
-	Obj[1]->PhysicsObject = Physics.AddBall( Obj[1]->Pos, Obj[1]->Scalar );
 	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
-	Physics.Remove( Obj[1]->PhysicsObject );
 	
 	for ( int idx = 0; idx < Obj.size(); idx++ ) {
+		Physics.Remove( Obj[idx]->PhysicsObject );
 		delete Obj[idx];
 	}
 	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+		Physics.Remove( Obj3[idx]->PhysicsObject );
 		delete Obj3[idx];
 	}
 	
@@ -279,7 +286,7 @@ void cGame::Step() {
 		
 		//CameraFollow->Pos -= Input_MoveStick.ToVector3D();
 		CameraFollow->PhysicsObject->rigidBody->applyForce( 
-			btVector3( 32.0 * -Input_MoveStick.x, 32.0 * -Input_MoveStick.y, 0 ), 
+			btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 ), 
 			btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
 	}
 	
@@ -386,6 +393,10 @@ void cGame::Draw() {
 		for ( int idx = 0; idx < Obj.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->DrawDebug();
+		}
+		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj3[idx]->DrawDebug();
 		}
 		for ( int idx = 0; idx < Room.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
