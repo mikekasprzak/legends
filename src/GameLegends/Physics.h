@@ -7,6 +7,7 @@
 #include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
+#include <Math/Matrix.h>
 #include <Grid/Grid2D.h>
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -29,6 +30,14 @@ public:
 	
 	inline Vector3D GetPos() const {
 		return Vector3D( trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ() );
+	}
+
+	inline Matrix3x3 GetBasis() const {
+		return Matrix3x3( 
+				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(0))) ),
+				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(1))) ),
+				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(2))) )
+				);
 	}
 	
 	inline void Exit() {
@@ -53,6 +62,33 @@ public:
 		
 		// Ball Orientation //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
+
+		btScalar ballMass = 10;
+		btVector3 ballInertia(0,0,0);
+		obj->shape->calculateLocalInertia( ballMass, ballInertia );
+
+		btRigidBody::btRigidBodyConstructionInfo ballRigidBodyCI( ballMass, obj->motionState, obj->shape, ballInertia );
+		obj->rigidBody = new btRigidBody( ballRigidBodyCI );
+		
+		dynamicsWorld->addRigidBody( obj->rigidBody );
+		
+		obj->UpdateTransform();
+		
+		return obj;
+	}
+	
+	cPhysicsObject* AddConvexHull( Vector3D& Pos, Real Radius, float* Points, int Count, int Size ) {
+		cPhysicsObject* obj = new cPhysicsObject;
+		
+		// Create a ball (radius) //
+		obj->shape = new btConvexHullShape(
+			(btScalar*)Points, Count, Size
+			);
+		
+		// Ball Orientation //
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
+		
+		obj->shape->setLocalScaling( btVector3( Radius, Radius, Radius ) );
 
 		btScalar ballMass = 1;
 		btVector3 ballInertia(0,0,0);
