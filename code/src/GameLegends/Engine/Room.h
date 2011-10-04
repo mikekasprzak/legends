@@ -20,6 +20,8 @@ public:
 	GelArray<unsigned short>* Index;
 	GelArray<unsigned short>* OutlineIndex;
 
+	GelArray<GelColor>* Color;
+
 	cPhysicsObject* PhysicsObject;
 
 public:
@@ -40,10 +42,12 @@ public:
 	
 	void Draw() {
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
-		
-		gelDrawIndexedTriangles( Vert->Data, Index->Data, Index->Size, GEL_RGBA(255,255,255,64) );
-		gelDrawIndexedLines( Vert->Data, OutlineIndex->Data, OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
-		gelDrawPoints( Vert->Data, Vert->Size, GEL_RGB_YELLOW );		
+
+		gelDrawIndexedTrianglesColors( &Vert->Data[0], (unsigned int*)(&Color->Data[0]), Index->Data, Index->Size );
+	
+//		gelDrawIndexedTriangles( Vert->Data, Index->Data, Index->Size, GEL_RGBA(255,255,255,64) );
+//		gelDrawIndexedLines( Vert->Data, OutlineIndex->Data, OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
+//		gelDrawPoints( Vert->Data, Vert->Size, GEL_RGB_YELLOW );		
 	}
 	
 	void DrawDebug() {
