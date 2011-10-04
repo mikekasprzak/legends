@@ -129,6 +129,17 @@ void cGame::Init() {
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
 		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
+		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
+			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
+//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
+			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+			if ( Color > 255 )
+				Color = 255;
+			if ( Color < 0 )
+				Color = 0;
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+		}
 	}
 	{
 		Room.push_back( new cRoom( Vector3D(128,256,0) ) );
@@ -136,6 +147,17 @@ void cGame::Init() {
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
 		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
+		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
+			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
+//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
+			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+			if ( Color > 255 )
+				Color = 255;
+			if ( Color < 0 )
+				Color = 0;
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+		}
 	}
 	{
 		Room.push_back( new cRoom( Vector3D(128,512,0) ) );
@@ -143,6 +165,17 @@ void cGame::Init() {
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
 		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
+		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
+			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
+//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
+			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+			if ( Color > 255 )
+				Color = 255;
+			if ( Color < 0 )
+				Color = 0;
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+		}
 	}
 	{
 		Room.push_back( new cRoom( Vector3D(256+128,512,0) ) );
@@ -150,6 +183,17 @@ void cGame::Init() {
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
 		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
+		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
+			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
+//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
+			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+			if ( Color > 255 )
+				Color = 255;
+			if ( Color < 0 )
+				Color = 0;
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+		}
 	}
 
 	Mesh = new cPMEFile( "Content/Models/Native/Monkey.pme" );
@@ -365,15 +409,11 @@ void cGame::Draw() {
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
 	
-		gelDrawModeFlat();	
+		gelDrawModeColors();	
 		for ( int idx = 0; idx < Room.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Room[idx]->Draw();
 		}
-//		DrawRoom( &(Room[0]), Vector3D(0,0,0) );
-//		DrawRoom( &(Room[1]), Vector3D(128,256,0) );
-//		DrawRoom( &(Room[2]), Vector3D(128,512,0) );
-//		DrawRoom( &(Room[3]), Vector3D(256+128,512,0) );
 
 		gelDrawModeFlat();
 		// Monkey Head //
@@ -389,7 +429,7 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->Draw();
 		}
-
+/*
 		gelDrawModeFlat();		
 		for ( int idx = 0; idx < Obj.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
@@ -403,7 +443,7 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			Room[idx]->DrawDebug();
 		}
-		
+*/		
 		if ( CameraFollow ) {
 			gelDrawModeFlat();
 			gelLoadMatrix( ModelViewMatrix );
