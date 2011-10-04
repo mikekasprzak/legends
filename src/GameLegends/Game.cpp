@@ -194,6 +194,7 @@ void cGame::Exit() {
 	}
 	
 	delete Mesh;
+	delete Mesh2;
 
 	for ( int idx = 0; idx < Room.size(); idx++ ) {
 		Physics.Remove( Room[idx]->PhysicsObject );
