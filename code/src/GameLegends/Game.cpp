@@ -138,7 +138,7 @@ void cGame::Init() {
 				Color = 255;
 			if ( Color < 0 )
 				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
 		}
 	}
 	{
@@ -156,7 +156,7 @@ void cGame::Init() {
 				Color = 255;
 			if ( Color < 0 )
 				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
 		}
 	}
 	{
@@ -174,7 +174,7 @@ void cGame::Init() {
 				Color = 255;
 			if ( Color < 0 )
 				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
 		}
 	}
 	{
@@ -192,7 +192,7 @@ void cGame::Init() {
 				Color = 255;
 			if ( Color < 0 )
 				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,Color);
+			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
 		}
 	}
 
@@ -376,15 +376,17 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
+	gelEnableDepthWriting();
+	
 	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
+	gelClearDepth();
 
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 //	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
-
 	
 	gelEnableAlphaBlending();
-	
+
 	// Terrain //
 	{
 		Real Near = 100;
@@ -392,6 +394,12 @@ void cGame::Draw() {
 		
 		Real Far = Near + Length;
 		Real PlanePos = 0.25;
+
+//		gelSetDepthRange( Near, Far );
+		gelSetDepthRange( 0, 1 );
+//		gelSetDepthFunc( GEL_LESS );
+//		gelSetDepthFunc( GEL_GREATEREQUAL );
+		gelSetDepthFunc( GEL_LESSEQUAL );
 		
 		Real CameraPos = Near + ((Far - Near) * PlanePos);
 
@@ -408,7 +416,10 @@ void cGame::Draw() {
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
-	
+
+		gelEnableDepthWriting();
+		gelEnableDepthTest();
+
 		gelDrawModeColors();	
 		for ( int idx = 0; idx < Room.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
@@ -419,31 +430,23 @@ void cGame::Draw() {
 		// Monkey Head //
 		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
-			gelSetColor( GEL_RGBA(255,0,0,64) );
+			// Changing Alpha no longer works because depth test is removing backfaces //
+			gelSetColor( GEL_RGBA(255-(int)(Obj3[idx]->Scalar*Real(32)),0,0,255) );
 			Obj3[idx]->Draw();
 			gelSetColor( GEL_RGB_DEFAULT );
 		}
 
+		gelDisableDepthWriting();
+		
+		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 		gelDrawModeTextured();		
 		for ( int idx = 0; idx < Obj.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->Draw();
 		}
-/*
-		gelDrawModeFlat();		
-		for ( int idx = 0; idx < Obj.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			Obj[idx]->DrawDebug();
-		}
-		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			Obj3[idx]->DrawDebug();
-		}
-		for ( int idx = 0; idx < Room.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			Room[idx]->DrawDebug();
-		}
-*/		
+				
+		gelDisableDepthTest();
+
 		if ( CameraFollow ) {
 			gelDrawModeFlat();
 			gelLoadMatrix( ModelViewMatrix );
