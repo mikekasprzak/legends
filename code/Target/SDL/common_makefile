@@ -31,6 +31,7 @@ DEFINES				:=	$(addprefix -D,$(DEFINES))
 FOLDER_STUBS		:=	$(addsuffix _stub,$(.O_FOLDERS))
 # - ------------------------------------------------------------------------ - #
 TARGET_STUBS		:=	obj/$(TARGET_NAME)/output_stub
+TARGET_STUBS_CHECK	:=	$(shell Tools/FileExists.sh $(TARGET_STUBS))
 # - ------------------------------------------------------------------------ - #
 #OTHER_FILES			+=	$(shell $(TreeTool) $(FILES_FOLDER) %)
 #OTHER_FILES_DEP		+=	$(subst $(FILES_FOLDER)/,output/$(TARGET_NAME)/,$(OTHER_FILES))
@@ -81,22 +82,26 @@ obj/$(TARGET_NAME)/%.c.o: %.c
 obj/$(TARGET_NAME)/%.cpp.o: %.cpp
 	$(GXX) $(DEFINES) $(INCLUDES) $(CPPFLAGS) -MMD -MF $@.d -c $< -o $@
 # - ------------------------------------------------------------------------ - #
-obj/$(TARGET_NAME)/%.c.o.d: %.c
-	$(GCC) $(DEFINES) $(INCLUDES) $(CFLAGS) -MMD -MF $@ -E $< -o $@.pp
+# The below 2 cause a conflict with the -include at the bottom. #
 # - ------------------------------------------------------------------------ - #
-obj/$(TARGET_NAME)/%.cpp.o.d: %.cpp
-	$(GXX) $(DEFINES) $(INCLUDES) $(CPPFLAGS) -MMD -MF $@ -E $< -o $@.pp
+#obj/$(TARGET_NAME)/%.c.o.d: %.c
+#	$(GCC) $(DEFINES) $(INCLUDES) $(CFLAGS) -MMD -MF $@ -E $< -o $@.pp
+# - ------------------------------------------------------------------------ - #
+#obj/$(TARGET_NAME)/%.cpp.o.d: %.cpp
+#	$(GXX) $(DEFINES) $(INCLUDES) $(CPPFLAGS) -MMD -MF $@ -E $< -o $@.pp
 # - ------------------------------------------------------------------------ - #
 obj/%/_stub:
 	mkdir -p obj/$*
 	@touch $@
 # - ------------------------------------------------------------------------ - #
 obj/$(TARGET_NAME)/output_stub:
-	mkdir -p output/$(TARGET_NAME)
+	mkdir -p obj/$(TARGET_NAME)
 	@touch $@	
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
+ifeq ($(TARGET_STUBS_CHECK),$(TARGET_STUBS))
 -include $(.O_FILES:.o=.o.d)
+endif 
 # - ------------------------------------------------------------------------ - #
 	
