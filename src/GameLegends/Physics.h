@@ -33,10 +33,14 @@ public:
 	}
 
 	inline Matrix3x3 GetBasis() const {
+		btVector3 c1( trans.getBasis().getColumn(0) );
+		btVector3 c2( trans.getBasis().getColumn(1) );
+		btVector3 c3( trans.getBasis().getColumn(2) );
+		
 		return Matrix3x3( 
-				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(0))) ),
-				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(1))) ),
-				Vector3D( *((Vector3D*)&(trans.getBasis().getColumn(2))) )
+				Vector3D( *((Vector3D*)&c1) ),
+				Vector3D( *((Vector3D*)&c2) ),
+				Vector3D( *((Vector3D*)&c3) )
 				);
 	}
 	
