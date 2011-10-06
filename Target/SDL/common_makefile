@@ -41,7 +41,7 @@ TARGET_STUBS		:=	obj/$(TARGET_NAME)/output_stub
 
 
 # - ------------------------------------------------------------------------ - #
-$(TARGET): $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(TARGET_STUBS) $(OTHER_FILES_DEP)
+$(TARGET): $(TARGET_STUBS) $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(OTHER_FILES_DEP)
 	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
 	cp -t $(TARGET_DIR) $(COPY_FILES)
 	$(GXX) $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
