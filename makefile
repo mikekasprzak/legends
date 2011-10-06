@@ -30,8 +30,10 @@ ___default:
 	@echo "Please run \"./setup.sh set\" and specify a new SKU"
 endif
 # - ------------------------------------------------------------------------ - #
+ifndef SKIP
 -include $(SKU_FILE)
 -include $(TARGET_FILE)
+endif # SKIP #
 # - ------------------------------------------------------------------------ - #
 ___default_missing:
 	@echo "*** ERROR: Configuration Missing! ***"
@@ -53,6 +55,17 @@ info:
 	@echo '* INCLUDES * $(INCLUDES)'
 	@echo '* LIBRARIES * $(LIBRARIES)'
 	@echo '* DEFINES * $(DEFINES)'
+	@echo '----------'
+	@echo '* __PROJECT_FILE__ * $(__PROJECT_FILE__)'
+	@echo '* __SKU_FILE__ * $(__SKU_FILE__)'
+	@echo '* __TARGET_FILE__ * $(__TARGET_FILE__)'
+	@echo '* __REPOS_FILE__ * $(__REPOS_FILE__)'
+	@echo '----------'
+	@echo '* PROJECT_FILE * $(PROJECT_FILE)'
+	@echo '* SKU_FILE * $(SKU_FILE)'
+	@echo '* TARGET_FILE * $(TARGET_FILE)'
+	@echo '* REPOS_FILE * $(REPOS_FILE)'
+	
 # - ------------------------------------------------------------------------ - #
 help:
 	@echo "* The Following Options can be Combined *"
