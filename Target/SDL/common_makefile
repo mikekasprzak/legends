@@ -94,8 +94,9 @@ obj/%/_stub:
 	mkdir -p obj/$*
 	@touch $@
 # - ------------------------------------------------------------------------ - #
+# Yes, this creates the output folder, but notes the creation under obj #
 obj/$(TARGET_NAME)/output_stub:
-	mkdir -p obj/$(TARGET_NAME)
+	mkdir -p output/$(TARGET_NAME)
 	@touch $@	
 # - ------------------------------------------------------------------------ - #
 
