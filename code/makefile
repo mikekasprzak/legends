@@ -56,6 +56,8 @@ info:
 	@echo '* LIBRARIES * $(LIBRARIES)'
 	@echo '* DEFINES * $(DEFINES)'
 	@echo '----------'
+	@echo '* FOLDER_STUBS * $(FOLDER_STUBS)'
+	@echo '----------'
 	@echo '* __PROJECT_FILE__ * $(__PROJECT_FILE__)'
 	@echo '* __SKU_FILE__ * $(__SKU_FILE__)'
 	@echo '* __TARGET_FILE__ * $(__TARGET_FILE__)'
