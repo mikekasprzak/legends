@@ -42,104 +42,22 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 					);
 			}
 			
-			v[VertexIndex].Normal = Vector3D::Zero;
-			for ( int idx = 0; idx < Normal.size(); idx++ ) {
-				v[VertexIndex].Normal.x += Normal[idx].x;
-				v[VertexIndex].Normal.y += Normal[idx].y;
-				v[VertexIndex].Normal.z += Normal[idx].z;
-			}
-			//v[VertexIndex].Normal.Normalize();
-			
-/*			
-			int Positive = 0;
-			int Negative = 0;
-			Real Accumulator = Real::Zero;
-			
-			for ( int idx = 0; idx < Normal.size(); idx++ ) {
-				for ( int idx2 = idx+1; idx2 < Edge.size(); idx2++ ) {
-//					int Common = 0;
-//					// Make sure we have a common edge //
-//					if ( Face[idx].a == Face[idx2].a )
-//						Common++;
-//					else if ( Face[idx].a == Face[idx2].b )
-//						Common++;
-//					else if ( Face[idx].a == Face[idx2].c )
-//						Common++;
-//					
-//					if ( Face[idx].b == Face[idx2].a )
-//						Common++;
-//					else if ( Face[idx].b == Face[idx2].b )
-//						Common++;
-//					else if ( Face[idx].b == Face[idx2].c )
-//						Common++;
-//					
-//					if ( Face[idx].c == Face[idx2].a )
-//						Common++;
-//					else if ( Face[idx].c == Face[idx2].b )
-//						Common++;
-//					else if ( Face[idx].c == Face[idx2].c )
-//						Common++;
-//						
-//					if ( Common < 2 )
-//						continue;
-					
-					Real Dot( Normal[idx] * Edge[idx2] );
-					Accumulator += Dot;
+//			v[VertexIndex].Normal = Vector3D::Zero;
+//			for ( int idx = 0; idx < Normal.size(); idx++ ) {
+//				v[VertexIndex].Normal.x += Normal[idx].x;
+//				v[VertexIndex].Normal.y += Normal[idx].y;
+//				v[VertexIndex].Normal.z += Normal[idx].z;
+//			}
+//			//v[VertexIndex].Normal.Normalize();
 
-					if ( Dot >= Real::Zero ) {
-						Positive++;
-					}
-					else {
-						Negative++;
-					}
-				}
-			}
-			Log( "%i %i %f", Positive, Negative, Accumulator );
-			
-			int Value;
-			if ( Negative == 0 )
-			{
-				Value = 255;
-			}
-			else {
-//				Value = Accumulator;
-//				if ( Value < 0 )
-					Value = 0;
-			}
-*/		
 
 			int Value = 255;
 			Real Constant(0.7);
 			Real Dot = (v[VertexIndex].Pos.Normal() * v[VertexIndex].Normal);
 			if ( Dot < Constant )
-				Value = 255-(-(Dot-Constant) * Real(100));
+				Value = 255-(-(Dot-Constant) * Real(128));
 			
 			v[VertexIndex].Color = GEL_RGB( Value, Value, Value );
-
-/*			
-			// Center Vertex storage //
-			std::vector< Vector3D > CenterVertex;
-			
-			// Calculate center points from the found faces //
-			for ( int idx = 0; idx < Face.size(); idx++ ) {
-				CenterVertex.push_back(
-					( v[ Face[idx].a ].Pos + v[ Face[idx].b ].Pos + v[ Face[idx].c ].Pos ) / Real(3)
-					);
-			}
-			
-			// Cheat. If > 3 verts, do a cross product. //
-			if ( CenterVertex >= 3 ) {
-				// Cross product. Result is a normal to check vs. the vert //
-				Vector3D Normal = 
-					(CenterVertex[1] - CenterVertex[0]) %
-					(CenterVertex[2] - CenterVertex[1]);
-					
-				
-				
-			}
-			
-			// Could technically calculate the vertex normal here too //
-*/
 		}
 	}
 }

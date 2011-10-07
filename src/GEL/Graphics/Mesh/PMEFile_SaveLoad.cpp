@@ -212,7 +212,8 @@ void cPMEFile::Import( const char* FileName ) {
 		aiProcess_CalcTangentSpace | 
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType
+		aiProcess_SortByPType |
+		aiProcess_PreTransformVertices
 		);
 	
 	if ( Scene ) {
@@ -241,8 +242,13 @@ void cPMEFile::Import( const char* FileName ) {
 				for ( int idx = 0; idx < Scene->mMeshes[Meshes]->mNumVertices; idx++ ) {
 					Mesh.back().Vertex.push_back( cPMEVertex() );
 					Mesh.back().Vertex.back().Pos.x = Scene->mMeshes[Meshes]->mVertices[idx].x;
-					Mesh.back().Vertex.back().Pos.y = Scene->mMeshes[Meshes]->mVertices[idx].y;
-					Mesh.back().Vertex.back().Pos.z = Scene->mMeshes[Meshes]->mVertices[idx].z;
+					Mesh.back().Vertex.back().Pos.z = Scene->mMeshes[Meshes]->mVertices[idx].y;
+					Mesh.back().Vertex.back().Pos.y = Scene->mMeshes[Meshes]->mVertices[idx].z;
+
+					Mesh.back().Vertex.back().Normal.x = Scene->mMeshes[Meshes]->mNormals[idx].x;
+					Mesh.back().Vertex.back().Normal.z = Scene->mMeshes[Meshes]->mNormals[idx].y;
+					Mesh.back().Vertex.back().Normal.y = Scene->mMeshes[Meshes]->mNormals[idx].z;
+
 					Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 				}
 
