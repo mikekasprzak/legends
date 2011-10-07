@@ -14,6 +14,7 @@
 #include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
+#include <Graphics/Mesh/PMEFile_SimpleSelfShadow.h>
 #include <Geometry/Projection/Projection.h>
 #include <Geometry/Curve/Curve.h>
 
@@ -200,6 +201,9 @@ void cGame::Init() {
 	Mesh2 = new cPMEFile();
 	
 	Mesh2->Import( "Content/Models/Native/Chest.3ds" );
+	
+//	SimpleSelfShadow( *Mesh );
+	SimpleSelfShadow( *Mesh2 );
 	
 	txPlayer = AssetPool::Load( "/Player01" );
 	txSword = AssetPool::Load( "/Sword01" );
@@ -426,7 +430,8 @@ void cGame::Draw() {
 			Room[idx]->Draw();
 		}
 
-		gelDrawModeFlat();
+		//gelDrawModeFlat();
+		gelDrawModeColors();	
 		// Monkey Head //
 		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
