@@ -201,8 +201,9 @@ void cGame::Init() {
 	Mesh2 = new cPMEFile();
 	
 	Mesh2->Import( "Content/Models/Native/Chest.3ds" );
+//	Mesh2->Import( "Content/Models/src/Chest.blend" ); // Bleh //
 	
-//	SimpleSelfShadow( *Mesh );
+	SimpleSelfShadow( *Mesh );
 	SimpleSelfShadow( *Mesh2 );
 	
 	txPlayer = AssetPool::Load( "/Player01" );
