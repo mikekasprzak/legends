@@ -15,11 +15,12 @@ inline void gels_DrawColors( const int Mode, const VertType* Poly, const unsigne
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof(VertType), Colors );
 	}
 	else {
 	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glColorPointer( 4, GL_UNSIGNED_BYTE, 0, Colors );
 	}
-	glColorPointer( 4, GL_UNSIGNED_BYTE, 0, Colors );
 	glDrawArrays( Mode, 0, PolyCount );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,11 +31,12 @@ inline void gels_DrawIndexedColors( const int Mode, const VertType* Poly, const 
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
+    	glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof(VertType), Colors );
 	}
 	else {
 	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glColorPointer( 4, GL_UNSIGNED_BYTE, 0, Colors );
 	}
-	glColorPointer( 4, GL_UNSIGNED_BYTE, 0, Colors );
 	glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -53,7 +53,8 @@ public:
 		gelMultMatrix( Orientation.ToMatrix4x4() );
 
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
-			gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+			//gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+			gelDrawIndexedTrianglesColors( &(Mesh->Mesh[idx].Vertex[0]), (unsigned int*)&(Mesh->Mesh[idx].Vertex[0].Color), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
 	}
 
