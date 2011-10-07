@@ -12,14 +12,14 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 		for ( int VertexIndex = 0; VertexIndex < v.size(); VertexIndex++ ) {
 			// Local face storage //
 			std::vector< cPMEFaceGroup::FaceType > Face;
-				
-			Log( "Vertex %i: %f %f %f", VertexIndex, v[ VertexIndex ].Pos.x, v[ VertexIndex ].Pos.y, v[ VertexIndex ].Pos.z );
-
+			
+			Vector3D Pos( v[ VertexIndex ].Pos );
 				
 			// Find all faces containing this vertex //
 			for ( int FaceGroupIndex = 0; FaceGroupIndex < Data.Mesh[MeshIndex].FaceGroup.size(); FaceGroupIndex++ ) {
 				for ( int FaceIndex = 0; FaceIndex < Data.Mesh[MeshIndex].FaceGroup[FaceGroupIndex].Face.size(); FaceIndex++ ) {
 					cPMEFaceGroup::FaceType& ThisFace = Data.Mesh[MeshIndex].FaceGroup[FaceGroupIndex].Face[FaceIndex];
+					
 					if ( ThisFace.a == VertexIndex ) {
 						Face.push_back( ThisFace );
 					}
@@ -32,25 +32,58 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 				}
 			}
 			
-//			Log( "Faces Found: %i", Face.size() );
-
 
 			std::vector< Vector3D > Normal;
 			
 			for ( int idx = 0; idx < Face.size(); idx++ ) {
 				Normal.push_back( 
-					(v[ Face[idx].b ].Pos - v[ Face[idx].a ].Pos) %
-					(v[ Face[idx].c ].Pos - v[ Face[idx].b ].Pos)
+					((v[ Face[idx].b ].Pos) - (v[ Face[idx].a ].Pos)) %
+					((v[ Face[idx].c ].Pos) - (v[ Face[idx].a ].Pos)).Normal()
 					);
 			}
 			
+			v[VertexIndex].Normal = Vector3D::Zero;
+			for ( int idx = 0; idx < Normal.size(); idx++ ) {
+				v[VertexIndex].Normal.x += Normal[idx].x;
+				v[VertexIndex].Normal.y += Normal[idx].y;
+				v[VertexIndex].Normal.z += Normal[idx].z;
+			}
+			//v[VertexIndex].Normal.Normalize();
+			
+/*			
 			int Positive = 0;
 			int Negative = 0;
 			Real Accumulator = Real::Zero;
 			
 			for ( int idx = 0; idx < Normal.size(); idx++ ) {
-				for ( int idx2 = idx+1; idx2 < Normal.size(); idx2++ ) {
-					Real Dot( Normal[idx] * Normal[idx2] );
+				for ( int idx2 = idx+1; idx2 < Edge.size(); idx2++ ) {
+//					int Common = 0;
+//					// Make sure we have a common edge //
+//					if ( Face[idx].a == Face[idx2].a )
+//						Common++;
+//					else if ( Face[idx].a == Face[idx2].b )
+//						Common++;
+//					else if ( Face[idx].a == Face[idx2].c )
+//						Common++;
+//					
+//					if ( Face[idx].b == Face[idx2].a )
+//						Common++;
+//					else if ( Face[idx].b == Face[idx2].b )
+//						Common++;
+//					else if ( Face[idx].b == Face[idx2].c )
+//						Common++;
+//					
+//					if ( Face[idx].c == Face[idx2].a )
+//						Common++;
+//					else if ( Face[idx].c == Face[idx2].b )
+//						Common++;
+//					else if ( Face[idx].c == Face[idx2].c )
+//						Common++;
+//						
+//					if ( Common < 2 )
+//						continue;
+					
+					Real Dot( Normal[idx] * Edge[idx2] );
 					Accumulator += Dot;
 
 					if ( Dot >= Real::Zero ) {
@@ -61,18 +94,25 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 					}
 				}
 			}
-			
 			Log( "%i %i %f", Positive, Negative, Accumulator );
 			
 			int Value;
-			if ( Positive > Negative ) {
+			if ( Negative == 0 )
+			{
 				Value = 255;
 			}
 			else {
-		//		Value = -Accumulator;
-		//		if ( Value < 0 )
+//				Value = Accumulator;
+//				if ( Value < 0 )
 					Value = 0;
 			}
+*/		
+
+			int Value = 255;
+			Real Constant(0.7);
+			Real Dot = (v[VertexIndex].Pos.Normal() * v[VertexIndex].Normal);
+			if ( Dot < Constant )
+				Value = 255-(-(Dot-Constant) * Real(100));
 			
 			v[VertexIndex].Color = GEL_RGB( Value, Value, Value );
 
