@@ -1,39 +1,40 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Room_H__
-#define __Room_H__
+#ifndef __RoomMesh_H__
+#define __RoomMesh_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
+#include <Graphics/Mesh/PMEFile.h>
+
 #include "../Physics.h"
 // - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
-class cRoom {
+class cRoomMesh {
 public:
 	// Redundant? //
 	struct VertType {
 		Vector3D Pos;
-	};
-	
-	Vector3D Pos;
-	
-	typedef unsigned char GType;
-	Grid2D<GType>* Grid;
-	
-	GelArray<VertType>* Vert;
-	GelArray<unsigned short>* Index;
-	GelArray<unsigned short>* OutlineIndex;
+	};	
 
-	GelArray<GelColor>* Color;
+	Vector3D Pos;
+	Real Scalar;
+	Matrix3x3 Orientation;
+	
+	cPMEFile* Mesh;
 
 	cPhysicsObject* PhysicsObject;
 
 public:
-	cRoom() :
+	cRoomMesh() :
 		PhysicsObject( 0 )
 	{
 	}
 
-	cRoom( const Vector3D& _Pos ) :
-		Pos( _Pos ),
+	cRoomMesh( const Vector3D& _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32) ) :
+		Pos( _Pos),
+		Mesh( _Mesh ),
+		Scalar( _Scalar ),
 		PhysicsObject( 0 )
 	{
 	}
@@ -44,12 +45,16 @@ public:
 	
 	void Draw() {
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
+		gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) );
 
-		gelDrawIndexedTrianglesColors( &Vert->Data[0], (unsigned int*)(&Color->Data[0]), Index->Data, Index->Size );
-	
-//		gelDrawIndexedTriangles( Vert->Data, Index->Data, Index->Size, GEL_RGBA(255,255,255,64) );
-//		gelDrawIndexedLines( Vert->Data, OutlineIndex->Data, OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
-//		gelDrawPoints( Vert->Data, Vert->Size, GEL_RGB_YELLOW );		
+//		gelMultMatrix( Orientation.ToMatrix4x4() );
+
+		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
+			AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
+				
+			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+		}
+
 	}
 	
 	void DrawDebug() {

@@ -9,6 +9,8 @@
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
 #include <Grid/Grid2D.h>
+
+#include <vector>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -108,7 +110,7 @@ public:
 		return obj;
 	}
 	
-	cPhysicsObject* AddPlane( ) {
+	cPhysicsObject* AddStaticPlane( ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 
 		// Create a Plane (directional vector and ?? (length?)) //
@@ -129,7 +131,7 @@ public:
 		return obj;
 	}
 
-	cPhysicsObject* AddHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid ) {
+	cPhysicsObject* AddStaticHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 
 		// Create a Heightmap //
@@ -157,6 +159,50 @@ public:
 		dynamicsWorld->addRigidBody( obj->rigidBody );
 
 		obj->UpdateTransform();
+		
+		return obj;
+	}
+
+
+	cPhysicsObject* AddStaticMesh( Vector3D& Pos, Real Radius, float* Verts, unsigned int VertCount, unsigned int VertStride, unsigned short* Faces, unsigned int FaceCount ) {
+		cPhysicsObject* obj = new cPhysicsObject;
+		
+		Log( "**" );
+		std::vector< int > FaceHack;
+		for ( int idx = 0; idx < FaceCount*3; idx++ ) {
+			FaceHack.push_back( Faces[idx] );
+		}
+		
+		btTriangleIndexVertexArray* InputMesh = new btTriangleIndexVertexArray(
+			FaceCount, (int*)&(FaceHack[0]), 3 * sizeof(int),
+			VertCount, (btScalar*)Verts, VertStride
+			);
+		Log( "**" );
+
+		// Create a Mesh //
+		obj->shape = new btBvhTriangleMeshShape( 
+			InputMesh,
+			true
+			);
+		Log( "**" );
+		
+//		delete InputMesh;
+		Log( "**" );
+
+		obj->shape->setLocalScaling( btVector3( Radius, Radius, Radius ) );
+
+		// Heightmap Orientation (quaternion) and position (vector) //
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
+		// Configure construction: Mass, MotionState, Shape, Inertia //
+		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
+		// Create //
+		obj->rigidBody = new btRigidBody( groundRigidBodyCI );
+		
+		// Add to the world //
+		dynamicsWorld->addRigidBody( obj->rigidBody );
+
+		obj->UpdateTransform();
+		Log( "**" );
 		
 		return obj;
 	}
