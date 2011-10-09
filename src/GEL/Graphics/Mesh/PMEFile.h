@@ -13,14 +13,19 @@
 
 #include <Graphics/GelUV.h>
 #include <Graphics/GelColor.h>
+
+#include <AssetPool/AssetPool.h>
+
 // - ------------------------------------------------------------------------------------------ - //
 class cPMEMaterial {
 public:
-	// Material Name //
+	// Material Name (NOT texture name) //
 	std::string Name;
 	
 	// Image FileName of our material - TODO: Array //
 	std::string ImageFileName;
+	
+	GelAssetHandle Texture;
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cPMEVertex {

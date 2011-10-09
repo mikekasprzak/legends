@@ -197,24 +197,28 @@ void cGame::Init() {
 		}
 	}
 
+
+	txPlayer = AssetPool::Load( "/Player01" );
+	txSword = AssetPool::Load( "/Sword01" );
+
+//	txSword = AssetPool::Load( "/Fontin_0" );
+
 	Mesh = new cPMEFile();
 	Mesh2 = new cPMEFile();
 	
 	Mesh->Import( "Content/Models/Native/Monkey.dae" );
 	Mesh2->Import( "Content/Models/Native/Chest.dae" );
 	
-	SimpleSelfShadow( *Mesh );
-	SimpleSelfShadow( *Mesh2 );
+//	SimpleSelfShadow( *Mesh );
+//	SimpleSelfShadow( *Mesh2 );
 	
-	txPlayer = AssetPool::Load( "/Player01" );
-	txSword = AssetPool::Load( "/Sword01" );
 
-//	txSword = AssetPool::Load( "/Fontin_0" );
-
-	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
-	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	Obj.push_back( new cObject( Vector3D(64+26,32,32+16+64), txSword ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
+	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	
+	CameraFollow = Obj[1];
 
 	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh, Real(16) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
@@ -224,8 +228,7 @@ void cGame::Init() {
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 //	Obj3.push_back( new cObject3D( Vector3D( 128, 256+128, 256 ), Mesh, Real(20) ) );
 //	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	
-	CameraFollow = Obj[0];
+
 	
 	
 	Log( "- End of Init" );
@@ -432,14 +435,15 @@ void cGame::Draw() {
 		}
 
 		//gelDrawModeFlat();
-		gelDrawModeColors();	
+		//gelDrawModeColors();
+		gelDrawModeTextured();	
 		// Monkey Head //
 		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			// Changing Alpha no longer works because depth test is removing backfaces //
-			gelSetColor( GEL_RGBA(255-(int)(Obj3[idx]->Scalar*Real(32)),0,0,255) );
+//			gelSetColor( GEL_RGBA(255-(int)(Obj3[idx]->Scalar*Real(32)),0,0,255) );
 			Obj3[idx]->Draw();
-			gelSetColor( GEL_RGB_DEFAULT );
+//			gelSetColor( GEL_RGB_DEFAULT );
 		}
 
 		gelDisableDepthWriting();
