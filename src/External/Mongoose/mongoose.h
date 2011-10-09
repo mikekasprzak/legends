@@ -21,6 +21,9 @@
 #ifndef MONGOOSE_HEADER_INCLUDED
 #define  MONGOOSE_HEADER_INCLUDED
 
+//MIKE
+#define HAVE_STDINT
+
 #include <stddef.h>
 
 #ifdef __cplusplus
