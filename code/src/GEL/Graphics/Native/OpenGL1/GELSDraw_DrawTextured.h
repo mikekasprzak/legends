@@ -15,11 +15,12 @@ inline void gels_DrawTextured( const int Mode, const VertType* Poly, const GelUV
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glTexCoordPointer(2, GL_UVType, sizeof(VertType), UV);
 	}
 	else {
 	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glTexCoordPointer(2, GL_UVType, 0, UV);
 	}
-	glTexCoordPointer(2, GL_UVType, 0, UV);
     glDrawArrays( Mode, 0, PolyCount );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,11 +31,12 @@ inline void gels_DrawIndexedTextured( const int Mode, const VertType* Poly, cons
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
 	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glTexCoordPointer(2, GL_UVType, sizeof(VertType), UV);
 	}
 	else {
 	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+		glTexCoordPointer(2, GL_UVType, 0, UV);
 	}
-	glTexCoordPointer(2, GL_UVType, 0, UV);
     glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -227,9 +227,6 @@ void cPMEFile::Import( const char* FileName ) {
 		if ( Scene->HasLights() ) {
 			Log( "* Scene has %i Lights", Scene->mNumLights );
 		}
-		if ( Scene->HasMaterials() ) {
-			Log( "* Scene has %i Materials", Scene->mNumMaterials );
-		}
 		if ( Scene->HasMeshes() ) {
 			Log( "* Scene has %i Meshes", Scene->mNumMeshes );
 			
@@ -250,6 +247,9 @@ void cPMEFile::Import( const char* FileName ) {
 					Mesh.back().Vertex.back().Normal.y = Scene->mMeshes[Meshes]->mNormals[idx].z;
 
 					Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
+
+					Mesh.back().Vertex.back().UV.u = Scene->mMeshes[Meshes]->mTextureCoords[0][idx].x * GEL_UV_ONE_F;
+					Mesh.back().Vertex.back().UV.v = Scene->mMeshes[Meshes]->mTextureCoords[0][idx].y * GEL_UV_ONE_F;
 				}
 
 				VVVLog( "**" );
@@ -262,6 +262,29 @@ void cPMEFile::Import( const char* FileName ) {
 					Mesh.back().FaceGroup.back().Face.back().c = Scene->mMeshes[Meshes]->mFaces[idx].mIndices[2];
 				}	
 				VVVLog( "**" );
+			}
+		}
+		if ( Scene->HasMaterials() ) {
+			Log( "* Scene has %i Materials", Scene->mNumMaterials );
+			
+			for ( int idx = 0; idx < Scene->mNumMaterials; idx++ ) {
+				Log( "* Material %i has %i Properties", idx, Scene->mMaterials[idx]->mNumProperties );
+				
+				aiString Name;
+				Scene->mMaterials[idx]->Get( AI_MATKEY_NAME, Name );
+				Log( "* Name: %s", Name.data );
+				
+				aiString Tex;
+				Scene->mMaterials[idx]->Get( AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE,0), Tex );
+				Log( "* Tex: %s", Tex.data );
+				
+				Mesh[idx].Material.push_back( cPMEMaterial() );
+				Mesh[idx].Material.back().Name = Name.data;
+				Mesh[idx].Material.back().ImageFileName = Tex.data;
+				Mesh[idx].Material.back().Texture = AssetPool::Load( Tex.data );
+				
+//				for ( int idx2 = 0; idx2 < Scene->mMaterials[idx]->mNumProperties; idx2++ ) {				
+//				}
 			}
 		}
 		if ( Scene->HasTextures() ) {
