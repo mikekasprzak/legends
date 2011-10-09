@@ -11,6 +11,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Physics.h"
 #include "Engine/Room.h"
+#include "Engine/RoomMesh.h"
 #include "Engine/Object.h"
 #include "Engine/Object3D.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -78,6 +79,7 @@ public:
 	std::vector< cObject3D* > Obj3;
 		
 	std::vector< cRoom* > Room;
+	std::vector< cRoomMesh* > RoomMesh;
 
 public:
 	cGame() :

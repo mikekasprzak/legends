@@ -129,7 +129,7 @@ void cGame::Init() {
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room01.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
 		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
@@ -147,7 +147,7 @@ void cGame::Init() {
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room02.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
 		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
@@ -165,7 +165,7 @@ void cGame::Init() {
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room03.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
 		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
@@ -183,7 +183,7 @@ void cGame::Init() {
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room04.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
 		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
 		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
@@ -229,7 +229,25 @@ void cGame::Init() {
 //	Obj3.push_back( new cObject3D( Vector3D( 128, 256+128, 256 ), Mesh, Real(20) ) );
 //	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
-	
+	cPMEFile* RMesh = new cPMEFile();
+	RMesh->Import( "Content/Models/Native/RockTest.dae" );
+
+
+	RoomMesh.push_back( 
+		new cRoomMesh( 
+			Vector3D( 0, -256, 0 ), 
+			RMesh, 
+			Real(16) ) 
+			);
+
+	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
+		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
+		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
+		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
+		sizeof(cPMEVertex),
+		(unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a), 
+		RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size()
+		);	
 	
 	Log( "- End of Init" );
 }
@@ -247,6 +265,12 @@ void cGame::Exit() {
 	
 	delete Mesh;
 	delete Mesh2;
+
+	for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+		Physics.Remove( RoomMesh[idx]->PhysicsObject );
+		delete RoomMesh[idx]->Mesh;
+		delete RoomMesh[idx];
+	}
 
 	for ( int idx = 0; idx < Room.size(); idx++ ) {
 		Physics.Remove( Room[idx]->PhysicsObject );
@@ -432,6 +456,12 @@ void cGame::Draw() {
 		for ( int idx = 0; idx < Room.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Room[idx]->Draw();
+		}
+
+		gelDrawModeTextured();	
+		for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			RoomMesh[idx]->Draw();
 		}
 
 		//gelDrawModeFlat();
