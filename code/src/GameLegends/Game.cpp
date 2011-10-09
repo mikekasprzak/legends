@@ -197,12 +197,11 @@ void cGame::Init() {
 		}
 	}
 
-	Mesh = new cPMEFile( "Content/Models/Native/Monkey.pme" );
+	Mesh = new cPMEFile();
 	Mesh2 = new cPMEFile();
 	
-//	Mesh2->Import( "Content/Models/Native/Chest.3ds" );
+	Mesh->Import( "Content/Models/Native/Monkey.dae" );
 	Mesh2->Import( "Content/Models/Native/Chest.dae" );
-//	Mesh2->Import( "Content/Models/src/Chest.blend" ); // Bleh //
 	
 	SimpleSelfShadow( *Mesh );
 	SimpleSelfShadow( *Mesh2 );
