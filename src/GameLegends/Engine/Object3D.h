@@ -53,7 +53,7 @@ public:
 		gelMultMatrix( Orientation.ToMatrix4x4() );
 
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
-			if ( Mesh->Mesh[idx].Material.size() >= 1 ) {
+			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
 				AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
 			}
 			else {

@@ -249,7 +249,7 @@ void cPMEFile::Import( const char* FileName ) {
 					Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 
 					Mesh.back().Vertex.back().UV.u = Scene->mMeshes[Meshes]->mTextureCoords[0][idx].x * GEL_UV_ONE_F;
-					Mesh.back().Vertex.back().UV.v = Scene->mMeshes[Meshes]->mTextureCoords[0][idx].y * GEL_UV_ONE_F;
+					Mesh.back().Vertex.back().UV.v = -Scene->mMeshes[Meshes]->mTextureCoords[0][idx].y * GEL_UV_ONE_F;
 				}
 
 				VVVLog( "**" );
