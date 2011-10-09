@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.59.0 r39307</authoring_tool>
     </contributor>
-    <created>2011-10-09T09:57:48</created>
-    <modified>2011-10-09T09:57:48</modified>
+    <created>2011-10-09T10:40:11</created>
+    <modified>2011-10-09T10:40:11</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -95,9 +95,24 @@
       </extra>
     </light>
   </library_lights>
+  <library_images>
+    <image id="Monkey_ao" name="Monkey_ao">
+      <init_from>Monkey_ao.png</init_from>
+    </image>
+  </library_images>
   <library_effects>
-    <effect id="Material_001-effect">
+    <effect id="MonkeyMat-effect">
       <profile_COMMON>
+        <newparam sid="Monkey_ao-surface">
+          <surface type="2D">
+            <init_from>Monkey_ao</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="Monkey_ao-sampler">
+          <sampler2D>
+            <source>Monkey_ao-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -107,7 +122,7 @@
               <color>0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color>1 1 1 1</color>
+              <texture texture="Monkey_ao-sampler" texcoord="UVTex"/>
             </diffuse>
             <specular>
               <color>0.5 0.5 0.5 1</color>
@@ -130,8 +145,8 @@
     </effect>
   </library_effects>
   <library_materials>
-    <material id="Material_001-material" name="Material.001">
-      <instance_effect url="#Material_001-effect"/>
+    <material id="MonkeyMat-material" name="MonkeyMat">
+      <instance_effect url="#MonkeyMat-effect"/>
     </material>
   </library_materials>
   <library_geometries>
@@ -169,7 +184,7 @@
         <vertices id="Monkey-mesh-vertices">
           <input semantic="POSITION" source="#Monkey-mesh-positions"/>
         </vertices>
-        <polylist material="Material_0011" count="500">
+        <polylist material="MonkeyMat1" count="500">
           <input semantic="VERTEX" source="#Monkey-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Monkey-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Monkey-mesh-map-0" offset="2" set="0"/>
@@ -191,7 +206,7 @@
         <instance_geometry url="#Monkey-mesh">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material_0011" target="#Material_001-material">
+              <instance_material symbol="MonkeyMat1" target="#MonkeyMat-material">
                 <bind_vertex_input semantic="UVTex" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>
