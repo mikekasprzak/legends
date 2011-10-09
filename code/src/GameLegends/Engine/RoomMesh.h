@@ -12,11 +12,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 class cRoomMesh {
 public:
-	// Redundant? //
-	struct VertType {
-		Vector3D Pos;
-	};	
-
 	Vector3D Pos;
 	Real Scalar;
 	Matrix3x3 Orientation;

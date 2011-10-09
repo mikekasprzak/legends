@@ -16,9 +16,16 @@
 // - ------------------------------------------------------------------------------------------ - //
 class cPhysicsObject {
 public:
+	cPhysicsObject() :
+		Mesh( 0 )
+	{
+	}
+	
 	btCollisionShape* shape;
 	btDefaultMotionState* motionState;
 	btRigidBody* rigidBody;
+	
+	btTriangleIndexVertexArray* Mesh;	// Optional //
 	
 	btTransform trans;
 	
@@ -49,7 +56,11 @@ public:
 	inline void Exit() {
 		delete rigidBody->getMotionState();
 		delete rigidBody;
-		delete shape;		
+		delete shape;
+				
+		if ( Mesh != 0 ) {
+			delete Mesh;
+		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -164,30 +175,24 @@ public:
 	}
 
 
-	cPhysicsObject* AddStaticMesh( Vector3D& Pos, Real Radius, float* Verts, unsigned int VertCount, unsigned int VertStride, unsigned short* Faces, unsigned int FaceCount ) {
+	cPhysicsObject* AddStaticMesh(
+		Vector3D& Pos, Real Radius, 
+		float* Verts, unsigned int VertCount, unsigned int VertStride, 
+		int* Faces, unsigned int FaceCount 
+		)
+	{
 		cPhysicsObject* obj = new cPhysicsObject;
 		
-		Log( "**" );
-		std::vector< int > FaceHack;
-		for ( int idx = 0; idx < FaceCount*3; idx++ ) {
-			FaceHack.push_back( Faces[idx] );
-		}
-		
-		btTriangleIndexVertexArray* InputMesh = new btTriangleIndexVertexArray(
-			FaceCount, (int*)&(FaceHack[0]), 3 * sizeof(int),
+		obj->Mesh = new btTriangleIndexVertexArray(
+			FaceCount, Faces, 3 * sizeof(int),
 			VertCount, (btScalar*)Verts, VertStride
 			);
-		Log( "**" );
 
 		// Create a Mesh //
 		obj->shape = new btBvhTriangleMeshShape( 
-			InputMesh,
+			obj->Mesh,
 			true
 			);
-		Log( "**" );
-		
-//		delete InputMesh;
-		Log( "**" );
 
 		obj->shape->setLocalScaling( btVector3( Radius, Radius, Radius ) );
 
