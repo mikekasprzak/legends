@@ -125,7 +125,7 @@ void cGame::Init() {
 	Vector3D RoomScale(128,128,64);
 
 	{
-		Room.push_back( new cRoom( Vector3D(0,0,0) ) );
+		Room.push_back( new cRoom( Vector3D(0,0+512,0) ) );
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room01.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
@@ -143,7 +143,7 @@ void cGame::Init() {
 		}
 	}
 	{
-		Room.push_back( new cRoom( Vector3D(128,256,0) ) );
+		Room.push_back( new cRoom( Vector3D(128,256+512,0) ) );
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room02.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
@@ -161,7 +161,7 @@ void cGame::Init() {
 		}
 	}
 	{
-		Room.push_back( new cRoom( Vector3D(128,512,0) ) );
+		Room.push_back( new cRoom( Vector3D(128,512+512,0) ) );
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room03.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
@@ -179,7 +179,7 @@ void cGame::Init() {
 		}
 	}
 	{
-		Room.push_back( new cRoom( Vector3D(256+128,512,0) ) );
+		Room.push_back( new cRoom( Vector3D(256+128,512+512,0) ) );
 		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room04.tga" );
 		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
@@ -235,18 +235,28 @@ void cGame::Init() {
 
 	RoomMesh.push_back( 
 		new cRoomMesh( 
-			Vector3D( 0, -256, 0 ), 
+			Vector3D( 0, 0, 0 ), 
 			RMesh, 
 			Real(16) ) 
 			);
 
+	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
+	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
+	
+	std::vector< int > FaceHack;
+	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
+		FaceHack.push_back( Faces[idx] );
+	}
+
 	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
 		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
+		
 		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
 		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
 		sizeof(cPMEVertex),
-		(unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a), 
-		RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size()
+		
+		&(FaceHack[0]), 
+		FaceCount
 		);	
 	
 	Log( "- End of Init" );
@@ -425,12 +435,9 @@ void cGame::Draw() {
 		Real Length = 800;
 		
 		Real Far = Near + Length;
-		Real PlanePos = 0.25;
+		Real PlanePos = 0.50;
 
-//		gelSetDepthRange( Near, Far );
 		gelSetDepthRange( 0, 1 );
-//		gelSetDepthFunc( GEL_LESS );
-//		gelSetDepthFunc( GEL_GREATEREQUAL );
 		gelSetDepthFunc( GEL_LESSEQUAL );
 		
 		Real CameraPos = Near + ((Far - Near) * PlanePos);
@@ -447,7 +454,7 @@ void cGame::Draw() {
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
 //		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-30,-100) ) * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-50,-160) ) * ModelViewMatrix;
 
 		gelEnableDepthWriting();
 		gelEnableDepthTest();
