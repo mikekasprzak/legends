@@ -233,6 +233,14 @@ void cGame::Init() {
 	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32+32, 32+16 ), Mesh, Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh, Real(3) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+32, 64+32, 32+16 ), Mesh, Real(2) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+64, 64+32, 32+16 ), Mesh, Real(2) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+
+
 	Obj3.push_back( new cObject3D( Vector3D( -108, 32, 64+32 ), Mesh2, Real(20) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.push_back( new cObject3D( Vector3D( 0, -48, 64+16 ), Mesh2, Real(10) ) );
