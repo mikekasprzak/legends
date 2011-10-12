@@ -206,8 +206,8 @@ void cGame::Init() {
 	Mesh = new cPMEFile();
 	Mesh2 = new cPMEFile();
 	
-	Mesh->Import( "Content/Models/Native/Monkey.dae" );
-	Mesh2->Import( "Content/Models/Native/Chest.dae" );
+	Mesh->Import( "Content/Models/Native/Skull.dae" );
+	Mesh2->Import( "Content/Models/Native/Sword.dae" );
 	
 //	SimpleSelfShadow( *Mesh );
 //	SimpleSelfShadow( *Mesh2 );
