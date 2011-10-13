@@ -32,6 +32,8 @@ namespace FullRefScreen {
 
 	Vector2D Shape;
 	Vector2D HalfShape;
+
+	Real Scalar;
 };
 // - ------------------------------------------------------------------------------------------ - //
 // Actual Screen //
@@ -44,6 +46,25 @@ namespace ActualScreen {
 
 	Vector2D Shape;
 	Vector2D HalfShape;
+};
+// - ------------------------------------------------------------------------------------------ - //
+// Proxy Screen //
+namespace ProxyScreen {
+	int Width = 0;
+	int Height = 0;
+	
+	Real AspectRatio;
+	bool TallScreen = false;
+
+	Vector2D Shape;
+	Vector2D HalfShape;
+
+	Real Scalar;
+	int OffsetX = 0;
+	int OffsetY = 0;
+
+	int DiffX = 0;
+	int DiffY = 0;
 };
 // - ------------------------------------------------------------------------------------------ - //
 // Overscan Screen //
@@ -111,6 +132,38 @@ void gelResetClip( ) {
 		0,
 		ActualScreen::Width,
 		ActualScreen::Height
+		);
+#endif // GELS_CROP //
+}
+// - ------------------------------------------------------------------------------------------ - //
+void gelSetProxyClip( const int x, const int y, const int w, const int h ) {
+#ifdef GELS_CROP
+	if ( ProxyScreen::TallScreen ) {
+		gels_Crop( 
+			(ProxyScreen::OffsetX + (y * ProxyScreen::Scalar)),
+			(ProxyScreen::OffsetY + (x * ProxyScreen::Scalar)),
+			(h * ProxyScreen::Scalar),
+			(w * ProxyScreen::Scalar)
+			);
+	}
+	else {
+		gels_Crop( 
+			(ProxyScreen::OffsetX + (x * ProxyScreen::Scalar)),
+			(ProxyScreen::OffsetY + (y * ProxyScreen::Scalar)),
+			(w * ProxyScreen::Scalar),
+			(h * ProxyScreen::Scalar)
+			);
+	}
+#endif // GELS_CROP //
+}
+// - ------------------------------------------------------------------------------------------ - //
+void gelResetProxyClip( ) {
+#ifdef GELS_CROP
+	gels_Crop( 
+		0,
+		0,
+		ProxyScreen::Width,
+		ProxyScreen::Height
 		);
 #endif // GELS_CROP //
 }

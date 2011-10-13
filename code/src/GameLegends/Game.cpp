@@ -31,6 +31,11 @@ GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
 GelAssetHandle txCursorAttack;
 
+GLuint FBOTextureId;
+GLuint FBOId;
+
+int FBOSize = 256;
+
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::InitScripts() {
 	vm_ScriptsLoaded = false;
@@ -115,6 +120,44 @@ void cGame::Init() {
 	LoadScripts();
 	
 	Physics.Init();
+	
+	// *** //
+	
+	// Create the FBO Target Texture //
+	glGenTextures(1, &FBOTextureId);
+	glBindTexture(GL_TEXTURE_2D, FBOTextureId);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, FBOSize, FBOSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Create the FBO Target RBO (for non color data storage - depth, stencil, etc) //
+//	glGenRenderbuffersEXT(1, &RBODepthId);
+//	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rboId);
+//	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+//	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+	// Create FBO //
+	glGenFramebuffersEXT(1, &FBOId);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOId);
+
+	// Attach the Texture to the FBO //
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, FBOTextureId, 0);
+
+//	// attach the renderbuffer to depth attachment point
+//	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, RBOId);
+
+	// check FBO status
+	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if ( status != GL_FRAMEBUFFER_COMPLETE_EXT )
+		Log( "ERROR: FBO Unavailable!" );
+
+	// switch back to window-system-provided framebuffer
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	// *** //
 	
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
@@ -326,6 +369,11 @@ void cGame::Exit() {
 		delete_Grid2D( Room[idx]->Grid );
 	}
 	
+	glDeleteFramebuffers( 1, &FBOId );
+//	glDeleteRenderbuffers( 1, &RBOId );
+	glDeleteTextures( 1, &FBOTextureId );
+	
+	
 	// Shut Down Physics //
 	Physics.Exit();
 
@@ -465,8 +513,9 @@ void cGame::Draw() {
 	
 	gelEnableAlphaBlending();
 
-	// Terrain //
+	// Main Render //
 	{
+		// Camera //
 		Real Near = 100;
 		Real Length = 800;
 		
@@ -489,7 +538,6 @@ void cGame::Draw() {
 	
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-//		ModelViewMatrix = SpinMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-50,-160) ) * ModelViewMatrix;
 
 		gelEnableDepthWriting();
@@ -539,7 +587,95 @@ void cGame::Draw() {
 	}
 
 
-	// Reset Camera //
+	// Update Proxy settings to reflect the FBO //
+	int BufferSize = FBOSize;
+	ProxyScreen::Width = BufferSize;
+	ProxyScreen::Height = BufferSize / FullRefScreen::Scalar;
+	gelCalculateProxyScreenShape();
+
+	glViewport( 
+		0,
+		0,
+		ProxyScreen::Width, 
+		ProxyScreen::Height
+		);
+		
+	// Load the proxy clipping coords //
+	gelResetProxyClip();
+	
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOId);
+	gelDisableBlending();
+	gelSetClearColor( GEL_RGBA(255,255,255,0) );
+//	gelSetClearColor( GEL_RGB_BLACK );
+	gelClear();
+	gelEnableAlphaBlending();
+
+	// Glow Render //
+	{
+		// Camera //
+		Real Near = 100;
+		Real Length = 800;
+		
+		Real Far = Near + Length;
+		Real PlanePos = 0.50;
+		
+		Real CameraPos = Near + ((Far - Near) * PlanePos);
+		
+		int ScWidth = ActualScreen::Width;
+		int ScHeight = ActualScreen::Height;
+
+		Real EffectWidth = ScWidth / RefScreen::Scalar;
+		Real EffectHeight = ScHeight / RefScreen::Scalar;
+
+		CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
+		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
+			EffectWidth,
+			EffectHeight,
+			Real( Near ),
+			Real( Far ),
+			Real( PlanePos )
+			);
+	
+		ModelViewMatrix = ViewMatrix;
+		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-50,-160) ) * ModelViewMatrix;
+
+		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
+		gelDisableDepthWriting();
+		gelDisableDepthTest();
+	
+	
+		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
+
+		gelDrawModeTextured();	
+		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj3[idx]->Draw();
+		}
+
+		gelDrawModeTextured();		
+		for ( int idx = 0; idx < Obj.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj[idx]->Draw();
+		}
+		gelSetColor( GEL_RGB_DEFAULT );	
+	}
+
+	glViewport( 
+		0,
+		0, 
+//		NativeScreen::Width, 
+//		NativeScreen::Height
+		ActualScreen::Width, 
+		ActualScreen::Height
+		);
+		
+	// Restore regular clipping coords //
+	gelResetClip();
+	// Unbind the FBO //
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+	// Reset Camera for UI //
 	{
 		Real Near = 100;
 		Real Length = 800;
@@ -565,6 +701,22 @@ void cGame::Draw() {
 //		CameraViewMatrix = SpinMatrix * CameraViewMatrix;
 	
 		gelLoadMatrix( CameraViewMatrix );
+
+		// Draw Color Buffer to screen //
+		glBindTexture(GL_TEXTURE_2D, FBOTextureId);	
+		gelDrawModeTextured();
+		//gelEnableAddativeBlending();
+		gelSetColor( GEL_RGBA(255,255,255,192) );
+		gelDrawRectFillTextured( 
+			Vector3D(-FullRefScreen::Width>>1,-(-((int)(FullRefScreen::Width*1.2))>>1)-176,0), 
+			Vector3D(FullRefScreen::Width>>1,-(((int)(FullRefScreen::Width*1.2))>>1)-176,0) 
+//			Vector3D(-128,-128,0),
+//			Vector3D(128,128,0)
+			);
+
+		gelSetColor( GEL_RGB_DEFAULT );
+		
+		gelEnableAlphaBlending();
 	}
 	
 }
