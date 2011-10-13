@@ -27,7 +27,6 @@ cPMEFile* Mesh[8];
 // - ------------------------------------------------------------------------------------------ - //
 
 GelAssetHandle txPlayer;
-GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::InitScripts() {
@@ -198,7 +197,6 @@ void cGame::Init() {
 
 
 	txPlayer = AssetPool::Load( "/Player01" );
-	txSword = AssetPool::Load( "/Sword01" );
 
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
@@ -206,16 +204,16 @@ void cGame::Init() {
 	Mesh[1] = new cPMEFile();
 	Mesh[2] = new cPMEFile();
 	Mesh[3] = new cPMEFile();
+	Mesh[4] = new cPMEFile();
 	
 	Mesh[0]->Import( "Content/Models/Native/Skull.dae" );
 	Mesh[1]->Import( "Content/Models/Native/Sword.dae" );
 	Mesh[2]->Import( "Content/Models/Native/Key_Boxy.dae" );
 	Mesh[3]->Import( "Content/Models/Native/Shield.dae" );
+	Mesh[4]->Import( "Content/Models/Native/Book_Open.dae" );
 	
 
 
-	Obj.push_back( new cObject( Vector3D(64+26,32,32+16+64), txSword ) );
-	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	
@@ -227,7 +225,8 @@ void cGame::Init() {
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh[0], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh[0], Real(8) ) );
+
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh[4], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
 	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32+32, 32+16 ), Mesh[3], Real(6) ) );
@@ -292,7 +291,7 @@ void cGame::Exit() {
 		delete Obj3[idx];
 	}
 
-	for ( int idx = 0; idx < 4; idx++ ) {
+	for ( int idx = 0; idx < 5; idx++ ) {
 		delete Mesh[idx];
 	}
 
