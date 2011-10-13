@@ -12,14 +12,16 @@ public:
 	Real Scalar;
 	
 	GelAssetHandle Texture;
+	GelColor Color;
 	
 	cPhysicsObject* PhysicsObject;
 
 	
-	cObject( Vector3D _Pos, GelAssetHandle _Texture, const Real _Scalar = Real(12) ) :
+	cObject( Vector3D _Pos, GelAssetHandle _Texture, GelColor _Color = GEL_RGB_WHITE, const Real _Scalar = Real(12) ) :
 		Pos( _Pos),
 		Scalar( _Scalar ),
 		Texture( _Texture ),
+		Color( _Color ),
 		PhysicsObject( 0 )
 	{	
 	}
@@ -35,6 +37,7 @@ public:
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
 		AssetPool::Set( Texture );
+		gelSetColor( Color );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
 	

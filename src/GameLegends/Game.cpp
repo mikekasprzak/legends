@@ -27,6 +27,9 @@ cPMEFile* Mesh[8];
 // - ------------------------------------------------------------------------------------------ - //
 
 GelAssetHandle txPlayer;
+GelAssetHandle txCursorMove;
+GelAssetHandle txCursorStop;
+GelAssetHandle txCursorAttack;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::InitScripts() {
@@ -196,7 +199,11 @@ void cGame::Init() {
 	}
 
 
-	txPlayer = AssetPool::Load( "/Player01" );
+	txPlayer = AssetPool::Load( "/Disc_Blank" );
+
+	txCursorMove = AssetPool::Load( "/Cursor_Move" );
+	txCursorStop = AssetPool::Load( "/Cursor_Stop" );
+	txCursorAttack = AssetPool::Load( "/Cursor_Attack" );
 
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
@@ -220,7 +227,7 @@ void cGame::Init() {
 	
 
 
-	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
+	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, GEL_RGB(255,242,0) ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	
 	CameraFollow = Obj[0];
@@ -520,6 +527,7 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[idx]->Draw();
 		}
+		gelSetColor( GEL_RGB_DEFAULT );
 				
 		gelDisableDepthTest();
 
