@@ -587,12 +587,28 @@ void cGame::Draw() {
 	}
 
 
+	// Draw to the FBO //
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOId);
+	gelDisableBlending();
+
 	// Update Proxy settings to reflect the FBO //
 	int BufferSize = FBOSize;
 	ProxyScreen::Width = BufferSize;
-	ProxyScreen::Height = BufferSize / FullRefScreen::Scalar;
+	ProxyScreen::Height = BufferSize / ActualScreen::AspectRatio;
 	gelCalculateProxyScreenShape();
 
+	// Fill with dummy color //
+	glViewport( 
+		0,
+		0,
+		ProxyScreen::Width, 
+		ProxyScreen::Width
+		);
+	gelResetNativeClip();		
+	gelSetClearColor( GEL_RGB(64,0,0) );
+	gelClear();
+
+	// Correct Shape //
 	glViewport( 
 		0,
 		0,
@@ -603,11 +619,11 @@ void cGame::Draw() {
 	// Load the proxy clipping coords //
 	gelResetProxyClip();
 	
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOId);
-	gelDisableBlending();
-	gelSetClearColor( GEL_RGBA(255,255,255,0) );
-//	gelSetClearColor( GEL_RGB_BLACK );
+//	gelSetClearColor( GEL_RGBA(255,255,255,0) );
+	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
+
+
 	gelEnableAlphaBlending();
 
 	// Glow Render //
@@ -707,11 +723,15 @@ void cGame::Draw() {
 		gelDrawModeTextured();
 		//gelEnableAddativeBlending();
 		gelSetColor( GEL_RGBA(255,255,255,192) );
+		
+		int Scalar = FullRefScreen::Width>>1;
+		int UnusedPixels = (ProxyScreen::Width - ProxyScreen::Height)>>1;
+		Real UnusedSpace = Real(UnusedPixels) / Real(ProxyScreen::Width);
+		Real Offset = UnusedSpace * Real(Scalar+Scalar);
+		
 		gelDrawRectFillTextured( 
-			Vector3D(-FullRefScreen::Width>>1,-(-((int)(FullRefScreen::Width*1.2))>>1)-176,0), 
-			Vector3D(FullRefScreen::Width>>1,-(((int)(FullRefScreen::Width*1.2))>>1)-176,0) 
-//			Vector3D(-128,-128,0),
-//			Vector3D(128,128,0)
+			Vector3D( -Scalar, Scalar - Offset, 0 ),
+			Vector3D( Scalar, -Scalar - Offset, 0 )
 			);
 
 		gelSetColor( GEL_RGB_DEFAULT );

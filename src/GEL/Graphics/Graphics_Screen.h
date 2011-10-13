@@ -85,6 +85,7 @@ void gelSetClip( const int x, const int y, const int w, const int h );
 void gelResetClip( );
 void gelSetProxyClip( const int x, const int y, const int w, const int h );
 void gelResetProxyClip( );
+void gelResetNativeClip( );
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
