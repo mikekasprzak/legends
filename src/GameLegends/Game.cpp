@@ -205,25 +205,32 @@ void cGame::Init() {
 	Mesh[2] = new cPMEFile();
 	Mesh[3] = new cPMEFile();
 	Mesh[4] = new cPMEFile();
+	Mesh[5] = new cPMEFile();
+	Mesh[6] = new cPMEFile();
+	Mesh[7] = new cPMEFile();
 	
 	Mesh[0]->Import( "Content/Models/Native/Skull.dae" );
 	Mesh[1]->Import( "Content/Models/Native/Sword.dae" );
 	Mesh[2]->Import( "Content/Models/Native/Key_Boxy.dae" );
 	Mesh[3]->Import( "Content/Models/Native/Shield.dae" );
 	Mesh[4]->Import( "Content/Models/Native/Book_Open.dae" );
+	Mesh[5]->Import( "Content/Models/Native/Bottle.dae" );
+	Mesh[6]->Import( "Content/Models/Native/CandleStick.dae" );
+	Mesh[7]->Import( "Content/Models/Native/Table_SquareCenter.dae" );
 	
 
 
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	
-	CameraFollow = Obj[1];
+	CameraFollow = Obj[0];
 
 	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh[0], Real(12) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32, 32+16 ), Mesh[0], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh[0], Real(8) ) );
+
+	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh[5], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
 	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh[4], Real(8) ) );
@@ -234,11 +241,14 @@ void cGame::Init() {
 	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32+32, 32+16 ), Mesh[3], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh[2], Real(4) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh[6], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.push_back( new cObject3D( Vector3D( 32+32, 64+32, 32+16 ), Mesh[2], Real(4) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.push_back( new cObject3D( Vector3D( 32+64, 64+32, 32+16 ), Mesh[2], Real(8) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32 ), Mesh[7], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
 
@@ -291,7 +301,7 @@ void cGame::Exit() {
 		delete Obj3[idx];
 	}
 
-	for ( int idx = 0; idx < 5; idx++ ) {
+	for ( int idx = 0; idx < 8; idx++ ) {
 		delete Mesh[idx];
 	}
 
