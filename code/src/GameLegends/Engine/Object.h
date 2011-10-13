@@ -16,14 +16,16 @@ public:
 	
 	cPhysicsObject* PhysicsObject;
 
+	bool IsGlowing;
 	
-	cObject( Vector3D _Pos, GelAssetHandle _Texture, GelColor _Color = GEL_RGB_WHITE, const Real _Scalar = Real(12) ) :
+	cObject( Vector3D _Pos, GelAssetHandle _Texture, const Real _Scalar = Real(12), GelColor _Color = GEL_RGB_WHITE ) :
 		Pos( _Pos),
 		Scalar( _Scalar ),
 		Texture( _Texture ),
 		Color( _Color ),
 		PhysicsObject( 0 )
 	{	
+		IsGlowing = false;
 	}
 	
 	void Step() {
@@ -39,6 +41,14 @@ public:
 		AssetPool::Set( Texture );
 		gelSetColor( Color );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
+	}
+	
+	void DrawGlow() {
+		// If Player //
+		Draw();
+		
+		// If enemy //
+		// Draw Eyes //
 	}
 	
 	void DrawDebug() {

@@ -18,15 +18,20 @@ public:
 	Matrix3x3 Orientation;
 	
 	cPMEFile* Mesh;
+	GelColor Color;
 
 	cPhysicsObject* PhysicsObject;
 	
-	cObject3D( Vector3D _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32) ) :
+	bool IsGlowing;
+	
+	cObject3D( Vector3D _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
 		Pos( _Pos),
 		Mesh( _Mesh ),
+		Color( _Color ),
 		Scalar( _Scalar ),
 		PhysicsObject( 0 )
 	{	
+		IsGlowing = false;
 	}
 	
 	void Step() {
@@ -52,6 +57,7 @@ public:
 
 		gelMultMatrix( Orientation.ToMatrix4x4() );
 
+		gelSetColor( Color );
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
 				AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
@@ -63,6 +69,17 @@ public:
 			//gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 //			gelDrawIndexedTrianglesColors( &(Mesh->Mesh[idx].Vertex[0]), (unsigned int*)&(Mesh->Mesh[idx].Vertex[0].Color), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+		}
+	}
+
+	void DrawGlow() {
+		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
+		gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) );
+		gelMultMatrix( Orientation.ToMatrix4x4() );
+
+		gelSetColor( Color );
+		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
+			gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
 	}
 
