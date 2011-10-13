@@ -23,8 +23,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-cPMEFile* Mesh;
-cPMEFile* Mesh2;
+cPMEFile* Mesh[8];
 // - ------------------------------------------------------------------------------------------ - //
 
 GelAssetHandle txPlayer;
@@ -203,15 +202,17 @@ void cGame::Init() {
 
 //	txSword = AssetPool::Load( "/Fontin_0" );
 
-	Mesh = new cPMEFile();
-	Mesh2 = new cPMEFile();
+	Mesh[0] = new cPMEFile();
+	Mesh[1] = new cPMEFile();
+	Mesh[2] = new cPMEFile();
+	Mesh[3] = new cPMEFile();
 	
-	Mesh->Import( "Content/Models/Native/Skull.dae" );
-	Mesh2->Import( "Content/Models/Native/Sword.dae" );
+	Mesh[0]->Import( "Content/Models/Native/Skull.dae" );
+	Mesh[1]->Import( "Content/Models/Native/Sword.dae" );
+	Mesh[2]->Import( "Content/Models/Native/Key_Boxy.dae" );
+	Mesh[3]->Import( "Content/Models/Native/Shield.dae" );
 	
-//	SimpleSelfShadow( *Mesh );
-//	SimpleSelfShadow( *Mesh2 );
-	
+
 
 	Obj.push_back( new cObject( Vector3D(64+26,32,32+16+64), txSword ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
@@ -220,30 +221,31 @@ void cGame::Init() {
 	
 	CameraFollow = Obj[1];
 
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh, Real(12) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh[0], Real(12) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32, 32+16 ), Mesh, Real(8) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32, 32+16 ), Mesh[0], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh, Real(8) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh[0], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh, Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32+32, 32+16 ), Mesh, Real(6) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32+32, 32+16 ), Mesh, Real(8) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh[0], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh, Real(3) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32+32, 32+16 ), Mesh[3], Real(6) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 64+32, 32+16 ), Mesh, Real(2) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32+32, 32+16 ), Mesh[3], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 64+32, 32+16 ), Mesh, Real(2) ) );
+
+	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh[2], Real(4) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+32, 64+32, 32+16 ), Mesh[2], Real(4) ) );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	Obj3.push_back( new cObject3D( Vector3D( 32+64, 64+32, 32+16 ), Mesh[2], Real(8) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
 
-	Obj3.push_back( new cObject3D( Vector3D( -108, 32, 64+32 ), Mesh2, Real(20) ) );
+	Obj3.push_back( new cObject3D( Vector3D( -108, 32, 64+32 ), Mesh[1], Real(20) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 0, -48, 64+16 ), Mesh2, Real(10) ) );
+	Obj3.push_back( new cObject3D( Vector3D( 0, -48, 64+16 ), Mesh[1], Real(10) ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
 	cPMEFile* RMesh = new cPMEFile();
@@ -289,9 +291,10 @@ void cGame::Exit() {
 		Physics.Remove( Obj3[idx]->PhysicsObject );
 		delete Obj3[idx];
 	}
-	
-	delete Mesh;
-	delete Mesh2;
+
+	for ( int idx = 0; idx < 4; idx++ ) {
+		delete Mesh[idx];
+	}
 
 	for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
 		Physics.Remove( RoomMesh[idx]->PhysicsObject );
