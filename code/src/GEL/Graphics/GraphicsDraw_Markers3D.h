@@ -92,6 +92,20 @@ inline void gelDrawSquareFill( const Vector3D& Center, const Vector2D& Radius, c
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawSquareFillTextured( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
+	gelDrawRectFillTextured( Vector3D( Center.x-Radius, Center.y-Radius, Center.z ), Vector3D( Center.x+Radius, Center.y+Radius, Center.z ), Vector2D(0,0), Vector2D(1,1), Color );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawSquareFillTextured( const Vector3D& Center, const Vector3D& Radius, const GelColor Color = Current::Color ) {
+	gelDrawRectFillTextured( Center-Radius, Center+Radius, Vector2D(0,0), Vector2D(1,1), Color );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawSquareFillTextured( const Vector3D& Center, const Vector2D& Radius, const GelColor Color = Current::Color ) {
+	gelDrawSquareFillTextured( Center, Radius.ToVector3D(), Color );
+}
+// - ------------------------------------------------------------------------------------------ - //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawDiamond( const Vector3D& Center, const Real& Radius, const GelColor Color = Current::Color ) {
