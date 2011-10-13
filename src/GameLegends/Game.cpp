@@ -587,9 +587,9 @@ void cGame::Draw() {
 			gelLoadMatrix( ModelViewMatrix );
 			
 			gelDrawModeTextured();
-			AssetPool::Set( txCursorStop );
+			AssetPool::Set( txCursorAttack );
 
-			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(20), Real(6), CameraFollow->Color );
+			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(24), Real(6), CameraFollow->Color );
 		}		
 	}
 
