@@ -584,9 +584,12 @@ void cGame::Draw() {
 		gelDisableDepthTest();
 
 		if ( CameraFollow ) {
-			gelDrawModeFlat();
 			gelLoadMatrix( ModelViewMatrix );
-			gelDrawCircle( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(20), Real(4), GEL_RGB_WHITE );
+			
+			gelDrawModeTextured();
+			AssetPool::Set( txCursorStop );
+
+			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(20), Real(6), CameraFollow->Color );
 		}		
 	}
 
