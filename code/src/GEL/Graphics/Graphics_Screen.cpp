@@ -168,3 +168,14 @@ void gelResetProxyClip( ) {
 #endif // GELS_CROP //
 }
 // - ------------------------------------------------------------------------------------------ - //
+void gelResetNativeClip( ) {
+#ifdef GELS_CROP
+	gels_Crop( 
+		0,
+		0,
+		NativeScreen::Width,
+		NativeScreen::Height
+		);
+#endif // GELS_CROP //
+}
+// - ------------------------------------------------------------------------------------------ - //
