@@ -69,6 +69,8 @@ bool gelPostSetup();
 void gelCalculateScreenShape();
 void gelCalculateViewMatrix();
 
+void gelCalculateProxyScreenShape();
+
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_Graphics_Init_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -131,52 +131,51 @@ void gelCalculateScreenShape() {
 		FullRefScreen::Height = (int)( Real(ActualScreen::Height) / RefScreen::Scalar );
 	}
 
-/*
-	// Calculate Scalars and Difference necessary to fit Reference screen to Actual Screen //
-	if ( RefScreen::AspectRatio > ActualScreen::AspectRatio ) {
+	// Calculate Scalars and Difference necessary to fit Reference screen to the Overscanned Screen //
+	if ( RefScreen::AspectRatio > OverscanScreen::AspectRatio ) {
 		// Final Screen (Information and Scalars that differentiate the two) //
 		if ( ActualScreen::TallScreen ) {
-			RefScreen::Scalar = Real( ActualScreen::Height ) / Real( RefScreen::Width );
-
-			RefScreen::DiffX = (ActualScreen::Width - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
-			RefScreen::DiffY = (ActualScreen::Height - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
+			FullRefScreen::Scalar = Real( OverscanScreen::Height ) / Real( FullRefScreen::Width );
 		}
 		else {
-			RefScreen::Scalar = Real( ActualScreen::Width ) / Real( RefScreen::Width );
-
-			RefScreen::DiffX = (ActualScreen::Width - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
-			RefScreen::DiffY = (ActualScreen::Height - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
+			FullRefScreen::Scalar = Real( OverscanScreen::Width ) / Real( FullRefScreen::Width );
 		}
 	}
 	else {
 		// Final Screen (Information and Scalars that differentiate the two) //
 		if ( ActualScreen::TallScreen ) {
-			RefScreen::Scalar = Real( ActualScreen::Width ) / Real( RefScreen::Height );
-
-			RefScreen::DiffX = (ActualScreen::Width - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
-			RefScreen::DiffY = (ActualScreen::Height - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
+			FullRefScreen::Scalar = Real( OverscanScreen::Width ) / Real( FullRefScreen::Height );
 		}
 		else {
-			RefScreen::Scalar = Real( ActualScreen::Height ) / Real( RefScreen::Height );
-		
-			RefScreen::DiffX = (ActualScreen::Width - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
-			RefScreen::DiffY = (ActualScreen::Height - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
+			FullRefScreen::Scalar = Real( OverscanScreen::Height ) / Real( FullRefScreen::Height );
 		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void gelCalculateProxyScreenShape() {
+	ProxyScreen::Shape = Vector2D( ProxyScreen::Width, ProxyScreen::Height );
+	ProxyScreen::HalfShape = ProxyScreen::Shape * Real::Half;
+	if ( ProxyScreen::TallScreen )
+		ProxyScreen::AspectRatio = Real( ProxyScreen::Height ) / Real( ProxyScreen::Width );
+	else
+		ProxyScreen::AspectRatio = Real( ProxyScreen::Width ) / Real( ProxyScreen::Height );
+
+	// Final Screen (Information and Scalars that differentiate the two) //
+	if ( ProxyScreen::TallScreen ) {
+		ProxyScreen::Scalar = Real( ProxyScreen::Height ) / Real( RefScreen::Width );
+
+		ProxyScreen::DiffX = (ProxyScreen::Width - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
+		ProxyScreen::DiffY = (ProxyScreen::Height - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
+	}
+	else {
+		ProxyScreen::Scalar = Real( ProxyScreen::Width ) / Real( RefScreen::Width );
+
+		ProxyScreen::DiffX = (ProxyScreen::Width - (int)(Real(RefScreen::Width) * RefScreen::Scalar));
+		ProxyScreen::DiffY = (ProxyScreen::Height - (int)(Real(RefScreen::Height) * RefScreen::Scalar));
 	}
 	
-	RefScreen::OffsetX = RefScreen::DiffX >> 1;
-	RefScreen::OffsetY = RefScreen::DiffY >> 1;
-
-	// Full Reference Screen (How much extra space we really have in reference co-ordinates) //
-	if ( ActualScreen::TallScreen ) {
-		FullRefScreen::Width = (int)( Real(ActualScreen::Height) / RefScreen::Scalar );
-		FullRefScreen::Height = (int)( Real(ActualScreen::Width) / RefScreen::Scalar );
-	}	
-	else {
-		FullRefScreen::Width = (int)( Real(ActualScreen::Width) / RefScreen::Scalar );
-		FullRefScreen::Height = (int)( Real(ActualScreen::Height) / RefScreen::Scalar );
-	}
-*/
+	ProxyScreen::OffsetX = RefScreen::DiffX >> 1;
+	ProxyScreen::OffsetY = RefScreen::DiffY >> 1;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void gelCalculateViewMatrix() {

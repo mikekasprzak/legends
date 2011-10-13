@@ -30,6 +30,8 @@ namespace FullRefScreen {
 
 	extern Vector2D Shape;
 	extern Vector2D HalfShape;
+
+	extern Real Scalar;
 };
 // - ------------------------------------------------------------------------------------------ - //
 namespace ActualScreen {
@@ -41,6 +43,24 @@ namespace ActualScreen {
 
 	extern Vector2D Shape;
 	extern Vector2D HalfShape;
+};
+// - ------------------------------------------------------------------------------------------ - //
+namespace ProxyScreen {
+	extern int Width;
+	extern int Height;
+	
+	extern Real AspectRatio;
+	extern bool TallScreen;
+
+	extern Vector2D Shape;
+	extern Vector2D HalfShape;
+
+	extern Real Scalar;
+	extern int OffsetX;
+	extern int OffsetY;
+
+	extern int DiffX;
+	extern int DiffY;
 };
 // - ------------------------------------------------------------------------------------------ - //
 namespace OverscanScreen {
@@ -62,8 +82,9 @@ namespace NativeScreen {
 
 // - ------------------------------------------------------------------------------------------ - //
 void gelSetClip( const int x, const int y, const int w, const int h );
-// - ------------------------------------------------------------------------------------------ - //
 void gelResetClip( );
+void gelSetProxyClip( const int x, const int y, const int w, const int h );
+void gelResetProxyClip( );
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
