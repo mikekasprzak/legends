@@ -4,6 +4,11 @@
 	"Color"	:		[137,111,171],
 	"Texture":		"/Disc_Bat",
 	
+	"Overlay": {
+		"Color"	:	[255,255,255],
+		"Texture":	"/Disc_Bat_Glow"
+	},
+
 	"Glow": {
 		"Color"	:	[255,255,255],
 		"Texture":	"/Disc_Bat_Glow"
