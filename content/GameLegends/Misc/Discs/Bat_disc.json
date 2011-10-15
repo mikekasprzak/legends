@@ -1,0 +1,11 @@
+{
+	"Name"	:		"Bat",
+	
+	"Color"	:		[137,111,171],
+	"Texture":		"/Disc_Bat",
+	
+	"Glow": {
+		"Color"	:	[255,255,255],
+		"Texture":	"/Disc_Bat_Glow"
+	}
+}
