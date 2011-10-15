@@ -74,7 +74,9 @@ deps: $(.O_FILES:.o=.o.d)
 	@echo Dependencies rebuilt.
 # - ------------------------------------------------------------------------ - #
 cache:
+	@echo Updating Depend Cache...
 	@cat $(.O_FILES:.o=.o.d)>obj/$(TARGET_NAME)/.ocache
+	@echo Depend Cache Updated
 # - ------------------------------------------------------------------------ - #
 startcache:
 	make -j 1 cache NO_DEPEND=true &
