@@ -10,6 +10,9 @@ class cDiscObject {
 public:
 	GelAssetHandle	Texture;
 	GelColor		Color;
+
+	GelAssetHandle	OverlayTexture;
+	GelAssetHandle	OverlayColor;
 	
 	GelAssetHandle	GlowTexture;
 	GelAssetHandle	GlowColor;
@@ -19,6 +22,8 @@ public:
 	cDiscObject( GelAssetHandle _Texture, GelColor _Color = GEL_RGB_WHITE ) :
 		Texture( _Texture ),
 		Color( _Color ),
+		OverlayTexture( 0 ),
+		OverlayColor( GEL_RGB_WHITE ),
 		GlowTexture( _Texture ),
 		GlowColor( _Color )
 	{	
@@ -27,6 +32,8 @@ public:
 	cDiscObject( const char* InFile ) :
 		Texture( 0 ),
 		Color( GEL_RGB_WHITE ),
+		OverlayTexture( 0 ),
+		OverlayColor( GEL_RGB_WHITE ),
 		GlowTexture( 0 ),
 		GlowColor( GEL_RGB_WHITE )
 	{
