@@ -273,6 +273,9 @@ void cGame::Init() {
 	//Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+
+	Obj.push_back( new cObject( Vector3D(0,32,32+16), "Content/Misc/Discs/Bat_disc.json", Real(12) ) );
+	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	
 	CameraFollow = Obj[0];
 	CameraFollow->IsGlowing = true;
