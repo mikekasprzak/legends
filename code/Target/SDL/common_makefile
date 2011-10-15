@@ -18,7 +18,8 @@ LDFLAGS				+=
 # - ------------------------------------------------------------------------ - #
 SRC_FILTER			:=	$(addsuffix /%,$(SRC_FOLDERS))
 # - ------------------------------------------------------------------------ - #
-ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
+#ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
+ALL_CODE_FILES		:=	$(shell $(TreeCache) obj/.treecache src .cpp .c .hpp .h)
 
 CODE_FILES			:=	$(filter %.cpp %.c,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
 H_FILES				:=	$(filter %.hpp %.h,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))

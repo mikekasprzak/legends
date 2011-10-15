@@ -22,7 +22,7 @@ else
 	EXE="$ROOT_NAME"_"$ARCH"
 fi
 fi
-echo $EXE
+#echo $EXE
 $EXE $@
 
 exit $?
