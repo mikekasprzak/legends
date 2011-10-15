@@ -3,6 +3,7 @@
 #define __GEL_ASSETPOOL_AssetPool_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "GelAssetHandle.h"
+#include <Core/DataBlock.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace AssetPool {
 	void Init( const char* BaseDirectory );

@@ -242,7 +242,7 @@ void cGame::Init() {
 	}
 
 
-	txPlayer = AssetPool::Load( "/Disc_Blank" );
+	//txPlayer = AssetPool::Load( "/Disc_Blank" );
 
 	txCursorMove = AssetPool::Load( "/Cursor_Move" );
 	txCursorStop = AssetPool::Load( "/Cursor_Stop" );
@@ -270,7 +270,8 @@ void cGame::Init() {
 	
 
 
-	Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
+	//Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
+	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	
 	CameraFollow = Obj[0];
@@ -589,7 +590,7 @@ void cGame::Draw() {
 			gelDrawModeTextured();
 			AssetPool::Set( txCursorAttack );
 
-			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(24), Real(6), CameraFollow->Color );
+			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(24), Real(6), GEL_RGB(255,242,0) );
 		}		
 	}
 

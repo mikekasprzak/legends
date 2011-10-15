@@ -2,6 +2,8 @@
 #ifndef __Object_H__
 #define __Object_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include "DiscObject.h"
+
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
 #include <AssetPool/AssetPool.h>
@@ -11,23 +13,28 @@ public:
 	Vector3D Pos;
 	Real Scalar;
 	
-	GelAssetHandle Texture;
-	GelColor Color;
-	
+	cDiscObject* Disc;
+		
 	cPhysicsObject* PhysicsObject;
 
 	bool IsGlowing;
-	
-	cObject( Vector3D _Pos, GelAssetHandle _Texture, const Real _Scalar = Real(12), GelColor _Color = GEL_RGB_WHITE ) :
-		Pos( _Pos),
+
+public:	
+	cObject( Vector3D _Pos, const char* InFile, const Real _Scalar = Real(8) ) :
+		Pos( _Pos ),
 		Scalar( _Scalar ),
-		Texture( _Texture ),
-		Color( _Color ),
-		PhysicsObject( 0 )
-	{	
-		IsGlowing = false;
+		PhysicsObject( 0 ),
+		IsGlowing( false )
+	{
+		Disc = new cDiscObject( InFile );
 	}
 	
+	~cObject() {
+		if ( Disc )
+			delete Disc;
+	}
+
+public:
 	void Step() {
 		if ( PhysicsObject ) {
 			PhysicsObject->Step();
@@ -38,17 +45,17 @@ public:
 	void Draw() {
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
-		AssetPool::Set( Texture );
-		gelSetColor( Color );
+		AssetPool::Set( Disc->Texture );
+		gelSetColor( Disc->Color );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
 	
 	void DrawGlow() {
-		// If Player //
-		Draw();
-		
-		// If enemy //
-		// Draw Eyes //
+		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
+
+		AssetPool::Set( Disc->GlowTexture );
+		gelSetColor( Disc->GlowColor );
+		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
 	
 	void DrawDebug() {
