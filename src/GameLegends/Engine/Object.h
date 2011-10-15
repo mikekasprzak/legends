@@ -48,6 +48,12 @@ public:
 		AssetPool::Set( Disc->Texture );
 		gelSetColor( Disc->Color );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
+
+		if ( Disc->OverlayTexture ) {
+			AssetPool::Set( Disc->OverlayTexture );
+			gelSetColor( Disc->OverlayColor );
+			gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
+		}
 	}
 	
 	void DrawGlow() {
