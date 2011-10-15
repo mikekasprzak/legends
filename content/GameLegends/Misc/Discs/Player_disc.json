@@ -1,0 +1,11 @@
+{
+	"Name"	:		"Player",
+	
+	"Color"	:		[255,128,0],
+	"Texture":		"/Disc_Blank",
+	
+	"Glow": {
+		"Color"	:	[255,242,0],
+		"Texture":	"/Disc_Blank"
+	}
+}
