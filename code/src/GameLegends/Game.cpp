@@ -273,12 +273,14 @@ void cGame::Init() {
 	//Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
 	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	Obj.back()->IsGlowing = true;
 
 	Obj.push_back( new cObject( Vector3D(0,32,32+16), "Content/Misc/Discs/Bat_disc.json", Real(12) ) );
 	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	Obj.back()->IsGlowing = true;
 	
 	CameraFollow = Obj[0];
-	CameraFollow->IsGlowing = true;
+//	CameraFollow->IsGlowing = true;
 
 	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh[0], Real(12), GEL_RGB_RED ) );
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
