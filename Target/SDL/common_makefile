@@ -19,7 +19,7 @@ LDFLAGS				+=
 SRC_FILTER			:=	$(addsuffix /%,$(SRC_FOLDERS))
 # - ------------------------------------------------------------------------ - #
 #ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
-ALL_CODE_FILES		:=	$(shell $(TreeCache) obj/.treecache src .cpp .c .hpp .h)
+ALL_CODE_FILES		:=	$(shell $(TreeCache) obj/$(TARGET_NAME)/.treecache src .cpp .c .hpp .h)
 
 CODE_FILES			:=	$(filter %.cpp %.c,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
 H_FILES				:=	$(filter %.hpp %.h,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
@@ -43,7 +43,7 @@ TARGET_STUBS_CHECK	:=	$(shell Tools/FileExists.sh $(TARGET_STUBS))
 
 
 # - ------------------------------------------------------------------------ - #
-$(TARGET): $(TARGET_STUBS) $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(OTHER_FILES_DEP)
+$(TARGET): $(TARGET_STUBS) $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(OTHER_FILES_DEP) startcache
 	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
 	cp -t $(TARGET_DIR) $(COPY_FILES)
 	$(GXX) $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
@@ -73,7 +73,13 @@ makedirs:
 deps: $(.O_FILES:.o=.o.d)
 	@echo Dependencies rebuilt.
 # - ------------------------------------------------------------------------ - #
-phony: run clean cleanmain cleandeps deps makedirs
+cache:
+	@cat $(.O_FILES:.o=.o.d)>obj/$(TARGET_NAME)/.ocache
+# - ------------------------------------------------------------------------ - #
+startcache:
+	make -j 1 cache NO_DEPEND=true &
+# - ------------------------------------------------------------------------ - #
+phony: run clean cleanmain cleandeps deps makedirs cache startcache
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
@@ -101,9 +107,13 @@ obj/$(TARGET_NAME)/output_stub:
 	@touch $@	
 # - ------------------------------------------------------------------------ - #
 
+
 # - ------------------------------------------------------------------------ - #
 ifeq ($(TARGET_STUBS_CHECK),$(TARGET_STUBS))
--include $(.O_FILES:.o=.o.d)
-endif 
+ifndef NO_DEPEND
+#-include $(.O_FILES:.o=.o.d)
+-include obj/$(TARGET_NAME)/.ocache
+endif # NO_DEPEND #
+endif # TARGET_STUBS does not exist #
 # - ------------------------------------------------------------------------ - #
 	
