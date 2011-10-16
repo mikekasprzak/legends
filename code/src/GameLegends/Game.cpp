@@ -20,6 +20,8 @@
 
 #include <Types/Set.h>
 #include <Grid/Grid2D.h>
+
+#include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -166,7 +168,66 @@ void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real 
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::LoadMap() {
+	const char* InFile = "Content/Maps/GameMap.json";
+	
+	DataBlock* File = new_read_nullterminate_DataBlock( InFile );
+	if ( File == 0 ) {
+		Log( "! Map: Error reading file %s!", InFile );
+	}
+	cJSON* root = cJSON_Parse( File->Data );
 
+	if ( root == 0 ) {
+		Log( "! Map: Error parsing JSON data! Check for bad formatting, extra commas, etc" );
+	}
+	else {
+		int Count = cJSON_GetArraySize( root );
+		Log( "> %i Objects found in map", Count );
+	
+		for ( int idx = 0; idx < Count; idx++ ) {
+			cJSON* Element = cJSON_GetArrayItem( root, idx );
+	
+			cJSON* obj = cJSON_GetObjectItem( Element, "Type" );
+			if ( obj ) {
+				if ( obj->valuestring == std::string("Object") ) {
+					Vector3D Pos(0,0,0);
+
+					cJSON* _Pos = cJSON_GetObjectItem( Element, "Pos" );
+					if ( _Pos ) {
+						Pos = Vector3D(
+							cJSON_GetArrayItem( _Pos, 0 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 1 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 2 )->valuedouble
+							);
+					}
+			
+					AddObject( Pos, cJSON_GetObjectItem( Element, "Disc" )->valuestring );
+					
+					cJSON* _Scalar = cJSON_GetObjectItem( Element, "Scalar" );
+					if ( _Scalar ) {
+						Obj.back()->Scalar = cJSON_GetObjectItem( Element, "Disc" )->valuedouble;
+					}
+					
+					cJSON* _Glowing = cJSON_GetObjectItem( Element, "Glowing" );
+					if ( _Glowing ) {
+						Obj.back()->IsGlowing = cJSON_GetObjectItem( Element, "Glowing" )->type;
+					}
+
+					cJSON* _Focus = cJSON_GetObjectItem( Element, "Focus" );
+					if ( _Focus ) {
+						if ( cJSON_GetObjectItem( Element, "Focus" )->type ) {
+							CameraFollow = Obj.back();
+						}
+					}
+				}
+			}
+			
+		}
+	}
+		
+	cJSON_Delete( root );
+	delete_DataBlock( File );	
+}
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	Log( "+ Start of Init..." );
@@ -231,6 +292,8 @@ void cGame::Init() {
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
 	CameraFollow = 0;	
+
+	LoadMap();
 
 	// Add Rooms //	
 	AddOldRoom( Vector3D(0,0+512,0), "Content/Tests/Room01.tga" );
