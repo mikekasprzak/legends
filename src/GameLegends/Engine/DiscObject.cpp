@@ -38,7 +38,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 	cJSON* root = cJSON_Parse( File->Data );
 
 	if ( root == 0 ) {
-		Log( "! DiscObject: Error parsing data! Check for bad formatting, extra commas, etc" );
+		Log( "! DiscObject: Error parsing JSON data! Check for bad formatting, extra commas, etc" );
 	}
 	else {
 		Log( "> DiscObject Name: %s", cJSON_GetObjectItem( root, "Name" )->valuestring );

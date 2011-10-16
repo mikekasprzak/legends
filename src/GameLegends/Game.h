@@ -81,12 +81,13 @@ public:
 	std::vector< cRoom* > Room;
 	std::vector< cRoomMesh* > RoomMesh;
 
-	void AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar );
-	void AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar );
+	void AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(12) );
+	void AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(8) );
 
 	void AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(128) );
 	void AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(16) );
 
+	void LoadMap();
 public:
 	cGame() :
 		FirstRun( true ),
