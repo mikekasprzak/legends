@@ -1,18 +1,16 @@
-{
-	[
-		{
-			"Type": "Object",
-			"Pos": [0,0,48],
-			"Disc": "Content/Objects/Discs/Player_disc.json",
-			"Glowing": true
-		},
-		{
-			"Type": "Item",
-			"Pos": [32,32,48],
-			"Mesh": "/Skull",
-			"Scalar": 12,
-			"Color": [255,0,0],
-			"Glowing": true
-		}
-	]
-}
+[
+	{
+		"Type": "Object",
+		"Pos": [32,0,48],
+		"Disc": "Content/Objects/Discs/Player_disc.json",
+		"Glowing": true
+	},
+	{
+		"Type": "Item",
+		"Pos": [128,32,48],
+		"Mesh": "/Skull",
+		"Scalar": 12,
+		"Color": [255,0,0],
+		"Glowing": true
+	}
+]
