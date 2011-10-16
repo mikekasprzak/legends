@@ -16,6 +16,8 @@ GelTexture_NativeHandle load_PVRTexture( PVRTexture* Texture, GelTexture::GelTex
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
 
+	Log("+ Loading Texture (PVR Loader)..." );
+
 	VLog("* Allocating GL Texture ID..." );
 	// Generate a GL Texture //
 	glGenTextures( 1, (GLuint*)&TextureID );

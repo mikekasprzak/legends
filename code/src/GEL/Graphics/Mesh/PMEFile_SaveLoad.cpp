@@ -258,7 +258,7 @@ void cPMEFile::Import( const aiScene* Scene ) {
 			Log( "* Scene has %i Meshes", Scene->mNumMeshes );
 			
 			for ( int Meshes = 0; Meshes < Scene->mNumMeshes; Meshes++ ) {
-				Log( "** Mesh Name: %s", Scene->mMeshes[Meshes]->mName.data );
+				Log( "> Mesh Name: %s", Scene->mMeshes[Meshes]->mName.data );
 				Mesh.push_back( cPMEMesh() );
 				
 				VVVLog( "**" );

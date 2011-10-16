@@ -22,12 +22,68 @@ extern int LogLevel;
 
 //#define FlushFunc fflush(0)
 #define LOG_FUNC		vfprintf
+#define LOG_FUNC2		printf
 #define LOG_TARGET		stdout
+
+// - ------------------------------------------------------------------------------------------ - //
+int CurrentLogIndentation = 0;
+// - ------------------------------------------------------------------------------------------ - //
+void LogIndentation( int Count, const char Val = ' ' ) {
+	if ( Count > 0 ) {	
+		char s[Count+1];
+		for ( int idx = 0; idx < Count; idx++ ) {
+			s[idx] = Val;
+		}
+		s[Count] = 0;
+		
+		LOG_FUNC2( s );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+// String only, so we can take action //
+void PreLog( const char* s ) {
+	if ( s[0] == 0 ) {
+		return;
+	}
+	else if ( s[1] == 0 ) {
+		return;
+	}
+	else if ( s[1] == ' ' ) {
+		if ( s[0] == '*' ) {
+			LogIndentation( CurrentLogIndentation );
+		}
+		if ( s[0] == '>' ) {
+			// TODO: Headline note //
+			LogIndentation( CurrentLogIndentation, '>' );
+		}
+		else if ( s[0] == '+' ) {
+			LogIndentation( CurrentLogIndentation );
+			CurrentLogIndentation++;
+		}
+		else if ( s[0] == '-' ) {
+			CurrentLogIndentation--;
+			LogIndentation( CurrentLogIndentation );
+		}
+	}
+	else if ( s[2] == 0 ) {
+		return;
+	}
+	else if ( s[2] == ' ' ) {
+		if ( s[0] == '*' ) {
+			if ( s[1] == '*' ) {
+				// TODO: Something for Double Star //
+			}
+		}
+	}
+} 
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void LogAlways( const char* s, ... ) {
 	va_list vl;
 	va_start( vl, s );
+	
+	PreLog( s );
 
 	LOG_FUNC( LOG_TARGET, s, vl );
 
@@ -40,6 +96,8 @@ void _LogAlways( const char* s, ... ) {
 	va_list vl;
 	va_start( vl, s );
 
+	PreLog( s );
+
 	LOG_FUNC( LOG_TARGET, s, vl );
 
 	va_end( vl );
@@ -50,6 +108,7 @@ void _LogAlways( const char* s, ... ) {
 		if ( LogLevel >= _LEVEL ) { \
 			va_list vl; \
 			va_start( vl, s ); \
+			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
 			LOG_FUNC( LOG_TARGET, (char*)"\n", 0 ); \
@@ -61,6 +120,7 @@ void _LogAlways( const char* s, ... ) {
 		if ( LogLevel >= _LEVEL ) { \
 			va_list vl; \
 			va_start( vl, s ); \
+			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
 		} \

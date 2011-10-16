@@ -207,7 +207,6 @@ public:
 		dynamicsWorld->addRigidBody( obj->rigidBody );
 
 		obj->UpdateTransform();
-		Log( "**" );
 		
 		return obj;
 	}

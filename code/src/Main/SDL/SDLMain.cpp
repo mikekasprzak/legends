@@ -974,7 +974,7 @@ int main( int argc, char* argv[] ) {
 			// Explicitly Create Game //
 			GameHost->CreateGame();
 			
-			Log("+ Main: Game Created");
+			Log("> Main: Game Created");
 
 			WorkTime = GetTimeNow();
 
