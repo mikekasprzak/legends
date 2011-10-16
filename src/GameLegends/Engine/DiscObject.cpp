@@ -5,6 +5,31 @@
 #include <Core/DataBlock.h>
 #include <cJSON.h>
 
+// I only need this functin here, so I didn't even bother adding it to the class //
+inline GelColor cDiscObject_ReadColor( cJSON* obj ) {
+	int Size = cJSON_GetArraySize( obj );
+	if ( Size == 3 ) {
+		return GEL_RGB( 
+			cJSON_GetArrayItem( obj, 0 )->valueint,
+			cJSON_GetArrayItem( obj, 1 )->valueint,
+			cJSON_GetArrayItem( obj, 2 )->valueint
+			);
+	}
+	else if ( Size == 4 ) {
+		return GEL_RGBA( 
+			cJSON_GetArrayItem( obj, 0 )->valueint,
+			cJSON_GetArrayItem( obj, 1 )->valueint,
+			cJSON_GetArrayItem( obj, 2 )->valueint,
+			cJSON_GetArrayItem( obj, 3 )->valueint
+			);
+	}
+	else {
+		Log( "DiscObject Error: Invalid Array-of-Colors Size %i", Size );
+	}
+	
+	return GEL_RGB_WHITE;
+}
+
 void cDiscObject::LoadFile( const char* InFile ) {
 	DataBlock* File = new_read_nullterminate_DataBlock( InFile );
 	
@@ -27,25 +52,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 
 		obj = cJSON_GetObjectItem( root, "Color" );
 		if ( obj ) {
-			int Size = cJSON_GetArraySize( obj );
-			if ( Size == 3 ) {
-				Color = GEL_RGB( 
-					cJSON_GetArrayItem( obj, 0 )->valueint,
-					cJSON_GetArrayItem( obj, 1 )->valueint,
-					cJSON_GetArrayItem( obj, 2 )->valueint
-					);
-			}
-			else if ( Size == 4 ) {
-				Color = GEL_RGBA( 
-					cJSON_GetArrayItem( obj, 0 )->valueint,
-					cJSON_GetArrayItem( obj, 1 )->valueint,
-					cJSON_GetArrayItem( obj, 2 )->valueint,
-					cJSON_GetArrayItem( obj, 3 )->valueint
-					);
-			}
-			else {
-				Log( "DiscObject Error: Invalid Array-of-Colors Size %i", Size );
-			}
+			Color = cDiscObject_ReadColor( obj );
 		}
 
 		cJSON* OverlayRoot = cJSON_GetObjectItem( root, "Overlay" );
@@ -58,25 +65,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 	
 			obj = cJSON_GetObjectItem( OverlayRoot, "Color" );
 			if ( obj ) {
-				int Size = cJSON_GetArraySize( obj );
-				if ( Size == 3 ) {
-					OverlayColor = GEL_RGB( 
-						cJSON_GetArrayItem( obj, 0 )->valueint,
-						cJSON_GetArrayItem( obj, 1 )->valueint,
-						cJSON_GetArrayItem( obj, 2 )->valueint
-						);
-				}
-				else if ( Size == 4 ) {
-					OverlayColor = GEL_RGBA( 
-						cJSON_GetArrayItem( obj, 0 )->valueint,
-						cJSON_GetArrayItem( obj, 1 )->valueint,
-						cJSON_GetArrayItem( obj, 2 )->valueint,
-						cJSON_GetArrayItem( obj, 3 )->valueint
-						);
-				}
-				else {
-					Log( "DiscObject Error: Invalid Array-of-Colors Size %i", Size );
-				}
+				OverlayColor = cDiscObject_ReadColor( obj );
 			}
 		}		
 	
@@ -90,25 +79,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 	
 			obj = cJSON_GetObjectItem( GlowRoot, "Color" );
 			if ( obj ) {
-				int Size = cJSON_GetArraySize( obj );
-				if ( Size == 3 ) {
-					GlowColor = GEL_RGB( 
-						cJSON_GetArrayItem( obj, 0 )->valueint,
-						cJSON_GetArrayItem( obj, 1 )->valueint,
-						cJSON_GetArrayItem( obj, 2 )->valueint
-						);
-				}
-				else if ( Size == 4 ) {
-					GlowColor = GEL_RGBA( 
-						cJSON_GetArrayItem( obj, 0 )->valueint,
-						cJSON_GetArrayItem( obj, 1 )->valueint,
-						cJSON_GetArrayItem( obj, 2 )->valueint,
-						cJSON_GetArrayItem( obj, 3 )->valueint
-						);
-				}
-				else {
-					Log( "DiscObject Error: Invalid Array-of-Colors Size %i", Size );
-				}
+				GlowColor = cDiscObject_ReadColor( obj );
 			}
 		}
 	}

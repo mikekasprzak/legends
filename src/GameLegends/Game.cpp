@@ -101,6 +101,18 @@ void cGame::ContentScan() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
+	Obj.push_back( new cObject( _Pos, _File, _Scalar ) );
+	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
+//	Obj3.push_back( new cObject3D( _Pos, _File, _Scalar ) );
+//	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );	
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
@@ -271,13 +283,13 @@ void cGame::Init() {
 
 
 	//Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
-	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
-	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+//	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
+//	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	AddObject( Vector3D(0,0,32+16), "Content/Objects/Discs/Player_disc.json", Real(12) );
 	Obj.back()->IsGlowing = true;
 
-	Obj.push_back( new cObject( Vector3D(0,32,32+16), "Content/Misc/Discs/Bat_disc.json", Real(12) ) );
-	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
-	Obj.back()->IsGlowing = true;
+	AddObject( Vector3D(0,32,32+16), "Content/Objects/Discs/Bat_disc.json", Real(12) );
+
 	
 	CameraFollow = Obj[0];
 //	CameraFollow->IsGlowing = true;

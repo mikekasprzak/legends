@@ -79,7 +79,7 @@ cache:
 	@echo Depend Cache Updated
 # - ------------------------------------------------------------------------ - #
 startcache:
-	make -j 1 cache NO_DEPEND=true &
+	make --quiet -j 1 cache NO_DEPEND=true &
 # - ------------------------------------------------------------------------ - #
 phony: run clean cleanmain cleandeps deps makedirs cache startcache
 # - ------------------------------------------------------------------------ - #
