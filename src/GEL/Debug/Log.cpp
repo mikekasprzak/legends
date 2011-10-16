@@ -56,6 +56,10 @@ void PreLog( const char* s ) {
 			// TODO: Headline note //
 			LogIndentation( CurrentLogIndentation, '>' );
 		}
+		if ( s[0] == '!' ) {
+			// TODO: Error note //
+			LogIndentation( CurrentLogIndentation, '!' );
+		}
 		else if ( s[0] == '+' ) {
 			LogIndentation( CurrentLogIndentation );
 			CurrentLogIndentation++;

@@ -24,7 +24,7 @@ inline GelColor cDiscObject_ReadColor( cJSON* obj ) {
 			);
 	}
 	else {
-		Log( "DiscObject Error: Invalid Array-of-Colors Size %i", Size );
+		Log( "! DiscObject: Error Invalid Array-of-Colors Size %i", Size );
 	}
 	
 	return GEL_RGB_WHITE;
@@ -38,7 +38,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 	cJSON* root = cJSON_Parse( File->Data );
 
 	if ( root == 0 ) {
-		Log( "DiscObject: Error parsing data!\n" );
+		Log( "! DiscObject: Error parsing data! Check for bad formatting, extra commas, etc" );
 	}
 	else {
 		Log( "> DiscObject Name: %s", cJSON_GetObjectItem( root, "Name" )->valuestring );
