@@ -24,7 +24,6 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 
-GelAssetHandle txPlayer;
 GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
 GelAssetHandle txCursorAttack;
@@ -99,9 +98,63 @@ void cGame::ContentScan() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::SortObject() {
+	// TODO: Only 1 per frame //
+
+	// One Forward Step of Bubble Sort //
+	for ( int idx = 1; idx < Obj_Sort.size(); idx++ ) {
+		Vector3D V1 = CameraEyePos - Obj[Obj_Sort[idx-1]]->Pos;
+		Vector3D V2 = CameraEyePos - Obj[Obj_Sort[idx-0]]->Pos;
+		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
+			int Temp = Obj_Sort[idx-1];
+			Obj_Sort[idx-1] = Obj_Sort[idx-0];
+			Obj_Sort[idx-0] = Temp;
+		}
+	}
+	// One Backward Step of Bubble Sort //
+	for ( int idx = Obj_Sort.size()-1; idx > 0; idx-- ) {
+		Vector3D V1 = CameraEyePos - Obj[Obj_Sort[idx-1]]->Pos;
+		Vector3D V2 = CameraEyePos - Obj[Obj_Sort[idx-0]]->Pos;
+		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
+			int Temp = Obj_Sort[idx-1];
+			Obj_Sort[idx-1] = Obj_Sort[idx-0];
+			Obj_Sort[idx-0] = Temp;
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::SortObject3D() {
+	// TODO: Only 1 per frame //
+	
+	// One Forward Step of Bubble Sort //
+	for ( int idx = 1; idx < Obj3_Sort.size(); idx++ ) {
+		Vector3D V1 = CameraEyePos - Obj3[Obj3_Sort[idx-1]]->Pos;
+		Vector3D V2 = CameraEyePos - Obj3[Obj3_Sort[idx-0]]->Pos;
+		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
+			int Temp = Obj3_Sort[idx-1];
+			Obj3_Sort[idx-1] = Obj3_Sort[idx-0];
+			Obj3_Sort[idx-0] = Temp;
+		}
+	}
+	// One Backward Step of Bubble Sort //
+	for ( int idx = Obj3_Sort.size()-1; idx > 0; idx-- ) {
+		Vector3D V1 = CameraEyePos - Obj3[Obj3_Sort[idx-1]]->Pos;
+		Vector3D V2 = CameraEyePos - Obj3[Obj3_Sort[idx-0]]->Pos;
+		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
+			int Temp = Obj3_Sort[idx-1];
+			Obj3_Sort[idx-1] = Obj3_Sort[idx-0];
+			Obj3_Sort[idx-0] = Temp;
+		}
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 void cGame::AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
 	Obj.push_back( new cObject( _Pos, _File, _Scalar ) );
 	Obj.back()->PhysicsObject = Physics.AddSphere( Obj.back()->Pos, Obj.back()->Scalar );
+	
+	Obj_Sort.push_back( Obj_Sort.size() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
@@ -115,6 +168,8 @@ void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Sc
 		Mesh->Mesh[0].Vertex.size(), 
 		sizeof(cPMEVertex) 
 		);	
+
+	Obj3_Sort.push_back( Obj3_Sort.size() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
@@ -231,12 +286,12 @@ void cGame::LoadMap() {
 					
 					cJSON* _Scalar = cJSON_GetObjectItem( Element, "Scalar" );
 					if ( _Scalar ) {
-						Obj.back()->Scalar = cJSON_GetObjectItem( Element, "Scalar" )->valuedouble;
+						Obj3.back()->Scalar = cJSON_GetObjectItem( Element, "Scalar" )->valuedouble;
 					}
 					
 					cJSON* _Glowing = cJSON_GetObjectItem( Element, "Glowing" );
 					if ( _Glowing ) {
-						Obj.back()->IsGlowing = cJSON_GetObjectItem( Element, "Glowing" )->type;
+						Obj3.back()->IsGlowing = cJSON_GetObjectItem( Element, "Glowing" )->type;
 					}
 
 //					cJSON* _Focus = cJSON_GetObjectItem( Element, "Focus" );
@@ -245,6 +300,39 @@ void cGame::LoadMap() {
 //							CameraFollow = Obj.back();
 //						}
 //					}
+				}
+				else if ( obj->valuestring == std::string("RoomMesh") ) {
+					Vector3D Pos(0,0,0);
+
+					cJSON* _Pos = cJSON_GetObjectItem( Element, "Pos" );
+					if ( _Pos ) {
+						Pos = Vector3D(
+							cJSON_GetArrayItem( _Pos, 0 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 1 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 2 )->valuedouble
+							);
+					}
+			
+					AddOldRoomMesh( Pos, cJSON_GetObjectItem( Element, "Mesh" )->valuestring );
+					
+					cJSON* _Scalar = cJSON_GetObjectItem( Element, "Scalar" );
+					if ( _Scalar ) {
+						RoomMesh.back()->Scalar = cJSON_GetObjectItem( Element, "Scalar" )->valuedouble;
+					}
+				}
+				else if ( obj->valuestring == std::string("Room") ) {
+					Vector3D Pos(0,0,0);
+
+					cJSON* _Pos = cJSON_GetObjectItem( Element, "Pos" );
+					if ( _Pos ) {
+						Pos = Vector3D(
+							cJSON_GetArrayItem( _Pos, 0 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 1 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 2 )->valuedouble
+							);
+					}
+			
+					AddOldRoomMesh( Pos, cJSON_GetObjectItem( Element, "Mesh" )->valuestring );
 				}
 			}
 			
@@ -317,6 +405,7 @@ void cGame::Init() {
 
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
+	CameraEyePos = Vector3D(0,-50,-160); // TODO: Should be positive //
 	CameraFollow = 0;	
 
 	LoadMap();
@@ -409,7 +498,7 @@ void cGame::LostFocus() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Step() {
-	float CameraSpeed = _TV(1.0f);	
+	float CameraSpeed = _TV(1.0f);
 
 	// Input //
 	Vector2D Stick(0,0);
@@ -469,6 +558,9 @@ void cGame::Step() {
 			btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 ), 
 			btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
 	}
+	
+	SortObject();
+	SortObject3D();
 	
 	// Step Physics //
 	Physics.Step();
@@ -547,7 +639,7 @@ void cGame::Draw() {
 	
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-50,-160) ) * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
 
 		gelEnableDepthWriting();
 		gelEnableDepthTest();
@@ -571,9 +663,7 @@ void cGame::Draw() {
 		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			// Changing Alpha no longer works because depth test is removing backfaces //
-//			gelSetColor( GEL_RGBA(255-(int)(Obj3[idx]->Scalar*Real(32)),0,0,255) );
-			Obj3[idx]->Draw();
-//			gelSetColor( GEL_RGB_DEFAULT );
+			Obj3[ Obj3_Sort[idx] ]->Draw();
 		}
 
 		gelDisableDepthWriting();
@@ -582,7 +672,7 @@ void cGame::Draw() {
 		gelDrawModeTextured();		
 		for ( int idx = 0; idx < Obj.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
-			Obj[idx]->Draw();
+			Obj[ Obj_Sort[idx] ]->Draw();
 		}
 		gelSetColor( GEL_RGB_DEFAULT );
 				
@@ -666,7 +756,7 @@ void cGame::Draw() {
 	
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - Vector3D(0,-50,-160) ) * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
 
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
 		gelDisableDepthWriting();
@@ -677,17 +767,17 @@ void cGame::Draw() {
 
 		gelDrawModeFlat();	
 		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
-			if ( Obj3[idx]->IsGlowing ) {
+			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
 				gelLoadMatrix( ModelViewMatrix );
-				Obj3[idx]->DrawGlow();
+				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
 			}
 		}
 
 		gelDrawModeTextured();		
 		for ( int idx = 0; idx < Obj.size(); idx++ ) {
-			if ( Obj[idx]->IsGlowing ) {
+			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
 				gelLoadMatrix( ModelViewMatrix );
-				Obj[idx]->DrawGlow();
+				Obj[ Obj_Sort[idx] ]->DrawGlow();
 			}
 		}
 		gelSetColor( GEL_RGB_DEFAULT );	
