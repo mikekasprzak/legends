@@ -117,8 +117,8 @@ void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Sc
 		);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File ) {
-	Vector3D RoomScale(128,128,64);
+void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
+	Vector3D RoomScale( _Scalar, _Scalar, _Scalar * Real::Half );
 
 	Room.push_back( new cRoom( _Pos ) );
 	Room.back()->Grid = load_Grid2D<cRoom::GType>( _File );
@@ -138,21 +138,16 @@ void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File ) {
-	cPMEFile* RMesh = new cPMEFile();
-	RMesh->Import( _File );
+void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
+//	cPMEFile* RMesh = new cPMEFile();
+//	RMesh->Import( _File );
 
+	RoomMesh.push_back( new cRoomMesh( _Pos, _File, _Scalar ) );
 
-	RoomMesh.push_back( 
-		new cRoomMesh( 
-			_Pos, 
-			RMesh, 
-			Real(16) 
-			) 
-		);
+	cPMEFile* RMesh = AssetPool::GetMesh( RoomMesh.back()->MeshHandle );
 
-	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
-	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
+	unsigned short* Faces = (unsigned short*)&(RMesh->Mesh[0].FaceGroup[0].Face[0].a);
+	unsigned int FaceCount = RMesh->Mesh[0].FaceGroup[0].Face.size();
 	
 	std::vector< int > FaceHack;
 	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
@@ -162,8 +157,8 @@ void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File ) {
 	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
 		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
 		
-		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
-		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
+		(float*)&(RMesh->Mesh[0].Vertex[0].Pos), 
+		RMesh->Mesh[0].Vertex.size(), 
 		sizeof(cPMEVertex),
 		
 		&(FaceHack[0]), 
@@ -269,7 +264,7 @@ void cGame::Init() {
 	AddObject3D( Vector3D( 0, -48, 64+16 ), "/Sword.dae", Real(10) );
 	Obj3.back()->IsGlowing = true;
 
-	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "Content/Models/Native/RockTest.dae" );
+	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest" );
 
 	Log( "- End of Init" );
 }
@@ -287,7 +282,6 @@ void cGame::Exit() {
 
 	for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
 		Physics.Remove( RoomMesh[idx]->PhysicsObject );
-		delete RoomMesh[idx]->Mesh;
 		delete RoomMesh[idx];
 	}
 
