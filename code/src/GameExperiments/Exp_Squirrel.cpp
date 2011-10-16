@@ -8,10 +8,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <squirrel.h>
 
-#include <sqstdblob.h>
-#include <sqstdsystem.h>
 #include <sqstdio.h>
+#include <sqstdblob.h>
 #include <sqstdmath.h>	
+#include <sqstdsystem.h>
 #include <sqstdstring.h>
 #include <sqstdaux.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -88,11 +88,14 @@ void CallExp_Squirrel() {
 		
 		// Setup //
 		sq_setprintfunc(v,printfunc,errorfunc);
+		
+		// Push the root table, to be sure the libraries get added to it //
+		sq_pushroottable(v);
 	
-		sqstd_register_bloblib(v);
 		sqstd_register_iolib(v);
-		sqstd_register_systemlib(v);
+		sqstd_register_bloblib(v);
 		sqstd_register_mathlib(v);
+		sqstd_register_systemlib(v);
 		sqstd_register_stringlib(v);
 
 		//aux library
@@ -111,19 +114,38 @@ void CallExp_Squirrel() {
 		
 		DataBlock* MrNuts = new_read_DataBlock( FileName );
 		
+		Log( "+ Compiling \"%s\"...\n", FileName );
+//		sq_pushroottable(v);
 		SQRESULT Error = sq_compilebuffer( v, MrNuts->Data, MrNuts->Size, FileName, true );
+		
 		if ( Error ) {
-			Log( "Squirrel Compile Error! %i\n", Error );
+			Log( "* Squirrel Compile Error! %i\n", Error );
 		}
 		else {
-//			sq_pushroottable(v);
+			Log( "- Success! Executing...\n" );
 
-			// Found this exact configuration (push -2, call 1 arg, remove -1) inside dofile //
-			sq_push( v,-2 );
+			// If the compile was a success, the stack contains a function //			
+			int StackTop = sq_gettop( v );
+			Log( "* Stack Top: %i\n", StackTop );
+
+			unsigned int Params = 0;
+			unsigned int FreeVars = 0;
+			sq_getclosureinfo( v, -1, (SQUnsignedInteger*)&Params, (SQUnsignedInteger*)&FreeVars );
+			Log( "* Function Info: Params: %i  FreeVars: %i\n", Params, FreeVars );
+			
+			sq_pushroottable( v );
 			sq_call( v, 1, false, true );
-			sq_remove( v, -1 );
+			
+			sq_settop( v, StackTop );
 
-//			sq_pop(v,1);
+////			sq_pushroottable(v);
+//
+//			// Found this exact configuration (push -2, call 1 arg, remove -1) inside dofile //
+//			sq_push( v,-2 );
+//			sq_call( v, 1, false, true );
+//			sq_remove( v, -1 );
+//
+////			sq_pop(v,1);
 		}
 		
 		delete_DataBlock( MrNuts );
