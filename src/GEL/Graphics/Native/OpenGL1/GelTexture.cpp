@@ -26,7 +26,7 @@ void GelTexture::Init( const bool _Processed, const bool _UnProcessed ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::LogAllocations() {
-	Log( "GelTextures GL Allocations: %i  Sum: %i", AllocCount, AllocSum );	
+	VVLog( "> GelTextures GL Allocations: %i  Sum: %i", AllocCount, AllocSum );	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Exit( ) {
@@ -234,7 +234,7 @@ void GelTexture::FreeHandle() {
 		AllocCount--;
 		AllocSum -= Handle;
 
-		Log( "* GL Texture %i Free'd", Handle );
+		_VVLog( "* GL Tex (%i) ", Handle );
 		glDeleteTextures( 1, (const GLuint*)&Handle );
 		
 		Handle = 0;
