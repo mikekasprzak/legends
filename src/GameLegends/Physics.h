@@ -47,10 +47,10 @@ public:
 		btVector3 c3( trans.getBasis().getColumn(2) );
 		
 		return Matrix3x3( 
-				Vector3D( *((Vector3D*)&c1) ),
-				Vector3D( *((Vector3D*)&c2) ),
-				Vector3D( *((Vector3D*)&c3) )
-				);
+			Vector3D( *((Vector3D*)&c1) ),
+			Vector3D( *((Vector3D*)&c2) ),
+			Vector3D( *((Vector3D*)&c3) )
+			);
 	}
 	
 	inline void Exit() {
@@ -86,6 +86,33 @@ public:
 
 		btRigidBody::btRigidBodyConstructionInfo ballRigidBodyCI( ballMass, obj->motionState, obj->shape, ballInertia );
 		obj->rigidBody = new btRigidBody( ballRigidBodyCI );
+		
+		dynamicsWorld->addRigidBody( obj->rigidBody );
+		
+		obj->UpdateTransform();
+		
+		return obj;
+	}	
+	
+	cPhysicsObject* AddSphere( Vector3D& Pos, Real Radius ) {
+		cPhysicsObject* obj = new cPhysicsObject;
+		
+		// Create a sphere (radius) //
+		obj->shape = new btSphereShape( Radius );
+		
+		// Ball Orientation //
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
+
+		btScalar ballMass = 10;
+		btVector3 ballInertia(0,0,0);
+		obj->shape->calculateLocalInertia( ballMass, ballInertia );
+
+		btRigidBody::btRigidBodyConstructionInfo ballRigidBodyCI( ballMass, obj->motionState, obj->shape, ballInertia );
+		obj->rigidBody = new btRigidBody( ballRigidBodyCI );
+		
+		// Amount to constrain by each axis //
+		obj->rigidBody->setAngularFactor( btVector3(0,0,0) );	// Rotation //
+		//obj->rigidBody->setLinearFactor( btVector3(0,0,1) );	// Translation //
 		
 		dynamicsWorld->addRigidBody( obj->rigidBody );
 		
