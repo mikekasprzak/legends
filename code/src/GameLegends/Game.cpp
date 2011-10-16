@@ -111,17 +111,65 @@ void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Sc
 //	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );	
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File ) {
+	Vector3D RoomScale(128,128,64);
+
+	Room.push_back( new cRoom( _Pos ) );
+	Room.back()->Grid = load_Grid2D<cRoom::GType>( _File );
+	new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
+	new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
+	Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+	Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
+	for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
+		Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
+//		int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
+		int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+		if ( Color > 255 )
+			Color = 255;
+		if ( Color < 0 )
+			Color = 0;
+		Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File ) {
+	cPMEFile* RMesh = new cPMEFile();
+	RMesh->Import( _File );
+
+
+	RoomMesh.push_back( 
+		new cRoomMesh( 
+			_Pos, 
+			RMesh, 
+			Real(16) 
+			) 
+		);
+
+	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
+	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
+	
+	std::vector< int > FaceHack;
+	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
+		FaceHack.push_back( Faces[idx] );
+	}
+
+	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
+		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
+		
+		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
+		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
+		sizeof(cPMEVertex),
+		
+		&(FaceHack[0]), 
+		FaceCount
+		);
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	Log( "+ Start of Init..." );
 	
-	// Run the Experiments ... //
-//	extern void ExpInit();
-//	ExpInit();
-//	extern void CallExp();
-//	CallExp();
-
 	// Initialize the Virtual Machine... //
 	vm_Init();
 	
@@ -177,6 +225,12 @@ void cGame::Init() {
 	CameraWorldPos = Vector3D(0,0,0);
 	CameraFollow = 0;
 	
+	
+	AddOldRoom( Vector3D(0,0+512,0), "Content/Tests/Room01.tga" );
+	AddOldRoom( Vector3D(128,256+512,0), "Content/Tests/Room02.tga" );
+	AddOldRoom( Vector3D(128,512+512,0), "Content/Tests/Room03.tga" );
+	AddOldRoom( Vector3D(256+128,512+512,0), "Content/Tests/Room04.tga" );
+/*	
 	// ??? //
 	Vector3D RoomScale(128,128,64);
 
@@ -252,9 +306,7 @@ void cGame::Init() {
 			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
 		}
 	}
-
-
-	//txPlayer = AssetPool::Load( "/Disc_Blank" );
+*/
 
 	txCursorMove = AssetPool::Load( "/Cursor_Move" );
 	txCursorStop = AssetPool::Load( "/Cursor_Stop" );
@@ -326,35 +378,37 @@ void cGame::Init() {
 	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 	Obj3.back()->IsGlowing = true;
 
-	cPMEFile* RMesh = new cPMEFile();
-	RMesh->Import( "Content/Models/Native/RockTest.dae" );
+	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "Content/Models/Native/RockTest.dae" );
 
-
-	RoomMesh.push_back( 
-		new cRoomMesh( 
-			Vector3D( 0, 0, 0 ), 
-			RMesh, 
-			Real(16) ) 
-			);
-
-	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
-	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
-	
-	std::vector< int > FaceHack;
-	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
-		FaceHack.push_back( Faces[idx] );
-	}
-
-	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
-		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
-		
-		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
-		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
-		sizeof(cPMEVertex),
-		
-		&(FaceHack[0]), 
-		FaceCount
-		);	
+//	cPMEFile* RMesh = new cPMEFile();
+//	RMesh->Import( "Content/Models/Native/RockTest.dae" );
+//
+//
+//	RoomMesh.push_back( 
+//		new cRoomMesh( 
+//			Vector3D( 0, 0, 0 ), 
+//			RMesh, 
+//			Real(16) ) 
+//			);
+//
+//	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
+//	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
+//	
+//	std::vector< int > FaceHack;
+//	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
+//		FaceHack.push_back( Faces[idx] );
+//	}
+//
+//	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
+//		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
+//		
+//		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
+//		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
+//		sizeof(cPMEVertex),
+//		
+//		&(FaceHack[0]), 
+//		FaceCount
+//		);	
 	
 	Log( "- End of Init" );
 }

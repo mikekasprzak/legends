@@ -84,6 +84,9 @@ public:
 	void AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar );
 	void AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar );
 
+	void AddOldRoom( const Vector3D& _Pos, const char* _File );
+	void AddOldRoomMesh( const Vector3D& _Pos, const char* _File );
+
 public:
 	cGame() :
 		FirstRun( true ),
