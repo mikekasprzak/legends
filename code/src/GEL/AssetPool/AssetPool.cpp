@@ -259,12 +259,12 @@ namespace AssetPool {
 					switch ( Type ) {
 						case GEL_ASSETCLASS_TEXTURE: {
 							Texture->Free();
-							VLog( "* Texture Asset Freed \"%s\"", FileName.c_str() );
+							VLog( "* Texture Asset: %s", FileName.c_str() );
 							break;
 						}
 						case GEL_ASSETCLASS_MESH: {
 							delete Mesh;
-							VLog( "* Mesh Asset Freed \"%s\"", FileName.c_str() );
+							VLog( "* Mesh Asset: %s", FileName.c_str() );
 							break;
 						}
 						case GEL_ASSETCLASS_AUDIO: {
@@ -274,7 +274,7 @@ namespace AssetPool {
 						case GEL_ASSETCLASS_SHADER:
 						case GEL_ASSETCLASS_TEXT: {
 							delete_DataBlock( Data );
-							VLog( "* Text Asset Freed \"%s\"", FileName.c_str() );
+							VLog( "* Text Asset: %s", FileName.c_str() );
 							break;
 						}
 					};
