@@ -130,17 +130,17 @@ inline void gels_SetVideoMode() {
 				
 		
 		if ( find_String( "GL_EXT_texture_compression_s3tc", OpenGLExtensions ) ) {
-			Log( "+ Found S3TC\n" );
+			Log( "* Found S3TC\n" );
 			System::InfoFlags.HasTextureCompression = true;
 		}
 		else if ( find_String( "GL_S3_s3tc", OpenGLExtensions ) ) {
-			Log( "+ Found S3TC\n" );
+			Log( "* Found S3TC\n" );
 			System::InfoFlags.HasTextureCompression = true;
 		}
 
 #ifdef USES_PVRTC
 		if ( find_String( "GL_IMG_texture_compression_pvrtc", OpenGLExtensions ) ) {
-			Log( "+ Found PVRTC\n" );
+			Log( "* Found PVRTC\n" );
 			System::InfoFlags.HasTextureCompression = true;
 		}
 #endif // USES_PVRTC //
@@ -164,14 +164,14 @@ inline void gels_SetVideoMode() {
 		// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
 		// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //
 		if ( find_String( "Intel", OpenGLVendor ) ) {
-			Log( "+ Found Intel GPU\n" );
+			Log( "* Found Intel GPU\n" );
 			if ( System::MaxTextureSize > 1024 ) {
 				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
 				System::MaxTextureSize = 1024;
 			}
 		}
 		else if ( find_String( "Intel", OpenGLRenderer ) ) {
-			Log( "+ Found Intel GPU\n" );
+			Log( "* Found Intel GPU\n" );
 			if ( System::MaxTextureSize > 1024 ) {
 				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
 				System::MaxTextureSize = 1024;

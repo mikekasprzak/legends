@@ -37,7 +37,7 @@ void CallExp_AssImp() {
 				Log( "* Scene has %i Meshes\n", Scene->mNumMeshes );
 				
 				for ( int Meshes = 0; Meshes < Scene->mNumMeshes; Meshes++ ) {
-					Log( "** Mesh Name: %s\n", Scene->mMeshes[Meshes]->mName.data );
+					Log( "> Mesh Name: %s\n", Scene->mMeshes[Meshes]->mName.data );
 				}
 			}
 			if ( Scene->HasTextures() ) {

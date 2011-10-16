@@ -161,7 +161,7 @@ inline const char* gels_SDLVideoModeName( Uint32 Format ) {
 
 inline void gels_LogGraphicsDetails() {
 	// About to begin Graphics Init Procedure //
-	Log( "+ Graphics Initalizing -=======-" );
+	Log( "** Graphics Initalizing -=======-" );
 	
 	// Get information about our video hardware //
 	SDL_DisplayMode DisplayMode;
@@ -377,7 +377,7 @@ inline void gels_SetVideoMode() {
 		// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
 		// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //
 		if ( find_String( "Intel", OpenGLVendor ) ) {
-			Log( "+ Found Intel GPU" );
+			Log( "* Found Intel GPU" );
 			System::InfoFlags.GPUVendor = System::GEL_GPU_INTEL;
 			if ( System::MaxTextureSize == 2048 ) {
 				Log( "* Limiting textures to 1024x1024 (was %i)", System::MaxTextureSize );
@@ -385,7 +385,7 @@ inline void gels_SetVideoMode() {
 			}
 		}
 		else if ( find_String( "Intel", OpenGLRenderer ) ) {
-			Log( "+ Found Intel GPU" );
+			Log( "* Found Intel GPU" );
 			System::InfoFlags.GPUVendor = System::GEL_GPU_INTEL;
 			if ( System::MaxTextureSize == 2048 ) {
 				Log( "* Limiting textures to 1024x1024 (was %i)", System::MaxTextureSize );

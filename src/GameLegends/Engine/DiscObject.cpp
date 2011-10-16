@@ -41,7 +41,7 @@ void cDiscObject::LoadFile( const char* InFile ) {
 		Log( "DiscObject: Error parsing data!\n" );
 	}
 	else {
-		Log( "DiscObject Name: %s", cJSON_GetObjectItem( root, "Name" )->valuestring );
+		Log( "> DiscObject Name: %s", cJSON_GetObjectItem( root, "Name" )->valuestring );
 		
 		cJSON* obj;
 		
