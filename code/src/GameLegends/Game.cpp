@@ -103,7 +103,7 @@ void cGame::ContentScan() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
 	Obj.push_back( new cObject( _Pos, _File, _Scalar ) );
-	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
+	Obj.back()->PhysicsObject = Physics.AddSphere( Obj.back()->Pos, Obj.back()->Scalar );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
