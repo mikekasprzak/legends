@@ -79,6 +79,8 @@ public:
 	void TextSave();
 	
 	void Import( const char* _FileName );
+	void Import( const DataBlock* FileData, const char* NameHint = ".dae" );
+	void Import( const class aiScene* Scene );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GLGraphics_PMEFile_H__ //

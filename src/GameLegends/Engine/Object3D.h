@@ -5,6 +5,7 @@
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
+#include <AssetPool/AssetPool.h>
 
 #ifdef USES_SIXENSE
 #include <sixense.h>
@@ -17,21 +18,33 @@ public:
 	Real Scalar;
 	Matrix3x3 Orientation;
 	
-	cPMEFile* Mesh;
+	//cPMEFile* Mesh;
+	GelAssetHandle MeshHandle;
+	
 	GelColor Color;
 
 	cPhysicsObject* PhysicsObject;
 	
 	bool IsGlowing;
 	
-	cObject3D( Vector3D _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
+//	cObject3D( Vector3D _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
+//		Pos( _Pos),
+//		Mesh( _Mesh ),
+//		Color( _Color ),
+//		Scalar( _Scalar ),
+//		PhysicsObject( 0 )
+//	{	
+//		IsGlowing = false;
+//	}
+	
+	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
 		Pos( _Pos),
-		Mesh( _Mesh ),
+		MeshHandle( AssetPool::Load( _File ) ),
 		Color( _Color ),
 		Scalar( _Scalar ),
-		PhysicsObject( 0 )
-	{	
-		IsGlowing = false;
+		PhysicsObject( 0 ),
+		IsGlowing( false )
+	{
 	}
 	
 	void Step() {
@@ -57,6 +70,8 @@ public:
 
 		gelMultMatrix( Orientation.ToMatrix4x4() );
 
+		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
+
 		gelSetColor( Color );
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
@@ -76,6 +91,8 @@ public:
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 		gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) );
 		gelMultMatrix( Orientation.ToMatrix4x4() );
+
+		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
 		gelSetColor( Color );
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {

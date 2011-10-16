@@ -206,17 +206,44 @@ void cPMEFile::TextSave() {
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_ASSIMP
 // - ------------------------------------------------------------------------------------------ - //
-void cPMEFile::Import( const char* FileName ) {
-	const aiScene* Scene = aiImportFile( 
-		FileName,
-		aiProcess_CalcTangentSpace | 
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType |
-		aiProcess_PreTransformVertices
-		);
-	
+#define MY_ASSIMP_LOAD_FLAGS \
+	aiProcess_CalcTangentSpace | \
+	aiProcess_Triangulate | \
+	aiProcess_JoinIdenticalVertices | \
+	aiProcess_SortByPType | \
+	aiProcess_PreTransformVertices
+// - ------------------------------------------------------------------------------------------ - //
+// Hint is a file extension hint for AssImp, ideally the original filename //
+void cPMEFile::Import( const DataBlock* FileData, const char* NameHint ) {
+	const aiScene* Scene = aiImportFileFromMemory( FileData->Data, FileData->Size, MY_ASSIMP_LOAD_FLAGS, NameHint );
+
 	if ( Scene ) {
+		Import( Scene );
+		
+		aiReleaseImport( Scene );
+	}	
+	else {
+		ELog( "Scene load failed!" );
+		Log( "%s", aiGetErrorString() );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cPMEFile::Import( const char* FileName ) {
+	const aiScene* Scene = aiImportFile( FileName, MY_ASSIMP_LOAD_FLAGS );
+
+	if ( Scene ) {
+		Import( Scene );	
+		
+		aiReleaseImport( Scene );
+	}	
+	else {
+		ELog( "Scene load failed!" );
+		Log( "%s", aiGetErrorString() );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cPMEFile::Import( const aiScene* Scene ) {	
+	{
 		// Success! //
 		if ( Scene->HasAnimations() ) {
 			Log( "* Scene has %i Animations", Scene->mNumAnimations );
@@ -290,13 +317,7 @@ void cPMEFile::Import( const char* FileName ) {
 		if ( Scene->HasTextures() ) {
 			Log( "* Scene has %i Textures", Scene->mNumTextures );
 		}
-		
-		aiReleaseImport( Scene );
-	}	
-	else {
-		ELog( "Scene load failed!" );
-		Log( "%s", aiGetErrorString() );
-	}
+	}		
 }
 // - ------------------------------------------------------------------------------------------ - //
 #else // USES_ASSIMP //

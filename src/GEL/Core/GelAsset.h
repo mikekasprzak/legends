@@ -33,20 +33,21 @@ enum GelAsset_T {
 	
 	GEL_ASSET_TEXTURE_MAX,
 	// - -------------------------------------------------------------------------------------- - //
-	// 3D Model Formats //
-	GEL_ASSET_MODEL_BASE = 0x600,
+	// 3D Mesh Formats //
+	GEL_ASSET_MESH_BASE = 0x600,
 	
-	GEL_ASSET_MODEL_NATIVE = GEL_ASSET_MODEL_BASE,	
+	GEL_ASSET_MESH_NATIVE = GEL_ASSET_MESH_BASE,	
 	GEL_ASSET_PME,							// My (original) native format //
 	GEL_ASSET_BLENDER,
 	GEL_ASSET_WINGS,
+	GEL_ASSET_COLLADA,
 	GEL_ASSET_3DS,
 	GEL_ASSET_OBJ,							// Truespace Object //
 	GEL_ASSET_MTL,							// Truespace Material //
-	GEL_ASSET_ASSIMP_MODEL,					// Model loadable by the Asset Import Library (ASSIMP) //
-	GEL_ASSET_ASSIMP_MODEL_NATIVE,			// The native Assimp_Model format (what it gives me) //
+	GEL_ASSET_ASSIMP_MESH,					// Mesh loadable by the Asset Import Library (ASSIMP) //
+	GEL_ASSET_ASSIMP_MESH_NATIVE,			// The native Assimp_Model format (what it gives me) //
 	
-	GEL_ASSET_MODEL_MAX,
+	GEL_ASSET_MESH_MAX,
 	// - -------------------------------------------------------------------------------------- - //
 	// Audio Formats //
 	GEL_ASSET_AUDIO_BASE = 0x800,
@@ -113,7 +114,7 @@ enum GelAsset_T {
 // - ------------------------------------------------------------------------------------------ - //
 extern GelAsset_T is_Compression_Data_GelAsset( const char* InData );
 extern GelAsset_T is_Texture_Data_GelAsset( const char* InData );
-extern GelAsset_T is_Model_Data_GelAsset( const char* InData );
+extern GelAsset_T is_Mesh_Data_GelAsset( const char* InData );
 extern GelAsset_T is_Audio_Data_GelAsset( const char* InData );
 extern GelAsset_T is_Text_Data_GelAsset( const char* InData );
 // Subsections of Text //
@@ -122,7 +123,7 @@ extern GelAsset_T is_Shader_Data_GelAsset( const char* InData );
 
 extern GelAsset_T is_Compression_Name_GelAsset( const char* FileName );
 extern GelAsset_T is_Texture_Name_GelAsset( const char* FileName );
-extern GelAsset_T is_Model_Name_GelAsset( const char* FileName );
+extern GelAsset_T is_Mesh_Name_GelAsset( const char* FileName );
 extern GelAsset_T is_Audio_Name_GelAsset( const char* FileName );
 extern GelAsset_T is_Text_Name_GelAsset( const char* FileName );
 // Subsections of Text //
@@ -163,8 +164,8 @@ struct GelAssetType {
 	inline void TestAudioData( const char* InData ) {
 		BitMask = is_Audio_Data_GelAsset( InData );
 	}
-	inline void TestModelData( const char* InData ) {
-		BitMask = is_Model_Data_GelAsset( InData );
+	inline void TestMeshData( const char* InData ) {
+		BitMask = is_Mesh_Data_GelAsset( InData );
 	}
 	inline void TestTextData( const char* InData ) {
 		BitMask = is_Text_Data_GelAsset( InData );
@@ -189,8 +190,8 @@ struct GelAssetType {
 	inline void TestAudioName( const char* FileName ) {
 		BitMask = is_Audio_Name_GelAsset( FileName );
 	}
-	inline void TestModelName( const char* FileName ) {
-		BitMask = is_Model_Name_GelAsset( FileName );
+	inline void TestMeshName( const char* FileName ) {
+		BitMask = is_Mesh_Name_GelAsset( FileName );
 	}
 	inline void TestTextName( const char* FileName ) {
 		BitMask = is_Text_Name_GelAsset( FileName );
@@ -212,8 +213,8 @@ struct GelAssetType {
 	inline bool IsTexture() {
 		return (Type >= GEL_ASSET_TEXTURE_BASE) && (Type <= GEL_ASSET_TEXTURE_MAX);
 	}
-	inline bool IsModel() {
-		return (Type >= GEL_ASSET_MODEL_BASE) && (Type <= GEL_ASSET_MODEL_MAX);
+	inline bool IsMesh() {
+		return (Type >= GEL_ASSET_MESH_BASE) && (Type <= GEL_ASSET_MESH_MAX);
 	}
 	inline bool IsAudio() {
 		return (Type >= GEL_ASSET_AUDIO_BASE) && (Type <= GEL_ASSET_AUDIO_MAX);

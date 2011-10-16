@@ -23,8 +23,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-cPMEFile* Mesh[8];
-// - ------------------------------------------------------------------------------------------ - //
 
 GelAssetHandle txPlayer;
 GelAssetHandle txCursorMove;
@@ -107,8 +105,16 @@ void cGame::AddObject( const Vector3D& _Pos, const char* _File, const Real _Scal
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
-//	Obj3.push_back( new cObject3D( _Pos, _File, _Scalar ) );
-//	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );	
+	Obj3.push_back( new cObject3D( _Pos, _File, _Scalar ) );
+	
+	cPMEFile* Mesh = AssetPool::GetMesh( Obj3.back()->MeshHandle );
+	Obj3.back()->PhysicsObject = Physics.AddConvexHull( 
+		Obj3.back()->Pos, 
+		Obj3.back()->Scalar, 
+		(float*)&(Mesh->Mesh[0].Vertex[0].Pos), 
+		Mesh->Mesh[0].Vertex.size(), 
+		sizeof(cPMEVertex) 
+		);	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File ) {
@@ -222,194 +228,49 @@ void cGame::Init() {
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
 
-	CameraWorldPos = Vector3D(0,0,0);
-	CameraFollow = 0;
-	
-	
-	AddOldRoom( Vector3D(0,0+512,0), "Content/Tests/Room01.tga" );
-	AddOldRoom( Vector3D(128,256+512,0), "Content/Tests/Room02.tga" );
-	AddOldRoom( Vector3D(128,512+512,0), "Content/Tests/Room03.tga" );
-	AddOldRoom( Vector3D(256+128,512+512,0), "Content/Tests/Room04.tga" );
-/*	
-	// ??? //
-	Vector3D RoomScale(128,128,64);
-
-	{
-		Room.push_back( new cRoom( Vector3D(0,0+512,0) ) );
-		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room01.tga" );
-		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
-		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
-		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
-		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
-			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
-//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
-			if ( Color > 255 )
-				Color = 255;
-			if ( Color < 0 )
-				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
-		}
-	}
-	{
-		Room.push_back( new cRoom( Vector3D(128,256+512,0) ) );
-		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room02.tga" );
-		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
-		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
-		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
-		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
-			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
-//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
-			if ( Color > 255 )
-				Color = 255;
-			if ( Color < 0 )
-				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
-		}
-	}
-	{
-		Room.push_back( new cRoom( Vector3D(128,512+512,0) ) );
-		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room03.tga" );
-		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
-		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
-		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
-		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
-			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
-//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
-			if ( Color > 255 )
-				Color = 255;
-			if ( Color < 0 )
-				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
-		}
-	}
-	{
-		Room.push_back( new cRoom( Vector3D(256+128,512+512,0) ) );
-		Room.back()->Grid = load_Grid2D<cRoom::GType>( "Content/Tests/Room04.tga" );
-		new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
-		new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-		Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
-		Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
-		for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
-			Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
-//			int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-			int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
-			if ( Color > 255 )
-				Color = 255;
-			if ( Color < 0 )
-				Color = 0;
-			Room.back()->Color->Data[idx] = GEL_RGBA(Color,Color,Color,255);
-		}
-	}
-*/
-
+	// Some Art Assets //
 	txCursorMove = AssetPool::Load( "/Cursor_Move" );
 	txCursorStop = AssetPool::Load( "/Cursor_Stop" );
 	txCursorAttack = AssetPool::Load( "/Cursor_Attack" );
 
-//	txSword = AssetPool::Load( "/Fontin_0" );
+	// Reset Camera //
+	CameraWorldPos = Vector3D(0,0,0);
+	CameraFollow = 0;	
 
-	Mesh[0] = new cPMEFile();
-	Mesh[1] = new cPMEFile();
-	Mesh[2] = new cPMEFile();
-	Mesh[3] = new cPMEFile();
-	Mesh[4] = new cPMEFile();
-	Mesh[5] = new cPMEFile();
-	Mesh[6] = new cPMEFile();
-	Mesh[7] = new cPMEFile();
+	// Add Rooms //	
+	AddOldRoom( Vector3D(0,0+512,0), "Content/Tests/Room01.tga" );
+	AddOldRoom( Vector3D(128,256+512,0), "Content/Tests/Room02.tga" );
+	AddOldRoom( Vector3D(128,512+512,0), "Content/Tests/Room03.tga" );
+	AddOldRoom( Vector3D(256+128,512+512,0), "Content/Tests/Room04.tga" );
 	
-	Mesh[0]->Import( "Content/Models/Native/Skull.dae" );
-	Mesh[1]->Import( "Content/Models/Native/Sword.dae" );
-	Mesh[2]->Import( "Content/Models/Native/Key_Boxy.dae" );
-	Mesh[3]->Import( "Content/Models/Native/Shield.dae" );
-	Mesh[4]->Import( "Content/Models/Native/Book_Open.dae" );
-	Mesh[5]->Import( "Content/Models/Native/Bottle.dae" );
-	Mesh[6]->Import( "Content/Models/Native/CandleStick.dae" );
-	Mesh[7]->Import( "Content/Models/Native/Table_SquareCenter.dae" );
-	
-
-
+	// Add some Objects //
 	AddObject( Vector3D(0,0,32+16), "Content/Objects/Discs/Player_disc.json", Real(12) );
 	Obj.back()->IsGlowing = true;
-
 	AddObject( Vector3D(0,32,32+16), "Content/Objects/Discs/Bat_disc.json", Real(12) );
 
-	
+	// Follow the 1st object //
 	CameraFollow = Obj[0];
-//	CameraFollow->IsGlowing = true;
 
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32, 32+16 ), Mesh[0], Real(12), GEL_RGB_RED ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	AddObject3D( Vector3D( 32, 32, 32+16 ), "/Skull", Real(12) );
+	Obj3.back()->Color = GEL_RGB_RED;
 	Obj3.back()->IsGlowing = true;
-	
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32, 32+16 ), Mesh[0], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
 
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32, 32+16 ), Mesh[5], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	AddObject3D( Vector3D( 32+32, 32, 32+16 ), "/Skull", Real(8) );
+	AddObject3D( Vector3D( 32+64, 32, 32+16 ), "/Bottle", Real(8) );
 
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+32, 32+16 ), Mesh[4], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 32+32, 32+16 ), Mesh[3], Real(6) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 32+32, 32+16 ), Mesh[3], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32+16 ), Mesh[6], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+32, 64+32, 32+16 ), Mesh[2], Real(4) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 32+64, 64+32, 32+16 ), Mesh[2], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-
-	Obj3.push_back( new cObject3D( Vector3D( 32, 32+64, 32 ), Mesh[7], Real(8) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-
-
-	Obj3.push_back( new cObject3D( Vector3D( -108, 32, 64+32 ), Mesh[1], Real(20) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
-	Obj3.push_back( new cObject3D( Vector3D( 0, -48, 64+16 ), Mesh[1], Real(10) ) );
-	Obj3.back()->PhysicsObject = Physics.AddConvexHull( Obj3.back()->Pos, Obj3.back()->Scalar, (float*)&(Obj3.back()->Mesh->Mesh[0].Vertex[0].Pos), Obj3.back()->Mesh->Mesh[0].Vertex.size(), sizeof(cPMEVertex) );
+	AddObject3D( Vector3D( 32, 32+32, 32+16 ), "/Book_Open", Real(8) );
+	AddObject3D( Vector3D( 32+32, 32+32, 32+16 ), "/Shield", Real(6) );
+	AddObject3D( Vector3D( 32+64, 32+32, 32+16 ), "/Shield", Real(8) );
+	AddObject3D( Vector3D( 32, 32+64, 32+16 ), "/CandleStick", Real(8) );
+	AddObject3D( Vector3D( 32+32, 64+32, 32+16 ), "/Key_Boxy", Real(4) );
+	AddObject3D( Vector3D( 32+64, 64+32, 32+16 ), "/Key_Boxy", Real(8) );
+	AddObject3D( Vector3D( 32, 32+64, 32 ), "/Table_SquareCenter", Real(8) );
+	AddObject3D( Vector3D( -108, 32, 64+32 ), "/Sword.dae", Real(20) );
+	AddObject3D( Vector3D( 0, -48, 64+16 ), "/Sword.dae", Real(10) );
 	Obj3.back()->IsGlowing = true;
 
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "Content/Models/Native/RockTest.dae" );
 
-//	cPMEFile* RMesh = new cPMEFile();
-//	RMesh->Import( "Content/Models/Native/RockTest.dae" );
-//
-//
-//	RoomMesh.push_back( 
-//		new cRoomMesh( 
-//			Vector3D( 0, 0, 0 ), 
-//			RMesh, 
-//			Real(16) ) 
-//			);
-//
-//	unsigned short* Faces = (unsigned short*)&(RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face[0].a);
-//	unsigned int FaceCount = RoomMesh.back()->Mesh->Mesh[0].FaceGroup[0].Face.size();
-//	
-//	std::vector< int > FaceHack;
-//	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
-//		FaceHack.push_back( Faces[idx] );
-//	}
-//
-//	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
-//		RoomMesh.back()->Pos, RoomMesh.back()->Scalar, 
-//		
-//		(float*)&(RoomMesh.back()->Mesh->Mesh[0].Vertex[0].Pos), 
-//		RoomMesh.back()->Mesh->Mesh[0].Vertex.size(), 
-//		sizeof(cPMEVertex),
-//		
-//		&(FaceHack[0]), 
-//		FaceCount
-//		);	
-	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -422,10 +283,6 @@ void cGame::Exit() {
 	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
 		Physics.Remove( Obj3[idx]->PhysicsObject );
 		delete Obj3[idx];
-	}
-
-	for ( int idx = 0; idx < 8; idx++ ) {
-		delete Mesh[idx];
 	}
 
 	for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
@@ -449,10 +306,6 @@ void cGame::Exit() {
 	
 	// Shut Down Physics //
 	Physics.Exit();
-
-	// Kill Experiments //
-//	extern void ExpExit();
-//	ExpExit();
 
 	// Kill VM //
 	vm_Exit();

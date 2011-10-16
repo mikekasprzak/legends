@@ -17,6 +17,7 @@
 #include <Graphics/Graphics_System.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GelTexture.h>
+#include <Graphics/Mesh/PMEFile.h>
 // - ------------------------------------------------------------------------------------------ - //
 // Use some STL, since I want to save time //
 #include <map>
@@ -52,7 +53,7 @@ namespace AssetPool {
 		enum AssetClass {
 			GEL_ASSETCLASS_NULL = 0,
 			GEL_ASSETCLASS_TEXTURE = 1,
-			GEL_ASSETCLASS_MODEL,
+			GEL_ASSETCLASS_MESH,
 			GEL_ASSETCLASS_AUDIO,
 			GEL_ASSETCLASS_SCRIPT,
 			GEL_ASSETCLASS_SHADER,
@@ -69,6 +70,7 @@ namespace AssetPool {
 
 		union {
 			GelTexture* Texture;
+			cPMEFile* Mesh;
 			DataBlock* Data;
 		};
 
@@ -149,6 +151,8 @@ namespace AssetPool {
 				// Now, determine what the data REALLY is //
 				GelAssetType AssetDataType;
 				AssetDataType.TestData( Processed->Data );
+				if ( !AssetDataType.IsAsset() )
+					AssetDataType.TestName( File.c_str() );
 				
 				if ( AssetDataType.IsTexture() ) {
 					VLog("* Asset is a Texture (0x%x)", Processed );
@@ -156,9 +160,13 @@ namespace AssetPool {
 					Texture = new GelTexture();
 					Texture->Load( Processed );
 				}
-				else if ( AssetDataType.IsModel() ) {
-					VLog("* Asset is a Model (0x%x)", Processed );
-					Type = GEL_ASSETCLASS_MODEL;
+				else if ( AssetDataType.IsMesh() ) {
+					VLog("* Asset is a Mesh (0x%x)", Processed );
+					Type = GEL_ASSETCLASS_MESH;
+					Mesh = new cPMEFile();
+					Mesh->Import( Processed, File.c_str() );
+					
+					delete_DataBlock( Processed );
 				}
 				else if ( AssetDataType.IsAudio() ) {
 					VLog("* Asset is a Audio (0x%x)", Processed );
@@ -204,7 +212,7 @@ namespace AssetPool {
 						case GEL_ASSETCLASS_TEXTURE: {
 							break;
 						}
-						case GEL_ASSETCLASS_MODEL: {
+						case GEL_ASSETCLASS_MESH: {
 							break;
 						}
 						case GEL_ASSETCLASS_AUDIO: {
@@ -219,6 +227,16 @@ namespace AssetPool {
 					};
 				}
 			}
+			return 0;
+		}
+		
+		inline ::cPMEFile* GetMesh() {
+			if ( HasData() ) {
+				if ( Type == GEL_ASSETCLASS_MESH ) {
+					return Mesh;
+				}
+			}
+			
 			return 0;
 		}
 		
@@ -241,10 +259,12 @@ namespace AssetPool {
 					switch ( Type ) {
 						case GEL_ASSETCLASS_TEXTURE: {
 							Texture->Free();
-							VLog( "* Texture Asset Freed" );
+							VLog( "* Texture Asset Freed \"%s\"", FileName.c_str() );
 							break;
 						}
-						case GEL_ASSETCLASS_MODEL: {
+						case GEL_ASSETCLASS_MESH: {
+							delete Mesh;
+							VLog( "* Mesh Asset Freed \"%s\"", FileName.c_str() );
 							break;
 						}
 						case GEL_ASSETCLASS_AUDIO: {
@@ -254,7 +274,7 @@ namespace AssetPool {
 						case GEL_ASSETCLASS_SHADER:
 						case GEL_ASSETCLASS_TEXT: {
 							delete_DataBlock( Data );
-							VLog( "* Text Asset Freed" );
+							VLog( "* Text Asset Freed \"%s\"", FileName.c_str() );
 							break;
 						}
 					};
@@ -379,6 +399,10 @@ namespace AssetPool {
 	// - -------------------------------------------------------------------------------------- - //
 	DataBlock* Get( const GelAssetHandle Asset ) {
 		return AssetInstance[ Asset ].Get();	
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	cPMEFile* GetMesh( const GelAssetHandle Asset ) {
+		return AssetInstance[ Asset ].GetMesh();	
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	void LoadAsset( const GelAssetHandle Asset ) {
