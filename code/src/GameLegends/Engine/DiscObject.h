@@ -12,10 +12,10 @@ public:
 	GelColor		Color;
 
 	GelAssetHandle	OverlayTexture;
-	GelAssetHandle	OverlayColor;
+	GelColor		OverlayColor;
 	
 	GelAssetHandle	GlowTexture;
-	GelAssetHandle	GlowColor;
+	GelColor		GlowColor;
 
 	
 public:
