@@ -282,9 +282,6 @@ void cGame::Init() {
 	
 
 
-	//Obj.push_back( new cObject( Vector3D(0,0,32+16), txPlayer, Real(12), GEL_RGB(255,242,0) ) );
-//	Obj.push_back( new cObject( Vector3D(0,0,32+16), "Content/Misc/Discs/Player_disc.json", Real(12) ) );
-//	Obj.back()->PhysicsObject = Physics.AddBall( Obj.back()->Pos, Obj.back()->Scalar );
 	AddObject( Vector3D(0,0,32+16), "Content/Objects/Discs/Player_disc.json", Real(12) );
 	Obj.back()->IsGlowing = true;
 
