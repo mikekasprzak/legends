@@ -5,6 +5,7 @@
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
 #include <Graphics/Mesh/PMEFile.h>
+#include <AssetPool/AssetPool.h>
 
 #include "../Physics.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -16,7 +17,8 @@ public:
 	Real Scalar;
 	Matrix3x3 Orientation;
 	
-	cPMEFile* Mesh;
+//	cPMEFile* Mesh;
+	GelAssetHandle MeshHandle;
 
 	cPhysicsObject* PhysicsObject;
 
@@ -26,9 +28,10 @@ public:
 	{
 	}
 
-	cRoomMesh( const Vector3D& _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32) ) :
+	cRoomMesh( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32) ) :
 		Pos( _Pos),
-		Mesh( _Mesh ),
+//		Mesh( _Mesh ),
+		MeshHandle( AssetPool::Load( _File ) ),
 		Scalar( _Scalar ),
 		PhysicsObject( 0 )
 	{
@@ -43,6 +46,8 @@ public:
 		gelMultMatrix( Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) );
 
 //		gelMultMatrix( Orientation.ToMatrix4x4() );
+
+		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
 		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
