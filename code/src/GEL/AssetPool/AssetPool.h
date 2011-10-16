@@ -5,6 +5,8 @@
 #include "GelAssetHandle.h"
 #include <Core/DataBlock.h>
 // - ------------------------------------------------------------------------------------------ - //
+class cPMEFile;
+// - ------------------------------------------------------------------------------------------ - //
 namespace AssetPool {
 	void Init( const char* BaseDirectory );
 	void Exit();
@@ -18,6 +20,7 @@ namespace AssetPool {
 
 	void Set( const GelAssetHandle Asset );
 	DataBlock* Get( const GelAssetHandle Asset );
+	cPMEFile* GetMesh( const GelAssetHandle Asset );
 
 	void Free( const GelAssetHandle Asset );
 

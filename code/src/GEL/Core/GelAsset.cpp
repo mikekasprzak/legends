@@ -39,7 +39,7 @@ GelAsset_T is_Texture_Data_GelAsset( const char* InData ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Model_Data_GelAsset( const char* InData ) {
+GelAsset_T is_Mesh_Data_GelAsset( const char* InData ) {
 	return GEL_ASSET_NULL;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -83,7 +83,7 @@ GelAsset_T is_Data_GelAsset( const char* InData ) {
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
-	Type = is_Model_Data_GelAsset( InData );
+	Type = is_Mesh_Data_GelAsset( InData );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
@@ -136,7 +136,7 @@ GelAsset_T is_Texture_Name_GelAsset( const char* FileName ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Model_Name_GelAsset( const char* FileName ) {
+GelAsset_T is_Mesh_Name_GelAsset( const char* FileName ) {
 	if ( find_String( ".pme", FileName ) ) {
 		return GEL_ASSET_PME;
 	}
@@ -145,6 +145,9 @@ GelAsset_T is_Model_Name_GelAsset( const char* FileName ) {
 	}
 	else if ( find_String( ".wings", FileName ) ) {
 		return GEL_ASSET_WINGS;
+	}
+	else if ( find_String( ".dae", FileName ) ) {
+		return GEL_ASSET_COLLADA;
 	}
 	else if ( find_String( ".3ds", FileName ) ) {
 		return GEL_ASSET_3DS;
@@ -271,7 +274,7 @@ GelAsset_T is_Name_GelAsset( const char* FileName ) {
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 
-	Type = is_Model_Name_GelAsset( FileName );
+	Type = is_Mesh_Name_GelAsset( FileName );
 	if ( Type != GEL_ASSET_NULL )
 		return Type;
 

@@ -43,6 +43,7 @@ cGameHost::cGameHost() {
 	#endif // RELEASE_MODE //
 
 	// Add Compiled scripts and Misc things VERY last, to still be MOD friendly //
+	AssetPool::AddDirectory( "/Objects" );
 	AssetPool::AddDirectory( "/Scripts/Compiled" );
 	AssetPool::AddDirectory( "/Misc" );				// Extra Things (Fonts) //
 
