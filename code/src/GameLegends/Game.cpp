@@ -205,7 +205,7 @@ void cGame::LoadMap() {
 					
 					cJSON* _Scalar = cJSON_GetObjectItem( Element, "Scalar" );
 					if ( _Scalar ) {
-						Obj.back()->Scalar = cJSON_GetObjectItem( Element, "Disc" )->valuedouble;
+						Obj.back()->Scalar = cJSON_GetObjectItem( Element, "Scalar" )->valuedouble;
 					}
 					
 					cJSON* _Glowing = cJSON_GetObjectItem( Element, "Glowing" );
@@ -219,6 +219,37 @@ void cGame::LoadMap() {
 							CameraFollow = Obj.back();
 						}
 					}
+				}
+				else if ( obj->valuestring == std::string("Item") ) {
+					Vector3D Pos(0,0,0);
+
+					cJSON* _Pos = cJSON_GetObjectItem( Element, "Pos" );
+					if ( _Pos ) {
+						Pos = Vector3D(
+							cJSON_GetArrayItem( _Pos, 0 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 1 )->valuedouble,
+							cJSON_GetArrayItem( _Pos, 2 )->valuedouble
+							);
+					}
+			
+					AddObject3D( Pos, cJSON_GetObjectItem( Element, "Mesh" )->valuestring );
+					
+					cJSON* _Scalar = cJSON_GetObjectItem( Element, "Scalar" );
+					if ( _Scalar ) {
+						Obj.back()->Scalar = cJSON_GetObjectItem( Element, "Scalar" )->valuedouble;
+					}
+					
+					cJSON* _Glowing = cJSON_GetObjectItem( Element, "Glowing" );
+					if ( _Glowing ) {
+						Obj.back()->IsGlowing = cJSON_GetObjectItem( Element, "Glowing" )->type;
+					}
+
+//					cJSON* _Focus = cJSON_GetObjectItem( Element, "Focus" );
+//					if ( _Focus ) {
+//						if ( cJSON_GetObjectItem( Element, "Focus" )->type ) {
+//							CameraFollow = Obj.back();
+//						}
+//					}
 				}
 			}
 			
