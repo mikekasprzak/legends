@@ -4,8 +4,6 @@
 //   My theroy, implement a member function you use for access, and check the "this" variable if it's
 //   zero.  If it's zero, then assume a failed lookup occured and do nothing.
 // - ------------------------------------------------------------------------------------------ - //
-// - Make the F12 key dump the Game Instance (or the GameHost), causing a re-search for asset files
-// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
@@ -141,9 +139,6 @@ void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Sca
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar ) {
-//	cPMEFile* RMesh = new cPMEFile();
-//	RMesh->Import( _File );
-
 	RoomMesh.push_back( new cRoomMesh( _Pos, _File, _Scalar ) );
 
 	cPMEFile* RMesh = AssetPool::GetMesh( RoomMesh.back()->MeshHandle );

@@ -98,6 +98,8 @@ int mouse_wheel = 0;
 //int CursorTimeout;
 //bool HasDetectedMotion;
 
+bool RefreshGame = false;
+
 int EventValue = 0;
 // - ------------------------------------------------------------------------------------------ - //
 extern int phone_orientation;
@@ -356,6 +358,10 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 		    	case SDLK_F10: {
 		    		System::CloseButtonPressed = true;
 		    		break;
+				}
+				case SDLK_F12: {
+					RefreshGame = true;
+					break;
 				}
 #endif // NDEBUG //
 
@@ -939,7 +945,9 @@ int main( int argc, char* argv[] ) {
 		Log( "- Sixense Initialized." );
 #endif // USES_SIXENSE //
 		
-		{
+		do {
+			RefreshGame = false;
+			
 			Log( "" );
 #ifdef PRODUCT_LEGACY_SMILES
 			// Populate Product Info, based on Compiled Arguments //
@@ -990,7 +998,7 @@ int main( int argc, char* argv[] ) {
 			MessageLoop();
 #endif // USES_SDL_EVENTTHREAD //
 
-			while( !gelHasShutdown() ) {
+			while( !gelHasShutdown() && !RefreshGame ) {
 				TIMEVALUE TimeDiff = SubtractTime( GetTimeNow(), WorkTime );
 				int FramesOfWork = GetFrames( &TimeDiff );
 	
@@ -1115,6 +1123,7 @@ int main( int argc, char* argv[] ) {
 			delete GameHost;
 			Log( "" );
 		}
+		while ( RefreshGame == true );
 
 #ifdef USES_SIXENSE
 		Log( "+ Shutting down Sixense..." );
