@@ -1,15 +1,16 @@
 [
 	{
 		"Type": "Object",
-		"Pos": [32,0,48],
+		"Pos": [4,64,32],
 		"Disc": "Content/Objects/Discs/Player_disc.json",
-		"Glowing": true
+		"Glowing": true,
+		"Focus": true
 	},
 	{
 		"Type": "Item",
-		"Pos": [128,32,48],
+		"Pos": [16,4,6],
 		"Mesh": "/Skull",
-		"Scalar": 12,
+		"Scalar": 2,
 		"Color": [255,0,0],
 		"Glowing": true
 	}
