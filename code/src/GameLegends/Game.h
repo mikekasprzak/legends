@@ -87,14 +87,14 @@ public:
 	std::vector< cRoomMesh* > RoomMesh;
 
 
-	void AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(12) );
-	void AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(8) );
+	void AddObject( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(1) );
+	void AddObject3D( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(1) );
 
 	void SortObject();
 	void SortObject3D();
 
-	void AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(128) );
-	void AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(16) );
+	void AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(8) );
+	void AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(2) );
 
 	void LoadMap();
 public:

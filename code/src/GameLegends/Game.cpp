@@ -267,6 +267,7 @@ void cGame::LoadMap() {
 					if ( _Focus ) {
 						if ( cJSON_GetObjectItem( Element, "Focus" )->type ) {
 							CameraFollow = Obj.back();
+							CameraWorldPos = CameraFollow->Pos;
 						}
 					}
 				}
@@ -405,41 +406,42 @@ void cGame::Init() {
 
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
-	CameraEyePos = Vector3D(0,-50,-160); // TODO: Should be positive //
+	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(12) ); // TODO: Should be positive //
 	CameraFollow = 0;	
 
 	LoadMap();
 
 	// Add Rooms //	
-	AddOldRoom( Vector3D(0,0+512,0), "Content/Tests/Room01.tga" );
-	AddOldRoom( Vector3D(128,256+512,0), "Content/Tests/Room02.tga" );
-	AddOldRoom( Vector3D(128,512+512,0), "Content/Tests/Room03.tga" );
-	AddOldRoom( Vector3D(256+128,512+512,0), "Content/Tests/Room04.tga" );
+	AddOldRoom( Vector3D(0,0+64,0), "Content/Tests/Room01.tga" );
+	AddOldRoom( Vector3D(16,32+64,0), "Content/Tests/Room02.tga" );
+	AddOldRoom( Vector3D(16,64+64,0), "Content/Tests/Room03.tga" );
+	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,0,32+16), "Content/Objects/Discs/Player_disc.json", Real(12) );
+	AddObject( Vector3D(0,0,4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
-	AddObject( Vector3D(0,32,32+16), "Content/Objects/Discs/Bat_disc.json", Real(12) );
+	AddObject( Vector3D(0,4,4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
 	// Follow the 1st object //
 	CameraFollow = Obj[0];
+	CameraWorldPos = CameraFollow->Pos;
 
-	AddObject3D( Vector3D( 32, 32, 32+16 ), "/Skull", Real(12) );
+	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull", Real(1.2) );
 	Obj3.back()->Color = GEL_RGB_RED;
 	Obj3.back()->IsGlowing = true;
 
-	AddObject3D( Vector3D( 32+32, 32, 32+16 ), "/Skull", Real(8) );
-	AddObject3D( Vector3D( 32+64, 32, 32+16 ), "/Bottle", Real(8) );
+	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull", Real(0.8) );
+	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle", Real(0.8) );
 
-	AddObject3D( Vector3D( 32, 32+32, 32+16 ), "/Book_Open", Real(8) );
-	AddObject3D( Vector3D( 32+32, 32+32, 32+16 ), "/Shield", Real(6) );
-	AddObject3D( Vector3D( 32+64, 32+32, 32+16 ), "/Shield", Real(8) );
-	AddObject3D( Vector3D( 32, 32+64, 32+16 ), "/CandleStick", Real(8) );
-	AddObject3D( Vector3D( 32+32, 64+32, 32+16 ), "/Key_Boxy", Real(4) );
-	AddObject3D( Vector3D( 32+64, 64+32, 32+16 ), "/Key_Boxy", Real(8) );
-	AddObject3D( Vector3D( 32, 32+64, 32 ), "/Table_SquareCenter", Real(8) );
-	AddObject3D( Vector3D( -108, 32, 64+32 ), "/Sword.dae", Real(20) );
-	AddObject3D( Vector3D( 0, -48, 64+16 ), "/Sword.dae", Real(10) );
+	AddObject3D( Vector3D( 4, 4+4, 4+2 ), "/Book_Open", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 4+4, 4+2 ), "/Shield", Real(0.6) );
+	AddObject3D( Vector3D( 4+8, 4+4, 4+2 ), "/Shield", Real(0.8) );
+	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy", Real(0.4) );
+	AddObject3D( Vector3D( 4+64, 8+4, 4+2 ), "/Key_Boxy", Real(0.8) );
+	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter", Real(0.8) );
+	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.dae", Real(2) );
+	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.dae", Real(1) );
 	Obj3.back()->IsGlowing = true;
 
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest" );
@@ -554,9 +556,21 @@ void cGame::Step() {
 		CameraWorldPos += (CameraFollow->Pos - CameraWorldPos) * Real(0.1f);//Stick.ToVector3D() * Real( 2.5f );
 		
 		//CameraFollow->Pos -= Input_MoveStick.ToVector3D();
-		CameraFollow->PhysicsObject->rigidBody->applyForce( 
-			btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 ), 
-			btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
+		if ( (Stick.x != Real::Zero) || (Stick.y != Real::Zero) ) {
+			CameraFollow->PhysicsObject->rigidBody->activate(true);
+
+			CameraFollow->PhysicsObject->rigidBody->applyCentralForce( 
+				btVector3( 16.0 * -Input_MoveStick.x, 16.0 * -Input_MoveStick.y, 0 )
+				);
+
+//			CameraFollow->PhysicsObject->rigidBody->applyCentralImpulse( 
+//				btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 )
+//				);
+
+//			CameraFollow->PhysicsObject->rigidBody->applyForce( 
+//				btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 ), 
+//				btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
+		}
 	}
 	
 	SortObject();
@@ -617,11 +631,11 @@ void cGame::Draw() {
 	// Main Render //
 	{
 		// Camera //
-		Real Near = 100;
-		Real Length = 800;
+		Real Near = _TV(10);
+		Real Length = _TV(800);
 		
 		Real Far = Near + Length;
-		Real PlanePos = 0.50;
+		Real PlanePos = _TV(0.50f);
 
 		gelSetDepthRange( 0, 1 );
 		gelSetDepthFunc( GEL_LESSEQUAL );
@@ -630,8 +644,8 @@ void cGame::Draw() {
 
 		CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
 		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
-			ActualScreen::Width / RefScreen::Scalar,
-			ActualScreen::Height / RefScreen::Scalar,
+			ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+			ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
 			Real( Near ),
 			Real( Far ),
 			Real( PlanePos )
@@ -731,16 +745,16 @@ void cGame::Draw() {
 	// Glow Render //
 	{
 		// Camera //
-		Real Near = 100;
-		Real Length = 800;
+		Real Near = _TV(100);
+		Real Length = _TV(800);
 		
 		Real Far = Near + Length;
-		Real PlanePos = 0.50;
+		Real PlanePos = _TV(0.50f);
 		
 		Real CameraPos = Near + ((Far - Near) * PlanePos);
 		
-		int ScWidth = ActualScreen::Width;
-		int ScHeight = ActualScreen::Height;
+		int ScWidth = ActualScreen::Width * Real(0.1);
+		int ScHeight = ActualScreen::Height * Real(0.1);
 
 		Real EffectWidth = ScWidth / RefScreen::Scalar;
 		Real EffectHeight = ScHeight / RefScreen::Scalar;
