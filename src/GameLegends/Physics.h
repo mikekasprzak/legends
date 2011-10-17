@@ -80,7 +80,7 @@ public:
 		// Ball Orientation //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
 
-		btScalar ballMass = 10;
+		btScalar ballMass = 2;
 		btVector3 ballInertia(0,0,0);
 		obj->shape->calculateLocalInertia( ballMass, ballInertia );
 
@@ -103,7 +103,7 @@ public:
 		// Ball Orientation //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
 
-		btScalar ballMass = 10;
+		btScalar ballMass = 2;
 		btVector3 ballInertia(0,0,0);
 		obj->shape->calculateLocalInertia( ballMass, ballInertia );
 
