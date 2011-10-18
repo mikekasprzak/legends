@@ -151,7 +151,7 @@ void SpaceNavigator_Update() {
 		}
 		while ( Count > 0 );
 	}
-	Log( "%i %i %i -- %i %i %i", SN_DOF[0], SN_DOF[1], SN_DOF[2], SN_DOF[3], SN_DOF[4], SN_DOF[5] );
+	//Log( "%i %i %i -- %i %i %i", SN_DOF[0], SN_DOF[1], SN_DOF[2], SN_DOF[3], SN_DOF[4], SN_DOF[5] );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES_HIDAPI //
