@@ -109,13 +109,14 @@ void SpaceNavigator_Init() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void SpaceNavigator_Update() {
-	SpaceNavigator_Packet Packet;
-	
-	// NOTE: Max seems to be between 340 and 350 per axis limit (+,-) //
-	Real DOF_Scalar(350);
-	
 	if ( SpaceNavigator_HID_Handle ) {
+		SpaceNavigator_Packet Packet;
+		
+		// NOTE: Max seems to be between 340 and 350 per axis limit (+,-) //
+		Real DOF_Scalar(350);
+
 		int Count = 0;
+
 		do {
 			Count = hid_read( SpaceNavigator_HID_Handle, (unsigned char*)&Packet, sizeof(SpaceNavigator_Packet) );
 			if ( Count > 0 ) {
@@ -1024,19 +1025,21 @@ void cGame::Draw() {
 //			Vector3D( Scalar, -Scalar - Offset, 0 )
 //			);
 
-#ifdef USES_HIDAPI		
-		gelDrawModeFlat();
-		for ( int idx = 0; idx < 6; idx++ ) {
-			gelSetColor( GEL_RGB_YELLOW );
-			gelDrawCircle( Vector3D( -150 + (idx * 32), -140, 0), Real(16) );
-
-			if ( SpaceNavigator[idx] > Real::Zero ) {
-				gelSetColor( GEL_RGB_WHITE );
+#ifdef USES_HIDAPI
+		if ( SpaceNavigator_HID_Handle ) {
+			gelDrawModeFlat();
+			for ( int idx = 0; idx < 6; idx++ ) {
+				gelSetColor( GEL_RGB_YELLOW );
+				gelDrawCircle( Vector3D( -150 + (idx * 32), -140, 0), Real(16) );
+	
+				if ( SpaceNavigator[idx] > Real::Zero ) {
+					gelSetColor( GEL_RGB_WHITE );
+				}
+				else {
+					gelSetColor( GEL_RGB_RED );				
+				}
+				gelDrawCircleFill( Vector3D( -150 + (idx * 32), -140, 0), Real(SpaceNavigator[idx] * Real(16)) );
 			}
-			else {
-				gelSetColor( GEL_RGB_RED );				
-			}
-			gelDrawCircleFill( Vector3D( -150 + (idx * 32), -140, 0), Real(SpaceNavigator[idx] * Real(16)) );
 		}
 #endif // USES_HIDAPI //
 
