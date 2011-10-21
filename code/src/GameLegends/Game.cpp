@@ -538,10 +538,10 @@ void cGame::Init() {
 
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
-	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(12) ); // TODO: Should be positive //
+	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(0) ); // TODO: Should be positive //
 	CameraFollow = 0;	
 
-	LoadMap();
+	//LoadMap();
 
 	// Add Rooms //	
 	AddOldRoom( Vector3D(0,0+64,0), "Content/Tests/Room01.tga" );
@@ -755,7 +755,8 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 void cGame::Draw() {
 	gelEnableDepthWriting();
 	
-	gelSetClearColor( GEL_RGB_BLACK );
+//	gelSetClearColor( GEL_RGB_BLACK );
+	gelSetClearColor( GEL_RGB_WHITE );
 	gelClear();
 	gelClearDepth();
 
@@ -768,7 +769,7 @@ void cGame::Draw() {
 	{
 		// Camera //
 		Real Near = _TV(10);
-		Real Length = _TV(800);
+		Real Length = _TV(100);
 		
 		Real Far = Near + Length;
 		Real PlanePos = _TV(0.50f);
@@ -834,7 +835,7 @@ void cGame::Draw() {
 			gelDrawModeTextured();
 			AssetPool::Set( txCursorAttack );
 
-			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(24), Real(6), GEL_RGB(255,242,0) );
+			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(2.4), Real(0.6), GEL_RGB(255,242,0) );
 		}		
 	}
 
@@ -881,8 +882,8 @@ void cGame::Draw() {
 	// Glow Render //
 	{
 		// Camera //
-		Real Near = _TV(100);
-		Real Length = _TV(800);
+		Real Near = _TV(10);
+		Real Length = _TV(100);
 		
 		Real Far = Near + Length;
 		Real PlanePos = _TV(0.50f);
