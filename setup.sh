@@ -33,6 +33,7 @@ if [ ! -n "$1" ]; then
 		echo -n "Project Name [$PROJECT]: "
 		read answer
 		if [ "$answer" != "" ]; then
+			# Answer Given #
 			if [ -e "SKU/$answer" ]; then
 				PROJECT="$answer"
 				break
@@ -41,7 +42,13 @@ if [ ! -n "$1" ]; then
 				#exit -1
 			fi		
 		else
-			break
+			# No Answer Given (Just pushed enter) #
+			if [ -e "SKU/$PROJECT" ]; then
+				break
+			else
+				echo "Error! $PROJECT not found!"
+				#exit -1
+			fi
 		fi
 	done
 else
@@ -51,7 +58,6 @@ else
 		echo "Error! $1 not found!"
 		exit -1
 	fi
-
 fi  
 
 echo "Project Name:    $PROJECT"
@@ -76,6 +82,7 @@ if [ ! -n "$2" ]; then
 		echo -n "Target SKU [$SKU]: "
 		read answer
 		if [ "$answer" != "" ]; then
+			# Answer Given #
 			if [ -e "$answer" ]; then
 				SKU="$answer"
 				break
@@ -87,7 +94,16 @@ if [ ! -n "$2" ]; then
 				#exit -1
 			fi
 		else
-			break
+			# No Answer Given (Just pushed enter) #
+			if [ -e "$SKU" ]; then
+				break
+			elif [ -e "SKU/$PROJECT/$SKU" ]; then
+				SKU="SKU/$PROJECT/$SKU"
+				break
+			else
+				echo "Error! $SKU and SKU/$PROJECT/$SKU not found!"
+				#exit -1
+			fi
 		fi
 	done
 else
@@ -96,7 +112,7 @@ else
 	elif [ -e "SKU/$PROJECT/$2" ]; then
 		SKU="SKU/$PROJECT/$2"
 	else
-		echo "Error! $2 and SKU/$PROJECT/$answer not found!"
+		echo "Error! $2 and SKU/$PROJECT/$2 not found!"
 		exit -1
 	fi
 fi
@@ -127,6 +143,7 @@ if [ ! -n "$3" ]; then
 		echo -n "Target Makefile [$TARGET]: "
 		read answer
 		if [ "$answer" != "" ]; then
+			# Answer Given #
 			if [ -e "$answer" ]; then
 				TARGET="$answer"
 				break
@@ -135,7 +152,13 @@ if [ ! -n "$3" ]; then
 				#exit -1
 			fi
 		else
-			break
+			# No Answer Given (Just pushed enter) #
+			if [ -e "$TARGET" ]; then
+				break
+			else
+				echo "Error! $TARGET not found!"
+				#exit -1
+			fi
 		fi
 	done
 else
