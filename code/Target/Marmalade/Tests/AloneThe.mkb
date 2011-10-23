@@ -1,0 +1,83 @@
+options 
+{ 
+	s3e-data-dir="../../../Content"
+}
+
+deployments
+{
+	["Default"]
+	name="Alone, The"
+	provider="Michael Kasprzak"
+	version=0.1.0
+	networking=0
+}
+
+options {	
+	arm-fpu=1
+}
+
+define PRODUCT_ALONETHE
+
+define STB_VORBIS_HAS_INT_TYPES
+
+includepaths
+{
+	../../../src/GEL
+	../../../src/GEL/Audio/Custom
+	../../../src/Game 
+	../../../src/Foundation
+	../../../src/External
+}
+
+files 
+{ 
+	(../../../src/Main/Marmalade)
+	"*.cpp"
+
+	(../../../src/GameLegends)
+	"*.cpp"
+	"Engine/*.cpp"
+	"Embed/*.cpp"
+	
+	(../../../src/GEL)
+#	"*.cpp"
+	"AssetPool/*.cpp"
+	"Audio/*.cpp"
+#	"Core/*.cpp"
+	"Debug/*.cpp"
+	"External/*.cpp"
+	"External/LZMA/*.c"
+	"External/STB/*.c"
+#	"Geometry/*.cpp"
+	"Geometry/Axis/*.cpp"
+#	"Geometry/Curve/*.cpp"
+#	"Geometry/Plane/*.cpp"
+#	"Geometry/Projection/*.cpp"
+#	"Geometry/Rect/*.cpp"
+#	"Geometry/Sphere/*.cpp"
+#	"Geometry/Vs/*.cpp"
+	"Graphics/*.cpp"
+	"Graphics/Texture/*.cpp"
+	"Graphics/Mesh/*.cpp"
+	"Graphics/Native/OpenGL1/*.cpp"
+	"Input/*.cpp"
+	"Math/*.cpp"
+	"Math/Matrix/*.cpp"
+	"Math/Vector/*.cpp"
+	"System/*.cpp"
+#	"Timer/Airplay/*.cpp"
+	"Timer/Unix/*.cpp"
+	"Audio/Custom/Audio/*.cpp"
+	
+#	(../../../src/External/STB/Vorbis)
+#	"*.c"
+	
+	(../../../src/Main/Generic)
+	"*.cpp"
+} 
+  
+subprojects 
+{ 
+	iwutil
+	iwgl
+}
