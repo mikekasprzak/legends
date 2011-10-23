@@ -1,6 +1,6 @@
 #include "TweakValue.h"
 
-#if TV_USE_TWEAKVAL && TV_HAS_COUNTER
+#if defined(TV_USE_TWEAKVAL) && defined(TV_HAS_COUNTER)
  
 #include <stdio.h>
 #include <stdlib.h>

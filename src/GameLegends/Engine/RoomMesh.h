@@ -49,7 +49,7 @@ public:
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
-		for ( int idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
 				
 			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
