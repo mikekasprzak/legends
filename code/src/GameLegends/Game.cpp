@@ -25,7 +25,9 @@
 #include <hidapi.h>
 #endif // USES_HIDAPI //
 // - ------------------------------------------------------------------------------------------ - //
-
+#ifdef USES_WINDOWS
+#define USES_FBO
+#endif // USES_WINDOWS //
 // - ------------------------------------------------------------------------------------------ - //
 
 GelAssetHandle txCursorMove;
