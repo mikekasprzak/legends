@@ -635,6 +635,12 @@ void cGame::Init() {
 
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest" );
 */
+
+	cPMEFile MeshTest;
+	MeshTest.Import( "Content/Models/Export/Skull.dae" );
+	MeshTest.FileName = "Skoot.pme";
+	MeshTest.TextSave();
+
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //

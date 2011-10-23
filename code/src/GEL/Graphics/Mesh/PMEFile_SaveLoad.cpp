@@ -1,5 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Util/WhitespaceTokenizer/WhitespaceTokenizer.h>
+#include <fstream>
 
 using namespace std;
 // - ------------------------------------------------------------------------------------------ - //
@@ -200,6 +201,56 @@ void cPMEFile::TextLoad() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cPMEFile::TextSave() {
+	std::ofstream out( FileName.c_str() );
+	
+	for ( size_t idx = 0; idx < Mesh.size(); idx++ ) {
+		out << "Mesh \"" << Mesh[idx].Name << "\"" << std::endl;
+		
+		out << "\tMaterials " << Mesh[idx].Material.size() << std::endl;
+		for ( size_t idx2 = 0; idx2 < Mesh[idx].Material.size(); idx2++ ) {
+			out << "\t\tMaterial " << idx2 << " \"" << Mesh[idx].Name << "\"" << std::endl;
+			out << "\t\tImage \"" << Mesh[idx].Material[idx2].ImageFileName << "\"" << std::endl;
+		}
+		
+		out << "\tVertices " << Mesh[idx].Vertex.size() << std::endl;
+		for ( size_t idx2 = 0; idx2 < Mesh[idx].Vertex.size(); idx2++ ) {
+			out << "\t\tVertexNormUV ";
+			out << Mesh[idx].Vertex[idx2].Pos.x << " ";
+			out << Mesh[idx].Vertex[idx2].Pos.y << " ";
+			out << Mesh[idx].Vertex[idx2].Pos.z << " ";
+			out << " ";
+			out << Mesh[idx].Vertex[idx2].Normal.x << " ";
+			out << Mesh[idx].Vertex[idx2].Normal.y << " ";
+			out << Mesh[idx].Vertex[idx2].Normal.z << " ";
+			out << " ";
+			out << (Mesh[idx].Vertex[idx2].UV.u / GEL_UV_ONE_F) << " ";
+			out << (Mesh[idx].Vertex[idx2].UV.v / GEL_UV_ONE_F) << "";
+			out << std::endl;
+		}
+
+		// Calculate Total Faces //
+		int TotalFaces = 0;		
+		for ( size_t idx2 = 0; idx2 < Mesh[idx].FaceGroup.size(); idx2++ ) {
+			TotalFaces += Mesh[idx].FaceGroup[idx2].Face.size();
+		}
+		
+		out << "\tFaces " << TotalFaces << std::endl;
+
+		for ( size_t idx2 = 0; idx2 < Mesh[idx].FaceGroup.size(); idx2++ ) {
+			out << "\t\tFaceGroup " << Mesh[idx].FaceGroup[idx2].Face.size() << std::endl;
+			out << "\t\tUseMaterial " << Mesh[idx].FaceGroup[idx2].Material << std::endl;
+
+			for ( size_t idx3 = 0; idx3 < Mesh[idx].FaceGroup[idx2].Face.size(); idx3++ ) {
+				out << "\t\t\tFace ";
+				out << Mesh[idx].FaceGroup[idx2].Face[idx3].a << " ";
+				out << Mesh[idx].FaceGroup[idx2].Face[idx3].b << " ";
+				out << Mesh[idx].FaceGroup[idx2].Face[idx3].c << "";
+				out << std::endl;
+			}				
+		}
+	}
+	
+	out.close();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
