@@ -6,18 +6,18 @@
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 void SimpleSelfShadow( cPMEFile& Data ) {	
-	for ( int MeshIndex = 0; MeshIndex < Data.Mesh.size(); MeshIndex++ ) {
+	for ( size_t MeshIndex = 0; MeshIndex < Data.Mesh.size(); MeshIndex++ ) {
 		std::vector< cPMEVertex >& v = Data.Mesh[MeshIndex].Vertex;
 		
-		for ( int VertexIndex = 0; VertexIndex < v.size(); VertexIndex++ ) {
+		for ( size_t VertexIndex = 0; VertexIndex < v.size(); VertexIndex++ ) {
 			// Local face storage //
 			std::vector< cPMEFaceGroup::FaceType > Face;
 			
 			Vector3D Pos( v[ VertexIndex ].Pos );
 				
 			// Find all faces containing this vertex //
-			for ( int FaceGroupIndex = 0; FaceGroupIndex < Data.Mesh[MeshIndex].FaceGroup.size(); FaceGroupIndex++ ) {
-				for ( int FaceIndex = 0; FaceIndex < Data.Mesh[MeshIndex].FaceGroup[FaceGroupIndex].Face.size(); FaceIndex++ ) {
+			for ( size_t FaceGroupIndex = 0; FaceGroupIndex < Data.Mesh[MeshIndex].FaceGroup.size(); FaceGroupIndex++ ) {
+				for ( size_t FaceIndex = 0; FaceIndex < Data.Mesh[MeshIndex].FaceGroup[FaceGroupIndex].Face.size(); FaceIndex++ ) {
 					cPMEFaceGroup::FaceType& ThisFace = Data.Mesh[MeshIndex].FaceGroup[FaceGroupIndex].Face[FaceIndex];
 					
 					if ( ThisFace.a == VertexIndex ) {
@@ -35,7 +35,7 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 
 			std::vector< Vector3D > Normal;
 			
-			for ( int idx = 0; idx < Face.size(); idx++ ) {
+			for ( size_t idx = 0; idx < Face.size(); idx++ ) {
 				Normal.push_back( 
 					((v[ Face[idx].b ].Pos) - (v[ Face[idx].a ].Pos)) %
 					((v[ Face[idx].c ].Pos) - (v[ Face[idx].a ].Pos)).Normal()
@@ -43,7 +43,7 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 			}
 			
 //			v[VertexIndex].Normal = Vector3D::Zero;
-//			for ( int idx = 0; idx < Normal.size(); idx++ ) {
+//			for ( size_t idx = 0; idx < Normal.size(); idx++ ) {
 //				v[VertexIndex].Normal.x += Normal[idx].x;
 //				v[VertexIndex].Normal.y += Normal[idx].y;
 //				v[VertexIndex].Normal.z += Normal[idx].z;

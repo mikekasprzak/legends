@@ -128,7 +128,7 @@ void Simple_Init( int Width, int Height ) {
 //	gelSwapBuffer();
 //#ifdef USES_WEBOS
 	// webOS layers OpenGL on top of Video, so make sure we don't write Alpha //
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+//	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 //#endif // USES_WEBOS //
 	gelClearColor( cGameSupport::Current()->FadeColor );
 

@@ -74,7 +74,7 @@ public:
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
 public:
-	boolean ShowDebug;
+	bool ShowDebug;
 	
 	cPhysics Physics;
 	

@@ -176,7 +176,7 @@ void cGame::InitScripts() {
 void cGame::LoadScripts() {
 	Log( "+ Loading Scripts..." );
 
-	for ( int idx = 0; idx < Script.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Script.size(); idx++ ) {
 		vm_CompileAndRun( AssetPool::Get( Script[idx].Handle ), Script[idx].FileName );	
 	}
 	vm_ScriptsLoaded = true;
@@ -188,7 +188,7 @@ void cGame::ReloadScripts() {
 	if ( vm_ScriptsLoaded ) {				
 		Log( "+ Scanning %i Scripts for changes...", Script.size() );
 
-		for ( int idx = 0; idx < Script.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Script.size(); idx++ ) {
 			if ( AssetPool::HasChanged( Script[idx].Handle ) ) {
 				Log( "* Change detected in \"%s\". Reloading...", Script[idx].FileName );
 				AssetPool::Reload( Script[idx].Handle );
@@ -231,7 +231,7 @@ void cGame::SortObject() {
 	// TODO: Only 1 per frame //
 
 	// One Forward Step of Bubble Sort //
-	for ( int idx = 1; idx < Obj_Sort.size(); idx++ ) {
+	for ( int idx = 1; idx < (int)Obj_Sort.size(); idx++ ) {
 		Vector3D V1 = CameraEyePos - Obj[Obj_Sort[idx-1]]->Pos;
 		Vector3D V2 = CameraEyePos - Obj[Obj_Sort[idx-0]]->Pos;
 		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
@@ -241,7 +241,7 @@ void cGame::SortObject() {
 		}
 	}
 	// One Backward Step of Bubble Sort //
-	for ( int idx = Obj_Sort.size()-1; idx > 0; idx-- ) {
+	for ( int idx = (int)Obj_Sort.size()-1; idx > 0; idx-- ) {
 		Vector3D V1 = CameraEyePos - Obj[Obj_Sort[idx-1]]->Pos;
 		Vector3D V2 = CameraEyePos - Obj[Obj_Sort[idx-0]]->Pos;
 		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
@@ -256,7 +256,7 @@ void cGame::SortObject3D() {
 	// TODO: Only 1 per frame //
 	
 	// One Forward Step of Bubble Sort //
-	for ( int idx = 1; idx < Obj3_Sort.size(); idx++ ) {
+	for ( int idx = 1; idx < (int)Obj3_Sort.size(); idx++ ) {
 		Vector3D V1 = CameraEyePos - Obj3[Obj3_Sort[idx-1]]->Pos;
 		Vector3D V2 = CameraEyePos - Obj3[Obj3_Sort[idx-0]]->Pos;
 		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
@@ -266,7 +266,7 @@ void cGame::SortObject3D() {
 		}
 	}
 	// One Backward Step of Bubble Sort //
-	for ( int idx = Obj3_Sort.size()-1; idx > 0; idx-- ) {
+	for ( int idx = (int)Obj3_Sort.size()-1; idx > 0; idx-- ) {
 		Vector3D V1 = CameraEyePos - Obj3[Obj3_Sort[idx-1]]->Pos;
 		Vector3D V2 = CameraEyePos - Obj3[Obj3_Sort[idx-0]]->Pos;
 		if ( V1.MagnitudeSquared() > V2.MagnitudeSquared() ) {
@@ -500,6 +500,8 @@ void cGame::Init() {
 	// *** //
 
 #ifdef USES_FBO	
+	Log( "+ Creating FBO..." );
+
 	// Create the FBO Target Texture //
 	glGenTextures(1, &FBOTextureId);
 	glBindTexture(GL_TEXTURE_2D, FBOTextureId);
@@ -528,12 +530,18 @@ void cGame::Init() {
 
 	// check FBO status
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-	if ( status != GL_FRAMEBUFFER_COMPLETE_EXT )
-		Log( "ERROR: FBO Unavailable!" );
+	if ( status != GL_FRAMEBUFFER_COMPLETE_EXT ) {
+		Log( "- ERROR: FBO Unavailable!" );
+	}
+	else {
+		Log( "- FBO Created." );
+	}
 
 	// switch back to window-system-provided framebuffer
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 #elif defined(USES_FBO_ES)
+	Log( "+ Creating FBO..." );
+
 	// Create the FBO Target Texture //
 	glGenTextures(1, &FBOTextureId);
 	glBindTexture(GL_TEXTURE_2D, FBOTextureId);
@@ -541,7 +549,7 @@ void cGame::Init() {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, FBOSize, FBOSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8_OES, FBOSize, FBOSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Create the FBO Target RBO (for non color data storage - depth, stencil, etc) //
@@ -562,9 +570,13 @@ void cGame::Init() {
 
 	// check FBO status
 	GLenum status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
-	if ( status != GL_FRAMEBUFFER_COMPLETE_OES )
-		Log( "ERROR: FBO Unavailable!" );
-
+	if ( status != GL_FRAMEBUFFER_COMPLETE_OES ) {
+		Log( "- ERROR: FBO Unavailable!" );
+	}
+	else {
+		Log( "- FBO Created." );
+	}
+	
 	// switch back to window-system-provided framebuffer
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 #endif // USES_FBO_ES //
@@ -626,21 +638,21 @@ void cGame::Init() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Exit() {
 	
-	for ( int idx = 0; idx < Obj.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 		Physics.Remove( Obj[idx]->PhysicsObject );
 		delete Obj[idx];
 	}
-	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 		Physics.Remove( Obj3[idx]->PhysicsObject );
 		delete Obj3[idx];
 	}
 
-	for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
 		Physics.Remove( RoomMesh[idx]->PhysicsObject );
 		delete RoomMesh[idx];
 	}
 
-	for ( int idx = 0; idx < Room.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Room.size(); idx++ ) {
 		Physics.Remove( Room[idx]->PhysicsObject );
 		
 		delete_Triangles( Room[idx]->Vert, Room[idx]->Index );
@@ -729,8 +741,8 @@ void cGame::Step() {
 		extern float accel_y;
 		extern float accel_z;
 
-		Stick.x = accel_x;
-		Stick.y = accel_y;
+		Stick.x = accel_y;
+		Stick.y = accel_x;
 #endif // PRODUCT_MOBILE //
 
 #ifdef USES_ICADE
@@ -787,10 +799,10 @@ void cGame::Step() {
 	Physics.Step();
 	
 	// Step Objects //
-	for ( int idx = 0; idx < Obj.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 		Obj[idx]->Step();
 	}
-	for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 		Obj3[idx]->Step();
 	}
 }
@@ -867,13 +879,13 @@ void cGame::Draw() {
 		gelEnableDepthTest();
 
 		gelDrawModeColors();	
-		for ( int idx = 0; idx < Room.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Room.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Room[idx]->Draw();
 		}
 
 		gelDrawModeTextured();	
-		for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+		for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			RoomMesh[idx]->Draw();
 		}
@@ -882,7 +894,7 @@ void cGame::Draw() {
 		//gelDrawModeColors();
 		gelDrawModeTextured();	
 		// Monkey Head //
-		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			// Changing Alpha no longer works because depth test is removing backfaces //
 			Obj3[ Obj3_Sort[idx] ]->Draw();
@@ -892,7 +904,7 @@ void cGame::Draw() {
 		
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 		gelDrawModeTextured();		
-		for ( int idx = 0; idx < Obj.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 			gelLoadMatrix( ModelViewMatrix );
 			Obj[ Obj_Sort[idx] ]->Draw();
 		}
@@ -903,19 +915,19 @@ void cGame::Draw() {
 		if ( ShowDebug ) {
 			gelDrawModeFlat();
 
-			for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+			for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 				gelLoadMatrix( ModelViewMatrix );
 				Obj3[ idx ]->DrawDebug();
 			}
-			for ( int idx = 0; idx < Obj.size(); idx++ ) {
+			for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 				gelLoadMatrix( ModelViewMatrix );
 				Obj[ idx ]->DrawDebug();
 			}
-			for ( int idx = 0; idx < Room.size(); idx++ ) {
+			for ( size_t idx = 0; idx < Room.size(); idx++ ) {
 				gelLoadMatrix( ModelViewMatrix );
 				Room[ idx ]->DrawDebug();
 			}
-			for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+			for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
 				gelLoadMatrix( ModelViewMatrix );
 				RoomMesh[ idx ]->DrawDebug();
 			}
@@ -1009,7 +1021,7 @@ void cGame::Draw() {
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 
 		gelDrawModeFlat();	
-		for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
 				gelLoadMatrix( ModelViewMatrix );
 				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
@@ -1017,7 +1029,7 @@ void cGame::Draw() {
 		}
 
 		gelDrawModeTextured();		
-		for ( int idx = 0; idx < Obj.size(); idx++ ) {
+		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
 				gelLoadMatrix( ModelViewMatrix );
 				Obj[ Obj_Sort[idx] ]->DrawGlow();
@@ -1039,6 +1051,114 @@ void cGame::Draw() {
 	gelResetClip();
 	// Unbind the FBO //
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+#elif defined(USES_FBO_ES)
+	// Draw to the FBO //
+	glBindFramebufferOES( GL_FRAMEBUFFER_OES, FBOId );
+	gelDisableBlending();
+
+	// Update Proxy settings to reflect the FBO //
+	int BufferSize = FBOSize;
+	ProxyScreen::Width = BufferSize;
+	ProxyScreen::Height = BufferSize / ActualScreen::AspectRatio;
+	gelCalculateProxyScreenShape();
+
+	// Fill with dummy color //
+	glViewport( 
+		0,
+		0,
+		ProxyScreen::Width, 
+		ProxyScreen::Width
+		);
+	gelResetNativeClip();		
+	gelSetClearColor( GEL_RGB(64,0,0) );
+	gelClear();
+
+	// Correct Shape //
+	glViewport( 
+		0,
+		0,
+		ProxyScreen::Width, 
+		ProxyScreen::Height
+		);
+		
+	// Load the proxy clipping coords //
+	gelResetProxyClip();
+	
+	gelSetClearColor( GEL_RGBA(255,255,255,0) );
+//	gelSetClearColor( GEL_RGB_BLACK );
+	gelClear();
+
+
+	gelEnableAlphaBlending();
+
+	// Glow Render //
+	{
+		// Camera //
+		Real Near = _TV(10);
+		Real Length = _TV(100);
+		
+		Real Far = Near + Length;
+		Real PlanePos = _TV(0.50f);
+		
+		Real CameraPos = Near + ((Far - Near) * PlanePos);
+		
+		int ScWidth = ActualScreen::Width * Real(0.1);
+		int ScHeight = ActualScreen::Height * Real(0.1);
+
+		Real EffectWidth = ScWidth / RefScreen::Scalar;
+		Real EffectHeight = ScHeight / RefScreen::Scalar;
+
+		CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
+		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
+			EffectWidth,
+			EffectHeight,
+			Real( Near ),
+			Real( Far ),
+			Real( PlanePos )
+			);
+	
+		ModelViewMatrix = ViewMatrix;
+		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
+		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
+
+		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
+		gelDisableDepthWriting();
+		gelDisableDepthTest();
+	
+	
+		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
+
+		gelDrawModeFlat();	
+		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
+			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
+				gelLoadMatrix( ModelViewMatrix );
+				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
+			}
+		}
+
+		gelDrawModeTextured();		
+		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
+			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
+				gelLoadMatrix( ModelViewMatrix );
+				Obj[ Obj_Sort[idx] ]->DrawGlow();
+			}
+		}
+		gelSetColor( GEL_RGB_DEFAULT );	
+	}
+
+	glViewport( 
+		0,
+		0, 
+//		NativeScreen::Width, 
+//		NativeScreen::Height
+		ActualScreen::Width, 
+		ActualScreen::Height
+		);
+		
+	// Restore regular clipping coords //
+	gelResetClip();
+	// Unbind the FBO //
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
 #endif // USES_FBO //
 
 	// Reset Camera for UI //
@@ -1072,6 +1192,7 @@ void cGame::Draw() {
 		// Draw Color Buffer to screen //
 		glBindTexture(GL_TEXTURE_2D, FBOTextureId);	
 		gelDrawModeTextured();
+		//gelDrawModeFlat();
 		
 		int Scalar = FullRefScreen::Width>>1;
 		int UnusedPixels = (ProxyScreen::Width - ProxyScreen::Height)>>1;
@@ -1125,7 +1246,7 @@ void cGame::Draw() {
 #ifdef USES_HIDAPI
 		if ( SpaceNavigator_HID_Handle ) {
 			gelDrawModeFlat();
-			for ( int idx = 0; idx < 6; idx++ ) {
+			for ( size_t idx = 0; idx < 6; idx++ ) {
 				gelSetColor( GEL_RGB_YELLOW );
 				gelDrawCircle( Vector3D( -150 + (idx * 32), -140, 0), Real(16) );
 	
