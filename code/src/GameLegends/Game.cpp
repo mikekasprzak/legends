@@ -32,7 +32,7 @@ GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
 GelAssetHandle txCursorAttack;
 
-#ifdef USES_FBO
+#if defined(USES_FBO) || defined(USES_FBO_ES)
 // TODO: DesktopGL uses _EXT functions, OpenGL ES uses _OES versions //
 GLuint FBOTextureId;
 GLuint FBOId;
@@ -313,7 +313,7 @@ void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Sca
 	for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 		Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
 //		int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-		int Color = 225-(3*Room.back()->Vert->Data[idx].Pos.z);
+		int Color = 225-(20*Room.back()->Vert->Data[idx].Pos.z);
 		if ( Color > 255 )
 			Color = 255;
 		if ( Color < 0 )
@@ -487,6 +487,8 @@ void cGame::Init() {
 	
 	Physics.Init();
 	
+	ShowDebug = false;
+	
 	// *** //
 	
 #ifdef USES_HIDAPI
@@ -531,7 +533,41 @@ void cGame::Init() {
 
 	// switch back to window-system-provided framebuffer
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-#endif // USES_FBO //
+#elif defined(USES_FBO_ES)
+	// Create the FBO Target Texture //
+	glGenTextures(1, &FBOTextureId);
+	glBindTexture(GL_TEXTURE_2D, FBOTextureId);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, FBOSize, FBOSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Create the FBO Target RBO (for non color data storage - depth, stencil, etc) //
+//	glGenRenderbuffersOES(1, &RBODepthId);
+//	glBindRenderbufferOES(GL_RENDERBUFFER_OES, rboId);
+//	glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+//	glBindRenderbufferOES(GL_RENDERBUFFER_OES, 0);
+
+	// Create FBO //
+	glGenFramebuffersOES(1, &FBOId);
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, FBOId);
+
+	// Attach the Texture to the FBO //
+	glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, FBOTextureId, 0);
+
+//	// attach the renderbuffer to depth attachment point
+//	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, RBOId);
+
+	// check FBO status
+	GLenum status = glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES);
+	if ( status != GL_FRAMEBUFFER_COMPLETE_OES )
+		Log( "ERROR: FBO Unavailable!" );
+
+	// switch back to window-system-provided framebuffer
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
+#endif // USES_FBO_ES //
 
 	// *** //
 	
@@ -613,8 +649,12 @@ void cGame::Exit() {
 	}
 
 #ifdef USES_FBO	
-	glDeleteFramebuffers( 1, &FBOId );
-//	glDeleteRenderbuffers( 1, &RBOId );
+	glDeleteFramebuffersEXT( 1, &FBOId );
+//	glDeleteRenderbuffersEXT( 1, &RBOId );
+	glDeleteTextures( 1, &FBOTextureId );
+#elif defined(USES_FBO_ES)
+	glDeleteFramebuffersOES( 1, &FBOId );
+//	glDeleteRenderbuffersOES( 1, &RBOId );
 	glDeleteTextures( 1, &FBOTextureId );
 #endif // USES_FBO //
 	
@@ -669,7 +709,29 @@ void cGame::Step() {
 		if ( keystate[SDL_SCANCODE_SPACE] ) {
 			vm_CallFunc( "DoAwesome" );
 		}
+		
+		static bool KeyDown = false;
+
+		if ( keystate[SDL_SCANCODE_F1] ) {
+			if ( KeyDown == false ) {
+				ShowDebug = !ShowDebug;
+				KeyDown = true;
+			}
+		}
+		else {
+			KeyDown = false;
+		}
+
 #endif // USES_SDL //		
+
+#ifdef PRODUCT_MOBILE
+		extern float accel_x;
+		extern float accel_y;
+		extern float accel_z;
+
+		Stick.x = accel_x;
+		Stick.y = accel_y;
+#endif // PRODUCT_MOBILE //
 
 #ifdef USES_ICADE
 		// iCade (Joystick Emulation via Keyboard) //
@@ -837,6 +899,27 @@ void cGame::Draw() {
 		gelSetColor( GEL_RGB_DEFAULT );
 				
 		gelDisableDepthTest();
+		
+		if ( ShowDebug ) {
+			gelDrawModeFlat();
+
+			for ( int idx = 0; idx < Obj3.size(); idx++ ) {
+				gelLoadMatrix( ModelViewMatrix );
+				Obj3[ idx ]->DrawDebug();
+			}
+			for ( int idx = 0; idx < Obj.size(); idx++ ) {
+				gelLoadMatrix( ModelViewMatrix );
+				Obj[ idx ]->DrawDebug();
+			}
+			for ( int idx = 0; idx < Room.size(); idx++ ) {
+				gelLoadMatrix( ModelViewMatrix );
+				Room[ idx ]->DrawDebug();
+			}
+			for ( int idx = 0; idx < RoomMesh.size(); idx++ ) {
+				gelLoadMatrix( ModelViewMatrix );
+				RoomMesh[ idx ]->DrawDebug();
+			}
+		}
 
 		if ( CameraFollow ) {
 			gelLoadMatrix( ModelViewMatrix );
@@ -985,7 +1068,7 @@ void cGame::Draw() {
 	
 		gelLoadMatrix( CameraViewMatrix );
 
-#ifdef USES_FBO
+#if defined(USES_FBO) || defined(USES_FBO_ES)
 		// Draw Color Buffer to screen //
 		glBindTexture(GL_TEXTURE_2D, FBOTextureId);	
 		gelDrawModeTextured();

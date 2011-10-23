@@ -38,7 +38,8 @@ cGameHost::cGameHost() {
 	#ifdef RELEASE_MODE
 	// Add source folders last, as a backup //
 	AssetPool::AddDirectory( "/Art/src" );
-	AssetPool::AddDirectory( "/Models/src" );
+	AssetPool::AddDirectory( "/Models/Export" );
+//	AssetPool::AddDirectory( "/Models/src" );
 	AssetPool::AddDirectory( "/Scripts/src" );
 	#endif // RELEASE_MODE //
 

@@ -74,6 +74,8 @@ public:
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
 public:
+	boolean ShowDebug;
+	
 	cPhysics Physics;
 	
 	std::vector< cObject* > Obj;
