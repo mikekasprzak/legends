@@ -1,22 +1,21 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef PRODUCT_EXPERIMENTS
+#ifdef PRODUCT_LEGACY
 #include "Sound/SoundPlayer.h"
 #include "Sound/MusicPlayer.h"
-#else // PRODUCT_EXPERIMENTS //
+#else // PRODUCT_LEGACY //
 #include <Audio/SoundPlayer.h>
 #include <Audio/MusicPlayer.h>
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY //
 // - ------------------------------------------------------------------------------------------ - //
 #include <GameHost.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include <Input/Input.h>
 
 // - ------------------------------------------------------------------------------------------ - //
 extern int phone_orientation;
 int phone_orientation = 0;
 
-//extern void SkipTime();
-//void SkipTime() {
-//}
+extern void SkipTime();
 // - ------------------------------------------------------------------------------------------ - //
 extern int mouse_b;
 extern int mouse_b_new;
@@ -51,14 +50,23 @@ char AppBaseDir[2048];
 extern char AppSaveDir[];
 char AppSaveDir[2048];
 
+// - ------------------------------------------------------------------------------------------ - //
+#ifndef PRODUCT_SKU
+#define PRODUCT_SKU		"UNKNOWN"
+#define wPRODUCT_SKU	L"UNKNOWN"
+#define FullProductName	"Unknown"
+
+//const char* ProductName = "Unknown";
+#endif // PRODUCT_SKU //
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost* GameHost = 0;
 // - ------------------------------------------------------------------------------------------ - //
 extern void Simple_Init( int Width, int Height );
 void Simple_Init( int Width, int Height ) {
-	Log( "-=======- GEL Application Started -- SDL Branch -- SKU: %s -=======-\n", PRODUCT_SKU );
-	Log( "GEL (C) Copyright 2008-2010 Mike Kasprzak and Sykhronics Entertainment\n" );
+	Log( "-=======- GEL Application Started -- Generic Branch -- SKU: %s -=======-\n", PRODUCT_SKU );
+	Log( "GEL (C) Copyright 2008-2012 Mike Kasprzak and Sykhronics Entertainment\n" );
 	Log( "\n" );
 	Log( "-=- SKU: %s -=- %s -=- \n", PRODUCT_SKU, FullProductName );
 	Log( "\n" );
@@ -69,9 +77,9 @@ void Simple_Init( int Width, int Height ) {
 	gelInit();		
 	gelSetupRefScreenShape( 480, 320 );
 
-#ifdef PRODUCT_EXPERIMENTS
+#ifndef PRODUCT_LEGACY
 	gelSetupDepthSize( 24 );
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY //
 
 #ifdef PRODUCT_OVERSCAN
 	gelSetupOverscan( 0.05f, 0.10f );
@@ -98,7 +106,7 @@ void Simple_Init( int Width, int Height ) {
 	
 	//musUpdate();
 
-#ifndef PRODUCT_EXPERIMENTS
+#ifdef PRODUCT_LEGACY
 			// Populate Product Info, based on Compiled Arguments //
 			ProductInfo = cProductInfo::DecodeEmbeddedInfo();
 			// Verify that the Product Info bits are correctly formatted //
@@ -107,7 +115,7 @@ void Simple_Init( int Width, int Height ) {
 			}
 			// Report what product we are //
 			ProductInfo.LogInfo();
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY //
 	
 	Log("+ Creating GameHost Instance...\n");
 	GameHost = new cGameHost;
@@ -132,12 +140,12 @@ extern void Simple_Exit();
 void Simple_Exit() {
 	Log( "\n-=======- Beginning GEL Application Shutdown... -=======-\n" );
 
-#ifndef PRODUCT_EXPERIMENTS			
+#ifdef PRODUCT_LEGACY			
 	Log( "- Writing Save Data...\n" );
 	GameHost->Save();
 	Log( "+ Finished Writing Save Data.\n" );
 	Log( "\n" );
-#endif // PRODUCT_EXPERIMENTS //
+#endif // PRODUCT_LEGACY //
 	
 	Log( "- Freeing audio resources...\n" );
 	musFree();
@@ -198,11 +206,11 @@ void Simple_FocusGained() {
 // - ------------------------------------------------------------------------------------------ - //
 extern bool IsMainMenu();
 bool IsMainMenu() {
-	if ( GameHost ) {
-		if ( GameHost->Game ) {
-			return (GameHost->Game->GameState == cGame::ST_MENU);
-		}
-	}
+//	if ( GameHost ) {
+//		if ( GameHost->Game ) {
+//			return (GameHost->Game->GameState == cGame::ST_MENU);
+//		}
+//	}
 		
 	return false;	
 }

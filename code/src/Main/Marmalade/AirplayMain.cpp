@@ -68,14 +68,14 @@ int32 KeyboardEvent_Key( s3eKeyboardEvent* e, void* User ) {
 			{
 				EventValue = 1;
 				
-#ifdef USES_AIRPLAY_ANDROID
+#ifdef USES_MARMALADE_ANDROID
 				extern bool IsMainMenu();
 				if ( e->m_Key == s3eKeyBack ) {
 					if ( IsMainMenu() ) {
 						System::CloseButtonPressed = true;
 					}
 				}
-#endif // USES_AIRPLAY_ANDROID //				
+#endif // USES_MARMALADE_ANDROID //				
 				break;
 			}
 		
@@ -148,11 +148,11 @@ void Init() {
 	Log( "+ Base Directory: %s\n\n", AppBaseDir );
 	Log( "+ Save Directory: %s\n\n", AppSaveDir );
 
-	Log( "*** AIRPLAY DEVICE INFO ***\n" );
+	Log( "*** MARMALADE DEVICE INFO ***\n" );
 	Log( "- DEVICE_OS: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_OS ), s3eDeviceGetInt( S3E_DEVICE_OS ) );
 	Log( "- DEVICE_CLASS: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_CLASS ), s3eDeviceGetInt( S3E_DEVICE_CLASS ) );
 	Log( "- DEVICE_OS_VERSION: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_OS_VERSION ), s3eDeviceGetInt( S3E_DEVICE_OS_VERSION ) );
-	Log( "- DEVICE_AIRPLAY_VERSION: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_AIRPLAY_VERSION ), s3eDeviceGetInt( S3E_DEVICE_AIRPLAY_VERSION ) );
+	Log( "- DEVICE_SDK_VERSION: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_SDK_VERSION ), s3eDeviceGetInt( S3E_DEVICE_SDK_VERSION ) );
 	Log( "- DEVICE_S3E_VERSION: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_S3E_VERSION ), s3eDeviceGetInt( S3E_DEVICE_S3E_VERSION ) );
 	Log( "- DEVICE_ID: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_ID ), s3eDeviceGetInt( S3E_DEVICE_ID ) );
 	Log( "- DEVICE_ARCHITECTURE: %s (%i)\n", s3eDeviceGetString( S3E_DEVICE_ARCHITECTURE ), s3eDeviceGetInt( S3E_DEVICE_ARCHITECTURE ) );
