@@ -20,8 +20,10 @@
 #include <Grid/Grid2D.h>
 
 #include <cJSON.h>
-
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef USES_HIDAPI
 #include <hidapi.h>
+#endif // USES_HIDAPI //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,10 +32,13 @@ GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
 GelAssetHandle txCursorAttack;
 
+#ifdef USES_FBO
+// TODO: DesktopGL uses _EXT functions, OpenGL ES uses _OES versions //
 GLuint FBOTextureId;
 GLuint FBOId;
 
 int FBOSize = 1024;
+#endif // USES_FBO //
 
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_HIDAPI
@@ -491,7 +496,8 @@ void cGame::Init() {
 #endif // USES_HIDAPI //
 	
 	// *** //
-	
+
+#ifdef USES_FBO	
 	// Create the FBO Target Texture //
 	glGenTextures(1, &FBOTextureId);
 	glBindTexture(GL_TEXTURE_2D, FBOTextureId);
@@ -525,6 +531,7 @@ void cGame::Init() {
 
 	// switch back to window-system-provided framebuffer
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+#endif // USES_FBO //
 
 	// *** //
 	
@@ -604,11 +611,12 @@ void cGame::Exit() {
 		delete_OutlineList( Room[idx]->OutlineIndex );
 		delete_Grid2D( Room[idx]->Grid );
 	}
-	
+
+#ifdef USES_FBO	
 	glDeleteFramebuffers( 1, &FBOId );
 //	glDeleteRenderbuffers( 1, &RBOId );
 	glDeleteTextures( 1, &FBOTextureId );
-	
+#endif // USES_FBO //
 	
 	// Shut Down Physics //
 	Physics.Exit();
@@ -637,6 +645,7 @@ void cGame::Step() {
 	// Input //
 	Vector2D Stick(0,0);
 	{
+#ifdef USES_SDL		
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_UP] ) {
 			Stick.y = CameraSpeed;
@@ -660,7 +669,7 @@ void cGame::Step() {
 		if ( keystate[SDL_SCANCODE_SPACE] ) {
 			vm_CallFunc( "DoAwesome" );
 		}
-		
+#endif // USES_SDL //		
 
 #ifdef USES_ICADE
 		// iCade (Joystick Emulation via Keyboard) //
@@ -839,9 +848,9 @@ void cGame::Draw() {
 		}		
 	}
 
-
+#ifdef USES_FBO
 	// Draw to the FBO //
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOId);
+	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, FBOId );
 	gelDisableBlending();
 
 	// Update Proxy settings to reflect the FBO //
@@ -947,6 +956,7 @@ void cGame::Draw() {
 	gelResetClip();
 	// Unbind the FBO //
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+#endif // USES_FBO //
 
 	// Reset Camera for UI //
 	{
@@ -975,6 +985,7 @@ void cGame::Draw() {
 	
 		gelLoadMatrix( CameraViewMatrix );
 
+#ifdef USES_FBO
 		// Draw Color Buffer to screen //
 		glBindTexture(GL_TEXTURE_2D, FBOTextureId);	
 		gelDrawModeTextured();
@@ -1025,6 +1036,8 @@ void cGame::Draw() {
 //			Vector3D( -Scalar, Scalar - Offset, 0 ),
 //			Vector3D( Scalar, -Scalar - Offset, 0 )
 //			);
+
+#endif // USES_FBO //
 
 #ifdef USES_HIDAPI
 		if ( SpaceNavigator_HID_Handle ) {

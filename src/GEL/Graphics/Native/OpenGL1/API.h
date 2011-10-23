@@ -74,7 +74,7 @@
 	#endif // NO_SDL_SUBDIR //
 #endif // USES_GLEE //
 // - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_AIRPLAY)
+#elif defined(USES_MARMALADE)
 // - ------------------------------------------------------------------------------------------ - //
 #include <GLES/gl.h>
 #include <GLES/glext.h>
