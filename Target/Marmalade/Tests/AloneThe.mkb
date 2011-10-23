@@ -17,6 +17,7 @@ deployments
 
 
 define PRODUCT_LEGENDS
+define PRODUCT_MOBILE
 
 define USES_MARMALADE
 

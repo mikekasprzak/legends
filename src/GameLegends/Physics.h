@@ -187,7 +187,7 @@ public:
 		obj->shape->setLocalScaling( btVector3( (float)Scale/32.0f, (float)Scale/32.0f, (float)Scale/64.0f ) );
 
 		// Heightmap Orientation (quaternion) and position (vector) //
-		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, 32.0f+Pos.z ) ) );
+		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, ((float)Scale/4.0f)+Pos.z ) ) );
 		// Configure construction: Mass, MotionState, Shape, Inertia //
 		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI( 0, obj->motionState, obj->shape, btVector3(0,0,0) );
 		// Create //
