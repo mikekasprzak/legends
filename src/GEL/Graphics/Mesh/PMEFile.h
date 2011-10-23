@@ -77,6 +77,7 @@ public:
 public:	
 	void TextLoad();
 	void TextSave();
+	void LoadTextures();
 	
 	void Import( const char* _FileName );
 	void Import( const DataBlock* FileData, const char* NameHint = ".dae" );

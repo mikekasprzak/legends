@@ -253,6 +253,14 @@ void cPMEFile::TextSave() {
 	out.close();
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cPMEFile::LoadTextures() {
+	for ( size_t idx = 0; idx < Mesh.size(); idx++ ) {
+		for ( size_t idx2 = 0; idx2 < Mesh[idx].Material.size(); idx2++ ) {
+			Mesh[idx].Material[idx2].Texture = AssetPool::Load( Mesh[idx].Material[idx2].ImageFileName.c_str() );
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_ASSIMP
