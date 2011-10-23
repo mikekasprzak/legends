@@ -1,6 +1,6 @@
 options 
 { 
-	s3e-data-dir="../../../Content"
+	s3e-data-dir="Data"
 	arm-fpu=1
 }
 
@@ -11,6 +11,8 @@ deployments
 	provider="Michael Kasprzak"
 	version=0.1.0
 	networking=0
+	embed-icf=1
+	app-icf='AloneThe.icf'
 }
 
 

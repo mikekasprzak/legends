@@ -557,14 +557,14 @@ void cGame::Init() {
 	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,0,4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,64,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
-	AddObject( Vector3D(0,4,4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
 	// Follow the 1st object //
 	CameraFollow = Obj[0];
 	CameraWorldPos = CameraFollow->Pos;
-
+/*
 	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull", Real(1.2) );
 	Obj3.back()->Color = GEL_RGB_RED;
 	Obj3.back()->IsGlowing = true;
@@ -584,7 +584,7 @@ void cGame::Init() {
 	Obj3.back()->IsGlowing = true;
 
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest" );
-
+*/
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -1,0 +1,20 @@
+[S3E] 
+SplashscreenBkR=255 
+SplashscreenBkG=255 
+SplashscreenBkB=255
+#SplashScreen="SmilesLoading.png"
+  
+MemSize = 52000000
+StackSize = 128000
+
+FixScreenOrientation = 1
+
+app_version=10500
+#app_caption="Smiles"
+
+GLESVersion = 1
+
+[GL]
+EGL_DEPTH_SIZE = 24
+EGL_STENCIL_SIZE = 0
+
