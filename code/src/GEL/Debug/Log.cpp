@@ -22,7 +22,7 @@ extern int LogLevel;
 
 //#define FlushFunc fflush(0)
 #define LOG_FUNC		vfprintf
-#define LOG_FUNC2		printf
+#define LOG_FUNC2		fprintf
 #define LOG_TARGET		stdout
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -36,7 +36,7 @@ void LogIndentation( int Count, const char Val = ' ' ) {
 		}
 		s[Count] = 0;
 		
-		LOG_FUNC2( s );
+		LOG_FUNC2( LOG_TARGET, s );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -93,7 +93,7 @@ void LogAlways( const char* s, ... ) {
 
 	va_end( vl );
 
-	LOG_FUNC( LOG_TARGET, (char*)"\n", 0 );
+	LOG_FUNC2( LOG_TARGET, (char*)"\n" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _LogAlways( const char* s, ... ) {
@@ -115,7 +115,7 @@ void _LogAlways( const char* s, ... ) {
 			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
-			LOG_FUNC( LOG_TARGET, (char*)"\n", 0 ); \
+			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
 		} \
 	}
 // - ------------------------------------------------------------------------------------------ - //

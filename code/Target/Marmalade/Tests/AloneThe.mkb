@@ -1,6 +1,7 @@
 options 
 { 
 	s3e-data-dir="../../../Content"
+	arm-fpu=1
 }
 
 deployments
@@ -12,13 +13,19 @@ deployments
 	networking=0
 }
 
-options {	
-	arm-fpu=1
-}
 
-define PRODUCT_ALONETHE
+define PRODUCT_LEGENDS
 
-define STB_VORBIS_HAS_INT_TYPES
+define USES_MARMALADE
+
+define USES_OPENGLES
+define USES_OPENGLES1
+
+define USES_GEL
+define USES_FOUNDATION
+
+define NDEBUG
+define STB_HAS_INT_TYPES
 
 includepaths
 {
@@ -27,6 +34,12 @@ includepaths
 	../../../src/Game 
 	../../../src/Foundation
 	../../../src/External
+	../../../src/External/Squirrel/include
+	../../../src/External/cJSON
+	
+	../../../src/External/Bullet
+	../../../src/External/Bullet/vectormath
+	../../../src/External/NVTriStrip/include
 }
 
 files 
@@ -69,8 +82,11 @@ files
 	"Timer/Unix/*.cpp"
 	"Audio/Custom/Audio/*.cpp"
 	
-#	(../../../src/External/STB/Vorbis)
-#	"*.c"
+	(../../../src/External)
+#	"STB/Vorbis/*.c"
+	"Squirrel/squirrel/*.cpp"
+	"cJSON/*.c"
+	"Bullet"
 	
 	(../../../src/Main/Generic)
 	"*.cpp"

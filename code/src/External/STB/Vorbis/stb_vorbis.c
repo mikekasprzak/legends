@@ -555,7 +555,7 @@ enum STBVorbisError
 #define MAX_BLOCKSIZE_LOG  13   // from specification
 #define MAX_BLOCKSIZE      (1 << MAX_BLOCKSIZE_LOG)
 
-#ifndef STB_VORBIS_HAS_INT_TYPES
+#ifndef STB_HAS_INT_TYPES
 typedef unsigned char  uint8;
 typedef   signed char   int8;
 typedef unsigned short uint16;
