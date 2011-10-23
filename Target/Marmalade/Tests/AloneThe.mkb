@@ -31,7 +31,7 @@ includepaths
 {
 	../../../src/GEL
 	../../../src/GEL/Audio/Custom
-	../../../src/Game 
+	../../../src/GameLegends
 	../../../src/Foundation
 	../../../src/External
 	../../../src/External/Squirrel/include
@@ -56,7 +56,7 @@ files
 #	"*.cpp"
 	"AssetPool/*.cpp"
 	"Audio/*.cpp"
-#	"Core/*.cpp"
+	"Core/*.cpp"
 	"Debug/*.cpp"
 	"External/*.cpp"
 	"External/LZMA/*.c"
@@ -85,8 +85,19 @@ files
 	(../../../src/External)
 #	"STB/Vorbis/*.c"
 	"Squirrel/squirrel/*.cpp"
+	"Squirrel/stdlib/*.cpp"
 	"cJSON/*.c"
-	"Bullet"
+	"Bullet/BulletCollision/BroadphaseCollision/*.cpp"
+	"Bullet/BulletCollision/CollisionDispatch/*.cpp"
+	"Bullet/BulletCollision/CollisionShapes/*.cpp"
+	"Bullet/BulletCollision/Gimpact/*.cpp"
+	"Bullet/BulletCollision/NarrowPhaseCollision/*.cpp"
+	"Bullet/BulletDynamics/Character/*.cpp"
+	"Bullet/BulletDynamics/ConstraintSolver/*.cpp"
+	"Bullet/BulletDynamics/Dynamics/*.cpp"
+	"Bullet/BulletDynamics/Vehicle/*.cpp"
+	"Bullet/BulletSoftBody/*.cpp"
+	"Bullet/LinearMath/*.cpp"
 	
 	(../../../src/Main/Generic)
 	"*.cpp"

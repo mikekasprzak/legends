@@ -325,6 +325,9 @@ void cPMEFile::Import( const aiScene* Scene ) {
 void cPMEFile::Import( const char* FileName ) {
 	ELog("WARNING: Assimp not available." );
 }
+void cPMEFile::Import( const DataBlock* FileData, const char* NameHint ) {
+	ELog("WARNING: Assimp not available." );
+}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES_ASSIMP //
 // - ------------------------------------------------------------------------------------------ - //
