@@ -93,7 +93,7 @@ public:
 	void SortObject();
 	void SortObject3D();
 
-	void AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(8) );
+	void AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(16) );
 	void AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real _Scalar = Real(2) );
 
 	void LoadMap();
