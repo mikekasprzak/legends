@@ -169,7 +169,7 @@ public:
 		return obj;
 	}
 
-	cPhysicsObject* AddStaticHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid ) {
+	cPhysicsObject* AddStaticHeightMap( Vector3D& Pos, Grid2D<unsigned char>& Grid, const Real Scale ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 
 		// Create a Heightmap //
@@ -184,7 +184,7 @@ public:
 			false
 			);
 
-		obj->shape->setLocalScaling( btVector3( 256/64.0, 256/64.0, 128/64.0 ) );
+		obj->shape->setLocalScaling( btVector3( (float)Scale/32.0f, (float)Scale/32.0f, (float)Scale/64.0f ) );
 
 		// Heightmap Orientation (quaternion) and position (vector) //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, 32.0f+Pos.z ) ) );

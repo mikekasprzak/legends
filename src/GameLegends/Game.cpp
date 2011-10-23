@@ -308,7 +308,7 @@ void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Sca
 	Room.back()->Grid = load_Grid2D<cRoom::GType>( _File );
 	new_Optimized_Triangles( Room.back()->Grid, &Room.back()->Vert, &Room.back()->Index, RoomScale );
 	new_Triangles_OutlineList( Room.back()->Index, &Room.back()->OutlineIndex );
-	Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid) );
+	Room.back()->PhysicsObject = Physics.AddStaticHeightMap( Room.back()->Pos, *(Room.back()->Grid), _Scalar );
 	Room.back()->Color = new_GelArray<GelColor>(Room.back()->Vert->Size);
 	for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 		Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
