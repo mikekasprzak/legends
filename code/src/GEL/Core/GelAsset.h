@@ -232,6 +232,10 @@ struct GelAssetType {
 	inline bool IsAsset() {
 		return is_GelAsset( BitMask );
 	}
+	
+	inline bool Is( const int AssetType ) {
+		return (bool)((int)BitMask & AssetType);
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_CORE_GELASSET_H__ //

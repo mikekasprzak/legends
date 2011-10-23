@@ -607,39 +607,38 @@ void cGame::Init() {
 	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,64,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
 	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
 	// Follow the 1st object //
 	CameraFollow = Obj[0];
 	CameraWorldPos = CameraFollow->Pos;
-/*
-	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull", Real(1.2) );
+
+	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull.pme", Real(1.2) );
 	Obj3.back()->Color = GEL_RGB_RED;
 	Obj3.back()->IsGlowing = true;
 
-	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull", Real(0.8) );
-	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle.pme", Real(0.8) );
 
-	AddObject3D( Vector3D( 4, 4+4, 4+2 ), "/Book_Open", Real(0.8) );
-	AddObject3D( Vector3D( 4+4, 4+4, 4+2 ), "/Shield", Real(0.6) );
-	AddObject3D( Vector3D( 4+8, 4+4, 4+2 ), "/Shield", Real(0.8) );
-	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick", Real(0.8) );
-	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy", Real(0.4) );
-	AddObject3D( Vector3D( 4+64, 8+4, 4+2 ), "/Key_Boxy", Real(0.8) );
-	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter", Real(0.8) );
-	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.dae", Real(2) );
-	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.dae", Real(1) );
+	AddObject3D( Vector3D( 4, 4+4, 4+2 ), "/Book_Open.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 4+4, 4+2 ), "/Shield.pme", Real(0.6) );
+	AddObject3D( Vector3D( 4+8, 4+4, 4+2 ), "/Shield.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.4) );
+	AddObject3D( Vector3D( 4+64, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter.pme", Real(0.8) );
+	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.pme", Real(2) );
+	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.pme", Real(1) );
 	Obj3.back()->IsGlowing = true;
 
-	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest" );
-*/
+	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest.pme" );
 
-	cPMEFile MeshTest;
-	MeshTest.Import( "Content/Models/Export/Skull.dae" );
-	MeshTest.FileName = "Skoot.pme";
-	MeshTest.TextSave();
+//	cPMEFile MeshTest;
+//	MeshTest.Import( "Content/Models/Export/Monkey.dae" );
+//	MeshTest.FileName = "Content/Models/Native/Monkey.pme";
+//	MeshTest.TextSave();
 
 	Log( "- End of Init" );
 }

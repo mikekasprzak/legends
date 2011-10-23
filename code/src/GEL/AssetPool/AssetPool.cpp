@@ -163,9 +163,18 @@ namespace AssetPool {
 				else if ( AssetDataType.IsMesh() ) {
 					VLog("* Asset is a Mesh (0x%x)", Processed );
 					Type = GEL_ASSETCLASS_MESH;
-					Mesh = new cPMEFile();
-					Mesh->Import( Processed, File.c_str() );
 					
+					if ( AssetDataType.Is( GEL_ASSET_PME ) ) {
+						VLog("* Asset in Native (PME)" );
+						Mesh = new cPMEFile( File.c_str() );
+						Mesh->LoadTextures();
+					}
+					else {
+						VLog("* Asset in other (imported)" );
+						Mesh = new cPMEFile();
+						Mesh->Import( Processed, File.c_str() );
+					}
+										
 					delete_DataBlock( Processed );
 				}
 				else if ( AssetDataType.IsAudio() ) {
