@@ -5,6 +5,7 @@
 #define __GEL_Graphics_OpenGL1_Draw_DrawFlat_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "API.h"
+#include "GELS_Shader.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -14,10 +15,10 @@ template< class VertType >
 inline void gels_DrawFlat( const int Mode, const VertType* Poly, const size_t PolyCount ) {
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
-	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
+	    gels_VertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );
 	}
 	else {
-	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+	    gels_VertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
 	}
     glDrawArrays( Mode, 0, PolyCount );
 }
@@ -28,10 +29,10 @@ template< class VertType >
 inline void gels_DrawIndexedFlat( const int Mode, const VertType* Poly, const unsigned short* Index, const size_t IndexCount ) {
 	if ( sizeof(VertType) / sizeof(Real) > 4 ) {
 		// Hack, hardcoded to 3 if greater than 4 //
-	    glVertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );		
+	    gels_VertexPointer( 3, GL_FLOAT, sizeof(VertType), (const float*)Poly );		
 	}
 	else {
-	    glVertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
+	    gels_VertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
 	}
     glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );
 }
