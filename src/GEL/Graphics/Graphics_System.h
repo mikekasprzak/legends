@@ -39,6 +39,7 @@ namespace System {
 		GEL_GPU_POWERVR,			// PowerVR/IMG //
 		GEL_GPU_QUALCOMM,			// Adreno //
 		GEL_GPU_ARM, 				// MALI //
+		GEL_GPU_VIVANTE,			// GC //
 	};
 	
 	union cInfoFlags {

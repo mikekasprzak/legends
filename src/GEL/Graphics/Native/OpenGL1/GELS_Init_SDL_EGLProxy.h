@@ -136,20 +136,20 @@ inline void gels_SetVideoMode() {
 
 		{
 			// use EGL to initialise GLES
-			Log( "- Getting X11 Display...\n" );
+			Log( "- Getting X11 Display..." );
 			g_x11Display = XOpenDisplay(NULL);
 		 
 			if (!g_x11Display)
 			{
-				Log("* ERROR: unable to get display!\n");
+				Log("* ERROR: unable to get display!");
 				return;
 			}
 		 
-			Log( "- Initializing EGL...\n" );
+			Log( "- Initializing EGL..." );
 			g_eglDisplay = eglGetDisplay((EGLNativeDisplayType)g_x11Display);
 			if (g_eglDisplay == EGL_NO_DISPLAY)
 			{
-				Log("* ERROR: Unable to bind display to EGL.\n");
+				Log("* ERROR: Unable to bind display to EGL.");
 				return;
 			}
 
@@ -158,15 +158,15 @@ inline void gels_SetVideoMode() {
 		 
 			if (!eglInitialize(g_eglDisplay, &egl_majorversion, &egl_minorversion))
 			{
-				Log("* ERROR: Unable to initialise EGL display.\n");
+				Log("* ERROR: Unable to initialise EGL display.");
 				return;
 			}
-			Log( "+ Successfully Initialized EGL -- v%i.%i\n", egl_majorversion, egl_minorversion );
+			Log( "+ Successfully Initialized EGL -- v%i.%i", egl_majorversion, egl_minorversion );
 		
-			Log( "EGL Version: %s\n", eglQueryString(g_eglDisplay, EGL_VERSION) );
-			Log( "Driver Vendor: %s\n", eglQueryString(g_eglDisplay, EGL_VENDOR) );
-			Log( "Client APIs: %s\n", eglQueryString(g_eglDisplay, EGL_CLIENT_APIS) );
-			Log( "Extensions: %s\n\n", eglQueryString(g_eglDisplay, EGL_EXTENSIONS) );
+			Log( "EGL Version: %s", eglQueryString(g_eglDisplay, EGL_VERSION) );
+			Log( "Driver Vendor: %s", eglQueryString(g_eglDisplay, EGL_VENDOR) );
+			Log( "Client APIs: %s", eglQueryString(g_eglDisplay, EGL_CLIENT_APIS) );
+			Log( "Extensions: %s\n", eglQueryString(g_eglDisplay, EGL_EXTENSIONS) );
 		 			
 			{
 				EGLint WindowConfigAttribList[] = {
@@ -191,7 +191,7 @@ inline void gels_SetVideoMode() {
 				
 				EGLint numConfigs;
 				eglChooseConfig( g_eglDisplay, WindowConfigAttribList, WindowConfigs, MaxWindowConfigs, &numConfigs );
-				Log( "+ %i configuration(s) found matching request.\n", numConfigs );
+				Log( "+ %i configuration(s) found matching request.", numConfigs );
 			}		 
 		 
 		 	
@@ -200,10 +200,10 @@ inline void gels_SetVideoMode() {
 			EGLint numConfigsOut = 0;
 			if (eglChooseConfig(g_eglDisplay, g_configAttribs, &g_eglConfig, 1, &numConfigsOut) != EGL_TRUE || numConfigsOut == 0)
 			{
-				Log("Unable to find appropriate EGL config.\n");
+				Log("Unable to find appropriate EGL config.");
 				return;
 			}
-			Log( "+ eglChooseConfig ok!\n" );
+			Log( "+ eglChooseConfig ok!" );
 		 
 			// Get the SDL window handle
 			Log( "- SDL\n" );
@@ -212,19 +212,19 @@ inline void gels_SetVideoMode() {
 			Log( "- SDL\n" );
 			if(SDL_GetWMInfo(&sysInfo) <= 0) 
 			{
-				Log("Unable to get window handle!\n");
+				Log("Unable to get window handle!");
 				return;
 			}
-			Log( "+ SDL Ok!\n" );
+			Log( "+ SDL Ok!" );
 		 
-			Log( "- eglCreateWindowSurface\n" );
+			Log( "- eglCreateWindowSurface" );
 			g_eglSurface = eglCreateWindowSurface(g_eglDisplay, g_eglConfig, (EGLNativeWindowType)sysInfo.info.x11.window, 0);
 			if ( g_eglSurface == EGL_NO_SURFACE)
 			{
-				Log("Unable to create EGL surface!\n");
+				Log("Unable to create EGL surface!");
 				return;
 			}
-			Log( "+ eglCreateWindowSurface Ok!\n" );
+			Log( "+ eglCreateWindowSurface Ok!" );
 		 
 			// Bind GLES and create the context
 			eglBindAPI(EGL_OPENGL_ES_API);
@@ -232,19 +232,19 @@ inline void gels_SetVideoMode() {
 			g_eglContext = eglCreateContext(g_eglDisplay, g_eglConfig, NULL, NULL);
 			if (g_eglContext == EGL_NO_CONTEXT)
 			{
-				Log("Unable to create GLES context!\n");
+				Log("Unable to create GLES context!");
 				return;
 			}
 		 
 			if (eglMakeCurrent(g_eglDisplay,  g_eglSurface,  g_eglSurface, g_eglContext) == EGL_FALSE)
 			{
-				Log("Unable to make GLES context current\n");
+				Log("Unable to make GLES context current");
 				return;
 			}		
 		}
 		
 		const SDL_VideoInfo* VideoInfo2 = SDL_GetVideoInfo();
-		Log( "Set Resolution: %ix%i %ibbp\n", VideoInfo2->current_w, VideoInfo2->current_h, VideoInfo2->vfmt->BitsPerPixel );
+		Log( "Set Resolution: %ix%i %ibbp", VideoInfo2->current_w, VideoInfo2->current_h, VideoInfo2->vfmt->BitsPerPixel );
 		
 //		int r = 0;
 //		int g = 0;
@@ -258,83 +258,20 @@ inline void gels_SetVideoMode() {
 		
 		int DepthBits = 0;
 		glGetIntegerv( GL_DEPTH_BITS, (GLint*)&DepthBits );
-		Log( "Depth Bits: %i\n", DepthBits );
+		Log( "Depth Bits: %i", DepthBits );
 
 		int StencilBits = 0;
 		glGetIntegerv( GL_STENCIL_BITS, (GLint*)&StencilBits );
-		Log( "Stencil Bits: %i\n", StencilBits );
+		Log( "Stencil Bits: %i", StencilBits );
 		
 		char TextBuffer[256];
 		SDL_VideoDriverName(TextBuffer, sizeof(TextBuffer));
-		Log( "Driver: %s\n\n", TextBuffer);
+		Log( "Driver: %s\n", TextBuffer);
 		
-		// Get OpenGL Information Strings //
-		const char* OpenGLVendor = (const char*)glGetString( GL_VENDOR );
-		const char* OpenGLRenderer = (const char*)glGetString( GL_RENDERER );
-		const char* OpenGLVersion = (const char*)glGetString( GL_VERSION );
-		const char* OpenGLExtensions = (const char*)glGetString( GL_EXTENSIONS );		
-		
-		// Log OpenGL Details //
-		Log( "OpenGL Vendor: %s\n", OpenGLVendor );
-		Log( "OpenGL Renderer: %s\n", OpenGLRenderer );
-		Log( "OpenGL Version: %s\n", OpenGLVersion );
-#ifndef USES_OPENGLES
-		Log( "OpenGL Shading Language Version: %s\n", glGetString( GL_SHADING_LANGUAGE_VERSION ) );
-#endif // USES_OPENGLES //
-		Log( "OpenGL Extensions: \n%s\n", OpenGLExtensions );
-				
-		
-		if ( find_String( "GL_EXT_texture_compression_s3tc", OpenGLExtensions ) ) {
-			Log( "+ Found S3TC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
-		else if ( find_String( "GL_S3_s3tc", OpenGLExtensions ) ) {
-			Log( "+ Found S3TC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
+#ifdef GELS_SCAN_GL_EXTENSIONS
+		gels_ScanGLExtensions();
+#endif // GELS_SCAN_GL_EXTENSIONS //
 
-#ifdef USES_PVRTC
-		if ( find_String( "GL_IMG_texture_compression_pvrtc", OpenGLExtensions ) ) {
-			Log( "+ Found PVRTC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
-#endif // USES_PVRTC //
-		
-/*
-		// Newer OpenGL's only //
-		int NumExtensions = 0;
-		glGetIntegerv( GL_NUM_EXTENSIONS, &NumExtensions );
-		Log( "OpenGL Extensions (%i):\n", NumExtensions );
-		for ( int idx = 0; idx < NumExtensions; idx++ ) {
-			printf( "- %s\n", glGetStringi( GL_EXTENSIONS, idx ) );
-		}
-*/
-		Log( "\n" );
-		
-		Log( "OpenGL Environment Settings\n" );
-		glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*)&System::MaxTextureSize );
-		Log( "GL_MAX_TEXTURE_SIZE: %i\n", System::MaxTextureSize );
-			
-#ifndef PRODUCT_NO_INTEL_FIX
-		// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
-		// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //
-		if ( find_String( "Intel", OpenGLVendor ) ) {
-			Log( "+ Found Intel GPU\n" );
-			if ( System::MaxTextureSize > 1024 ) {
-				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
-				System::MaxTextureSize = 1024;
-			}
-		}
-		else if ( find_String( "Intel", OpenGLRenderer ) ) {
-			Log( "+ Found Intel GPU\n" );
-			if ( System::MaxTextureSize > 1024 ) {
-				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
-				System::MaxTextureSize = 1024;
-			}
-		}
-#endif // PRODUCT_NO_INTEL_FIX //
-
-		Log( "\n" ); 
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
