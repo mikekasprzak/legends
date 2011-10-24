@@ -28,7 +28,7 @@ define GL_GLEXT_PROTOTYPES
 define USES_GEL
 define USES_FOUNDATION
 
-define USES_FBO_ES
+define USES_FBO_ES2
 
 define NO_TWEAKVALUE
 define STB_HAS_INT_TYPES
@@ -79,6 +79,7 @@ files
 	"Graphics/Texture/*.cpp"
 	"Graphics/Mesh/*.cpp"
 	"Graphics/Native/OpenGL1/*.cpp"
+	"Graphics/Native/OpenGL1/EmbeddedShaders/*.cpp"
 	"Input/*.cpp"
 	"Math/*.cpp"
 	"Math/Matrix/*.cpp"
