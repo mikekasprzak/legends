@@ -286,7 +286,13 @@ bool gelPostSetup() {
 		ActualScreen::Height
 		);
 
-#ifndef USES_OPENGL2
+#if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	gels_BuildInternalShaders();
+#else // USES_OPENGL2 //
 	// Set a Transformation Matrix that makes Texture Co-ordinates work from 0-63 //	
 	glMatrixMode( GL_TEXTURE );
 	glLoadIdentity();
@@ -297,12 +303,6 @@ bool gelPostSetup() {
 	glLoadIdentity();
 
     glEnableClientState(GL_VERTEX_ARRAY);
-#else // USES_OPENGL2 //
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	gelBuildInternalShaders();
 #endif // USES_OPENGL2 //
 
 	// Reset Clipping and Set Projection //
