@@ -1,8 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL) || defined(USES_OPENGLES)
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL_Graphics_OpenGL1_Blending_H__
-#define __GEL_Graphics_OpenGL1_Blending_H__
+#ifndef __GEL_Graphics_OpenGL_Blending_H__
+#define __GEL_Graphics_OpenGL_Blending_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "API.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -12,6 +12,12 @@
 inline void gels_EnableAlphaBlending() {
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+}
+// - ------------------------------------------------------------------------------------------ - //
+#define GELS_ENABLE_PREMULTIPLIED_ALPHA_BLENDING
+inline void gels_EnablePremultipliedAlphaBlending() {
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_ENABLE_ADDATIVE_BLENDING
@@ -33,7 +39,7 @@ inline void gels_DisableBlending() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL_Graphics_OpenGL1_Blending_H__ //
+#endif // __GEL_Graphics_OpenGL_Blending_H__ //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES //
 // - ------------------------------------------------------------------------------------------ - //

@@ -3,9 +3,11 @@
 #include <Input/Input_Mouse.h>
 #include <Geometry/Projection/Projection.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Native/OpenGL1/GELS_Init_SDL_EGLProxy.h"
+#include "Native/OpenGL1/GELS_Init_GLExtensions.h"
+
 #include "Native/OpenGL1/GELS_Init_SDL.h"
 #include "Native/OpenGL1/GELS_Init_SDL13.h"
+#include "Native/OpenGL1/GELS_Init_SDL_EGLProxy.h"
 #include "Native/OpenGL1/GELS_Init_Airplay.h"
 //#include "Native/OpenGL1/GELS_Init_EGL.h"
 // - ------------------------------------------------------------------------------------------ - //

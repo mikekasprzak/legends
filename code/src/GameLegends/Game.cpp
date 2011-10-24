@@ -628,7 +628,7 @@ void cGame::Init() {
 	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.4) );
 */	
-	AddObject3D( Vector3D( 4+64, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter.pme", Real(0.8) );
 	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.pme", Real(2) );
 //	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.pme", Real(1) );

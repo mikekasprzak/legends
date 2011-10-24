@@ -112,75 +112,11 @@ inline void gels_Minimize() {
 
 // Given all prior settings, set the video mode //
 inline void gels_SetVideoMode() {
-	{
-		// Get OpenGL Information Strings //
-		const char* OpenGLVendor = (const char*)glGetString( GL_VENDOR );
-		const char* OpenGLRenderer = (const char*)glGetString( GL_RENDERER );
-		const char* OpenGLVersion = (const char*)glGetString( GL_VERSION );
-		const char* OpenGLExtensions = (const char*)glGetString( GL_EXTENSIONS );		
-		
-		// Log OpenGL Details //
-		Log( "OpenGL Vendor: %s\n", OpenGLVendor );
-		Log( "OpenGL Renderer: %s\n", OpenGLRenderer );
-		Log( "OpenGL Version: %s\n", OpenGLVersion );
-#ifndef USES_OPENGLES
-		Log( "OpenGL Shading Language Version: %s\n", glGetString( GL_SHADING_LANGUAGE_VERSION ) );
-#endif // USES_OPENGLES //
-		Log( "OpenGL Extensions: \n%s\n", OpenGLExtensions );
-				
-		
-		if ( find_String( "GL_EXT_texture_compression_s3tc", OpenGLExtensions ) ) {
-			Log( "* Found S3TC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
-		else if ( find_String( "GL_S3_s3tc", OpenGLExtensions ) ) {
-			Log( "* Found S3TC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
 
-#ifdef USES_PVRTC
-		if ( find_String( "GL_IMG_texture_compression_pvrtc", OpenGLExtensions ) ) {
-			Log( "* Found PVRTC\n" );
-			System::InfoFlags.HasTextureCompression = true;
-		}
-#endif // USES_PVRTC //
-		
-/*
-		// Newer OpenGL's only //
-		int NumExtensions = 0;
-		glGetIntegerv( GL_NUM_EXTENSIONS, &NumExtensions );
-		Log( "OpenGL Extensions (%i):\n", NumExtensions );
-		for ( int idx = 0; idx < NumExtensions; idx++ ) {
-			printf( "- %s\n", glGetStringi( GL_EXTENSIONS, idx ) );
-		}
-*/
-		Log( "\n" );
-		
-		Log( "OpenGL Environment Settings\n" );
-		glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*)&System::MaxTextureSize );
-		Log( "GL_MAX_TEXTURE_SIZE: %i\n", System::MaxTextureSize );
-			
-#ifndef PRODUCT_NO_INTEL_FIX
-		// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
-		// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //
-		if ( find_String( "Intel", OpenGLVendor ) ) {
-			Log( "* Found Intel GPU\n" );
-			if ( System::MaxTextureSize > 1024 ) {
-				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
-				System::MaxTextureSize = 1024;
-			}
-		}
-		else if ( find_String( "Intel", OpenGLRenderer ) ) {
-			Log( "* Found Intel GPU\n" );
-			if ( System::MaxTextureSize > 1024 ) {
-				Log( "* Limiting textures to 1024x1024 (was %i)\n", System::MaxTextureSize );
-				System::MaxTextureSize = 1024;
-			}
-		}
-#endif // PRODUCT_NO_INTEL_FIX //
+#ifdef GELS_SCAN_GL_EXTENSIONS
+	gels_ScanGLExtensions();
+#endif // GELS_SCAN_GL_EXTENSIONS //
 
-		Log( "\n" ); 
-	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 

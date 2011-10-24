@@ -1,0 +1,12 @@
+#ifdef GL_ES
+precision highp float;
+#else
+#define lowp
+#endif
+
+uniform vec4 GlobalColor;
+
+void main()
+{
+	gl_FragColor = GlobalColor;
+}
