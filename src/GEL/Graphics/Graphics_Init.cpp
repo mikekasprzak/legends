@@ -272,7 +272,7 @@ bool gelPostSetup() {
 
 	ModelMatrix = Matrix4x4::ScalarMatrix( 1 );
 
-#ifndef USES_OPENGL2
+#if !defined(USES_OPENGL2) && !defined(USES_OPENGLES2)
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
 #endif // USES_OPENGL2 //
