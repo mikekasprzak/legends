@@ -12,7 +12,7 @@ DispFixRot = 2
 SysAppVersion=10500
 #app_caption="Smiles"
 
-SysGlesVersion = 1
+SysGlesVersion = 2
 
 [GL]
 EGL_DEPTH_SIZE = 24
