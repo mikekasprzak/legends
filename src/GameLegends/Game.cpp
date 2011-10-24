@@ -821,6 +821,8 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 //			gelMultMatrix( CameraMatrix );
 //			gelMultMatrix( SpinMatrix );
 			gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
+
+
 			
 			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
 ////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
