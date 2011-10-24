@@ -31,3 +31,6 @@ LIBRARIES			+=
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
+# Game Specific Target Influencing Defines #
+REQUIRES_OPENGL2	:=	true
+# - ------------------------------------------------------------------------ - #

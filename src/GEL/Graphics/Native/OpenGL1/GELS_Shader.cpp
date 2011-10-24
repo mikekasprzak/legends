@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
-#include "Graphics.h"
+#include <Graphics/Graphics.h>
 #include "EmbeddedShaders/EmbeddedShaders.h"
 // - ------------------------------------------------------------------------------------------ - //
 GLuint GELS_CurrentProgram;
@@ -108,8 +108,8 @@ void gels_BuildInternalShaders() {
 	glShaderBinary(1, &GELS_FlatShader_Vs, (GLenum)0, FlatShaderGlvs, sizeof(int)*FlatShaderGlvsLength);
 	glShaderBinary(1, &GELS_FlatShader_Fs, (GLenum)0, FlatShaderGlfs, sizeof(int)*FlatShaderGlfsLength);
 #else // USES_BINARY_SHADERS //
-	GELS_FlatShader_Vs = gelsCompileShader( vsFlatShader, GL_VERTEX_SHADER );
-	GELS_FlatShader_Fs = gelsCompileShader( fsFlatShader, GL_FRAGMENT_SHADER );
+	GELS_FlatShader_Vs = gels_CompileShader( vsFlatShader, GL_VERTEX_SHADER );
+	GELS_FlatShader_Fs = gels_CompileShader( fsFlatShader, GL_FRAGMENT_SHADER );
 #endif // USES_BINARY_SHADERS //
 
 	GELS_FlatShader_Prog = glCreateProgram();
@@ -133,8 +133,8 @@ void gels_BuildInternalShaders() {
 	glShaderBinary(1, &GELS_ColorShader_Vs, (GLenum)0, ColorShaderGlvs, sizeof(int)*ColorShaderGlvsLength);
 	glShaderBinary(1, &GELS_ColorShader_Fs, (GLenum)0, ColorShaderGlfs, sizeof(int)*ColorShaderGlfsLength);
 #else // USES_BINARY_SHADERS //
-	GELS_ColorShader_Vs = gelsCompileShader( vsColorShader, GL_VERTEX_SHADER );
-	GELS_ColorShader_Fs = gelsCompileShader( fsColorShader, GL_FRAGMENT_SHADER );
+	GELS_ColorShader_Vs = gels_CompileShader( vsColorShader, GL_VERTEX_SHADER );
+	GELS_ColorShader_Fs = gels_CompileShader( fsColorShader, GL_FRAGMENT_SHADER );
 #endif // USES_BINARY_SHADERS //
 
 	GELS_ColorShader_Prog = glCreateProgram();
@@ -159,8 +159,8 @@ void gels_BuildInternalShaders() {
 	glShaderBinary(1, &GELS_TextureShader_Vs, (GLenum)0, TextureShaderGlvs, sizeof(int)*TextureShaderGlvsLength);
 	glShaderBinary(1, &GELS_TextureShader_Fs, (GLenum)0, TextureShaderGlfs, sizeof(int)*TextureShaderGlfsLength);
 #else // USES_BINARY_SHADERS //
-	GELS_TextureShader_Vs = gelsCompileShader( vsTextureShader, GL_VERTEX_SHADER );
-	GELS_TextureShader_Fs = gelsCompileShader( fsTextureShader, GL_FRAGMENT_SHADER );
+	GELS_TextureShader_Vs = gels_CompileShader( vsTextureShader, GL_VERTEX_SHADER );
+	GELS_TextureShader_Fs = gels_CompileShader( fsTextureShader, GL_FRAGMENT_SHADER );
 #endif // USES_BINARY_SHADERS //
 
 	GELS_TextureShader_Prog = glCreateProgram();
@@ -185,8 +185,8 @@ void gels_BuildInternalShaders() {
 	glShaderBinary(1, &GELS_TextureColorShader_Vs, (GLenum)0, TextureColorShaderGlvs, sizeof(int)*TextureColorShaderGlvsLength);
 	glShaderBinary(1, &GELS_TextureColorShader_Fs, (GLenum)0, TextureColorShaderGlfs, sizeof(int)*TextureColorShaderGlfsLength);
 #else // USES_BINARY_SHADERS //
-	GELS_TextureColorShader_Vs = gelsCompileShader( vsTextureColorShader, GL_VERTEX_SHADER );
-	GELS_TextureColorShader_Fs = gelsCompileShader( fsTextureColorShader, GL_FRAGMENT_SHADER );
+	GELS_TextureColorShader_Vs = gels_CompileShader( vsTextureColorShader, GL_VERTEX_SHADER );
+	GELS_TextureColorShader_Fs = gels_CompileShader( fsTextureColorShader, GL_FRAGMENT_SHADER );
 #endif // USES_BINARY_SHADERS //
 
 	GELS_TextureColorShader_Prog = glCreateProgram();
