@@ -9,6 +9,8 @@
 #include <Math/Matrix.h>
 #include <Object/FdoHeightMap.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include "UberShader/UberShader.h"
+// - ------------------------------------------------------------------------------------------ - //
 #include "Physics.h"
 #include "Engine/Room.h"
 #include "Engine/RoomMesh.h"
@@ -73,6 +75,10 @@ public:
 	
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
+
+public:
+	cUberShader* Shader;
+
 public:
 	bool ShowDebug;
 	

@@ -1,0 +1,11 @@
+{
+	"File"		: "src/GameLegends/UberShader/UberShader.glsl",
+	"Shaders"	: {
+		"Flat" : [
+			"SHADE_FLAT"
+		],
+		"Color" : [
+			"SHADE_COLOR"
+		]
+	}
+}
