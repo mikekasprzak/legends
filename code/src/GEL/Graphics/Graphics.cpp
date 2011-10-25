@@ -2,9 +2,9 @@
 #include "Graphics.h"
 #include "GraphicsDraw.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include "Native/OpenGL1/GELS_Init_SDL_EGLProxy.h"
-#include "Native/OpenGL1/GELS_Init_SDL.h"
-#include "Native/OpenGL1/GELS_Init_SDL13.h"
+#include "Native/OpenGL/GELS_Init_SDL_EGLProxy.h"
+#include "Native/OpenGL/GELS_Init_SDL.h"
+#include "Native/OpenGL/GELS_Init_SDL13.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
