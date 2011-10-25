@@ -2,7 +2,7 @@
 #ifndef __GEL_GraphicsDraw_DrawTexturedColors_H__
 #define __GEL_GraphicsDraw_DrawTexturedColors_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Native/OpenGL1/GELSDraw_DrawTexturedColors.h"
+#include "Native/OpenGL/GELSDraw_DrawTexturedColors.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
