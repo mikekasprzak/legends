@@ -1,0 +1,54 @@
+/L20"Squirrel" Line Comment = // Block Comment On = /* Block Comment Off = */ File Extensions = NUT 
+/Delimiters = ~!@%^&*()-+=|\/{}[]:;"'<> , .? 
+/Function String = "%[ ^t]++function^(*(*)^)" 
+/Function String 1 = "%[ ^t]++^(*^)=[ ^t]++function*(*)" 
+/Indent Strings = "{" 
+/Unindent Strings = "}" 
+/Open Fold Strings = "{" 
+/Close Fold Strings = "}" 
+/C1"Keywords" 
+break 
+case catch class clone continue 
+default delegate delete 
+else extends 
+false for function 
+if in instanceof 
+local 
+null 
+resume return 
+switch 
+this throw true try typeof 
+while 
+parent 
+vargc vargv 
+yield 
+/C2"Objects" 
+/C3"Functions" 
+array assert 
+collectgarbage compilestring 
+enabledebuginfo 
+format 
+getroottable getstackinfos 
+newthread 
+print 
+setdebughook seterrorhandler 
+type 
+/C4"Methods and Properties" 
+_add _call _cloned _cmp _delslot _div _get _modulo _mul _newslot _nexti _set _sub _typeof _unm 
+constructor 
+/C5"Operators" 
+! 
+
+? 
+[ 
+] 
+^ 
+| 
+~ 
+/C5"Separators" 
+( 
+) 
+, 
+; 
+{ 
+} 
