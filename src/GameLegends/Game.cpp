@@ -491,6 +491,8 @@ void cGame::Init() {
 	
 	ShowDebug = false;
 	
+	Shader = new cUberShader( "src/GameLegends/UberShader/UberShader.json" );
+	
 	// *** //
 	
 #ifdef USES_HIDAPI
@@ -721,6 +723,9 @@ void cGame::Exit() {
 //	glDeleteRenderbuffers( 1, &RBOId );
 	glDeleteTextures( 1, &FBOTextureId );
 #endif // USES_FBO //
+
+	if ( Shader )
+		delete Shader;
 	
 	// Shut Down Physics //
 	Physics.Exit();
