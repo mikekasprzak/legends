@@ -2,6 +2,19 @@
 #ifndef __GEL_OPENGL_RENDERTARGET_H__
 #define __GEL_OPENGL_RENDERTARGET_H__
 // - ------------------------------------------------------------------------------------------ - //
+// TIP: I may want to use a non Renderbuffer for Depth (i.e. a texture). //
+//	If I do, it means I could use samplers in the shader for reading the data. //
+// - ------------------------------------------------------------------------------------------ - //
+// TODO: Allow choice of Depth and Stencil modes. //
+//	GL_RGBA4	(ES2 Spec)
+//	GL_RGB565	(ES2 Spec)
+//	GL_RGB5_A1	(ES2 Spec)
+//	GL_DEPTH_COMPONENT16
+//	GL_DEPTH_COMPONENT24 (with extension)
+//	GL_STENCIL_INDEX8
+//	GL_DEPTH24_STENCIL8_EXT (with extension)
+//	GL_DEPTH24_STENCIL8_OES (with extension)
+// - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
@@ -12,7 +25,8 @@ class cRenderTarget {
 public:
 	size_t Width;
 	size_t Height;
-	
+
+private:	
 	std::vector< GLuint > FBO;				// If an MRT, then there will be only 1 FBO //
 	std::vector< GLuint > Texture;
 	std::vector< GLuint > DepthBuffer;
@@ -45,7 +59,7 @@ public:
 			// For all Depth Buffers //
 			for ( size_t idx = 0; idx < _DepthBuffers; idx++ ) {
 				gels_BindRenderbuffer( GELS_RENDERBUFFER, DepthBuffer[idx] );
-				gels_RenderbufferStorage( GELS_RENDERBUFFER, GELS_DEPTH_COMPONENT, Width, Height );
+				gels_RenderbufferStorage( GELS_RENDERBUFFER, GL_DEPTH_COMPONENT24, Width, Height );
 			}
 			gels_BindRenderbuffer( GELS_RENDERBUFFER, 0 ); // Unbind //
 		}		
@@ -61,7 +75,7 @@ public:
 			// For all Stencil Buffers //
 			for ( size_t idx = 0; idx < _StencilBuffers; idx++ ) {
 				gels_BindRenderbuffer( GELS_RENDERBUFFER, StencilBuffer[idx] );
-				gels_RenderbufferStorage( GELS_RENDERBUFFER, GELS_STENCIL_COMPONENT, Width, Height );
+				gels_RenderbufferStorage( GELS_RENDERBUFFER, GL_STENCIL_INDEX8, Width, Height );
 			}
 			gels_BindRenderbuffer( GELS_RENDERBUFFER, 0 ); // Unbind //			
 		}
@@ -123,7 +137,7 @@ public:
 		
 		// Validate FBOs //
 		for ( size_t idx = 0; idx < FBO.size(); idx++ ) {
-			gels_BindFramebuffer( GELS_FRAMEBUFFER, FBO[idx];
+			gels_BindFramebuffer( GELS_FRAMEBUFFER, FBO[idx] );
 			
 			if ( gels_CheckFramebufferStatus( GELS_FRAMEBUFFER ) != GELS_FRAMEBUFFER_COMPLETE ) {
 				Log( "* ERROR: FBO %i Unavailable! (%i)", idx, FBO[idx] );
