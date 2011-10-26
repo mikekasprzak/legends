@@ -52,20 +52,20 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Vertex = GLSLCompile( ProgramCode.c_str(), GL_VERTEX_SHADER );
-	VLog( "* Vertex Shader Compiled" );
+	VLog( "* Vertex Shader Compiled (%i)", Program.Vertex );
 	
 	ProgramCode = DefineSymbol( "FRAGMENT_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Fragment = GLSLCompile( ProgramCode.c_str(), GL_FRAGMENT_SHADER );
-	VLog( "* Fragment Shader Compiled" );
+	VLog( "* Fragment Shader Compiled (%i)", Program.Fragment );
 	
 #ifdef USES_GEOMETRY_SHADERS
 	ProgramCode = DefineSymbol( "GEOMETRY_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
-	Program.Fragment = GLSLCompile( ProgramCode.c_str(), GL_GEOMETRY_SHADER );
-	VLog( "* Geometry Shader Compiled" );
+	Program.Geometry = GLSLCompile( ProgramCode.c_str(), GL_GEOMETRY_SHADER );
+	VLog( "* Geometry Shader Compiled (%i)", Program.Geometry );
 #endif // USES_GEOMETRY_SHADERS //
 	
 	Program.Program = glCreateProgram();
@@ -74,12 +74,16 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	glAttachShader( Program.Program, Program.Fragment );
 #ifdef USES_GEOMETRY_SHADERS
 	if ( UseGeometryShader )
-		glAttachShader( Program.Program, Program.Geometry);
+		glAttachShader( Program.Program, Program.Geometry );
 #endif // USES_GEOMETRY_SHADERS //
-	VLog( "* Shaders Bound to Program" );
+	VLog( "* Shaders Bound to Program (%i)", Program.Program );
+	
+	return Program;
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void LinkShader( const cUberShader_Shader& Program ) {
+	VLog( "* Linking..." );
+	
 	glLinkProgram( Program.Program );
 	glUseProgram( Program.Program );
 	VLog( "* Program Linked. Done." );
@@ -89,15 +93,18 @@ inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* At
 	cJSON* Attrib = Attribute->child;
 	
 	while ( Attrib ) {
+		int Index = cJSON_GetObjectItem( Attrib, "Index" )->valueint;
+		char* Name = cJSON_GetObjectItem( Attrib, "Name" )->valuestring;
+		
 		VLog( "* * * Attribute: %i %s", 
-			cJSON_GetObjectItem( Attrib, "Index" )->valueint, 
-			cJSON_GetObjectItem( Attrib, "Name" )->valuestring
+			Index, 
+			Name
 			);
 
 		glBindAttribLocation( 
 			Program.Program, 
-			cJSON_GetObjectItem( Attrib, "Index" )->valueint, 
-			cJSON_GetObjectItem( Attrib, "Name" )->valuestring
+			Index, 
+			Name
 			);
 		
 		// Next Attribute //
@@ -137,8 +144,6 @@ cUberShader::cUberShader( const char* InFile ) {
 				VLog( "* * %s", ShaderObj->string );
 				
 				std::string DefineList;
-				
-				//VLog("* * * %s", ShaderObj->child->string );
 				
 				cJSON* Define = cJSON_GetObjectItem( ShaderObj, "Define" );
 				if ( Define ) {
@@ -180,6 +185,7 @@ cUberShader::cUberShader( const char* InFile ) {
 				// Link the shader for use //
 				LinkShader( Program );
 				
+				// Add Shader to the UberShader //
 				Shader.push_back( Program );
 				
 				// Next Shader //

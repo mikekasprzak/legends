@@ -490,7 +490,9 @@ void cGame::Init() {
 	Physics.Init();
 	
 	ShowDebug = false;
-	
+
+	// *** //
+
 	Shader = new cUberShader( "src/GameLegends/UberShader/UberShader.json" );
 	
 	// *** //
@@ -682,7 +684,7 @@ void cGame::Init() {
 //	MeshTest.Import( "Content/Models/Export/Monkey.dae" );
 //	MeshTest.FileName = "Content/Models/Native/Monkey.pme";
 //	MeshTest.TextSave();
-
+	
 	Log( "- End of Init" );
 }
 // - ------------------------------------------------------------------------------------------ - //
