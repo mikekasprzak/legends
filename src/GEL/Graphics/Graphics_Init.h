@@ -71,6 +71,8 @@ void gelCalculateViewMatrix();
 
 void gelCalculateProxyScreenShape();
 
+void gelBeginShutdown();
+
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_Graphics_Init_H__ //
 // - ------------------------------------------------------------------------------------------ - //

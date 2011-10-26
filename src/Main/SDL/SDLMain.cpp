@@ -1125,6 +1125,8 @@ int main( int argc, char* argv[] ) {
 		}
 		while ( RefreshGame == true );
 
+		gelBeginShutdown();
+
 #ifdef USES_SIXENSE
 		Log( "+ Shutting down Sixense..." );
 		sixenseExit();
