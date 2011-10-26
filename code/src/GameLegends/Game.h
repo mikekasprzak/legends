@@ -7,7 +7,6 @@
 #include <squirrel.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Matrix.h>
-#include <Object/FdoHeightMap.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader/UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -63,7 +62,6 @@ public:
 	void ContentScan();
 
 public:
-	cFdoHeightMap HeightMap;
 	Matrix4x4 SpinMatrix;
 	Matrix4x4 CameraMatrix;
 	
@@ -110,8 +108,7 @@ public:
 		FirstRun( true ),
 		Capture( false ),
 		vm_ScriptsLoaded( false ),
-		
-		HeightMap(4,4)
+		Shader( 0 )
 	{
 		Init();
 	}
