@@ -14,6 +14,14 @@ public:
 	GLuint Geometry;
 
 	GLuint Program;
+		
+	cUberShader_Shader() :
+		Vertex( 0 ),
+		Fragment( 0 ),
+		Geometry( 0 ),
+		Program( 0 )
+	{
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cUberShader {
@@ -21,7 +29,6 @@ public:
 	std::string FileName;
 	
 	std::vector< cUberShader_Shader > Shader;
-		
 public:
 	cUberShader( const char* InFile );
 };
