@@ -5,7 +5,8 @@
 			"SHADE_FLAT"
 		],
 		"Color" : [
-			"SHADE_COLOR"
+			"SHADE_COLOR",
+			"SHADE_MOMMY"
 		]
 	}
 }
