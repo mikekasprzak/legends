@@ -28,7 +28,21 @@ cUberShader::cUberShader( const char* InFile ) {
 		if ( ShaderSource ) {
 			VLog( "* Shader Source Loaded (%i bytes).", ShaderSource->Size );
 			
+			cJSON* ShaderList = cJSON_GetObjectItem( root, "Shaders" );
 			
+			Log( "* %s", ShaderList->string );
+			
+			cJSON* Shader = ShaderList->child;
+			while ( Shader != 0 ) {
+				Log( "* * %s", Shader->string );
+				
+				cJSON* Obj = Shader->child;
+				while ( Obj != 0 ) {
+					Log("* * * %s", Obj->valuestring );
+					Obj = Obj->next;
+				}
+				Shader = Shader->next;
+			}			
 			
 			delete_DataBlock( ShaderSource );
 			VLog( "* Done with Shader Sources" );
