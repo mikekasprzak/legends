@@ -29,6 +29,7 @@
 #define USES_FBO
 #endif // USES_WINDOWS //
 // - ------------------------------------------------------------------------------------------ - //
+#include "RenderTarget/RenderTarget.h"
 
 GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
