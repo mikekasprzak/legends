@@ -16,8 +16,7 @@ attribute vec4 VertexPos;
 attribute vec2 TexCoord;
 attribute vec4 VertexColor;
 
-void main()
-{
+void main() {
 	gl_Position = ViewMatrix * VertexPos;
 	v_TexCoord = TexCoord * UVScalar;
 	v_Color = VertexColor * ColorScalar * GlobalColor;
@@ -28,7 +27,7 @@ void main()
 
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifdef FRAGMET_SHADER
+#ifdef FRAGMENT_SHADER
 // - ------------------------------------------------------------------------------------------ - //
 uniform vec4 GlobalColor;
 uniform sampler2D TexImage0;
@@ -36,8 +35,7 @@ uniform sampler2D TexImage0;
 varying vec2 v_TexCoord;
 varying vec4 v_Color;
 
-void main()
-{
+void main() {
 	gl_FragColor = v_Color * texture2D(TexImage0, v_TexCoord.xy);
 }
 // - ------------------------------------------------------------------------------------------ - //

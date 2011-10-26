@@ -114,6 +114,9 @@ inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* At
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) {
+	// Clear Shader Usage //
+	glUseProgram( 0 );
+
 	Log( "+ Loading UberShader Permutations File..." );
 	VLog( "* File: %s", InFile );
 	DataBlock* File = new_read_nullterminate_DataBlock( InFile );
