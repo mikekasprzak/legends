@@ -4,8 +4,11 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <string>
 #include <vector>
+#include <map>
 
 #include <Graphics/API.h>
+// - ------------------------------------------------------------------------------------------ - //
+typedef size_t GelShaderHandle;
 // - ------------------------------------------------------------------------------------------ - //
 class cUberShader_Shader {
 public:
@@ -29,8 +32,13 @@ public:
 	std::string FileName;
 	
 	std::vector< cUberShader_Shader > Shader;
+	std::map< std::string, GelShaderHandle > ShaderLookup;
 public:
 	cUberShader( const char* InFile );
+	~cUberShader();
+	
+	GelShaderHandle Find( const char* ShaderName );
+	void Bind( const GelShaderHandle Index ) const;
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __LEGENDS_UBERSHADER_UBERSHADER_H__ //
