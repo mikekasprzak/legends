@@ -154,6 +154,8 @@ void Simple_Exit() {
 	Log( "\n" );
 	
 	delete GameHost;
+	
+	gelBeginShutdown();
 
 	Log( "- Shutting Down GEL Graphics...\n" );
 	gelExit();

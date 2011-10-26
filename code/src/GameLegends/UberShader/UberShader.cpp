@@ -113,8 +113,10 @@ inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* At
 	VLog( "* Attributes bound to Program" );
 }
 // - ------------------------------------------------------------------------------------------ - //
-cUberShader::cUberShader( const char* InFile ) {
-	ShaderLookup.clear();
+cUberShader::cUberShader( const char* InFile ) :
+	CurrentShader( 0 )
+{
+//	ShaderLookup.clear();
 
 	Log( "+ Loading UberShader Permutations File..." );
 	VLog( "* File: %s", InFile );
@@ -231,7 +233,8 @@ cUberShader::~cUberShader() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cUberShader::Bind( const GelShaderHandle Index ) const {
+void cUberShader::Bind( const GelShaderHandle Index ) {
+	CurrentShader = &Shader[Index];
 	glUseProgram( Shader[Index].Program );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -250,7 +253,5 @@ GelShaderHandle cUberShader::Find( const char* ShaderName ) {
 	}
 	
 	return 0;
-
-//	return ShaderLookup[ ShaderName ];
 }
 // - ------------------------------------------------------------------------------------------ - //

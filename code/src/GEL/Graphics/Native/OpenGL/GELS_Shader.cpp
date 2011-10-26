@@ -207,5 +207,23 @@ void gels_BuildInternalShaders() {
 	// - --------------------------------------------------------------------------------------- - //
 }
 // - ------------------------------------------------------------------------------------------ - //
+void gels_FreeInternalShaders() {
+	glDeleteProgram( GELS_FlatShader_Prog );
+	glDeleteShader( GELS_FlatShader_Vs );
+	glDeleteShader( GELS_FlatShader_Fs );
+
+	glDeleteProgram( GELS_ColorShader_Prog );
+	glDeleteShader( GELS_ColorShader_Vs );
+	glDeleteShader( GELS_ColorShader_Fs );
+
+	glDeleteProgram( GELS_TextureShader_Prog );
+	glDeleteShader( GELS_TextureShader_Vs );
+	glDeleteShader( GELS_TextureShader_Fs );
+
+	glDeleteProgram( GELS_TextureColorShader_Prog );
+	glDeleteShader( GELS_TextureColorShader_Vs );
+	glDeleteShader( GELS_TextureColorShader_Fs );
+}
+// - ------------------------------------------------------------------------------------------ - //
 #endif // USES_OPENGL2 //
 // - ------------------------------------------------------------------------------------------ - //

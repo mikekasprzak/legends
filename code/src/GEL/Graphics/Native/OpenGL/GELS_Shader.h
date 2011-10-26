@@ -33,6 +33,9 @@ inline void gels_SetShader( const GLuint Program ) {
 #define GELS_BUILD_INTERNAL_SHADERS
 void gels_BuildInternalShaders();
 // - ------------------------------------------------------------------------------------------ - //
+#define GELS_FREE_INTERNAL_SHADERS
+void gels_FreeInternalShaders();
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_FLAT_SHADED
