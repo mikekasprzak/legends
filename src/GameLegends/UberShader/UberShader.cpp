@@ -6,6 +6,106 @@
 
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
+inline std::string DefineSymbol( const char* InStr ) {
+	return std::string("#define ") + std::string(InStr) + std::string("\n");
+}
+// - ------------------------------------------------------------------------------------------ - //
+GLuint GLSLCompile( const char* ShaderSrc, GLenum type ) {
+	GLuint GLShader;
+	GLint CompileStatus;
+	
+	GLShader = glCreateShader( type );
+	if ( GLShader == 0 )
+		return 0;
+	
+	glShaderSource( GLShader, 1, &ShaderSrc, NULL );
+	glCompileShader( GLShader );
+	
+	glGetShaderiv( GLShader, GL_COMPILE_STATUS, &CompileStatus );
+	
+	if ( !CompileStatus ) {
+		GLint InfoLen = 0;
+		glGetShaderiv( GLShader, GL_INFO_LOG_LENGTH, &InfoLen );
+		
+		if ( InfoLen > 0 ) {
+			char* InfoLog = new char[InfoLen];
+			
+			glGetShaderInfoLog( GLShader, InfoLen, NULL, InfoLog );
+			Log( "! Error Compiling Shader:\n%s\n", InfoLog );
+			
+			delete [] InfoLog;
+		}
+		
+		glDeleteShader( GLShader );
+		return 0;
+	}
+	
+	return GLShader;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSource, bool UseGeometryShader = false ) {
+	cUberShader_Shader Program;
+	
+	std::string ProgramCode;
+		
+	ProgramCode = DefineSymbol( "VERTEX_SHADER" );
+	ProgramCode += Defines;
+	ProgramCode += ShaderSource;
+	Program.Vertex = GLSLCompile( ProgramCode.c_str(), GL_VERTEX_SHADER );
+	VLog( "* Vertex Shader Compiled" );
+	
+	ProgramCode = DefineSymbol( "FRAGMENT_SHADER" );
+	ProgramCode += Defines;
+	ProgramCode += ShaderSource;
+	Program.Fragment = GLSLCompile( ProgramCode.c_str(), GL_FRAGMENT_SHADER );
+	VLog( "* Fragment Shader Compiled" );
+	
+#ifdef USES_GEOMETRY_SHADERS
+	ProgramCode = DefineSymbol( "GEOMETRY_SHADER" );
+	ProgramCode += Defines;
+	ProgramCode += ShaderSource;
+	Program.Fragment = GLSLCompile( ProgramCode.c_str(), GL_GEOMETRY_SHADER );
+	VLog( "* Geometry Shader Compiled" );
+#endif // USES_GEOMETRY_SHADERS //
+	
+	Program.Program = glCreateProgram();
+
+	glAttachShader( Program.Program, Program.Vertex );
+	glAttachShader( Program.Program, Program.Fragment );
+#ifdef USES_GEOMETRY_SHADERS
+	if ( UseGeometryShader )
+		glAttachShader( Program.Program, Program.Geometry);
+#endif // USES_GEOMETRY_SHADERS //
+	VLog( "* Shaders Bound to Program" );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void LinkShader( const cUberShader_Shader& Program ) {
+	glLinkProgram( Program.Program );
+	glUseProgram( Program.Program );
+	VLog( "* Program Linked. Done." );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* Attribute ) {
+	cJSON* Attrib = Attribute->child;
+	
+	while ( Attrib ) {
+		VLog( "* * * Attribute: %i %s", 
+			cJSON_GetObjectItem( Attrib, "Index" )->valueint, 
+			cJSON_GetObjectItem( Attrib, "Name" )->valuestring
+			);
+
+		glBindAttribLocation( 
+			Program.Program, 
+			cJSON_GetObjectItem( Attrib, "Index" )->valueint, 
+			cJSON_GetObjectItem( Attrib, "Name" )->valuestring
+			);
+		
+		// Next Attribute //
+		Attrib = Attrib->next;
+	}
+	VLog( "* Attributes bound to Program" );
+}
+// - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) {
 	Log( "+ Loading UberShader Permutations File..." );
 	VLog( "* File: %s", InFile );
@@ -30,19 +130,61 @@ cUberShader::cUberShader( const char* InFile ) {
 			
 			cJSON* ShaderList = cJSON_GetObjectItem( root, "Shaders" );
 			
-			Log( "* %s", ShaderList->string );
+			VLog( "* %s", ShaderList->string );
 			
-			cJSON* Shader = ShaderList->child;
-			while ( Shader != 0 ) {
-				Log( "* * %s", Shader->string );
+			cJSON* ShaderObj = ShaderList->child;
+			while ( ShaderObj != 0 ) {
+				VLog( "* * %s", ShaderObj->string );
 				
-				cJSON* Obj = Shader->child;
-				while ( Obj != 0 ) {
-					Log("* * * %s", Obj->valuestring );
-					Obj = Obj->next;
+				std::string DefineList;
+				
+				//VLog("* * * %s", ShaderObj->child->string );
+				
+				cJSON* Define = cJSON_GetObjectItem( ShaderObj, "Define" );
+				if ( Define ) {
+					cJSON* Obj = Define->child;
+					while ( Obj != 0 ) {
+						VLog("* * * #DEFINE %s", Obj->valuestring );
+						
+						DefineList += DefineSymbol( Obj->valuestring );
+						
+						// Next Define //
+						Obj = Obj->next;
+					}
 				}
-				Shader = Shader->next;
-			}			
+				else {
+					Log( "! UberShader: Error, \"Define\" section not found in %s!", ShaderObj->string );
+				}
+
+				bool HasGeometryShader = false;
+#ifdef USES_GEOMETRY_SHADER
+				// Section "Geometry": true, under the shader name //
+				cJSON* Geometry = cJSON_GetObjectItem( ShaderObj, "Geometry" );
+				if ( Geometry ) {
+					if ( Geometry->type == cJSON_True ) {
+						HasGeometryShader = true;
+					}
+				}
+#endif // USES_GEOMETRY_SHADER //
+
+				// Build the Shader //
+				cUberShader_Shader Program = BuildShader( DefineList.c_str(), ShaderSource->Data, HasGeometryShader );
+				// Assign Attributes //
+				cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
+				if ( Attribute ) {
+					AssignShaderAttributes( Program, Attribute );
+				}
+				else {
+					Log( "! UberShader: Error, \"Attribute\" section not found in %s!", ShaderObj->string );
+				}				
+				// Link the shader for use //
+				LinkShader( Program );
+				
+				Shader.push_back( Program );
+				
+				// Next Shader //
+				ShaderObj = ShaderObj->next;
+			}
 			
 			delete_DataBlock( ShaderSource );
 			VLog( "* Done with Shader Sources" );
@@ -55,6 +197,9 @@ cUberShader::cUberShader( const char* InFile ) {
 		cJSON_Delete( root );
 		VLog( "* Done JSON Data" );
 	}
+	
+	// Clear Shader Usage //
+	glUseProgram( 0 );
 
 	delete_DataBlock( File );
 	Log( "- Done with UberShader Permutations File." );
