@@ -59,7 +59,7 @@ debug: $(TARGET)
 endif # NON_STANDARD_RUN #
 # - ------------------------------------------------------------------------ - #
 clean:
-	-rm $(.O_FILES) $(.O_FILES:.o=.o.d) $(TARGET_DIR)/*
+	-rm $(.O_FILES) $(.O_FILES:.o=.o.d) $(TARGET_DIR)/* obj/$(TARGET_NAME)/.ocache
 # - ------------------------------------------------------------------------ - #
 cleanmain:
 	-rm $(filter %Main.cpp.o,$(.O_FILES) $(.O_FILES:.o=.o.d)) $(TARGET_DIR)/*
