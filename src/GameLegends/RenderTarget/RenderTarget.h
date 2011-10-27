@@ -18,6 +18,7 @@
 #if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
+#include <Debug/GelDebug.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderTarget_GLDefines.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -148,6 +149,32 @@ public:
 		}
 		
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 ); // Unbind //
+	}
+	
+	inline ~cRenderTarget() {
+		if ( FBO.size() > 0 )
+			gels_DeleteFramebuffers( FBO.size(), &FBO[0] );
+
+		if ( Texture.size() > 0 )
+			glDeleteTextures( Texture.size(), &Texture[0] );
+
+		if ( DepthBuffer.size() > 0 )
+			gels_DeleteRenderbuffers( DepthBuffer.size(), &DepthBuffer[0] );
+
+		if ( StencilBuffer.size() > 0 )
+			gels_DeleteRenderbuffers( StencilBuffer.size(), &StencilBuffer[0] );
+	}
+	
+	inline void Bind( const size_t Index = 0 ) const {
+		gels_BindFramebuffer( GELS_FRAMEBUFFER, FBO[Index] );
+	}
+		
+	inline void UnBind( ) const {
+		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
+	}
+	
+	inline void BindTexture( const size_t Index = 0 ) const { 
+		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
 	}
 };
 
