@@ -10,6 +10,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader/UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef USES_WINDOWS
+#define USES_FBO
+#endif // USES_WINDOWS //
+// - ------------------------------------------------------------------------------------------ - //
+#include "RenderTarget/RenderTarget.h"
+// - ------------------------------------------------------------------------------------------ - //
 #include "Physics.h"
 #include "Engine/Room.h"
 #include "Engine/RoomMesh.h"
@@ -75,6 +81,10 @@ public:
 	Vector3D Input_MoveTarget; // ?? //
 
 public:
+#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
+	cRenderTarget* RenderTarget;
+#endif // USES_FBO //
+
 	cUberShader* Shader;
 
 public:
