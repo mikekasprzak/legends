@@ -583,7 +583,7 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void cGame::DrawScene() {
+void cGame::UpdateCameraMatrix() {
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 //	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
 	
@@ -610,10 +610,11 @@ void cGame::DrawScene() {
 
 	ModelViewMatrix = ViewMatrix;
 	ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-	ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
-
-#ifndef NDEBUG
-	// Only in Debug build, Clear to red, so we can see undrawn pixels //
+	ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::DrawScene() {
+#ifndef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
 	gelSetClearColor( GEL_RGB_RED );
 	gelClear();
 #endif // NDEBUG //
@@ -692,8 +693,6 @@ void cGame::DrawScene() {
 void cGame::DrawSceneGlow() {
 	gelDisableBlending();
 
-	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
-
 	// Update Proxy settings to reflect the FBO //
 	ProxyScreen::Width = RenderTarget[RT_MINI1]->Width;
 	ProxyScreen::Height = RenderTarget[RT_MINI1]->Height;
@@ -738,42 +737,11 @@ void cGame::DrawSceneGlow() {
 
 	// Glow Render //
 	{
-/*
-		// Camera //
-		Real Near = _TV(10);
-		Real Length = _TV(100);
-		
-		Real Far = Near + Length;
-		Real PlanePos = _TV(0.50f);
-		
-		Real CameraPos = Near + ((Far - Near) * PlanePos);
-		
-		int ScWidth = ActualScreen::Width * Real(0.1);
-		int ScHeight = ActualScreen::Height * Real(0.1);
-
-		Real EffectWidth = ScWidth / RefScreen::Scalar;
-		Real EffectHeight = ScHeight / RefScreen::Scalar;
-
-		CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
-		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
-			EffectWidth,
-			EffectHeight,
-			Real( Near ),
-			Real( Far ),
-			Real( PlanePos )
-			);
-	
-		ModelViewMatrix = ViewMatrix;
-		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
-*/
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
 		gelDisableDepthWriting();
 		gelDisableDepthTest();
-	
-	
+		
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
-
 		gelDrawModeFlat();	
 		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
@@ -810,6 +778,8 @@ void cGame::DrawSceneGlow() {
 void cGame::Draw() {
 	gelEnableDepthWriting();
 	gelClearDepth();
+	
+	UpdateCameraMatrix();
 
 	DrawScene();
 

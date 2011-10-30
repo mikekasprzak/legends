@@ -141,6 +141,7 @@ public:
 	void GotFocus();
 	void LostFocus();
 	
+	void UpdateCameraMatrix();
 	void DrawScene();
 	void DrawSceneGlow();
 	
