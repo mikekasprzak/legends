@@ -705,7 +705,9 @@ void cGame::DrawSceneGlow() {
 	
 	gelCalculateProxyScreenShape();
 
-	// Fill with dummy color //
+	// ** ONLY IF REQUIRED TO BE SQUARE ** //
+/*
+	// Fill with dummy color, so we can visually see unused space bleed //
 	glViewport( 
 		0,
 		0,
@@ -715,7 +717,7 @@ void cGame::DrawSceneGlow() {
 	gelResetNativeClip();		
 	gelSetClearColor( GEL_RGB(64,0,0) );
 	gelClear();
-
+*/
 	// Correct Shape //
 	glViewport( 
 		0,
@@ -736,6 +738,7 @@ void cGame::DrawSceneGlow() {
 
 	// Glow Render //
 	{
+/*
 		// Camera //
 		Real Near = _TV(10);
 		Real Length = _TV(100);
@@ -763,7 +766,7 @@ void cGame::DrawSceneGlow() {
 		ModelViewMatrix = ViewMatrix;
 		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
 		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
-
+*/
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
 		gelDisableDepthWriting();
 		gelDisableDepthTest();
@@ -859,7 +862,7 @@ void cGame::Draw() {
 //		Real Offset = UnusedSpace * Real(Scalar+Scalar);
 //		ScalarY -= Offset;
 
-		// If correct aspect ratio //
+		// ** If correct aspect ratio (NPOT) ** //
 		int ScalarY = FullRefScreen::Height>>1;
 
 		gelSetColor( GEL_RGBA(255,255,255,16) );
