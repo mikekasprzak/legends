@@ -142,7 +142,7 @@ void cGame::AddOldRoom( const Vector3D& _Pos, const char* _File, const Real _Sca
 	for( int idx = 0; idx < Room.back()->Color->Size; idx++ ) {
 		Grid2D<cRoom::GType>* Grid = Room.back()->Grid;
 //		int Color = 255-Grid->Data[idx];//Room.back()->Vert->Data[idx].Pos.z;
-		int Color = 225-(20*Room.back()->Vert->Data[idx].Pos.z);
+		int Color = 225-(32*Room.back()->Vert->Data[idx].Pos.z);
 		if ( Color > 255 )
 			Color = 255;
 		if ( Color < 0 )
@@ -372,7 +372,7 @@ void cGame::Init() {
 	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,64,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
 	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
@@ -785,10 +785,10 @@ void cGame::Draw() {
 		gelEnableDepthWriting();
 		//gelClearDepth();
 
-#ifndef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
+#ifdef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
 		gelSetClearColor( GEL_RGB_RED );
 #else // NDEBUG //
-		gelSetClearColor( GEL_BLACK );
+		gelSetClearColor( GEL_RGB_BLACK );
 #endif // NDEBUG //
 
 		gelClear( true, true );
