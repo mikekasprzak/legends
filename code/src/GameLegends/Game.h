@@ -81,8 +81,18 @@ public:
 	Vector3D Input_MoveTarget; // ?? //
 
 public:
-	cRenderTarget* RenderTarget;
-	cUberShader* Shader;
+	std::vector< cRenderTarget* >	RenderTarget;
+	std::vector< cUberShader* >		UberShader;
+		
+	enum {
+		RT_PRIMARY = 0,
+		RT_MINI1,
+		RT_MINI2
+	};
+		
+	enum {
+		US_POSTPROCESS = 0
+	};
 
 public:
 	bool ShowDebug;
@@ -114,8 +124,7 @@ public:
 	cGame() :
 		FirstRun( true ),
 		Capture( false ),
-		vm_ScriptsLoaded( false ),
-		Shader( 0 )
+		vm_ScriptsLoaded( false )
 	{
 		Init();
 	}

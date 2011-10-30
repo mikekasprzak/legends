@@ -320,7 +320,19 @@ void cGame::Init() {
 
 	// *** //
 
-	Shader = new cUberShader( "src/GameLegends/UberShader/UberShader.json" );
+	RenderTarget.resize(3);
+	RenderTarget[RT_PRIMARY] = 
+		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 1 );
+			
+	RenderTarget[RT_MINI1] = 
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+	
+	RenderTarget[RT_MINI2] = 
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+	
+	UberShader.resize(1);
+	UberShader[US_POSTPROCESS] =
+		new cUberShader( "Content/Scripts/glsl/PostProcess.json" );
 	
 	// *** //
 	
@@ -329,12 +341,6 @@ void cGame::Init() {
 
 	SpaceNavigator_Init();
 #endif // USES_HIDAPI //
-	
-	// *** //
-
-
-	RenderTarget = new cRenderTarget( 1024, 1024, 1, 0, 0 );
-
 
 	// *** //
 	
@@ -421,12 +427,13 @@ void cGame::Exit() {
 		delete_Grid2D( Room[idx]->Grid );
 	}
 
+	for ( size_t idx = 0; idx < RenderTarget.size(); idx++ ) {	
+		delete RenderTarget[idx];
+	}
 
-	delete RenderTarget;
-
-
-	if ( Shader )
-		delete Shader;
+	for ( size_t idx = 0; idx < UberShader.size(); idx++ ) {	
+		delete UberShader[idx];
+	}
 	
 	// Shut Down Physics //
 	Physics.Exit();
@@ -580,8 +587,6 @@ void cGame::DrawScene() {
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 //	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
 	
-	gelEnableAlphaBlending();
-
 	// Camera //
 	Real Near = _TV(10);
 	Real Length = _TV(100);
@@ -607,13 +612,15 @@ void cGame::DrawScene() {
 	ModelViewMatrix = CameraMatrix * ModelViewMatrix;
 	ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
 
-//	gelSetClearColor( GEL_RGB_BLACK );
-	gelSetClearColor( GEL_RGB_WHITE );
+#ifndef NDEBUG
+	// Only in Debug build, Clear to red, so we can see undrawn pixels //
+	gelSetClearColor( GEL_RGB_RED );
 	gelClear();
-
+#endif // NDEBUG //
 
 	gelEnableDepthWriting();
 	gelEnableDepthTest();
+	gelDisableBlending();
 
 	gelDrawModeColors();	
 	for ( size_t idx = 0; idx < Room.size(); idx++ ) {
@@ -627,8 +634,6 @@ void cGame::DrawScene() {
 		RoomMesh[idx]->Draw();
 	}
 
-	//gelDrawModeFlat();
-	//gelDrawModeColors();
 	gelDrawModeTextured();	
 	// Monkey Head //
 	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
@@ -637,7 +642,8 @@ void cGame::DrawScene() {
 		Obj3[ Obj3_Sort[idx] ]->Draw();
 	}
 
-	gelDisableDepthWriting();
+	gelDisableDepthWriting();	// Just writing. Testing is still enabled. //
+	gelEnableAlphaBlending();
 	
 	// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 	gelDrawModeTextured();		
@@ -650,6 +656,7 @@ void cGame::DrawScene() {
 	gelDisableDepthTest();
 	
 	if ( ShowDebug ) {
+		gelDisableBlending();
 		gelDrawModeFlat();
 
 		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
@@ -668,6 +675,8 @@ void cGame::DrawScene() {
 			gelLoadMatrix( ModelViewMatrix );
 			RoomMesh[ idx ]->DrawDebug();
 		}
+		
+		gelEnableAlphaBlending();
 	}
 
 	if ( CameraFollow ) {
@@ -686,9 +695,14 @@ void cGame::DrawSceneGlow() {
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 
 	// Update Proxy settings to reflect the FBO //
-	int BufferSize = RenderTarget->Width;
-	ProxyScreen::Width = BufferSize;
-	ProxyScreen::Height = BufferSize / ActualScreen::AspectRatio;
+	ProxyScreen::Width = RenderTarget[RT_MINI1]->Width;
+	ProxyScreen::Height = RenderTarget[RT_MINI1]->Height;
+	
+	// ** ONLY IF REQUIRED TO MAKE A SQUARE FBO! **
+//	int BufferSize = RenderTarget[RT_MINI1]->Width;
+//	ProxyScreen::Width = BufferSize;
+//	ProxyScreen::Height = BufferSize / ActualScreen::AspectRatio;
+	
 	gelCalculateProxyScreenShape();
 
 	// Fill with dummy color //
@@ -796,8 +810,7 @@ void cGame::Draw() {
 
 	DrawScene();
 
-
-	RenderTarget->Bind();
+	RenderTarget[RT_MINI1]->Bind();
 
 	DrawSceneGlow();
 
@@ -833,55 +846,62 @@ void cGame::Draw() {
 
 
 		// Draw Color Buffer to screen //
-		RenderTarget->BindTexture();
+		RenderTarget[RT_MINI1]->BindTexture();
 		gelDrawModeTextured();
 		//gelDrawModeFlat();
 		
-		int Scalar = FullRefScreen::Width>>1;
-		int UnusedPixels = (ProxyScreen::Width - ProxyScreen::Height)>>1;
-		Real UnusedSpace = Real(UnusedPixels) / Real(ProxyScreen::Width);
-		Real Offset = UnusedSpace * Real(Scalar+Scalar);
+		int ScalarX = FullRefScreen::Width>>1;
+		
+		// ** ONLY IF SQUARE ** //
+//		int ScalarY = ScalarX;
+//		int UnusedPixels = (ProxyScreen::Width - ProxyScreen::Height)>>1;
+//		Real UnusedSpace = Real(UnusedPixels) / Real(ProxyScreen::Width);
+//		Real Offset = UnusedSpace * Real(Scalar+Scalar);
+//		ScalarY -= Offset;
+
+		// If correct aspect ratio //
+		int ScalarY = FullRefScreen::Height>>1;
 
 		gelSetColor( GEL_RGBA(255,255,255,16) );
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar, Scalar - Offset + 4, 0 ),
-			Vector3D( Scalar, -Scalar - Offset + 4, 0 )
+			Vector3D( -ScalarX, ScalarY + 4, 0 ),
+			Vector3D( ScalarX, -ScalarY + 4, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar, Scalar - Offset - 4, 0 ),
-			Vector3D( Scalar, -Scalar - Offset - 4, 0 )
+			Vector3D( -ScalarX, ScalarY - 4, 0 ),
+			Vector3D( ScalarX, -ScalarY - 4, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar + 4, Scalar - Offset, 0 ),
-			Vector3D( Scalar  + 4, -Scalar - Offset, 0 )
+			Vector3D( -ScalarX + 4, ScalarY, 0 ),
+			Vector3D( ScalarX  + 4, -ScalarY, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar - 4, Scalar - Offset, 0 ),
-			Vector3D( Scalar  - 4, -Scalar - Offset, 0 )
+			Vector3D( -ScalarX - 4, ScalarY, 0 ),
+			Vector3D( ScalarX  - 4, -ScalarY, 0 )
 			);
 			
 		gelSetColor( GEL_RGBA(255,255,255,32) );
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar + 2, Scalar - Offset  + 2, 0 ),
-			Vector3D( Scalar  + 2, -Scalar - Offset + 2, 0 )
+			Vector3D( -ScalarX + 2, ScalarY  + 2, 0 ),
+			Vector3D( ScalarX  + 2, -ScalarY + 2, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar + 2, Scalar - Offset  - 2, 0 ),
-			Vector3D( Scalar  + 2, -Scalar - Offset - 2, 0 )
+			Vector3D( -ScalarX + 2, ScalarY  - 2, 0 ),
+			Vector3D( ScalarX  + 2, -ScalarY - 2, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar - 2, Scalar - Offset  + 2, 0 ),
-			Vector3D( Scalar  - 2, -Scalar - Offset + 2, 0 )
+			Vector3D( -ScalarX - 2, ScalarY  + 2, 0 ),
+			Vector3D( ScalarX  - 2, -ScalarY + 2, 0 )
 			);
 		gelDrawRectFillTextured( 
-			Vector3D( -Scalar - 2, Scalar - Offset  - 2, 0 ),
-			Vector3D( Scalar  - 2, -Scalar - Offset - 2, 0 )
+			Vector3D( -ScalarX - 2, ScalarY  - 2, 0 ),
+			Vector3D( ScalarX  - 2, -ScalarY - 2, 0 )
 			);
 			
 //		gelSetColor( GEL_RGBA(255,255,255,128) );
 //		gelDrawRectFillTextured( 
-//			Vector3D( -Scalar, Scalar - Offset, 0 ),
-//			Vector3D( Scalar, -Scalar - Offset, 0 )
+//			Vector3D( -ScalarX, ScalarY, 0 ),
+//			Vector3D( ScalarX, -ScalarY, 0 )
 //			);
 
 
