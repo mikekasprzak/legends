@@ -723,12 +723,12 @@ void cGame::DrawSceneGlow() {
 	// Load the proxy clipping coords //
 	gelResetProxyClip();
 	
-//	gelSetClearColor( GEL_RGBA(255,255,255,0) );
-	gelSetClearColor( GEL_RGB_BLACK );
+	gelSetClearColor( GEL_RGBA(0,0,0,0) );
+//	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
 
 
-	gelEnableAlphaBlending();
+//	gelEnableAlphaBlending();
 
 	// Glow Render //
 	{
@@ -744,7 +744,8 @@ void cGame::DrawSceneGlow() {
 				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
 			}
 		}
-
+		
+		gelEnableAlphaBlending();
 		gelDrawModeTextured();		
 		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
@@ -863,7 +864,7 @@ void cGame::Draw() {
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 
-		gelEnableAddativeBlending();
+		gelEnablePremultipliedAlphaBlending();
 
 		UberShader[0]->Bind(0);
 		gelLoadMatrix( CameraViewMatrix );

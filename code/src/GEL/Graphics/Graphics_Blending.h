@@ -12,6 +12,12 @@ inline void gelEnableAlphaBlending() {
 #endif // GELS_ENABLE_ALPHA_BLENDING //
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void gelEnablePremultipliedAlphaBlending() {
+#ifdef GELS_ENABLE_PREMULTIPLIED_ALPHA_BLENDING
+	gels_EnablePremultipliedAlphaBlending();
+#endif // GELS_ENABLE_ALPHA_BLENDING //
+}
+// - ------------------------------------------------------------------------------------------ - //
 inline void gelEnableAddativeBlending() {
 #ifdef GELS_ENABLE_ADDATIVE_BLENDING
 	gels_EnableAddativeBlending();
