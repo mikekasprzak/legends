@@ -320,9 +320,12 @@ void cGame::Init() {
 
 	// *** //
 
-	RenderTarget.resize(3);
+	RenderTarget.resize(4);
 	RenderTarget[RT_PRIMARY] = 
 		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
+
+	RenderTarget[RT_BLURY] = 
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
@@ -858,7 +861,7 @@ void cGame::Draw() {
 		int ScalarX = FullRefScreen::Width>>1;
 		int ScalarY = FullRefScreen::Height>>1;
 
-		UberShader[0]->Bind(1);
+		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
@@ -868,6 +871,36 @@ void cGame::Draw() {
 			);
 	}
 
+	rt = RenderTarget[RT_BLURY];
+	rt->Bind();
+
+	// Correct Shape //
+	glViewport( 
+		0,
+		0,
+		rt->Width, 
+		rt->Height
+		);
+	
+	gelDisableBlending();
+		
+	{
+		gelSetClearColor( GEL_RGBA(0,0,0,0) );
+		gelClear();
+
+		int ScalarX = FullRefScreen::Width>>1;
+		int ScalarY = FullRefScreen::Height>>1;
+
+		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
+		gelLoadMatrix( CameraViewMatrix );
+		RenderTarget[RT_PRIMARY]->BindAsTexture();
+	
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+	}
+	
 	cRenderTarget::UnBind();	// Back to Screen //
 
 	glViewport( 
@@ -903,9 +936,18 @@ void cGame::Draw() {
 		// ** If correct aspect ratio (NPOT) ** //
 		int ScalarY = FullRefScreen::Height>>1;
 
-		RenderTarget[RT_PRIMARY]->BindAsTexture();
+//		RenderTarget[RT_PRIMARY]->BindAsTexture();
+//
+//		gelSetColor( GEL_RGBA(255,255,255,255) );
+//		gelDrawRectFillTextured( 
+//			Vector3D( -ScalarX, ScalarY, 0 ),
+//			Vector3D( ScalarX, -ScalarY, 0 )
+//			);
 
-		gelSetColor( GEL_RGBA(255,255,255,255) );
+		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
+		gelLoadMatrix( CameraViewMatrix );
+		RenderTarget[RT_BLURY]->BindAsTexture();
+
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
@@ -913,7 +955,7 @@ void cGame::Draw() {
 
 		gelEnablePremultipliedAlphaBlending();
 
-		UberShader[0]->Bind(0);
+		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI2]->BindAsTexture();
 
