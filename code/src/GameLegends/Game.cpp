@@ -325,7 +325,7 @@ void cGame::Init() {
 		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
 
 	RenderTarget[RT_BLURY] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>2, ActualScreen::Height>>2, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
@@ -333,9 +333,12 @@ void cGame::Init() {
 	RenderTarget[RT_MINI2] = 
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 	
-	UberShader.resize(1);
+	UberShader.resize(2);
 	UberShader[US_POSTPROCESS] =
 		new cUberShader( "Content/Scripts/glsl/PostProcess.json" );
+
+	UberShader[US_EDGEBLEND] =
+		new cUberShader( "Content/Scripts/glsl/PPEdgeBlend.json" );
 	
 	// *** //
 	
@@ -891,7 +894,7 @@ void cGame::Draw() {
 		int ScalarX = FullRefScreen::Width>>1;
 		int ScalarY = FullRefScreen::Height>>1;
 
-		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
+		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
@@ -936,15 +939,17 @@ void cGame::Draw() {
 		// ** If correct aspect ratio (NPOT) ** //
 		int ScalarY = FullRefScreen::Height>>1;
 
-//		RenderTarget[RT_PRIMARY]->BindAsTexture();
-//
-//		gelSetColor( GEL_RGBA(255,255,255,255) );
-//		gelDrawRectFillTextured( 
-//			Vector3D( -ScalarX, ScalarY, 0 ),
-//			Vector3D( ScalarX, -ScalarY, 0 )
-//			);
+		RenderTarget[RT_PRIMARY]->BindAsTexture();
 
-		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
+		gelSetColor( GEL_RGBA(255,255,255,255) );
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+
+		gelEnableAlphaBlending();
+//		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR_HEAVY);
+		UberShader[US_EDGEBLEND]->Bind(0);
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_BLURY]->BindAsTexture();
 
