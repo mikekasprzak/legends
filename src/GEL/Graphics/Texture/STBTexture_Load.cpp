@@ -109,7 +109,28 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	int OmittedTexture = 0;
 	
 	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, MipMapCount );
-
+	
+	// Premultiply the Alpha, but only if it has alpha //
+	if ( Texture->Info == 4 ) {
+		VLog("* Premultiplying Alpha...");
+		for ( size_t texHeight = 0; texHeight < Texture->Height; texHeight++ ) {
+			for ( size_t texWidth = 0; texWidth < Texture->Width; texWidth++ ) {
+				register int Index = (texHeight * (int)Texture->Width) + texWidth;
+				unsigned int* Data = (unsigned int*)(&Texture->Data[0]);
+				int R = (Data[ Index ] >> 0) & 0xff;
+				int G = (Data[ Index ] >> 8) & 0xff;
+				int B = (Data[ Index ] >> 16) & 0xff;
+				int A = (Data[ Index ] >> 24);// & 0xff;
+				
+				R = (R * A) / 255;
+				G = (G * A) / 255;
+				B = (B * A) / 255;
+				
+				Data[ Index ] = (R << 0) | (G << 8) | (B << 16) | (A << 24);
+			}
+		}
+	}
+	
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < MipMapCount+1; MipMap++ ) {
 		{
