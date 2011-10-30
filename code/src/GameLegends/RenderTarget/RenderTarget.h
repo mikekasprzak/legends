@@ -144,7 +144,7 @@ public:
 				Log( "* ERROR: FBO %i Unavailable! (%i)", idx, FBO[idx] );
 			}
 			else {
-				Log( "* FBO %i OK. (%i)", idx, FBO[idx] );
+				Log( "* FBO %i OK. (GL_ID: %i)", idx, FBO[idx] );
 			}
 		}
 		
