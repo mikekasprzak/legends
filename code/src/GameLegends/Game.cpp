@@ -639,7 +639,7 @@ void cGame::DrawScene() {
 	}
 
 	gelDisableDepthWriting();	// Just writing. Depth Testing is still enabled. //
-	gelEnableAlphaBlending();
+	gelEnablePremultipliedAlphaBlending();
 	
 	// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 	gelDrawModeTextured();		
@@ -672,7 +672,7 @@ void cGame::DrawScene() {
 			RoomMesh[ idx ]->DrawDebug();
 		}
 		
-		gelEnableAlphaBlending();
+		gelEnablePremultipliedAlphaBlending();
 	}
 
 	if ( CameraFollow ) {
@@ -689,15 +689,15 @@ void cGame::DrawSceneGlow() {
 	gelDisableBlending();
 
 	// Update Proxy settings to reflect the FBO //
-	ProxyScreen::Width = RenderTarget[RT_MINI1]->Width;
-	ProxyScreen::Height = RenderTarget[RT_MINI1]->Height;
+//	ProxyScreen::Width = RenderTarget[RT_MINI1]->Width;
+//	ProxyScreen::Height = RenderTarget[RT_MINI1]->Height;
 	
 	// ** ONLY IF REQUIRED TO MAKE A SQUARE FBO! **
 //	int BufferSize = RenderTarget[RT_MINI1]->Width;
 //	ProxyScreen::Width = BufferSize;
 //	ProxyScreen::Height = BufferSize / ActualScreen::AspectRatio;
 	
-	gelCalculateProxyScreenShape();
+//	gelCalculateProxyScreenShape();
 
 	// ** ONLY IF REQUIRED TO BE SQUARE ** //
 /*
@@ -712,16 +712,16 @@ void cGame::DrawSceneGlow() {
 	gelSetClearColor( GEL_RGB(64,0,0) );
 	gelClear();
 */
-	// Correct Shape //
-	glViewport( 
-		0,
-		0,
-		ProxyScreen::Width, 
-		ProxyScreen::Height
-		);
-		
-	// Load the proxy clipping coords //
-	gelResetProxyClip();
+//	// Correct Shape //
+//	glViewport( 
+//		0,
+//		0,
+//		ProxyScreen::Width, 
+//		ProxyScreen::Height
+//		);
+//		
+//	// Load the proxy clipping coords //
+//	gelResetProxyClip();
 	
 	gelSetClearColor( GEL_RGBA(0,0,0,0) );
 //	gelSetClearColor( GEL_RGB_BLACK );
@@ -745,7 +745,7 @@ void cGame::DrawSceneGlow() {
 			}
 		}
 		
-		gelEnableAlphaBlending();
+		gelEnablePremultipliedAlphaBlending();
 		gelDrawModeTextured();		
 		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
@@ -755,18 +755,6 @@ void cGame::DrawSceneGlow() {
 		}
 		gelSetColor( GEL_RGB_DEFAULT );	
 	}
-
-	glViewport( 
-		0,
-		0, 
-//		NativeScreen::Width, 
-//		NativeScreen::Height
-		ActualScreen::Width, 
-		ActualScreen::Height
-		);
-		
-	// Restore regular clipping coords //
-	gelResetClip();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -802,18 +790,30 @@ void cGame::Draw() {
 		DrawScene();
 	}
 
-	RenderTarget[RT_MINI1]->Bind();
+	rt = RenderTarget[RT_MINI1];
+	rt->Bind();
+	
+	ProxyScreen::Width = rt->Width;
+	ProxyScreen::Height = rt->Height;
+	gelCalculateProxyScreenShape();
+
+	// Correct Shape //
+	glViewport( 
+		0,
+		0,
+		ProxyScreen::Width, 
+		ProxyScreen::Height
+		);
+		
+	// Load the proxy clipping coords //
+	gelResetProxyClip();
 	
 	{
 		DrawSceneGlow();
 	}
 
-	cRenderTarget::UnBind();	// Back to Screen //
-
-	gelEnableDepthWriting();
-	gelClearDepth();
-
 	// Reset Camera for UI //
+	Matrix4x4 CameraViewMatrix;
 	{
 		Real Near = 100;
 		Real Length = 800;
@@ -834,15 +834,62 @@ void cGame::Draw() {
 			Real( PlanePos )
 			);
 		
-		Matrix4x4 CameraViewMatrix = ViewMatrix;
+		CameraViewMatrix = ViewMatrix;
 		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
-//		CameraViewMatrix = SpinMatrix * CameraViewMatrix;
+	}
+
+	rt = RenderTarget[RT_MINI2];
+	rt->Bind();
+
+	// Correct Shape //
+	glViewport( 
+		0,
+		0,
+		rt->Width, 
+		rt->Height
+		);
 	
+	gelDisableBlending();
+		
+	{
+		gelSetClearColor( GEL_RGBA(0,0,0,0) );
+		gelClear();
+
+		int ScalarX = FullRefScreen::Width>>1;
+		int ScalarY = FullRefScreen::Height>>1;
+
+		UberShader[0]->Bind(1);
 		gelLoadMatrix( CameraViewMatrix );
+		RenderTarget[RT_MINI1]->BindAsTexture();
+	
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+	}
 
+	cRenderTarget::UnBind();	// Back to Screen //
 
+	glViewport( 
+		0,
+		0, 
+//		NativeScreen::Width, 
+//		NativeScreen::Height
+		ActualScreen::Width, 
+		ActualScreen::Height
+		);
+		
+	// Restore regular clipping coords //
+	gelResetClip();
+
+	gelEnableDepthWriting();
+	gelClearDepth();
+
+	// Reset Camera for UI //
+	{
 		// Draw Color Buffer to screen //
 		gelDrawModeTextured();
+		gelLoadMatrix( CameraViewMatrix );
 		
 		int ScalarX = FullRefScreen::Width>>1;
 		
@@ -868,64 +915,20 @@ void cGame::Draw() {
 
 		UberShader[0]->Bind(0);
 		gelLoadMatrix( CameraViewMatrix );
-		RenderTarget[RT_MINI1]->BindAsTexture();
+		RenderTarget[RT_MINI2]->BindAsTexture();
 
 		gelSetColor( GEL_RGBA(255,255,255,255) );
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
-/*
-		gelSetColor( GEL_RGBA(255,255,255,16) );
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX, ScalarY + 4, 0 ),
-			Vector3D( ScalarX, -ScalarY + 4, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX, ScalarY - 4, 0 ),
-			Vector3D( ScalarX, -ScalarY - 4, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX + 4, ScalarY, 0 ),
-			Vector3D( ScalarX  + 4, -ScalarY, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX - 4, ScalarY, 0 ),
-			Vector3D( ScalarX  - 4, -ScalarY, 0 )
-			);
-			
-		gelSetColor( GEL_RGBA(255,255,255,32) );
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX + 2, ScalarY  + 2, 0 ),
-			Vector3D( ScalarX  + 2, -ScalarY + 2, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX + 2, ScalarY  - 2, 0 ),
-			Vector3D( ScalarX  + 2, -ScalarY - 2, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX - 2, ScalarY  + 2, 0 ),
-			Vector3D( ScalarX  - 2, -ScalarY + 2, 0 )
-			);
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX - 2, ScalarY  - 2, 0 ),
-			Vector3D( ScalarX  - 2, -ScalarY - 2, 0 )
-			);
-			
-//		gelSetColor( GEL_RGBA(255,255,255,128) );
-//		gelDrawRectFillTextured( 
-//			Vector3D( -ScalarX, ScalarY, 0 ),
-//			Vector3D( ScalarX, -ScalarY, 0 )
-//			);
-
-*/
 
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();
 #endif // USES_HIDAPI //
 
 		gelSetColor( GEL_RGB_DEFAULT );
-		gelEnableAlphaBlending();
+		gelEnablePremultipliedAlphaBlending();
 	}
 	
 }
