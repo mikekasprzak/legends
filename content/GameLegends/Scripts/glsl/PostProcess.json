@@ -3,7 +3,8 @@
 	"Shaders"	: {
 		"HBlur" : {
 			"Define" : [
-				"H_BLUR_PASS"
+				"H_BLUR_PASS",
+				"LIGHT_BLUR"
 			],
 			"Attribute" : [
 				{
@@ -19,7 +20,74 @@
 
 		"VBlur" : {
 			"Define" : [
-				"V_BLUR_PASS"
+				"V_BLUR_PASS",
+				"LIGHT_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+		
+		"HBlurHeavy" : {
+			"Define" : [
+				"H_BLUR_PASS",
+				"HEAVY_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+
+		"VBlurHeavy" : {
+			"Define" : [
+				"V_BLUR_PASS",
+				"HEAVY_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+		
+		"Blur" : {
+			"Define" : [
+				"LIGHT_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+		
+		"BlurHeavy" : {
+			"Define" : [
+				"HEAVY_BLUR"
 			],
 			"Attribute" : [
 				{

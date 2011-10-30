@@ -1,0 +1,20 @@
+{
+	"File"		: "Content/Scripts/glsl/PPEdgeBlend.glsl",
+	"Shaders"	: {
+		"VingetteBlend" : {
+			"Define" : [
+				"DUMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		}
+	}
+}
