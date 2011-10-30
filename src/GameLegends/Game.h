@@ -92,12 +92,17 @@ public:
 	};
 		
 	enum {
-		US_POSTPROCESS = 0
+		US_POSTPROCESS = 0,
+		US_EDGEBLEND
 	};
 
 	enum {
 		US_PP_HBLUR = 0,
-		US_PP_VBLUR
+		US_PP_VBLUR,
+		US_PP_HBLUR_HEAVY,
+		US_PP_VBLUR_HEAVY,
+		US_PP_BLUR,
+		US_PP_BLUR_HEAVY
 	};
 
 public:
