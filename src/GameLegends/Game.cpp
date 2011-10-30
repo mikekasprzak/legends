@@ -322,16 +322,16 @@ void cGame::Init() {
 
 	RenderTarget.resize(4);
 	RenderTarget[RT_PRIMARY] = 
-		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 1, 0 );
 
 	RenderTarget[RT_BLURY] = 
 		new cRenderTarget( ActualScreen::Width>>2, ActualScreen::Height>>2, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
-		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
 	
 	RenderTarget[RT_MINI2] = 
-		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
 	
 	UberShader.resize(2);
 	UberShader[US_POSTPROCESS] =
@@ -372,7 +372,7 @@ void cGame::Init() {
 	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,64,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
 	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
@@ -693,7 +693,11 @@ void cGame::DrawScene() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawSceneGlow() {
 	gelDisableBlending();
-
+	gelDisableDepthWriting();
+	gelDisableDepthTest();
+	gelDisableStencilWriting();
+	gelDisableStencilTest();
+		
 	// Update Proxy settings to reflect the FBO //
 //	ProxyScreen::Width = RenderTarget[RT_MINI1]->Width;
 //	ProxyScreen::Height = RenderTarget[RT_MINI1]->Height;
@@ -739,8 +743,7 @@ void cGame::DrawSceneGlow() {
 	// Glow Render //
 	{
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
-		gelDisableDepthWriting();
-		gelDisableDepthTest();
+
 		
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 		gelDrawModeFlat();	
