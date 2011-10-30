@@ -332,9 +332,9 @@ void cGame::Init() {
 	
 	// *** //
 
-#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
+
 	RenderTarget = new cRenderTarget( 1024, 1024, 1, 0, 0 );
-#endif // USES_FBO //
+
 
 	// *** //
 	
@@ -421,9 +421,9 @@ void cGame::Exit() {
 		delete_Grid2D( Room[idx]->Grid );
 	}
 
-#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
+
 	delete RenderTarget;
-#endif // USES_FBO //
+
 
 	if ( Shader )
 		delete Shader;
@@ -566,147 +566,124 @@ void cGame::Step() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
-			gelLoadMatrix( ModelViewMatrix );
-//			gelLoadMatrix( ViewMatrix );
-//			gelMultMatrix( CameraMatrix );
-//			gelMultMatrix( SpinMatrix );
-			gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
-
-
-			
-			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
-			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
-			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
+	gelLoadMatrix( ModelViewMatrix );
+	gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
 	
-//			gelDrawIndexedTriangleStrip( ThisRoom->Vert->Data, ThisRoom->Index->Data, 1024/*ThisRoom->Index->Size*/, GEL_RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
-//			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, 1024/*ThisRoom->OutlineIndex->Size*/, GEL_RGBA(0,255,0,64) );
-//			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
-	
-//			static int StripNum = 0;
-//			StripNum++;
-//			StripNum %= indexStripCount_Optimized_TriangleStrips(65);
-//			gelDrawIndexedTriangleStrip( 
-//				ThisRoom->Vert->Data,
-//				&ThisRoom->Index->Data[indexIndex_Optimized_TriangleStrips(65,StripNum,0)],
-//				indexStripSize_Optimized_TriangleStrips(65),
-//				GEL_RGBA(255,0,0,128)
-//				);	
+	gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
+	gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
+	gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cGame::Draw() {
-	gelEnableDepthWriting();
-	
-//	gelSetClearColor( GEL_RGB_BLACK );
-	gelSetClearColor( GEL_RGB_WHITE );
-	gelClear();
-	gelClearDepth();
 
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::DrawScene() {
 	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 //	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
 	
 	gelEnableAlphaBlending();
 
-	// Main Render //
-	{
-		// Camera //
-		Real Near = _TV(10);
-		Real Length = _TV(100);
-		
-		Real Far = Near + Length;
-		Real PlanePos = _TV(0.50f);
-
-		gelSetDepthRange( 0, 1 );
-		gelSetDepthFunc( GEL_LESSEQUAL );
-		
-		Real CameraPos = Near + ((Far - Near) * PlanePos);
-
-		CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
-		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
-			ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
-			ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-			Real( Near ),
-			Real( Far ),
-			Real( PlanePos )
-			);
+	// Camera //
+	Real Near = _TV(10);
+	Real Length = _TV(100);
 	
-		ModelViewMatrix = ViewMatrix;
-		ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-		ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
+	Real Far = Near + Length;
+	Real PlanePos = _TV(0.50f);
 
-		gelEnableDepthWriting();
-		gelEnableDepthTest();
+	gelSetDepthRange( 0, 1 );
+	gelSetDepthFunc( GEL_LESSEQUAL );
+	
+	Real CameraPos = Near + ((Far - Near) * PlanePos);
 
-		gelDrawModeColors();	
-		for ( size_t idx = 0; idx < Room.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			Room[idx]->Draw();
-		}
+	CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
+	ViewMatrix = Calc_Frustum_PerspectiveProjection( 
+		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+		Real( Near ),
+		Real( Far ),
+		Real( PlanePos )
+		);
 
-		gelDrawModeTextured();	
-		for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			RoomMesh[idx]->Draw();
-		}
+	ModelViewMatrix = ViewMatrix;
+	ModelViewMatrix = CameraMatrix * ModelViewMatrix;
+	ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;
 
-		//gelDrawModeFlat();
-		//gelDrawModeColors();
-		gelDrawModeTextured();	
-		// Monkey Head //
-		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			// Changing Alpha no longer works because depth test is removing backfaces //
-			Obj3[ Obj3_Sort[idx] ]->Draw();
-		}
+//	gelSetClearColor( GEL_RGB_BLACK );
+	gelSetClearColor( GEL_RGB_WHITE );
+	gelClear();
 
-		gelDisableDepthWriting();
-		
-		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
-		gelDrawModeTextured();		
-		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
-			Obj[ Obj_Sort[idx] ]->Draw();
-		}
-		gelSetColor( GEL_RGB_DEFAULT );
-				
-		gelDisableDepthTest();
-		
-		if ( ShowDebug ) {
-			gelDrawModeFlat();
 
-			for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-				gelLoadMatrix( ModelViewMatrix );
-				Obj3[ idx ]->DrawDebug();
-			}
-			for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
-				gelLoadMatrix( ModelViewMatrix );
-				Obj[ idx ]->DrawDebug();
-			}
-			for ( size_t idx = 0; idx < Room.size(); idx++ ) {
-				gelLoadMatrix( ModelViewMatrix );
-				Room[ idx ]->DrawDebug();
-			}
-			for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-				gelLoadMatrix( ModelViewMatrix );
-				RoomMesh[ idx ]->DrawDebug();
-			}
-		}
+	gelEnableDepthWriting();
+	gelEnableDepthTest();
 
-		if ( CameraFollow ) {
-			gelLoadMatrix( ModelViewMatrix );
-			
-			gelDrawModeTextured();
-			AssetPool::Set( txCursorAttack );
-
-			gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(2.4), Real(0.6), GEL_RGB(255,242,0) );
-		}		
+	gelDrawModeColors();	
+	for ( size_t idx = 0; idx < Room.size(); idx++ ) {
+		gelLoadMatrix( ModelViewMatrix );
+		Room[idx]->Draw();
 	}
 
-#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
-	// Draw to the FBO //
-	RenderTarget->Bind();
+	gelDrawModeTextured();	
+	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
+		gelLoadMatrix( ModelViewMatrix );
+		RoomMesh[idx]->Draw();
+	}
+
+	//gelDrawModeFlat();
+	//gelDrawModeColors();
+	gelDrawModeTextured();	
+	// Monkey Head //
+	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
+		gelLoadMatrix( ModelViewMatrix );
+		// Changing Alpha no longer works because depth test is removing backfaces //
+		Obj3[ Obj3_Sort[idx] ]->Draw();
+	}
+
+	gelDisableDepthWriting();
+	
+	// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
+	gelDrawModeTextured();		
+	for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
+		gelLoadMatrix( ModelViewMatrix );
+		Obj[ Obj_Sort[idx] ]->Draw();
+	}
+	gelSetColor( GEL_RGB_DEFAULT );
+			
+	gelDisableDepthTest();
+	
+	if ( ShowDebug ) {
+		gelDrawModeFlat();
+
+		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj3[ idx ]->DrawDebug();
+		}
+		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Obj[ idx ]->DrawDebug();
+		}
+		for ( size_t idx = 0; idx < Room.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			Room[ idx ]->DrawDebug();
+		}
+		for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
+			gelLoadMatrix( ModelViewMatrix );
+			RoomMesh[ idx ]->DrawDebug();
+		}
+	}
+
+	if ( CameraFollow ) {
+		gelLoadMatrix( ModelViewMatrix );
+		
+		gelDrawModeTextured();
+		AssetPool::Set( txCursorAttack );
+
+		gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(2.4), Real(0.6), GEL_RGB(255,242,0) );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::DrawSceneGlow() {
 	gelDisableBlending();
+
+	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
 
 	// Update Proxy settings to reflect the FBO //
 	int BufferSize = RenderTarget->Width;
@@ -809,10 +786,23 @@ void cGame::Draw() {
 		
 	// Restore regular clipping coords //
 	gelResetClip();
+}
+// - ------------------------------------------------------------------------------------------ - //
 
-	// Unbind the FBO //
-	RenderTarget->UnBind();
-#endif // USES_FBO //
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::Draw() {
+	gelEnableDepthWriting();
+	gelClearDepth();
+
+	DrawScene();
+
+
+	RenderTarget->Bind();
+
+	DrawSceneGlow();
+
+	cRenderTarget::UnBind();
+
 
 	// Reset Camera for UI //
 	{
@@ -841,7 +831,7 @@ void cGame::Draw() {
 	
 		gelLoadMatrix( CameraViewMatrix );
 
-#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
+
 		// Draw Color Buffer to screen //
 		RenderTarget->BindTexture();
 		gelDrawModeTextured();
@@ -894,7 +884,7 @@ void cGame::Draw() {
 //			Vector3D( Scalar, -Scalar - Offset, 0 )
 //			);
 
-#endif // USES_FBO //
+
 
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();

@@ -81,10 +81,7 @@ public:
 	Vector3D Input_MoveTarget; // ?? //
 
 public:
-#if defined(USES_FBO) || defined(USES_FBO_EXT) || defined(USES_FBO_OES)
 	cRenderTarget* RenderTarget;
-#endif // USES_FBO //
-
 	cUberShader* Shader;
 
 public:
@@ -135,6 +132,8 @@ public:
 	void GotFocus();
 	void LostFocus();
 	
+	void DrawScene();
+	void DrawSceneGlow();
 	
 	void DrawRoom( cRoom* ThisRoom, const Vector3D& Offset );
 public:

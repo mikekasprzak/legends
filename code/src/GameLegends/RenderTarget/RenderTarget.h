@@ -169,7 +169,7 @@ public:
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, FBO[Index] );
 	}
 		
-	inline void UnBind( ) const {
+	inline static void UnBind( ) {
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
 	}
 	
