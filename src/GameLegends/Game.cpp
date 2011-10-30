@@ -322,7 +322,7 @@ void cGame::Init() {
 
 	RenderTarget.resize(3);
 	RenderTarget[RT_PRIMARY] = 
-		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 1 );
+		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
@@ -614,11 +614,6 @@ void cGame::UpdateCameraMatrix() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawScene() {
-#ifndef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
-	gelSetClearColor( GEL_RGB_RED );
-	gelClear();
-#endif // NDEBUG //
-
 	gelEnableDepthWriting();
 	gelEnableDepthTest();
 	gelDisableBlending();
@@ -643,7 +638,7 @@ void cGame::DrawScene() {
 		Obj3[ Obj3_Sort[idx] ]->Draw();
 	}
 
-	gelDisableDepthWriting();	// Just writing. Testing is still enabled. //
+	gelDisableDepthWriting();	// Just writing. Depth Testing is still enabled. //
 	gelEnableAlphaBlending();
 	
 	// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
@@ -654,7 +649,7 @@ void cGame::DrawScene() {
 	}
 	gelSetColor( GEL_RGB_DEFAULT );
 			
-	gelDisableDepthTest();
+	gelDisableDepthTest();		// Testing too. Depth buffer is off //
 	
 	if ( ShowDebug ) {
 		gelDisableBlending();
@@ -776,19 +771,47 @@ void cGame::DrawSceneGlow() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
-	gelEnableDepthWriting();
-	gelClearDepth();
-	
 	UpdateCameraMatrix();
 
-	DrawScene();
+	RenderTarget[RT_PRIMARY]->Bind();
+	
+	glViewport( 
+		0,
+		0, 
+//		NativeScreen::Width, 
+//		NativeScreen::Height
+		ActualScreen::Width, 
+		ActualScreen::Height
+		);
+		
+	// Restore regular clipping coords //
+	gelResetClip();
+	
+	{
+		gelEnableDepthWriting();
+		//gelClearDepth();
+
+#ifndef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
+		gelSetClearColor( GEL_RGB_RED );
+#else // NDEBUG //
+		gelSetClearColor( GEL_BLACK );
+#endif // NDEBUG //
+
+		gelClear( true, true );
+
+		DrawScene();
+	}
 
 	RenderTarget[RT_MINI1]->Bind();
+	
+	{
+		DrawSceneGlow();
+	}
 
-	DrawSceneGlow();
+	cRenderTarget::UnBind();	// Back to Screen //
 
-	cRenderTarget::UnBind();
-
+	gelEnableDepthWriting();
+	gelClearDepth();
 
 	// Reset Camera for UI //
 	{
@@ -819,9 +842,7 @@ void cGame::Draw() {
 
 
 		// Draw Color Buffer to screen //
-		RenderTarget[RT_MINI1]->BindTexture();
 		gelDrawModeTextured();
-		//gelDrawModeFlat();
 		
 		int ScalarX = FullRefScreen::Width>>1;
 		
@@ -834,6 +855,16 @@ void cGame::Draw() {
 
 		// ** If correct aspect ratio (NPOT) ** //
 		int ScalarY = FullRefScreen::Height>>1;
+
+		RenderTarget[RT_PRIMARY]->BindAsTexture();
+
+		gelSetColor( GEL_RGBA(255,255,255,128) );
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+
+		RenderTarget[RT_MINI1]->BindAsTexture();
 
 		gelSetColor( GEL_RGBA(255,255,255,16) );
 		gelDrawRectFillTextured( 

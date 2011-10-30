@@ -173,7 +173,7 @@ public:
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
 	}
 	
-	inline void BindTexture( const size_t Index = 0 ) const { 
+	inline void BindAsTexture( const size_t Index = 0 ) const { 
 		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
 	}
 };
