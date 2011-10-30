@@ -322,13 +322,13 @@ void cGame::Init() {
 
 	RenderTarget.resize(3);
 	RenderTarget[RT_PRIMARY] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 1, 0 );
+		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
 			
 	RenderTarget[RT_MINI1] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 	
 	RenderTarget[RT_MINI2] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 	
 	UberShader.resize(1);
 	UberShader[US_POSTPROCESS] =
@@ -723,8 +723,8 @@ void cGame::DrawSceneGlow() {
 	// Load the proxy clipping coords //
 	gelResetProxyClip();
 	
-	gelSetClearColor( GEL_RGBA(255,255,255,0) );
-//	gelSetClearColor( GEL_RGB_BLACK );
+//	gelSetClearColor( GEL_RGBA(255,255,255,0) );
+	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
 
 
@@ -863,8 +863,18 @@ void cGame::Draw() {
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 
+		gelEnableAddativeBlending();
+
+		UberShader[0]->Bind(0);
+		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI1]->BindAsTexture();
 
+		gelSetColor( GEL_RGBA(255,255,255,255) );
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+/*
 		gelSetColor( GEL_RGBA(255,255,255,16) );
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY + 4, 0 ),
@@ -907,7 +917,7 @@ void cGame::Draw() {
 //			Vector3D( ScalarX, -ScalarY, 0 )
 //			);
 
-
+*/
 
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();
