@@ -322,7 +322,7 @@ void cGame::Init() {
 
 	RenderTarget.resize(3);
 	RenderTarget[RT_PRIMARY] = 
-		new cRenderTarget( ActualScreen::Width, ActualScreen::Height, 1, 1, 0 );
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 1, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
@@ -773,15 +773,14 @@ void cGame::DrawSceneGlow() {
 void cGame::Draw() {
 	UpdateCameraMatrix();
 
-	RenderTarget[RT_PRIMARY]->Bind();
+	cRenderTarget* rt = RenderTarget[RT_PRIMARY];
+	rt->Bind();
 	
 	glViewport( 
 		0,
 		0, 
-//		NativeScreen::Width, 
-//		NativeScreen::Height
-		ActualScreen::Width, 
-		ActualScreen::Height
+		rt->Width,
+		rt->Height
 		);
 		
 	// Restore regular clipping coords //
@@ -858,7 +857,7 @@ void cGame::Draw() {
 
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 
-		gelSetColor( GEL_RGBA(255,255,255,128) );
+		gelSetColor( GEL_RGBA(255,255,255,255) );
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
