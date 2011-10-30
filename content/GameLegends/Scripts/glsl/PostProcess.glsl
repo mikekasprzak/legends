@@ -39,21 +39,21 @@ const float Blender2 = 1;
 const float Frac = 1 / 10.0;//14.0;
 
 
-#ifdef V_PASS
+#ifdef V_BLUR_PASS
 const vec2 Step = vec2( 0.0025, 0.005 );
 const vec2 Step2 = vec2( -0.0025, 0.01 );
-#else // H_PASS //
+#else // H_BLUR_PASS //
 const vec2 Step = vec2( 0.005, 0.0025 );
 const vec2 Step2 = vec2( 0.01, -0.0025 );
-#endif // x_PASS //
+#endif // x_BLUR_PASS //
 
-//#ifdef V_PASS
+//#ifdef V_BLUR_PASS
 //const vec2 Step = vec2( 0.005, 0.01 );
 //const vec2 Step2 = vec2( -0.005, 0.02 );
-//#else // H_PASS //
+//#else // H_BLUR_PASS //
 //const vec2 Step = vec2( 0.01, 0.005 );
 //const vec2 Step2 = vec2( 0.02, -0.005 );
-//#endif // x_PASS //
+//#endif // x_BLUR_PASS //
 
 varying vec2 v_TexCoord;
 

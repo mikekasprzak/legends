@@ -3,7 +3,7 @@
 	"Shaders"	: {
 		"HBlur" : {
 			"Define" : [
-				"H_PASS"
+				"H_BLUR_PASS"
 			],
 			"Attribute" : [
 				{
@@ -19,7 +19,7 @@
 
 		"VBlur" : {
 			"Define" : [
-				"V_PASS"
+				"V_BLUR_PASS"
 			],
 			"Attribute" : [
 				{
