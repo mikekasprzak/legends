@@ -86,12 +86,18 @@ public:
 		
 	enum {
 		RT_PRIMARY = 0,
+		RT_BLURY,
 		RT_MINI1,
 		RT_MINI2
 	};
 		
 	enum {
 		US_POSTPROCESS = 0
+	};
+
+	enum {
+		US_PP_HBLUR = 0,
+		US_PP_VBLUR
 	};
 
 public:
