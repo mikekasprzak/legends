@@ -60,7 +60,7 @@ public:
 		gelMultMatrix( Matrix4x4::TranslationMatrix( Pos ) );
 
 		AssetPool::Set( Disc->GlowTexture );
-		gelSetColor( Disc->GlowColor );
+		gelSetColor( Disc->GlowColor & 0x7fffffff );
 		gelDrawRectFillTextured( Vector3D(-Scalar,-Scalar,0), Vector3D(Scalar,Scalar,0) );
 	}
 	

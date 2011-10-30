@@ -94,7 +94,7 @@ public:
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
-		gelSetColor( Color );
+		gelSetColor( Color & 0x7fffffff );
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
