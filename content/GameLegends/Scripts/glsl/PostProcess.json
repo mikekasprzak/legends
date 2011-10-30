@@ -1,0 +1,36 @@
+{
+	"File"		: "Content/Scripts/glsl/PostProcess.glsl",
+	"Shaders"	: {
+		"HBlur" : {
+			"Define" : [
+				"H_PASS"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+
+		"VBlur" : {
+			"Define" : [
+				"V_PASS"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		}
+	}
+}
