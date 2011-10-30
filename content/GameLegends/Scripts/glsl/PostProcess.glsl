@@ -28,15 +28,20 @@ void main() {
 #ifdef FRAGMENT_SHADER
 // - ------------------------------------------------------------------------------------------ - //
 uniform sampler2D TexImage0;
-const vec4 Blender = vec4(1,1,1,0.5);
-const vec4 Blender2 = vec4(1,1,1,0.25);
+//const vec4 Blender0 = vec4(1,1,1,4);
+//const vec4 Blender = vec4(1,1,1,3);
+//const vec4 Blender2 = vec4(1,1,1,2);
+
+const float Blender0 = 4;
+const float Blender = 3;
+const float Blender2 = 2;
 
 #ifdef V_PASS
-const vec2 Step = vec2(0,0.005);
-const vec2 Step2 = vec2(0,0.005);
+const vec2 Step = vec2(0,0.004);
+const vec2 Step2 = vec2(0,0.008);
 #else // H_PASS //
-const vec2 Step = vec2(0.005,0);
-const vec2 Step2 = vec2(0.005,0);
+const vec2 Step = vec2(0.004,0);
+const vec2 Step2 = vec2(0.008,0);
 #endif // x_PASS //
 
 varying vec2 v_TexCoord;
@@ -44,12 +49,11 @@ varying vec2 v_TexCoord;
 
 void main() {
 	gl_FragColor = 
-		texture2D(TexImage0, v_TexCoord.xy) + 
+		(texture2D(TexImage0, v_TexCoord.xy) * Blender0 + 
 		texture2D(TexImage0, v_TexCoord.xy + Step) * Blender +
 		texture2D(TexImage0, v_TexCoord.xy - Step) * Blender +
 		texture2D(TexImage0, v_TexCoord.xy + Step2) * Blender2 +
-		texture2D(TexImage0, v_TexCoord.xy - Step2) * Blender2
-			;
+		texture2D(TexImage0, v_TexCoord.xy - Step2) * Blender2) / 14;
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
