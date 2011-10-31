@@ -770,6 +770,7 @@ void cGame::DrawSceneGlow() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
 	UpdateCameraMatrix();
+	glDisable( GL_CULL_FACE );
 
 	cRenderTarget* rt = RenderTarget[RT_PRIMARY];
 	rt->Bind();
