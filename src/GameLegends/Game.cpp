@@ -910,7 +910,7 @@ void cGame::Draw() {
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
-		gelDrawRectFillTextured( 
+		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
@@ -973,7 +973,7 @@ void cGame::Draw() {
 //		ScalarX *= 0.5;
 //		ScalarY *= 0.5;
 
-		gelDrawRectFillTextured( 
+		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
@@ -985,7 +985,7 @@ void cGame::Draw() {
 		RenderTarget[RT_MINI2]->BindAsTexture();
 
 		gelSetColor( GEL_RGBA(255,255,255,255) );
-		gelDrawRectFillTextured( 
+		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
