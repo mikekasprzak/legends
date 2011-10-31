@@ -385,6 +385,7 @@ void cGame::Init() {
 
 	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull.pme", Real(1.2) );
 	Obj3.back()->Color = GEL_RGB_RED;
+	Obj3.back()->GlowColor = GEL_RGBA(64,64,0,64);
 	Obj3.back()->IsGlowing = true;
 
 //	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull.pme", Real(0.8) );
@@ -883,6 +884,7 @@ void cGame::Draw() {
 			RenderTarget[RT_BLURY]->BindAsTexture();
 	//		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
 			UberShader[US_EDGEBLEND]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+			UberShader[US_EDGEBLEND]->BindUniform2f( "AspectScalar", 1.0f, 1.0f / ActualScreen::AspectRatio );
 	
 //			ScalarX *= 0.5;
 //			ScalarY *= 0.5;
