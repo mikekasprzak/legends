@@ -156,5 +156,25 @@ inline void gelDrawRectFillTextured( const Vector3D& P1, const Vector3D& P2, con
 	gelDrawTriangleStripTextured( (Vector3D*)Verts, UVs, 4, Color );    
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawRectFillTextured_( const Vector3D& P1, const Vector3D& P2, const Vector2D& UV1 = Vector2D(0,0), const Vector2D&UV2 = Vector2D(1,1), const GelColor Color = Current::Color ) {
+	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
+
+    float Verts[] = {
+		(float)P1.x, (float)P1.y, (float)P1.z,
+		(float)P1.x, (float)P2.y, Diff,
+		(float)P2.x, (float)P1.y, Diff,
+		(float)P2.x, (float)P2.y, (float)P2.z,
+    };
+
+	GelUV UVs[] = {
+		(GelUV)(UV1.x * Real(GEL_UV_ONE_F)), (GelUV)(UV1.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV1.x * Real(GEL_UV_ONE_F)), (GelUV)(UV2.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV2.x * Real(GEL_UV_ONE_F)), (GelUV)(UV1.y * Real(GEL_UV_ONE_F)),
+		(GelUV)(UV2.x * Real(GEL_UV_ONE_F)), (GelUV)(UV2.y * Real(GEL_UV_ONE_F)),
+	};
+
+	gelDrawTriangleStripTextured_( (Vector3D*)Verts, UVs, 4 );    
+}
+// - ------------------------------------------------------------------------------------------ - //
 #endif // __GraphicsDraw_Rectangles3D_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -952,7 +952,7 @@ void cGame::Draw() {
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 
 		gelSetColor( GEL_RGBA(255,255,255,255) );
-		gelDrawRectFillTextured( 
+		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
