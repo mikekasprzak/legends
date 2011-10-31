@@ -19,6 +19,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
 #include <Debug/GelDebug.h>
+#include <Graphics/Graphics.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderTarget_GLDefines.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -167,23 +168,28 @@ public:
 	
 	inline void Bind( const size_t Index = 0 ) const {
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, FBO[Index] );
-	}
 		
-	inline static void UnBind( ) {
-		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
-	}
-	
-	inline void BindAsTexture( const size_t Index = 0 ) const { 
-		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
-	}
-	
-	inline void SetViewport() {
 		glViewport( 
 			0,
 			0,
 			Width, 
 			Height
-			);		
+			);	
+	}
+		
+	inline static void UnBind( ) {
+		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
+		
+		glViewport( 
+			0,
+			0, 
+			ActualScreen::Width, 
+			ActualScreen::Height
+			);
+	}
+	
+	inline void BindAsTexture( const size_t Index = 0 ) const { 
+		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
 	}
 };
 
