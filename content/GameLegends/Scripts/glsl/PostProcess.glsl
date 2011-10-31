@@ -37,6 +37,11 @@ const float Blender1 = 2.0;
 const float Blender2 = 1.0;
 
 #ifdef LIGHT_BLUR
+const float MainAxis1 = 0.0025;
+const float MainAxis2 = 0.005;
+const float OffAxis1 = 0.00125;
+const float OffAxis2 = -0.00125;
+#elif defined(MEDIUM_BLUR)
 const float MainAxis1 = 0.005;
 const float MainAxis2 = 0.01;
 const float OffAxis1 = 0.0025;
