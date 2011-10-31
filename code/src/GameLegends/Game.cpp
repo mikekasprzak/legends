@@ -774,16 +774,11 @@ void cGame::Draw() {
 
 	cRenderTarget* rt = RenderTarget[RT_PRIMARY];
 	rt->Bind();
-	
-	glViewport( 
-		0,
-		0, 
-		rt->Width,
-		rt->Height
-		);
+	rt->SetViewport();
 		
 	// Restore regular clipping coords //
 	gelResetClip();
+	glDisable( GL_SCISSOR_TEST );
 	
 	{
 		gelEnableDepthWriting();
@@ -802,13 +797,7 @@ void cGame::Draw() {
 
 	rt = RenderTarget[RT_MINI1];
 	rt->Bind();
-
-	glViewport( 
-		0,
-		0, 
-		rt->Width,
-		rt->Height
-		);
+	rt->SetViewport();
 	
 //	ProxyScreen::Width = rt->Width;
 //	ProxyScreen::Height = rt->Height;
@@ -857,44 +846,7 @@ void cGame::Draw() {
 
 	rt = RenderTarget[RT_MINI2];
 	rt->Bind();
-
-	// Correct Shape //
-	glViewport( 
-		0,
-		0,
-		rt->Width, 
-		rt->Height
-		);
-	
-/*	gelDisableBlending();
-		
-	{
-		gelSetClearColor( GEL_RGBA(0,0,0,0) );
-		gelClear();
-
-		int ScalarX = FullRefScreen::Width>>1;
-		int ScalarY = FullRefScreen::Height>>1;
-
-		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
-		gelLoadMatrix( CameraViewMatrix );
-		RenderTarget[RT_MINI1]->BindAsTexture();
-	
-		gelDrawRectFillTextured( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
-			);
-	}*/
-
-	rt = RenderTarget[RT_BLURY];
-	rt->Bind();
-
-	// Correct Shape //
-	glViewport( 
-		0,
-		0,
-		rt->Width, 
-		rt->Height
-		);
+	rt->SetViewport();
 	
 	gelDisableBlending();
 		
@@ -905,9 +857,32 @@ void cGame::Draw() {
 		int ScalarX = FullRefScreen::Width>>1;
 		int ScalarY = FullRefScreen::Height>>1;
 
-		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR_HEAVY);
-		//gelDrawModeTextured();
-		gelLoadMatrix( CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		//gelLoadMatrix( CameraViewMatrix );
+		RenderTarget[RT_MINI1]->BindAsTexture();
+	
+		gelDrawRectFillTextured( 
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
+			);
+	}
+
+	rt = RenderTarget[RT_BLURY];
+	rt->Bind();
+	rt->SetViewport();
+	
+	gelDisableBlending();
+		
+	{
+		gelSetClearColor( GEL_RGBA(0,0,0,0) );
+		gelClear();
+
+		int ScalarX = FullRefScreen::Width>>1;
+		int ScalarY = FullRefScreen::Height>>1;
+
+		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
@@ -960,15 +935,16 @@ void cGame::Draw() {
 		gelEnableAlphaBlending();
 //		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR_HEAVY);
 		UberShader[US_EDGEBLEND]->Bind(0);
-//		glEnable(GL_TEXTURE_2D);
+//		gelDrawModeTextured();
 //		glEnableVertexAttribArray(0);
 //		glEnableVertexAttribArray(1);
 //		glDisableVertexAttribArray(2);
 
-		gelLoadMatrix( CameraViewMatrix );
+//		gelLoadMatrix( CameraViewMatrix );
 //		glActiveTexture( GL_TEXTURE0 );
 		RenderTarget[RT_BLURY]->BindAsTexture();
 //		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
+		UberShader[US_EDGEBLEND]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
 
 //		ScalarX *= 0.5;
 //		ScalarY *= 0.5;
@@ -981,10 +957,11 @@ void cGame::Draw() {
 		gelEnablePremultipliedAlphaBlending();
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
-		gelLoadMatrix( CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		//gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI2]->BindAsTexture();
 
-		gelSetColor( GEL_RGBA(255,255,255,255) );
+		//gelSetColor( GEL_RGBA(255,255,255,255) );
 		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
