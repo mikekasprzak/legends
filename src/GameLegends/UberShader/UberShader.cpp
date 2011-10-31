@@ -47,14 +47,16 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	cUberShader_Shader Program;
 	
 	std::string ProgramCode;
-		
-	ProgramCode = DefineSymbol( "VERTEX_SHADER" );
+	
+	ProgramCode = "";//"#version 200\n";	
+	ProgramCode += DefineSymbol( "VERTEX_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Vertex = GLSLCompile( ProgramCode.c_str(), GL_VERTEX_SHADER );
 	VLog( "* Vertex Shader Compiled (%i)", Program.Vertex );
 	
-	ProgramCode = DefineSymbol( "FRAGMENT_SHADER" );
+	ProgramCode = "";//"#version 200\n";
+	ProgramCode += DefineSymbol( "FRAGMENT_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Fragment = GLSLCompile( ProgramCode.c_str(), GL_FRAGMENT_SHADER );

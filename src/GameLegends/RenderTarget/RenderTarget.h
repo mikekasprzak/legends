@@ -176,6 +176,15 @@ public:
 	inline void BindAsTexture( const size_t Index = 0 ) const { 
 		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
 	}
+	
+	inline void SetViewport() {
+		glViewport( 
+			0,
+			0,
+			Width, 
+			Height
+			);		
+	}
 };
 
 //#ifdef USES_MRT
