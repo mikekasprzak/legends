@@ -1,3 +1,11 @@
+#ifdef GL_ES
+precision highp float;
+#else // GL_ES //
+#define lowp
+#define mediump
+#define highp
+#endif // GL_ES //
+
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef VERTEX_SHADER
 // - ------------------------------------------------------------------------------------------ - //
@@ -24,9 +32,9 @@ void main() {
 // - ------------------------------------------------------------------------------------------ - //
 uniform sampler2D TexImage0;
 
-const float Blender0 = 3;
-const float Blender1 = 2;
-const float Blender2 = 1;
+const float Blender0 = 3.0;
+const float Blender1 = 2.0;
+const float Blender2 = 1.0;
 
 #ifdef LIGHT_BLUR
 const float MainAxis1 = 0.005;
@@ -51,9 +59,9 @@ const vec2 HStep2 = vec2( MainAxis2, OffAxis2 );
 #endif // !V_BLUR_PASS //
 
 #if defined(H_BLUR_PASS) || defined(V_BLUR_PASS)
-	const float Frac = 1 / 9.0;
+	const float Frac = 1.0 / 9.0;
 #else // x_BLUR_PASS //
-	const float Frac = 1 / 15.0;
+	const float Frac = 1.0 / 15.0;
 #endif // x_BLUR_PASS //
 
 varying vec2 v_TexCoord;

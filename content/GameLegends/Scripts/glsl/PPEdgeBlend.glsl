@@ -1,3 +1,11 @@
+#ifdef GL_ES
+precision highp float;
+#else // GL_ES //
+#define lowp
+#define mediump
+#define highp
+#endif // GL_ES //
+
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef VERTEX_SHADER
 // - ------------------------------------------------------------------------------------------ - //
@@ -31,7 +39,7 @@ const float RadialOffset = -0.25;
 
 void main() {	
 	float Alpha = length( Center - var_TexCoord );
-	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb - Alpha, RadialOffset + Alpha * 3);
+	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb - Alpha, RadialOffset + Alpha * 3.0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
