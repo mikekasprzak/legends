@@ -904,7 +904,7 @@ void cGame::Draw() {
 		int ScalarX = FullRefScreen::Width>>1;
 		int ScalarY = FullRefScreen::Height>>1;
 
-		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
+		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR_HEAVY);
 		//gelDrawModeTextured();
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
@@ -969,8 +969,8 @@ void cGame::Draw() {
 		RenderTarget[RT_BLURY]->BindAsTexture();
 //		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
 
-		ScalarX *= 0.5;
-		ScalarY *= 0.5;
+//		ScalarX *= 0.5;
+//		ScalarY *= 0.5;
 
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
