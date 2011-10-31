@@ -7,88 +7,88 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 inline Matrix4x4 Calc_Simple_OrthoProjection( const Real& Width, const Real& Height ) {
-	Real ActualWidth = 2.0 / Width;
-	Real ActualHeight = 2.0 / Height;
+	Real ActualWidth = 2.0f / Width;
+	Real ActualHeight = 2.0f / Height;
 
 	Matrix4x4 Matrix;
 
 	Matrix[0] = ActualWidth;
-	Matrix[1] = 0;
-	Matrix[2] = 0;
-	Matrix[3] = 0;
+	Matrix[1] = 0.0f;
+	Matrix[2] = 0.0f;
+	Matrix[3] = 0.0f;
 	
-	Matrix[4] = 0;
+	Matrix[4] = 0.0f;
 	Matrix[5] = -ActualHeight;
-	Matrix[6] = 0;
-	Matrix[7] = 0;
+	Matrix[6] = 0.0f;
+	Matrix[7] = 0.0f;
 	
-	Matrix[8] = 0;
-	Matrix[9] = 0;
-	Matrix[10] = 1;
-	Matrix[11] = 0;
+	Matrix[8] = 0.0f;
+	Matrix[9] = 0.0f;
+	Matrix[10] = 1.0f;
+	Matrix[11] = 0.0f;
 	
-	Matrix[12] = 0;
-	Matrix[13] = 0;
-	Matrix[14] = 0;
-	Matrix[15] = 1;
+	Matrix[12] = 0.0f;
+	Matrix[13] = 0.0f;
+	Matrix[14] = 0.0f;
+	Matrix[15] = 1.0f;
 
 	return Matrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline Matrix4x4 Calc_Frustum_OrthoProjection( const Real& Width, const Real& Height, const Real& Near, const Real& Far ) {
-	Real ActualWidth = 2.0 / Width;
-	Real ActualHeight = 2.0 / Height;
+	Real ActualWidth = 2.0f / Width;
+	Real ActualHeight = 2.0f / Height;
 
 	Matrix4x4 Matrix;
 
 	Matrix[0] = ActualWidth;
-	Matrix[1] = 0;
-	Matrix[2] = 0;
-	Matrix[3] = 0;
+	Matrix[1] = 0.0f;
+	Matrix[2] = 0.0f;
+	Matrix[3] = 0.0f;
 	
-	Matrix[4] = 0;
+	Matrix[4] = 0.0f;
 	Matrix[5] = -ActualHeight;
-	Matrix[6] = 0;
-	Matrix[7] = 0;
+	Matrix[6] = 0.0f;
+	Matrix[7] = 0.0f;
 	
-	Matrix[8] = 0;
-	Matrix[9] = 0;
+	Matrix[8] = 0.0f;
+	Matrix[9] = 0.0f;
 	Matrix[10] = 2.0 / (Far - Near);
-	Matrix[11] = 0;
+	Matrix[11] = 0.0f;
 	
-	Matrix[12] = 0;
-	Matrix[13] = 0;
+	Matrix[12] = 0.0f;
+	Matrix[13] = 0.0f;
 	Matrix[14] = -((Far+Near)/(Far-Near));
-	Matrix[15] = 1;
+	Matrix[15] = 1.0f;
 
 	return Matrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline Matrix4x4 Calc_Simple_PerspectiveProjection( const Real& Width, const Real& Height, const Real& Distance ) {
-	Real ActualWidth = 2.0 / Width;
-	Real ActualHeight = 2.0 / Height;
+	Real ActualWidth = 2.0f / Width;
+	Real ActualHeight = 2.0f / Height;
 
 	Matrix4x4 Matrix;
 
 	Matrix[0] = ActualWidth;
-	Matrix[1] = 0;
-	Matrix[2] = 0;
-	Matrix[3] = 0;
+	Matrix[1] = 0.0f;
+	Matrix[2] = 0.0f;
+	Matrix[3] = 0.0f;
 	
-	Matrix[4] = 0;
+	Matrix[4] = 0.0f;
 	Matrix[5] = -ActualHeight;
-	Matrix[6] = 0;
-	Matrix[7] = 0;
+	Matrix[6] = 0.0f;
+	Matrix[7] = 0.0f;
 	
-	Matrix[8] = 0;
-	Matrix[9] = 0;
-	Matrix[10] = 1;
-	Matrix[11] = 0;
+	Matrix[8] = 0.0f;
+	Matrix[9] = 0.0f;
+	Matrix[10] = 1.0f;
+	Matrix[11] = 0.0f;
 	
-	Matrix[12] = 0;
-	Matrix[13] = 0;
-	Matrix[14] = -1.0 / Distance;
-	Matrix[15] = 1;
+	Matrix[12] = 0.0f;
+	Matrix[13] = 0.0f;
+	Matrix[14] = -1.0f / Distance;
+	Matrix[15] = 1.0f;
 
 	return Matrix;
 }
@@ -101,24 +101,24 @@ inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Re
 	Matrix4x4 Matrix;
 
 	Matrix[0] = ActualWidth;
-	Matrix[1] = 0;
-	Matrix[2] = 0;
-	Matrix[3] = 0;
+	Matrix[1] = 0.0f;
+	Matrix[2] = 0.0f;
+	Matrix[3] = 0.0f;
 	
-	Matrix[4] = 0;
+	Matrix[4] = 0.0f;
 	Matrix[5] = -ActualHeight;
-	Matrix[6] = 0;
-	Matrix[7] = 0;
+	Matrix[6] = 0.0f;
+	Matrix[7] = 0.0f;
 	
-	Matrix[8] = 0;
-	Matrix[9] = 0;
+	Matrix[8] = 0.0f;
+	Matrix[9] = 0.0f;
 	Matrix[10] = (Far + Near) / (Far - Near);
-	Matrix[11] = 1;
+	Matrix[11] = 1.0f;
 	
-	Matrix[12] = 0;
-	Matrix[13] = 0;
-	Matrix[14] = -((2.0*Far*Near)/(Far-Near));
-	Matrix[15] = 0;
+	Matrix[12] = 0.0f;
+	Matrix[13] = 0.0f;
+	Matrix[14] = -((2.0f*Far*Near)/(Far-Near));
+	Matrix[15] = 0.0f;
 
 	return Matrix;
 }
@@ -139,10 +139,10 @@ inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const V
 	Vector3D Right = Up % ViewDirection;
 	
 	return Matrix4x4(
-		Right.x, Up.x, ViewDirection.x, 0,
-		Right.y, Up.y, ViewDirection.y, 0,
-		Right.z, Up.z, ViewDirection.z, 0,
-		0, 0, 0, 1
+		Right.x, Up.x, ViewDirection.x, 0.0f,
+		Right.y, Up.y, ViewDirection.y, 0.0f,
+		Right.z, Up.z, ViewDirection.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
 		);
 
 //	return Matrix4x4(
