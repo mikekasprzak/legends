@@ -320,12 +320,15 @@ void cGame::Init() {
 
 	// *** //
 
-	RenderTarget.resize(4);
+	RenderTarget.resize(5);
 	RenderTarget[RT_PRIMARY] = 
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 1, 0 );
 
 	RenderTarget[RT_BLURY] = 
-		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+
+	RenderTarget[RT_BLURY2] = 
+		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
@@ -859,7 +862,6 @@ void cGame::Draw() {
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
 		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
-		//gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
