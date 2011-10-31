@@ -5,7 +5,7 @@
 	"Texture":		"/Disc_Blank",
 	
 	"Glow": {
-		"Color"	:	[255,242,0],
+		"Color"	:	[128,120,0,64],
 		"Texture":	"/Disc_Blank"
 	}
 }

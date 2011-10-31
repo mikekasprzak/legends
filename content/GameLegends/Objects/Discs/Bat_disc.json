@@ -10,7 +10,7 @@
 	},
 
 	"Glow": {
-		"Color"	:	[64,0,128],
+		"Color"	:	[64,0,128,32],
 		"Texture":	"/Disc_Bat"
 	}
 }
