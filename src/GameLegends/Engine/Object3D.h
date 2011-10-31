@@ -22,6 +22,7 @@ public:
 	GelAssetHandle MeshHandle;
 	
 	GelColor Color;
+	GelColor GlowColor;
 
 	cPhysicsObject* PhysicsObject;
 	
@@ -37,10 +38,11 @@ public:
 //		IsGlowing = false;
 //	}
 	
-	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
+	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE, GelColor _GlowColor = GEL_RGBA(255,255,255,32) ) :
 		Pos( _Pos),
 		MeshHandle( AssetPool::Load( _File ) ),
 		Color( _Color ),
+		GlowColor( _GlowColor ),
 		Scalar( _Scalar ),
 		PhysicsObject( 0 ),
 		IsGlowing( false )
@@ -94,7 +96,7 @@ public:
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
-		gelSetColor( Color & 0x7fffffff );
+		gelSetColor( GlowColor );
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
