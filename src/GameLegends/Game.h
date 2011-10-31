@@ -87,6 +87,7 @@ public:
 	enum {
 		RT_PRIMARY = 0,
 		RT_BLURY,
+		RT_BLURY2,		
 		RT_MINI1,
 		RT_MINI2
 	};
