@@ -14,7 +14,7 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 hid_device* SpaceNavigator_HID_Handle = 0;
-Real SpaceNavigator[6];
+float SpaceNavigator[6];
 int SN_DOF[6];
 int SpaceNavigator_Button;
 // - ------------------------------------------------------------------------------------------ - //
@@ -88,7 +88,7 @@ void SpaceNavigator_Update() {
 		SpaceNavigator_Packet Packet;
 		
 		// NOTE: Max seems to be between 340 and 350 per axis limit (+,-) //
-		Real DOF_Scalar(350);
+		float DOF_Scalar = 350.0f;
 
 		int Count = 0;
 
@@ -101,9 +101,9 @@ void SpaceNavigator_Update() {
 					SN_DOF[1] = (Packet.c & 0x000000ff) | ((int)Packet.d<<8 & 0xffffff00); 
 					SN_DOF[2] = (Packet.e & 0x000000ff) | ((int)Packet.f<<8 & 0xffffff00);
 
-					SpaceNavigator[0] = Real(SN_DOF[0]) / DOF_Scalar;
-					SpaceNavigator[1] = Real(SN_DOF[1]) / DOF_Scalar;
-					SpaceNavigator[2] = Real(SN_DOF[2]) / DOF_Scalar;
+					SpaceNavigator[0] = SN_DOF[0] / DOF_Scalar;
+					SpaceNavigator[1] = SN_DOF[1] / DOF_Scalar;
+					SpaceNavigator[2] = SN_DOF[2] / DOF_Scalar;
 				}
 				else if ( Packet.Type == 2 ) {
 					// Rotation //
@@ -111,9 +111,9 @@ void SpaceNavigator_Update() {
 					SN_DOF[4] = (Packet.c & 0x000000ff) | ((int)Packet.d<<8 & 0xffffff00); 
 					SN_DOF[5] = (Packet.e & 0x000000ff) | ((int)Packet.f<<8 & 0xffffff00);
 
-					SpaceNavigator[3] = Real(SN_DOF[3]) / DOF_Scalar;
-					SpaceNavigator[4] = Real(SN_DOF[4]) / DOF_Scalar;
-					SpaceNavigator[5] = Real(SN_DOF[5]) / DOF_Scalar;
+					SpaceNavigator[3] = SN_DOF[3] / DOF_Scalar;
+					SpaceNavigator[4] = SN_DOF[4] / DOF_Scalar;
+					SpaceNavigator[5] = SN_DOF[5] / DOF_Scalar;
 				}
 				else if ( Packet.Type == 3 ) {
 					// Buttons //
@@ -136,13 +136,13 @@ void SpaceNavigator_DrawValues() {
 			gelSetColor( GEL_RGB_YELLOW );
 			gelDrawCircle( Vector3D( -150 + (idx * 32), -140, 0), Real(16) );
 
-			if ( SpaceNavigator[idx] > Real::Zero ) {
+			if ( SpaceNavigator[idx] > 0.0f ) {
 				gelSetColor( GEL_RGB_WHITE );
 			}
 			else {
 				gelSetColor( GEL_RGB_RED );				
 			}
-			gelDrawCircleFill( Vector3D( -150 + (idx * 32), -140, 0), Real(SpaceNavigator[idx] * Real(16)) );
+			gelDrawCircleFill( Vector3D( -150 + (idx * 32), -140, 0), Real(SpaceNavigator[idx] * 16.0f) );
 		}
 	}	
 }

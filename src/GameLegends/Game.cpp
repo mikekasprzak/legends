@@ -594,8 +594,18 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::UpdateCameraMatrix() {
-	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
-//	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
+	Vector3D ViewerPos( 0, 256, 1024 );
+	
+#ifdef USES_HIDAPI
+	ViewerPos.x = 0 + (SpaceNavigator[4] * 512);
+	ViewerPos.y = 256 + (SpaceNavigator[3] * 512);
+#endif // USES_HIDAPI //
+	
+	Matrix4x4 Look = Calc_LookAt( ViewerPos, Vector3D(0,0,0) );
+
+#ifdef USES_HIDAPI
+	Look = Look * Matrix4x4::RotationMatrixXY( SpaceNavigator[5] * 32.0f );
+#endif // USES_HIDAPI //
 	
 	// Camera //
 	Real Near = _TV(10);
