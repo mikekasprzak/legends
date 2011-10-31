@@ -325,7 +325,7 @@ void cGame::Init() {
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 1, 0 );
 
 	RenderTarget[RT_BLURY] = 
-		new cRenderTarget( ActualScreen::Width>>2, ActualScreen::Height>>2, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
 		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
@@ -801,21 +801,28 @@ void cGame::Draw() {
 
 	rt = RenderTarget[RT_MINI1];
 	rt->Bind();
-	
-	ProxyScreen::Width = rt->Width;
-	ProxyScreen::Height = rt->Height;
-	gelCalculateProxyScreenShape();
 
-	// Correct Shape //
 	glViewport( 
 		0,
-		0,
-		ProxyScreen::Width, 
-		ProxyScreen::Height
+		0, 
+		rt->Width,
+		rt->Height
 		);
-		
-	// Load the proxy clipping coords //
-	gelResetProxyClip();
+	
+//	ProxyScreen::Width = rt->Width;
+//	ProxyScreen::Height = rt->Height;
+//	gelCalculateProxyScreenShape();
+//
+//	// Correct Shape //
+//	glViewport( 
+//		0,
+//		0,
+//		ProxyScreen::Width, 
+//		ProxyScreen::Height
+//		);
+//		
+//	// Load the proxy clipping coords //
+//	gelResetProxyClip();
 	
 	{
 		DrawSceneGlow();
@@ -858,7 +865,7 @@ void cGame::Draw() {
 		rt->Height
 		);
 	
-	gelDisableBlending();
+/*	gelDisableBlending();
 		
 	{
 		gelSetClearColor( GEL_RGBA(0,0,0,0) );
@@ -875,7 +882,7 @@ void cGame::Draw() {
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
-	}
+	}*/
 
 	rt = RenderTarget[RT_BLURY];
 	rt->Bind();
@@ -897,8 +904,8 @@ void cGame::Draw() {
 		int ScalarX = FullRefScreen::Width>>1;
 		int ScalarY = FullRefScreen::Height>>1;
 
-		//UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
-		gelDrawModeTextured();
+		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
+		//gelDrawModeTextured();
 		gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
@@ -913,8 +920,6 @@ void cGame::Draw() {
 	glViewport( 
 		0,
 		0, 
-//		NativeScreen::Width, 
-//		NativeScreen::Height
 		ActualScreen::Width, 
 		ActualScreen::Height
 		);
@@ -963,6 +968,9 @@ void cGame::Draw() {
 //		glActiveTexture( GL_TEXTURE0 );
 		RenderTarget[RT_BLURY]->BindAsTexture();
 //		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
+
+		ScalarX *= 0.5;
+		ScalarY *= 0.5;
 
 		gelDrawRectFillTextured( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
