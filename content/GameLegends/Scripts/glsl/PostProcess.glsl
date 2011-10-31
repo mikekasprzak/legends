@@ -1,15 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef VERTEX_SHADER
 // - ------------------------------------------------------------------------------------------ - //
-// Color Scalar can be optimized away by the "Normalize" feature of attrib //
-const float ColorScalar = 1.0/255.0;
 const float UVScalar = 1.0/1024.0;
 
-//uniform vec4 GlobalColor;
 uniform mat4 ViewMatrix;
 
 varying vec2 v_TexCoord;
-//varying vec4 v_Color;
 
 attribute vec4 VertexPos;
 attribute vec2 TexCoord;
@@ -17,7 +13,6 @@ attribute vec2 TexCoord;
 void main() {
 	gl_Position = ViewMatrix * VertexPos;
 	v_TexCoord = TexCoord * UVScalar;
-//	v_Color = ColorScalar * GlobalColor;
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // VERTEX_SHADER //
@@ -28,9 +23,6 @@ void main() {
 #ifdef FRAGMENT_SHADER
 // - ------------------------------------------------------------------------------------------ - //
 uniform sampler2D TexImage0;
-//const vec4 Blender0 = vec4(1,1,1,4);
-//const vec4 Blender = vec4(1,1,1,3);
-//const vec4 Blender2 = vec4(1,1,1,2);
 
 const float Blender0 = 3;
 const float Blender1 = 2;
