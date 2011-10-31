@@ -12,6 +12,9 @@ varying vec2 v_TexCoord;
 attribute vec4 VertexPos;
 attribute vec2 TexCoord;
 
+uniform vec4 GlobalColor;
+varying vec4 v_Color;
+
 void main() {
 	gl_Position = ViewMatrix * VertexPos;
 	v_TexCoord = TexCoord * UVScalar;
@@ -26,6 +29,9 @@ void main() {
 // - ------------------------------------------------------------------------------------------ - //
 uniform sampler2D TexImage0;
 varying vec2 v_TexCoord;
+
+varying vec4 v_Color;
+
 
 const vec2 Center = vec2(0.5,0.5);
 
