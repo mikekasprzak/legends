@@ -375,7 +375,7 @@ void cGame::Init() {
 	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
 	
 	// Add some Objects //
-	AddObject( Vector3D(0,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(16,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
 	Obj.back()->IsGlowing = true;
 	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
 
@@ -612,20 +612,21 @@ void cGame::UpdateCameraMatrix() {
 	Real Length = _TV(100);
 	
 	Real Far = Near + Length;
-	Real PlanePos = _TV(0.50f);
+	Real CenterPlanePos = _TV(0.50f);
 
 	gelSetDepthRange( 0, 1 );
 	gelSetDepthFunc( GEL_LESSEQUAL );
 	
-	Real CameraPos = Near + ((Far - Near) * PlanePos);
+	Real CameraPos = Near + ((Far - Near) * CenterPlanePos);
 
 	CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
+		
 	ViewMatrix = Calc_Frustum_PerspectiveProjection( 
 		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
 		Real( Near ),
 		Real( Far ),
-		Real( PlanePos )
+		Real( CenterPlanePos )
 		);
 
 	ModelViewMatrix = ViewMatrix;
