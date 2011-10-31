@@ -862,7 +862,7 @@ void cGame::Draw() {
 		//gelLoadMatrix( CameraViewMatrix );
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
-		gelDrawRectFillTextured( 
+		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
@@ -966,13 +966,14 @@ void cGame::Draw() {
 			Vector3D( -ScalarX, ScalarY, 0 ),
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
-
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();
 #endif // USES_HIDAPI //
-
+		
+		gelDrawModeTextured();
+		gelLoadMatrix( CameraViewMatrix );
 		gelSetColor( GEL_RGB_DEFAULT );
-		gelEnablePremultipliedAlphaBlending();
+		gelEnableAlphaBlending();
 	}
 	
 }
