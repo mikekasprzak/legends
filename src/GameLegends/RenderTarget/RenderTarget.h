@@ -60,7 +60,7 @@ public:
 			// For all Depth Buffers //
 			for ( size_t idx = 0; idx < _DepthBuffers; idx++ ) {
 				gels_BindRenderbuffer( GELS_RENDERBUFFER, DepthBuffer[idx] );
-				gels_RenderbufferStorage( GELS_RENDERBUFFER, GL_DEPTH_COMPONENT24, Width, Height );
+				gels_RenderbufferStorage( GELS_RENDERBUFFER, GL_DEPTH_COMPONENT16, Width, Height );
 			}
 			gels_BindRenderbuffer( GELS_RENDERBUFFER, 0 ); // Unbind //
 		}		
