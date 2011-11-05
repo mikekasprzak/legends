@@ -54,6 +54,7 @@ public:
 			FileName( _FileName ),
 			Handle( AssetPool::Load( _FileName ) )
 		{
+		
 		}
 	};
 

@@ -600,6 +600,15 @@ void cGame::UpdateCameraMatrix() {
 	ViewerPos.x = 0 + (SpaceNavigator[4] * 512);
 	ViewerPos.y = 256 + (SpaceNavigator[3] * 512);
 #endif // USES_HIDAPI //
+
+#ifdef PRODUCT_MOBILE
+	extern float accel_x;
+	extern float accel_y;
+	extern float accel_z;
+
+	ViewerPos.x = 0 + (accel_y * 512);
+	ViewerPos.y = 0 + (accel_x * 512);
+#endif // PRODUCT_MOBILE //
 	
 	Matrix4x4 Look = Calc_LookAt( ViewerPos, Vector3D(0,0,0) );
 
