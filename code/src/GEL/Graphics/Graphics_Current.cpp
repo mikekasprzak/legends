@@ -2,7 +2,7 @@
 #include "Graphics_Current.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace Current {
-	const GelFont* Font;
+	const GelOldFont* Font;
 
 	GelColor Color;
 	GelColor NormalColor;

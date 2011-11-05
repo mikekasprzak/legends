@@ -2,7 +2,7 @@
 #ifndef __GEL_GraphicsDraw_Text_H__
 #define __GEL_GraphicsDraw_Text_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/GelFont.h>
+#include <Graphics/GelOldFont.h>
 #include <Graphics/BMFont/BMFont.h>
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -229,7 +229,7 @@
 #include <Graphics/Allocator/UVAllocator.h>
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelSetFont( const GelFont& FontName ) {
+inline void gelSetFont( const GelOldFont& FontName ) {
 	Current::Font = &FontName;
 }
 // - ------------------------------------------------------------------------------------------ - //

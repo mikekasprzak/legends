@@ -318,6 +318,8 @@ void cGame::Init() {
 	
 	ShowDebug = false;
 
+	Font = new GelFont( "Content/Misc/Fonts/Arial.fnt" );
+
 	// *** //
 
 	RenderTarget.resize(5);
@@ -445,6 +447,8 @@ void cGame::Exit() {
 	for ( size_t idx = 0; idx < UberShader.size(); idx++ ) {	
 		delete UberShader[idx];
 	}
+
+	delete Font;
 	
 	// Shut Down Physics //
 	Physics.Exit();
