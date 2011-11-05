@@ -364,7 +364,8 @@ void cGame::Init() {
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
 	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(0) ); // TODO: Should be positive //
-	CameraFollow = 0;	
+	CameraFollow = 0;
+	CameraTilt = Vector3D(0,0,1024);
 
 	//LoadMap();
 
@@ -602,15 +603,23 @@ void cGame::UpdateCameraMatrix() {
 #endif // USES_HIDAPI //
 
 #ifdef PRODUCT_MOBILE
-	extern float accel_x;
-	extern float accel_y;
-	extern float accel_z;
+extern float smoothaccel_x;
+extern float smoothaccel_y;
+extern float smoothaccel_z;
 
-	ViewerPos.x = 0 + (accel_y * 512);
-	ViewerPos.y = 0 + (accel_x * 512);
+	float TiltScalar = 256+128;
+
+	ViewerPos.x = 0.0f - (smoothaccel_y * TiltScalar);
+	ViewerPos.y = 0.0f - (smoothaccel_x * TiltScalar);	
 #endif // PRODUCT_MOBILE //
+
+	ViewerPos.Normalize();
+	ViewerPos *= 1024.0f;
+
+	Vector3D CameraDiff = CameraTilt - ViewerPos;
+	CameraTilt -= CameraDiff * Real(0.25);
 	
-	Matrix4x4 Look = Calc_LookAt( ViewerPos, Vector3D(0,0,0) );
+	Matrix4x4 Look = Calc_LookAt( CameraTilt, CameraFollow->Pos );
 
 #ifdef USES_HIDAPI
 	Look = Look * Matrix4x4::RotationMatrixXY( SpaceNavigator[5] * 32.0f );
@@ -809,7 +818,7 @@ void cGame::Draw() {
 		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
 	}
 
-	
+/*	
 	gelDisableBlending();
 	int ScalarX = FullRefScreen::Width>>1;
 	int ScalarY = FullRefScreen::Height>>1;
@@ -873,7 +882,7 @@ void cGame::Draw() {
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
-	
+*/	
 	cRenderTarget::UnBind();	// Back to Screen //
 
 	gelEnableDepthWriting();
@@ -894,7 +903,7 @@ void cGame::Draw() {
 				Vector3D( ScalarX, -ScalarY, 0 )
 				);
 		}
-
+/*
 		{
 			gelEnableAlphaBlending();
 	//		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR_HEAVY);
@@ -914,13 +923,14 @@ void cGame::Draw() {
 				Vector3D( ScalarX, -ScalarY, 0 )
 				);		
 		}
-
+*/
 		{
 			gelEnablePremultipliedAlphaBlending();
 	
 			UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
 			UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
-			RenderTarget[RT_MINI2]->BindAsTexture();
+//			RenderTarget[RT_MINI2]->BindAsTexture();
+			RenderTarget[RT_MINI1]->BindAsTexture();
 	
 			gelDrawRectFillTextured_( 
 				Vector3D( -ScalarX, ScalarY, 0 ),
