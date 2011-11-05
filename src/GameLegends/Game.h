@@ -77,6 +77,7 @@ public:
 	Vector3D CameraWorldPos;
 	Vector3D CameraEyePos;
 	cObject* CameraFollow;
+	Vector3D CameraTilt;
 	
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
