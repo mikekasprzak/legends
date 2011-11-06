@@ -824,7 +824,7 @@ void cGame::Draw() {
 		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
 	}
 
-/*	
+
 	gelDisableBlending();
 	int ScalarX = FullRefScreen::Width>>1;
 	int ScalarY = FullRefScreen::Height>>1;
@@ -888,7 +888,7 @@ void cGame::Draw() {
 			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
-*/	
+
 	cRenderTarget::UnBind();	// Back to Screen //
 
 	gelEnableDepthWriting();
@@ -909,7 +909,7 @@ void cGame::Draw() {
 				Vector3D( ScalarX, -ScalarY, 0 )
 				);
 		}
-/*
+
 		{
 			gelEnableAlphaBlending();
 	//		UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR_HEAVY);
@@ -929,14 +929,14 @@ void cGame::Draw() {
 				Vector3D( ScalarX, -ScalarY, 0 )
 				);		
 		}
-*/
+
 		{
 			gelEnablePremultipliedAlphaBlending();
 	
 			UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
 			UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
-//			RenderTarget[RT_MINI2]->BindAsTexture();
-			RenderTarget[RT_MINI1]->BindAsTexture();
+			RenderTarget[RT_MINI2]->BindAsTexture();
+//			RenderTarget[RT_MINI1]->BindAsTexture();
 	
 			gelDrawRectFillTextured_( 
 				Vector3D( -ScalarX, ScalarY, 0 ),
