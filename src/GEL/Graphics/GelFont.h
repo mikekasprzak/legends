@@ -12,6 +12,8 @@
 #include <Graphics/GraphicsDraw.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
+#include <stdio.h>
+#include <stdarg.h>
 // - ------------------------------------------------------------------------------------------ - //
 struct GelFont {
 	BMFont* Font;
@@ -26,21 +28,25 @@ public:
 		}
 	}
 	
+	~GelFont() {
+		delete_BMFont( Font );
+	}
+	
 	enum {
-		FONT_LEFT = 	0x1 << 0,
-		FONT_HCENTER =	0x2 << 0,
-		FONT_RIGHT = 	0x3 << 0,
+		ALIGN_LEFT = 	0x1 << 0,
+		ALIGN_HCENTER =	0x2 << 0,
+		ALIGN_RIGHT = 	0x3 << 0,
 		
-		FONT_TOP =	 	0x1 << 2,
-		FONT_VCENTER =	0x2 << 2,
-		FONT_BOTTOM = 	0x3 << 2,
-		FONT_BASELINE =	0x4 << 2,
+		ALIGN_TOP =	 	0x1 << 2,
+		ALIGN_VCENTER =	0x2 << 2,
+		ALIGN_BOTTOM = 	0x3 << 2,
+		ALIGN_BASELINE =	0x4 << 2,
 
-		FONT_CENTER = FONT_HCENTER | FONT_VCENTER,
-		FONT_DEFAULT = FONT_HCENTER | FONT_BASELINE,
+		ALIGN_CENTER = ALIGN_HCENTER | ALIGN_VCENTER,
+		ALIGN_DEFAULT = ALIGN_HCENTER | ALIGN_BASELINE,
 	};
 	
-	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
+	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
 		size_t CharsDrawn = 0;
 		
 		int ScaleW = common_BMFont( Font )->ScaleW;
@@ -55,19 +61,19 @@ public:
 		BMFont_Chars** Glyph = glyph_BMFont( Font );
 				
 		// Alignment //
-		if ( Align & FONT_HCENTER ) {
+		if ( Align & ALIGN_HCENTER ) {
 			Pos.x -= (Width>>1) * Scalar * ScaleW_F;
 		}
-		else if ( Align & FONT_RIGHT ) {
+		else if ( Align & ALIGN_RIGHT ) {
 			Pos.x -= Width * Scalar * ScaleW_F;
 		}
-		if ( Align & FONT_VCENTER ) {
+		if ( Align & ALIGN_VCENTER ) {
 			Pos.y -= (Height>>1) * Scalar * ScaleH_F;
 		}
-		else if ( Align & FONT_BOTTOM ) {
+		else if ( Align & ALIGN_BOTTOM ) {
 			Pos.y -= Height * Scalar * ScaleH_F;
 		}
-		else if ( Align & FONT_BASELINE ) {
+		else if ( Align & ALIGN_BASELINE ) {
 			Pos.y -= baseline_BMFont( Font ) * Scalar * ScaleH_F;
 		}
 
@@ -132,16 +138,27 @@ public:
 		}		
 	}
 	
-	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
 		DrawText( Text, length_String( Text ), Pos, Scalar, Align );
 	}
 	
-	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
 		DrawText( Text, Pos.ToVector3D(), Scalar, Align );
 	}
 	
-	~GelFont() {
-		delete_BMFont( Font );
+	inline void printf( const Vector3D& Pos, const Real Scalar, const int Align, const char* Text, ... ) {
+		char StrBuff[2048];
+		
+		{
+			va_list vl;
+			va_start( vl, Text );
+	
+			vsprintf( StrBuff, Text, vl );
+	
+			va_end( vl );
+		}
+
+		DrawText( StrBuff, Pos, Scalar, Align );
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

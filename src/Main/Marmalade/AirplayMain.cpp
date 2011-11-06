@@ -31,6 +31,11 @@ extern int mouse_b;
 extern int mouse_b_new;
 
 extern int EventValue;
+
+extern int FPS_Counter;
+int FPS_Counter = 0;
+int FPS_Work = 0;
+int FPS_Draw = 0;
 // - ------------------------------------------------------------------------------------------ - //
 int32 PointerEvent_Button( s3ePointerEvent* e, void* User ) {
 //	if ( e->m_Button == S3E_POINTER_BUTTON_SELECT ) 
@@ -348,6 +353,10 @@ S3E_MAIN_DECL void IwMain() {
 	Simple_Init( IwGLGetInt( IW_GL_WIDTH ), IwGLGetInt( IW_GL_HEIGHT ) );
 	SkipTime();
 	SetFramesPerSecond( 60 );
+
+	FPS_Work = 0;
+	FPS_Draw = 0;
+	FPS_Counter = 0;
 	
 	int nextFrame = 0;
 
@@ -365,6 +374,7 @@ S3E_MAIN_DECL void IwMain() {
 				if ( s3eDeviceCheckQuitRequest() || gelHasShutdown() )
 					break;
 			}
+			FPS_Work += FramesOfWork;
 			
 			if ( s3eDeviceCheckQuitRequest() || gelHasShutdown() )
 				break;
@@ -374,6 +384,13 @@ S3E_MAIN_DECL void IwMain() {
 					Draw();
 				glFlush();
 				IwGLSwapBuffers();
+				FPS_Draw++;
+			}
+			
+			if ( FPS_Work > 60 ) {
+				FPS_Work -= 60;
+				FPS_Counter = FPS_Draw;
+				FPS_Draw = 0;
 			}
 		}
 	}
