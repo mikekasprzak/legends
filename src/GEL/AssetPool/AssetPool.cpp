@@ -401,6 +401,11 @@ namespace AssetPool {
 
 	// - -------------------------------------------------------------------------------------- - //
 	void Set( const GelAssetHandle Asset ) {
+		// TODO: Change this //
+		BindTexture( Asset );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	void BindTexture( const GelAssetHandle Asset ) {
 		if ( AssetInstance[ Asset ].HasData() ) {	
 			AssetInstance[ Asset ].Texture->Bind( 0 );
 		}
