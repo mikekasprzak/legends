@@ -192,7 +192,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			
 			copy_Data( Read.GetString(StringSize), &MyFont->Info->FontName, StringSize );
 			
-			Log( "** Source Font Name: %s", MyFont->Info->FontName );
+			Log( "** Source Font Name: %s -- %i pt", MyFont->Info->FontName, MyFont->Info->FontSize );
 		}
 		else if ( Section == BMFONT_SECTION_COMMON ) {
 			MyFont->Common = new BMFont_Common;
@@ -357,14 +357,33 @@ inline BMFont_Common* common_BMFont( BMFont* FontData ) {
 	return FontData->Common;	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline int height_BMFont( BMFont* FontData, const char* = "", const size_t = 0 ) {
-	return FontData->Common->LineHeight;	
+inline BMFont_Info* info_BMFont( BMFont* FontData ) {
+	return FontData->Info;	
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline int width_BMFont( BMFont* FontData, const char* Text, const size_t Length ) {
+inline const int baseline_BMFont( BMFont* FontData ) {
+	return FontData->Common->Base;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline const int size_BMFont( BMFont* FontData ) {
+	// http://www.gamedev.net/topic/510060-bmfont-font-size/
+	// BMFont uses negative size to signal to itself to enable its "Match char height" option.
+	
+	if ( FontData->Info->FontSize > 0 )
+		return FontData->Info->FontSize;
+	else
+		return -FontData->Info->FontSize;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline const int height_BMFont( BMFont* FontData, const char* = "", const size_t = 0 ) {
+	return FontData->Common->LineHeight;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline const int width_BMFont( BMFont* FontData, const char* Text, const size_t Length ) {
 	int Width = 0;
 	for ( size_t idx = 0; idx < Length; idx++ ) {
-		Width += FontData->Glyph->Data[Text[idx]]->AdvanceX;
+		// NOTE: ASCII+EXT ONLY //
+		Width += FontData->Glyph->Data[Text[idx]&0xff]->AdvanceX;
 	}
 	return Width;
 }
