@@ -101,6 +101,11 @@ int mouse_wheel = 0;
 bool RefreshGame = false;
 
 int EventValue = 0;
+
+extern int FPS_Counter;
+int FPS_Counter = 0;
+int FPS_Work = 0;
+int FPS_Draw = 0;
 // - ------------------------------------------------------------------------------------------ - //
 extern int phone_orientation;
 int phone_orientation = 0;
@@ -985,7 +990,9 @@ int main( int argc, char* argv[] ) {
 			Log("> Main: Game Created");
 
 			WorkTime = GetTimeNow();
-
+			FPS_Work = 0;
+			FPS_Draw = 0;
+			FPS_Counter = 0;
 
 #ifdef USES_SDL_EVENTTHREAD
 #ifndef USES_SDL_1_3
@@ -1034,6 +1041,7 @@ int main( int argc, char* argv[] ) {
 	
 							AddFrame( &WorkTime );
 						}
+						FPS_Work += FramesOfWork;
 					}
 					if ( (FramesOfWork > 0) || DoRefresh ) 
 					{
@@ -1086,6 +1094,8 @@ int main( int argc, char* argv[] ) {
 							// Swap display buffer to screen //
 							gelSwapBuffer();
 						}
+						
+						FPS_Draw++;
 					}
 					else {
 #ifdef USES_WEBOS
@@ -1099,6 +1109,12 @@ int main( int argc, char* argv[] ) {
 					Wait(250);
 					SDL_PumpEvents();
 					MessageLoop();
+				}
+				
+				if ( FPS_Work > 60 ) {
+					FPS_Work -= 60;
+					FPS_Counter = FPS_Draw;
+					FPS_Draw = 0;
 				}
 				
 				if ( System::ToggleFullScreen ) {
