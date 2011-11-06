@@ -19,6 +19,7 @@ namespace AssetPool {
 	void Reload( const GelAssetHandle Asset );
 
 	void Set( const GelAssetHandle Asset );
+	void BindTexture( const GelAssetHandle Asset );
 	DataBlock* Get( const GelAssetHandle Asset );
 	cPMEFile* GetMesh( const GelAssetHandle Asset );
 

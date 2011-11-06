@@ -353,5 +353,30 @@ inline BMFont* new_read_BMFont( const char* InFile ) {
 	return FontData;
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline int height_BMFont( BMFont* FontData, const char* = "", const size_t = 0 ) {
+	return FontData->Common->LineHeight;	
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline int width_BMFont( BMFont* FontData, const char* Text, const size_t Length ) {
+	int Width = 0;
+	for ( size_t idx = 0; idx < Length; idx++ ) {
+		Width += FontData->Glyph->Data[Text[idx]]->Width;
+	}
+	return Width;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Return a pointer you can index like an array to access Glyph data //
+inline BMFont_Chars** glyph_BMFont( BMFont* FontData ) {
+	return FontData->Glyph->Data;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Return a pointer you can index like an array to access Kerning data //
+inline BMFont_Kerning** kerning_BMFont( BMFont* FontData ) {
+	if ( FontData->FirstKerning )
+		return FontData->FirstKerning->Data;
+	else
+		return 0;
+}
+// - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_Graphics_BMFont_H__ //
 // - ------------------------------------------------------------------------------------------ - //
