@@ -947,9 +947,19 @@ void cGame::Draw() {
 #endif // USES_HIDAPI //
 		
 		gelDrawModeTextured();
+//		gelDrawModeFlat();
 		gelLoadMatrix( CameraViewMatrix );
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
+//		gelDisableBlending();
+
+//		AssetPool::BindTexture( Font->Texture[0] );
+//			gelDrawRectFillTextured_( 
+//				Vector3D( -32, 32, 0 ),
+//				Vector3D( 32, -32, 0 )
+//				);
+		
+		Font->DrawText( " %% Cobra Shakes! %%", Vector3D(0,0,0), 128 );
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //

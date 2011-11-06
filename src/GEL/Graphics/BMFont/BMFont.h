@@ -353,6 +353,10 @@ inline BMFont* new_read_BMFont( const char* InFile ) {
 	return FontData;
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline BMFont_Common* common_BMFont( BMFont* FontData ) {
+	return FontData->Common;	
+}
+// - ------------------------------------------------------------------------------------------ - //
 inline int height_BMFont( BMFont* FontData, const char* = "", const size_t = 0 ) {
 	return FontData->Common->LineHeight;	
 }
@@ -360,7 +364,7 @@ inline int height_BMFont( BMFont* FontData, const char* = "", const size_t = 0 )
 inline int width_BMFont( BMFont* FontData, const char* Text, const size_t Length ) {
 	int Width = 0;
 	for ( size_t idx = 0; idx < Length; idx++ ) {
-		Width += FontData->Glyph->Data[Text[idx]]->Width;
+		Width += FontData->Glyph->Data[Text[idx]]->AdvanceX;
 	}
 	return Width;
 }
