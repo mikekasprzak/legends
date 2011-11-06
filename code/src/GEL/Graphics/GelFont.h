@@ -27,18 +27,20 @@ public:
 	}
 	
 	enum {
-		GEL_FONT_LEFT = 	0x1 << 0,
-		GEL_FONT_HCENTER =	0x2 << 0,
-		GEL_FONT_RIGHT = 	0x3 << 0,
+		FONT_LEFT = 	0x1 << 0,
+		FONT_HCENTER =	0x2 << 0,
+		FONT_RIGHT = 	0x3 << 0,
 		
-		GEL_FONT_TOP =	 	0x1 << 2,
-		GEL_FONT_VCENTER =	0x2 << 2,
-		GEL_FONT_BOTTOM = 	0x3 << 2,
+		FONT_TOP =	 	0x1 << 2,
+		FONT_VCENTER =	0x2 << 2,
+		FONT_BOTTOM = 	0x3 << 2,
+		FONT_BASELINE =	0x4 << 2,
 
-		GEL_FONT_CENTER = GEL_FONT_HCENTER | GEL_FONT_VCENTER
+		FONT_CENTER = FONT_HCENTER | FONT_VCENTER,
+		FONT_DEFAULT = FONT_HCENTER | FONT_BASELINE,
 	};
 	
-	void DrawText( const char* Text, const size_t Length, Vector3D Pos, const Real Scalar = Real::One, const int Align = GEL_FONT_CENTER ) {
+	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
 		size_t CharsDrawn = 0;
 		
 		int ScaleW = common_BMFont( Font )->ScaleW;
@@ -46,22 +48,27 @@ public:
 		float ScaleW_F = 1.0f / (float)ScaleW; 
 		float ScaleH_F = 1.0f / (float)ScaleH;
 
+		Scalar *= size_BMFont( Font );
+
 		int Width = width_BMFont( Font, Text, Length );
 		int Height = height_BMFont( Font, Text, Length );
 		BMFont_Chars** Glyph = glyph_BMFont( Font );
 				
 		// Alignment //
-		if ( Align & GEL_FONT_HCENTER ) {
+		if ( Align & FONT_HCENTER ) {
 			Pos.x -= (Width>>1) * Scalar * ScaleW_F;
 		}
-		else if ( Align & GEL_FONT_RIGHT ) {
+		else if ( Align & FONT_RIGHT ) {
 			Pos.x -= Width * Scalar * ScaleW_F;
 		}
-		if ( Align & GEL_FONT_VCENTER ) {
+		if ( Align & FONT_VCENTER ) {
 			Pos.y -= (Height>>1) * Scalar * ScaleH_F;
 		}
-		else if ( Align & GEL_FONT_BOTTOM ) {
+		else if ( Align & FONT_BOTTOM ) {
 			Pos.y -= Height * Scalar * ScaleH_F;
+		}
+		else if ( Align & FONT_BASELINE ) {
+			Pos.y -= baseline_BMFont( Font ) * Scalar * ScaleH_F;
 		}
 
 		Vector3DAllocator Vert( Length * 6 );
@@ -78,7 +85,8 @@ public:
 			
 			// Draw Text //
 			for ( size_t idx = 0; idx < Length; idx++ ) {
-				int Ch = Text[idx];
+				// NOTE: ASCII+EXT ONLY //
+				int Ch = Text[idx] & 0xff;
 				
 				// If I'm on the correct texture page, draw the glyph //
 				if ( Glyph[Ch]->Page == Tex ) {
@@ -124,11 +132,11 @@ public:
 		}		
 	}
 	
-	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = GEL_FONT_CENTER ) {
+	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
 		DrawText( Text, length_String( Text ), Pos, Scalar, Align );
 	}
 	
-	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = GEL_FONT_CENTER ) {
+	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = FONT_DEFAULT ) {
 		DrawText( Text, Pos.ToVector3D(), Scalar, Align );
 	}
 	

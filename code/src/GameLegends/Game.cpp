@@ -319,6 +319,8 @@ void cGame::Init() {
 	ShowDebug = false;
 
 	Font = new GelFont( "Content/Misc/Fonts/Arial.fnt" );
+//	Font = new GelFont( "Content/Misc/Fonts/CourierNew.fnt" );
+//	Font = new GelFont( "Content/Misc/Fonts/Fontin.fnt" );
 
 	// *** //
 
@@ -947,19 +949,13 @@ void cGame::Draw() {
 #endif // USES_HIDAPI //
 		
 		gelDrawModeTextured();
-//		gelDrawModeFlat();
 		gelLoadMatrix( CameraViewMatrix );
 		gelSetColor( GEL_RGB_DEFAULT );
-		gelEnableAlphaBlending();
-//		gelDisableBlending();
+		gelEnablePremultipliedAlphaBlending();
+	
+		Font->DrawText( "%% Çôbrä Shâkéÿs! %%", Vector3D(0,0,0), 4 );
 
-//		AssetPool::BindTexture( Font->Texture[0] );
-//			gelDrawRectFillTextured_( 
-//				Vector3D( -32, 32, 0 ),
-//				Vector3D( 32, -32, 0 )
-//				);
-		
-		Font->DrawText( " %% Cobra Shakes! %%", Vector3D(0,0,0), 128 );
+		gelEnableAlphaBlending();
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //

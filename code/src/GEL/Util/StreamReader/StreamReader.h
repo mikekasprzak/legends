@@ -36,8 +36,6 @@ public:
 	}
 	
 	inline int GetInt( const int Count ) {
-//		Log("- %i\n", Count );
-
 		int Value;
 		
 		if ( Count >= 4 ) {
@@ -61,7 +59,6 @@ public:
 	}
 	
 	inline const char* const GetString( const int Count ) {
-//		Log("- %i\n", Count );
 		const char* Value = Current;
 		
 		Current += Count;
