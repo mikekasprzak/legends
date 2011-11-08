@@ -1,7 +1,9 @@
 # - ------------------------------------------------------------------------ - #
+CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse
+# - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
-CFLAGS				+=	-I /usr/local/include
-CPPFLAGS			+=	-I /usr/local/include
+CFLAGS				+=	-I /usr/local/include $(CPUFLAGS)
+CPPFLAGS			+=	-I /usr/local/include $(CPUFLAGS)
 LDFLAGS				+=	-L /usr/local/lib -static-libgcc -static
 # - ------------------------------------------------------------------------ - #
 # Release Build Only #
