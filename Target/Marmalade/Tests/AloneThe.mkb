@@ -1,7 +1,10 @@
 options 
 { 
 	s3e-data-dir="Data"
-	arm-fpu=1
+#	arm-fpu=1
+	arm-fpu=vfpv3
+#	arm-cpu=cortex-a8
+#	arm-fpu=neon
 }
 
 deployments
