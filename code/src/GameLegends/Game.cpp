@@ -33,6 +33,15 @@ GelAssetHandle txCursorAttack;
 
 // - ------------------------------------------------------------------------------------------ - //
 
+typedef int v4si __attribute__ ((vector_size (16)));
+     
+v4si a, b, c;
+
+extern v4si Cornball();
+v4si Cornball() {
+	return c = a + b;
+}
+
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::ContentScan() {
 	TIMEVALUE CurrentScan = GetTimeNow();
