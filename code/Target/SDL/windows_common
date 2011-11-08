@@ -1,5 +1,5 @@
 # - ------------------------------------------------------------------------ - #
-CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse
+CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
 CFLAGS				+=	-I /usr/local/include $(CPUFLAGS)
