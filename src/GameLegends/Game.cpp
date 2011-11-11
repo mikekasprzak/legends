@@ -349,12 +349,15 @@ void cGame::Init() {
 	RenderTarget[RT_MINI2] = 
 		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
 	
-	UberShader.resize(2);
+	UberShader.resize(3);
 	UberShader[US_POSTPROCESS] =
 		new cUberShader( "Content/Scripts/glsl/PostProcess.json" );
 
 	UberShader[US_EDGEBLEND] =
 		new cUberShader( "Content/Scripts/glsl/PPEdgeBlend.json" );
+
+	UberShader[US_TEXTWOBLEND] =
+		new cUberShader( "Content/Scripts/glsl/TexTwoBlend.json" );
 	
 	// *** //
 	
@@ -684,12 +687,13 @@ void cGame::DrawScene() {
 		RoomMesh[idx]->Draw();
 	}
 
-	gelDrawModeTextured();	
+//	gelDrawModeTextured();	
 	// Monkey Head //
+	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-		gelLoadMatrix( ModelViewMatrix );
+		//gelLoadMatrix( ModelViewMatrix );
 		// Changing Alpha no longer works because depth test is removing backfaces //
-		Obj3[ Obj3_Sort[idx] ]->Draw();
+		Obj3[ Obj3_Sort[idx] ]->Draw( UberShader[US_TEXTWOBLEND], ModelViewMatrix );
 	}
 
 	gelDisableDepthWriting();	// Just writing. Depth Testing is still enabled. //

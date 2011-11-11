@@ -7,6 +7,8 @@
 #include <Graphics/Mesh/PMEFile.h>
 #include <AssetPool/AssetPool.h>
 
+#include "../UberShader/UberShader.h"
+
 #ifdef USES_SIXENSE
 #include <sixense.h>
 #endif // USES_SIXENSE //
@@ -27,16 +29,6 @@ public:
 	cPhysicsObject* PhysicsObject;
 	
 	bool IsGlowing;
-	
-//	cObject3D( Vector3D _Pos, cPMEFile* _Mesh, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE ) :
-//		Pos( _Pos),
-//		Mesh( _Mesh ),
-//		Color( _Color ),
-//		Scalar( _Scalar ),
-//		PhysicsObject( 0 )
-//	{	
-//		IsGlowing = false;
-//	}
 	
 	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE, GelColor _GlowColor = GEL_RGBA(255,255,255,32) ) :
 		Pos( _Pos),
@@ -85,6 +77,30 @@ public:
 			
 			//gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 //			gelDrawIndexedTrianglesColors( &(Mesh->Mesh[idx].Vertex[0]), (unsigned int*)&(Mesh->Mesh[idx].Vertex[0].Color), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+		}
+	}
+
+	void Draw( cUberShader* InShader, const Matrix4x4& ViewMatrix ) {
+		Matrix4x4 Me = ViewMatrix;
+		Me = Matrix4x4::TranslationMatrix( Pos ) * Me;
+		Me = Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) * Me;
+		Me = Orientation.ToMatrix4x4() * Me;
+
+		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
+		
+		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
+		InShader->BindUniformColor( "MaxColor", Color );//GEL_RGB(148,250,84) );
+		InShader->BindUniformColor( "MinColor", Color );//GEL_RGB(84,84,84) );
+		
+		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
+			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
+				AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
+			}
+			else {
+				Log( "Honk" );
+			}
+			
 			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
 	}
