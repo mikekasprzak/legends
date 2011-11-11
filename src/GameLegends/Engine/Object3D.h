@@ -87,11 +87,9 @@ public:
 		Me = Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) * Me;
 		Me = Orientation.ToMatrix4x4() * Me;
 		
-		int M1 = InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
-		int C1 = InShader->BindUniformColor( "MinColor", GEL_RGB(84,84,84) );
-		int C2 = InShader->BindUniformColor( "MaxColor", GEL_RGB(148,250,84) );
-
-		Log( "%i %i %i", M1, C1, C2 );
+		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
+		InShader->BindUniformColor( "MinColor", GEL_RGB_RED );//GEL_RGB(0,0,84) );
+		InShader->BindUniformColor( "MaxColor", Color );//GEL_RGB(148,250,84) );
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 		
@@ -103,7 +101,7 @@ public:
 				Log( "Honk" );
 			}
 			
-			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+			gelDrawIndexedTrianglesTextured_( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
 	}
 
