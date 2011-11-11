@@ -88,5 +88,85 @@ inline GelColor GEL_HSV( float Hue, float Sat, float Val, int a = 255 ) {
 	return GEL_RGBA( (int)(r * 255.0f), (int)(g * 255.0f), (int)(b * 255.0f), a );
 }
 // - ------------------------------------------------------------------------------------------ - //
+typedef long long int GelSColor;
+// - ------------------------------------------------------------------------------------------ - //
+#define GEL_SRGB(_r,_g,_b)		((_r&0xffffll)|((_g&0xffffll)<<16)|((_b&0xffffll)<<32)|((255ll)<<48))
+#define GEL_SRGBA(_r,_g,_b,_a)	((_r&0xffffll)|((_g&0xffffll)<<16)|((_b&0xffffll)<<32)|((_a&0xffffll)<<48))
+// - ------------------------------------------------------------------------------------------ - //
+inline int SignExtend8To32( const int Value ) {
+	if ( Value & 0x80 )
+		return 0xffffff00 | Value;
+	else
+		return Value;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline int SignExtend16To32( const int Value ) {	
+	if ( Value & 0x8000 )
+		return 0xffff0000 | Value;
+	else
+		return Value;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline int SignExtend24To32( const int Value ) {
+	if ( Value & 0x800000 )
+		return 0xff000000 | Value;
+	else
+		return Value;
+}
+// - ------------------------------------------------------------------------------------------ - //
+//#define GEL_SGET_R(c)			SignExtend16To32(((c)>>0)&0xffff)
+//#define GEL_SGET_G(c)			SignExtend16To32(((c)>>16)&0xffff)
+//#define GEL_SGET_B(c)			SignExtend16To32(((c)>>32)&0xffff)
+//#define GEL_SGET_A(c)			SignExtend16To32(((c)>>48)&0xffff)
+// - ------------------------------------------------------------------------------------------ - //
+#define GEL_SGET_R(c)			(short)(((c)>>0)&0xffff)
+#define GEL_SGET_G(c)			(short)(((c)>>16)&0xffff)
+#define GEL_SGET_B(c)			(short)(((c)>>32)&0xffff)
+#define GEL_SGET_A(c)			(short)(((c)>>48)&0xffff)
+// - ------------------------------------------------------------------------------------------ - //
+#define GEL_SRGB_BLACK			GEL_SRGB(0,0,0)
+#define GEL_SRGB_GREY			GEL_SRGB(127,127,127)
+#define GEL_SRGB_WHITE			GEL_SRGB(255,255,255)
+
+#define GEL_SRGB_RED			GEL_SRGB(255,0,0)
+#define GEL_SRGB_GREEN			GEL_SRGB(0,255,0)
+#define GEL_SRGB_BLUE			GEL_SRGB(0,0,255)
+
+#define GEL_SRGB_MAGENTA		GEL_SRGB(255,0,255)
+#define GEL_SRGB_YELLOW			GEL_SRGB(255,255,0)
+#define GEL_SRGB_CYAN			GEL_SRGB(0,255,255)
+
+#define GEL_SRGB_ORANGE			GEL_SRGB(255,127,0)
+#define GEL_SRGB_PINK			GEL_SRGB(255,0,127)
+#define GEL_SRGB_PURPLE			GEL_SRGB(127,0,255)
+#define GEL_SRGB_PUKE			GEL_SRGB(127,255,0)
+#define GEL_SRGB_MINT			GEL_SRGB(0,255,127)
+#define GEL_SRGB_SKY			GEL_SRGB(0,127,255)
+
+#define GEL_SRGB_DEFAULT		GEL_SRGB_WHITE
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+inline int SaturateToU8( const int In ) {
+	if ( In > 255 )
+		return 255;
+	else if ( In < 0 )
+		return 0;
+	
+	return In;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline GelColor ToGelColor( const GelSColor In ) {
+	return GEL_RGBA( GEL_SGET_R(In), GEL_SGET_G(In), GEL_SGET_B(In), GEL_SGET_A(In) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline GelColor ToGelColorSaturate( const GelSColor In ) {
+	return GEL_RGBA( SaturateToU8(GEL_SGET_R(In)), SaturateToU8(GEL_SGET_G(In)), SaturateToU8(GEL_SGET_B(In)), SaturateToU8(GEL_SGET_A(In)) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline GelSColor ToGelSColor( const GelColor In ) {
+	return GEL_SRGBA( GEL_GET_R(In), GEL_GET_G(In), GEL_GET_B(In), GEL_GET_A(In) );
+}
+// - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_GRAPHICS_GelColor_H__ //
 // - ------------------------------------------------------------------------------------------ - //

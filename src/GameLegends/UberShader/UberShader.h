@@ -75,6 +75,7 @@ public:
 	inline int BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
 
 	inline int BindUniformColor( const char* Name, const GelColor Color );
+	inline int BindUniformSColor( const char* Name, const GelSColor Color );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader_Uniform.h"
