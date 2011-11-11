@@ -172,13 +172,14 @@ int cUberShader::BindUniformMatrix4fv( const char* Name, const float* Matrix, co
 // - ------------------------------------------------------------------------------------------ - //
 int cUberShader::BindUniformColor( const char* Name, const GelColor Color ) {
 	GLint Location = glGetUniformLocation( CurrentShader->Program, Name );
-	if ( Location != -1 )
+	if ( Location != -1 ) {
 		glUniform4f( Location, 
 			((float)GEL_GET_R(Color))*(1.0f/255.0f),
 			((float)GEL_GET_G(Color))*(1.0f/255.0f),
 			((float)GEL_GET_B(Color))*(1.0f/255.0f),
 			((float)GEL_GET_A(Color))*(1.0f/255.0f)
 			);
+	}
 	return Location;
 }
 // - ------------------------------------------------------------------------------------------ - //
