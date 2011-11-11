@@ -684,12 +684,13 @@ void cGame::DrawScene() {
 		gelLoadMatrix( ModelViewMatrix );
 		Room[idx]->Draw();
 	}
+//	gelDrawModeNull();
 
-	gelDrawModeTextured();
-	//UberShader[US_TEXTWOBLEND]->Bind( 0 );
+	gelDrawModeTextured();	// To disable some features //
+	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-		gelLoadMatrix( ModelViewMatrix );
-		RoomMesh[idx]->Draw();// UberShader[US_TEXTWOBLEND], ModelViewMatrix );
+		//gelLoadMatrix( ModelViewMatrix );
+		RoomMesh[idx]->Draw( UberShader[US_TEXTWOBLEND], ModelViewMatrix );
 	}
 
 //	gelDrawModeTextured();	
