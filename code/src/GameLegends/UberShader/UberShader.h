@@ -46,35 +46,35 @@ public:
 	void Bind( const GelShaderHandle Index );
 
 public:
-	inline void BindUniform1i( const char* Name, const int v0 );
-	inline void BindUniform2i( const char* Name, const int v0, const int v1 );
-	inline void BindUniform3i( const char* Name, const int v0, const int v1, const int v2 );
-	inline void BindUniform4i( const char* Name, const int v0, const int v1, const int v2, const int v3 );
+	inline int BindUniform1i( const char* Name, const int v0 );
+	inline int BindUniform2i( const char* Name, const int v0, const int v1 );
+	inline int BindUniform3i( const char* Name, const int v0, const int v1, const int v2 );
+	inline int BindUniform4i( const char* Name, const int v0, const int v1, const int v2, const int v3 );
 
-	inline void BindUniform1f( const char* Name, const float v0 );
-	inline void BindUniform2f( const char* Name, const float v0, const float v1 );
-	inline void BindUniform3f( const char* Name, const float v0, const float v1, const float v2 );
-	inline void BindUniform4f( const char* Name, const float v0, const float v1, const float v2, const float v3 );
+	inline int BindUniform1f( const char* Name, const float v0 );
+	inline int BindUniform2f( const char* Name, const float v0, const float v1 );
+	inline int BindUniform3f( const char* Name, const float v0, const float v1, const float v2 );
+	inline int BindUniform4f( const char* Name, const float v0, const float v1, const float v2, const float v3 );
 
-	inline void BindUniform1iv( const char* Name, const int* v, const size_t Count );
-	inline void BindUniform2iv( const char* Name, const int* v, const size_t Count );
-	inline void BindUniform3iv( const char* Name, const int* v, const size_t Count );
-	inline void BindUniform4iv( const char* Name, const int* v, const size_t Count );
+	inline int BindUniform1iv( const char* Name, const int* v, const size_t Count );
+	inline int BindUniform2iv( const char* Name, const int* v, const size_t Count );
+	inline int BindUniform3iv( const char* Name, const int* v, const size_t Count );
+	inline int BindUniform4iv( const char* Name, const int* v, const size_t Count );
 
-	inline void BindUniform1fv( const char* Name, const float* v, const size_t Count );
-	inline void BindUniform2fv( const char* Name, const float* v, const size_t Count );
-	inline void BindUniform3fv( const char* Name, const float* v, const size_t Count );
-	inline void BindUniform4fv( const char* Name, const float* v, const size_t Count );
-	
-	inline void BindUniformMatrix2x2( const char* Name, const Matrix2x2& Matrix );
-	inline void BindUniformMatrix3x3( const char* Name, const Matrix3x3& Matrix );
-	inline void BindUniformMatrix4x4( const char* Name, const Matrix4x4& Matrix );
+	inline int BindUniform1fv( const char* Name, const float* v, const size_t Count );
+	inline int BindUniform2fv( const char* Name, const float* v, const size_t Count );
+	inline int BindUniform3fv( const char* Name, const float* v, const size_t Count );
+	inline int BindUniform4fv( const char* Name, const float* v, const size_t Count );
 
-	inline void BindUniformMatrix2fv( const char* Name, const float* Matrix, const size_t Count );
-	inline void BindUniformMatrix3fv( const char* Name, const float* Matrix, const size_t Count );
-	inline void BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
-	
-	inline void BindUniformColor( const char* Name, const GelColor Color );
+	inline int BindUniformMatrix2x2( const char* Name, const Matrix2x2& Matrix );
+	inline int BindUniformMatrix3x3( const char* Name, const Matrix3x3& Matrix );
+	inline int BindUniformMatrix4x4( const char* Name, const Matrix4x4& Matrix );
+
+	inline int BindUniformMatrix2fv( const char* Name, const float* Matrix, const size_t Count );
+	inline int BindUniformMatrix3fv( const char* Name, const float* Matrix, const size_t Count );
+	inline int BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
+
+	inline int BindUniformColor( const char* Name, const GelColor Color );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader_Uniform.h"
