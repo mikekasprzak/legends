@@ -86,12 +86,14 @@ public:
 		Me = Matrix4x4::TranslationMatrix( Pos ) * Me;
 		Me = Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) * Me;
 		Me = Orientation.ToMatrix4x4() * Me;
+		
+		int M1 = InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
+		int C1 = InShader->BindUniformColor( "MinColor", GEL_RGB(84,84,84) );
+		int C2 = InShader->BindUniformColor( "MaxColor", GEL_RGB(148,250,84) );
+
+		Log( "%i %i %i", M1, C1, C2 );
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
-		
-		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
-		InShader->BindUniformColor( "MaxColor", GEL_RGB(148,250,84) );
-		InShader->BindUniformColor( "MinColor", GEL_RGB(84,84,84) );
 		
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
