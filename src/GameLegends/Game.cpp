@@ -402,19 +402,19 @@ void cGame::Init() {
 	Obj3.back()->GlowColor = GEL_RGBA(64,64,0,64);
 	Obj3.back()->IsGlowing = true;
 
-//	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull.pme", Real(0.8) );
-//	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle.pme", Real(0.8) );
-/*
+	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle.pme", Real(0.8) );
+
 	AddObject3D( Vector3D( 4, 4+4, 4+2 ), "/Book_Open.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4+4, 4+4, 4+2 ), "/Shield.pme", Real(0.6) );
 	AddObject3D( Vector3D( 4+8, 4+4, 4+2 ), "/Shield.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.4) );
-*/	
+	
 	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.8) );
-	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter.pme", Real(0.8) );
+//	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter.pme", Real(0.8) );
 	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.pme", Real(2) );
-//	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.pme", Real(1) );
+	AddObject3D( Vector3D( 0, -6, 8+2 ), "/Sword.pme", Real(1) );
 //	Obj3.back()->IsGlowing = true;
 
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest.pme" );
@@ -794,7 +794,8 @@ void cGame::Draw() {
 #ifdef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
 		gelSetClearColor( GEL_RGB_RED );
 #else // NDEBUG //
-		gelSetClearColor( GEL_RGB_BLACK );
+		gelSetClearColor( GEL_RGB_WHITE );
+//		gelSetClearColor( GEL_RGB_BLACK );
 #endif // NDEBUG //
 
 		gelClear( true, true );
