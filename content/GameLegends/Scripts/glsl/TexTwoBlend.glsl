@@ -31,16 +31,16 @@ void main() {
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef FRAGMENT_SHADER
 // - ------------------------------------------------------------------------------------------ - //
-uniform sampler2D TexImage0;
 uniform lowp vec4 MinColor;
 uniform lowp vec4 MaxColor;
+
+uniform sampler2D TexImage0;
 
 varying vec2 var_TexCoord;
 
 void main() {
-	vec4 Sample = texture2D(TexImage0, var_TexCoord.xy);
+	vec4 Sample = texture2D( TexImage0, var_TexCoord );
 	gl_FragColor = mix( MinColor, MaxColor, Sample );
-//	gl_FragColor = mix( vec4(1,0,0,1), vec4(0,1,0,1), Sample );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
