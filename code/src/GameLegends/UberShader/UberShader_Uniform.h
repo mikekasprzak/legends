@@ -183,6 +183,19 @@ int cUberShader::BindUniformColor( const char* Name, const GelColor Color ) {
 	return Location;
 }
 // - ------------------------------------------------------------------------------------------ - //
+int cUberShader::BindUniformSColor( const char* Name, const GelSColor Color ) {
+	GLint Location = glGetUniformLocation( CurrentShader->Program, Name );
+	if ( Location != -1 ) {
+		glUniform4f( Location, 
+			((float)GEL_SGET_R(Color))*(1.0f/255.0f),
+			((float)GEL_SGET_G(Color))*(1.0f/255.0f),
+			((float)GEL_SGET_B(Color))*(1.0f/255.0f),
+			((float)GEL_SGET_A(Color))*(1.0f/255.0f)
+			);
+	}
+	return Location;
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __LEGENDS_UBERSHADER_UBERSHADER_UNIFORM_H__ //

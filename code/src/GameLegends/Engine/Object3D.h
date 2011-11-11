@@ -23,14 +23,14 @@ public:
 	//cPMEFile* Mesh;
 	GelAssetHandle MeshHandle;
 	
-	GelColor Color;
-	GelColor GlowColor;
+	GelSColor Color;
+	GelSColor GlowColor;
 
 	cPhysicsObject* PhysicsObject;
 	
 	bool IsGlowing;
 	
-	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelColor _Color = GEL_RGB_WHITE, GelColor _GlowColor = GEL_RGBA(255,255,255,32) ) :
+	cObject3D( const Vector3D& _Pos, const char* _File, Real _Scalar = Real(32), GelSColor _Color = GEL_SRGB_WHITE, GelSColor _GlowColor = GEL_SRGBA(255,255,255,32) ) :
 		Pos( _Pos),
 		MeshHandle( AssetPool::Load( _File ) ),
 		Color( _Color ),
@@ -66,7 +66,7 @@ public:
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
-		gelSetColor( Color );
+		gelSetColor( ToGelColor(Color) );
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
 				AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
@@ -88,8 +88,8 @@ public:
 		Me = Orientation.ToMatrix4x4() * Me;
 		
 		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
-		InShader->BindUniformColor( "MinColor", GEL_RGB_RED );//GEL_RGB(0,0,84) );
-		InShader->BindUniformColor( "MaxColor", Color );//GEL_RGB(148,250,84) );
+		InShader->BindUniformSColor( "MinColor", GEL_SRGB_RED );//GEL_SRGB(0,0,84) );
+		InShader->BindUniformSColor( "MaxColor", Color );//GEL_SRGB(148,250,84) );
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 		
@@ -112,7 +112,7 @@ public:
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 
-		gelSetColor( GlowColor );
+		gelSetColor( ToGelColor(GlowColor) );
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			gelDrawIndexedTriangles( &(Mesh->Mesh[idx].Vertex[0]), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
