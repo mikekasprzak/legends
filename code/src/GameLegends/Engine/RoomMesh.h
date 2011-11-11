@@ -7,6 +7,9 @@
 #include <Graphics/Mesh/PMEFile.h>
 #include <AssetPool/AssetPool.h>
 
+#include "../UberShader/UberShader.h"
+
+
 #include "../Physics.h"
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -55,6 +58,24 @@ public:
 			gelDrawIndexedTrianglesTextured( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
 		}
 
+	}
+	
+	void Draw( cUberShader* InShader, const Matrix4x4& ViewMatrix ) {
+		Matrix4x4 Me = ViewMatrix;
+		Me = Matrix4x4::TranslationMatrix( Pos ) * Me;
+		Me = Matrix4x4::ScalarMatrix( Vector3D( Scalar, Scalar, Scalar ) ) * Me;
+
+		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
+		InShader->BindUniformSColor( "MinColor", GEL_SRGB_BLACK );//GEL_SRGB(0,-92,-64) );
+		InShader->BindUniformSColor( "MaxColor", GEL_SRGB_WHITE );//GEL_SRGB(148,250,84) );
+
+		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
+
+		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
+			AssetPool::Set( Mesh->Mesh[idx].Material[0].Texture );
+				
+			gelDrawIndexedTrianglesTextured_( &(Mesh->Mesh[idx].Vertex[0]), (const GelUV*)&(Mesh->Mesh[idx].Vertex[0].UV), (unsigned short*)&(Mesh->Mesh[idx].FaceGroup[0].Face[0]), Mesh->Mesh[idx].FaceGroup[0].Face.size()*3 );
+		}
 	}
 	
 	void DrawDebug() {

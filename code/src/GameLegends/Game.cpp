@@ -685,10 +685,11 @@ void cGame::DrawScene() {
 		Room[idx]->Draw();
 	}
 
-	gelDrawModeTextured();	
+	gelDrawModeTextured();
+	//UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
 		gelLoadMatrix( ModelViewMatrix );
-		RoomMesh[idx]->Draw();
+		RoomMesh[idx]->Draw();// UberShader[US_TEXTWOBLEND], ModelViewMatrix );
 	}
 
 //	gelDrawModeTextured();	

@@ -88,8 +88,8 @@ public:
 		Me = Orientation.ToMatrix4x4() * Me;
 		
 		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
-		InShader->BindUniformSColor( "MinColor", GEL_SRGB(-128,-1024,-1024) );
-		InShader->BindUniformSColor( "MaxColor", GEL_SRGB(148,250,84) );
+		InShader->BindUniformSColor( "MinColor", GEL_SRGB(0,-92,-64) );
+		InShader->BindUniformSColor( "MaxColor", Color ); //GEL_SRGB(148,250,84) );
 
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 		
