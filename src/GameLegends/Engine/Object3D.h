@@ -90,8 +90,8 @@ public:
 		cPMEFile* Mesh = AssetPool::GetMesh( MeshHandle );
 		
 		InShader->BindUniformMatrix4x4( "ViewMatrix", Me );
-		InShader->BindUniformColor( "MaxColor", Color );//GEL_RGB(148,250,84) );
-		InShader->BindUniformColor( "MinColor", Color );//GEL_RGB(84,84,84) );
+		InShader->BindUniformColor( "MaxColor", GEL_RGB(148,250,84) );
+		InShader->BindUniformColor( "MinColor", GEL_RGB(84,84,84) );
 		
 		for ( size_t idx = 0; idx < Mesh->Mesh.size(); idx++ ) {
 			if ( Mesh->Mesh[idx].Material.size() == 1 ) {
