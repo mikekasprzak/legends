@@ -98,7 +98,8 @@ public:
 		
 	enum {
 		US_POSTPROCESS = 0,
-		US_EDGEBLEND
+		US_EDGEBLEND,
+		US_TEXTWOBLEND
 	};
 
 	enum {

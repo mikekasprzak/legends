@@ -7,6 +7,7 @@
 #include <map>
 
 #include <Graphics/API.h>
+#include <Graphics/GelColor.h>
 #include <Math/Matrix.h>
 // - ------------------------------------------------------------------------------------------ - //
 typedef size_t GelShaderHandle;
@@ -72,6 +73,8 @@ public:
 	inline void BindUniformMatrix2fv( const char* Name, const float* Matrix, const size_t Count );
 	inline void BindUniformMatrix3fv( const char* Name, const float* Matrix, const size_t Count );
 	inline void BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
+	
+	inline void BindUniformColor( const char* Name, const GelColor Color );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader_Uniform.h"
