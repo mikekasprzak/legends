@@ -57,7 +57,7 @@ public:
 	void UpdateMatrix() {
 		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane );		
 		// NOTE: Camera Up should not be hardcoded! //
-		View = Calc_LookAt( Pos, Target, Vector3D(0,1,0) );
+		View = Calc_LookAt( Pos, Target, Vector3D(0,-1,0) );
 	
 		ProjectionView = Projection;
 		ProjectionView.Multiply( View );
