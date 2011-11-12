@@ -670,8 +670,8 @@ extern float smoothaccel_z;
 		);
 
 	ModelViewMatrix = ViewMatrix;
-	ModelViewMatrix = CameraMatrix * ModelViewMatrix;
-	ModelViewMatrix = Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) * ModelViewMatrix;	
+	ModelViewMatrix.Multiply( CameraMatrix );
+	ModelViewMatrix.Multiply( Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawScene() {
