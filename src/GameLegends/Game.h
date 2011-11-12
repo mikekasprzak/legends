@@ -15,6 +15,7 @@
 #endif // USES_WINDOWS //
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderTarget/RenderTarget.h"
+#include "Camera/Camera.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "Physics.h"
 #include "Engine/Room.h"
@@ -83,6 +84,8 @@ public:
 	
 	Vector2D Input_MoveStick;
 	Vector3D Input_MoveTarget; // ?? //
+
+	GelCamera ObserverCamera;
 
 public:
 	std::vector< cRenderTarget* >	RenderTarget;
