@@ -170,7 +170,7 @@ public:
 		if ( Mag.IsZeroOrLess() )
 			return Real::Zero;
 		else
-			return Mag.Sqrt();
+			return Mag.Sqrt_();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The squared length of a vector //
