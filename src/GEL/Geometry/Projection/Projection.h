@@ -18,7 +18,7 @@ inline Matrix4x4 Calc_Simple_OrthoProjection( const Real& Width, const Real& Hei
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -47,7 +47,7 @@ inline Matrix4x4 Calc_Frustum_OrthoProjection( const Real& Width, const Real& He
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -76,7 +76,7 @@ inline Matrix4x4 Calc_Simple_PerspectiveProjection( const Real& Width, const Rea
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -106,7 +106,7 @@ inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Re
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -132,10 +132,11 @@ inline void Rotate_Matrix_XY( Matrix4x4& Matrix ) {
 	Matrix[5] = -Temp[2];
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const Vector3D& WorldUp = Vector3D(0,1,0) ) {
+inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {
 	Vector3D ViewDirection = (Dest - Src).Normal();
-	Real Dot = ViewDirection * WorldUp;
-	Vector3D Up = (WorldUp - (Dot * ViewDirection)).Normal();
+	Real Dot = ViewDirection * CameraUp;
+	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
+//	Vector3D Up = (CameraUp % ViewDirection).Normal();
 	Vector3D Right = Up % ViewDirection;
 	
 	return Matrix4x4(
@@ -144,13 +145,36 @@ inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const V
 		Right.z, Up.z, ViewDirection.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 		);
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {	
+	Vector3D ViewDirection = (Dest - Src).Normal();
+	Real Dot = ViewDirection * CameraUp;
+	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
+//	Vector3D Up = (CameraUp % ViewDirection).Normal();
+	Vector3D Right = Up % ViewDirection;
 
-//	return Matrix4x4(
-//		Right.x, Up.x, ViewDirection.x, 0,
-//		Right.y, Up.y, ViewDirection.y, 0,
-//		Right.z, Up.z, ViewDirection.z, 0,
-//		Src.x, Src.y, Src.z, 1
-//		);
+	return Matrix4x4(
+		Right.x, Up.x, ViewDirection.x, 0.0f,
+		Right.y, Up.y, ViewDirection.y, 0.0f,
+		Right.z, Up.z, ViewDirection.z, 0.0f,
+		Src.x, -Src.y, Src.z, 1.0f
+		);
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {
+	Vector3D ViewDirection = (Dest - Src).Normal();
+//	Real Dot = ViewDirection * CameraUp;
+//	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
+	Vector3D Up = (CameraUp % ViewDirection).Normal();
+	Vector3D Right = Up % ViewDirection;
+
+	return Matrix4x4(
+		Right.x, Up.x, ViewDirection.x, 0,
+		Right.y, Up.y, ViewDirection.y, 0,
+		Right.z, Up.z, ViewDirection.z, 0,
+		-(Right * Src), -(Up * Src), -(ViewDirection * Src), 1
+		);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Geometry_Projection_H__ //

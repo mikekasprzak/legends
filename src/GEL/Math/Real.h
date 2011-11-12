@@ -605,7 +605,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
-	inline const bool IsZeroPositive() const {
+	inline const bool IsZeroOrLess() const {
 		//return *this == Real::Zero;
 		return *this < Real::SmallestUnit;
 	}
@@ -684,7 +684,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
-	inline static const bool IsZeroPositive( _RealType Value ) {
+	inline static const bool IsZeroOrLess( _RealType Value ) {
 		return Value < Real::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //

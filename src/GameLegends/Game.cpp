@@ -502,10 +502,10 @@ void cGame::Step() {
 #ifdef USES_SDL		
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_UP] ) {
-			Stick.y = CameraSpeed;
+			Stick.y = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_DOWN] ) {
-			Stick.y = -CameraSpeed;
+			Stick.y = CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_LEFT] ) {
 			Stick.x = -CameraSpeed;
@@ -621,6 +621,7 @@ void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::UpdateCameraMatrix() {
+/*
 	Vector3D ViewerPos( 0, 256, 1024 );
 	
 #ifdef USES_HIDAPI
@@ -645,7 +646,8 @@ extern float smoothaccel_z;
 	Vector3D CameraDiff = CameraTilt - ViewerPos;
 	CameraTilt -= CameraDiff * Real(0.25);
 	
-	Matrix4x4 Look = Calc_LookAt( CameraTilt, CameraFollow->Pos );
+	// NOTE: Camera Up should not be hardcoded! //
+	Matrix4x4 Look = Calc_LookAtOnly( CameraTilt, CameraFollow->Pos, Vector3D(0,1,0) );
 
 #ifdef USES_HIDAPI
 	Look = Look * Matrix4x4::RotationMatrixXY( SpaceNavigator[5] * 32.0f );
@@ -673,18 +675,18 @@ extern float smoothaccel_z;
 	ModelViewMatrix = ViewMatrix;
 	ModelViewMatrix.Multiply( CameraMatrix );
 	ModelViewMatrix.Multiply( Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) );
-
-//	ObserverCamera.SetFrustum( 
-//		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
-//		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-//		_TV(10),
-//		_TV(100)
-//		);
-//	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
-//	ObserverCamera.Target = CameraWorldPos;
-//	ObserverCamera.UpdateMatrix();
+*/
+	ObserverCamera.SetFrustum( 
+		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+		_TV(10),
+		_TV(100)
+		);
+	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,2,64); // Y=0 BREAKS //
+	ObserverCamera.Target = CameraWorldPos;
+	ObserverCamera.UpdateMatrix();
 	
-	ObserverCamera.ProjectionView = ModelViewMatrix;
+//	ObserverCamera.ProjectionView = ModelViewMatrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawScene() {
@@ -842,8 +844,8 @@ void cGame::Draw() {
 		
 		Real CameraPos = Near + ((Far - Near) * PlanePos);
 
-		//Matrix4x4 Look2 = Calc_LookAt( Vector3D(0,0,0), Vector3D(0,150,800) );
-		Matrix4x4 Look2 = Calc_LookAt( Vector3D(0,0,0), Vector3D(0,0,800) );
+		//Matrix4x4 Look2 = Calc_LookAtOnly( Vector3D(0,0,0), Vector3D(0,150,800), Vector3D(0,1,0) );
+		Matrix4x4 Look2 = Calc_LookAtOnly( Vector3D(0,0,0), Vector3D(0,0,800), Vector3D(0,1,0) );
 		CameraMatrix = Look2 * Matrix4x4::TranslationMatrix( -Vector3D( 0, 0, -CameraPos ) );
 		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
 			ActualScreen::Width / RefScreen::Scalar,
@@ -872,8 +874,8 @@ void cGame::Draw() {
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -887,8 +889,8 @@ void cGame::Draw() {
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -902,8 +904,8 @@ void cGame::Draw() {
 		RenderTarget[RT_BLURY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -917,8 +919,8 @@ void cGame::Draw() {
 		RenderTarget[RT_BLURY2]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -938,8 +940,8 @@ void cGame::Draw() {
 	
 			gelSetColor( GEL_RGBA(255,255,255,255) );
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);
 		}
 
@@ -958,8 +960,8 @@ void cGame::Draw() {
 //			ScalarY *= 0.5;
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);		
 		}
 
@@ -972,8 +974,8 @@ void cGame::Draw() {
 //			RenderTarget[RT_MINI1]->BindAsTexture();
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);
 		}
 
