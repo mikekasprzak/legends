@@ -990,7 +990,11 @@ void cGame::Draw() {
 		gelSetColor( GEL_RGB_YELLOW );
 	
 		extern int FPS_Counter;		
-		Font->printf( Vector3D(FullRefScreen::Width>>1,FullRefScreen::Height>>1,0), 2, GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, "FPS: %i", FPS_Counter );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
+			2, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"FPS: %i", FPS_Counter );
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
