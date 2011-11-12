@@ -132,7 +132,7 @@ public:
 	inline const Vector3D& Normalize() {
 		Real Mag( Magnitude() );
 	
-		if ( Mag.IsZeroPositive() )
+		if ( Mag.IsZeroOrLess() )
 			return Vector3D::Zero;
 	
 		return *this /= Mag;
@@ -142,7 +142,7 @@ public:
 	inline const Real NormalizeRet() {
 		Real Mag( Magnitude() );
 	
-		if ( Mag.IsZeroPositive() )
+		if ( Mag.IsZeroOrLess() )
 			return Real::Zero;
 	
 		*this /= Mag;
@@ -153,7 +153,7 @@ public:
 	inline const Vector3D Normal() const {
 		Real Mag( Magnitude() );
 	
-		if ( Mag.IsZeroPositive() )
+		if ( Mag.IsZeroOrLess() )
 			return Vector3D::Zero;
 		
 		Vector3D Result( *this );
@@ -165,12 +165,12 @@ public:
 	// The length of a vector //
 	inline const Real Magnitude() const {
 		Real Mag( MagnitudeSquared() );
-		Mag = Mag.Sqrt();
+//		Mag = Mag.Sqrt();
 	
-		if ( Mag.IsZeroPositive() )
+		if ( Mag.IsZeroOrLess() )
 			return Real::Zero;
 		else
-			return Mag;
+			return Mag.Sqrt();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The squared length of a vector //
@@ -279,8 +279,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
-	inline const bool IsZeroPositive() const {
-		return x.IsZeroPositive() && y.IsZeroPositive() && z.IsZeroPositive();
+	inline const bool IsZeroOrLess() const {
+		return x.IsZeroOrLess() && y.IsZeroOrLess() && z.IsZeroOrLess();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 

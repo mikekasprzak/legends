@@ -69,27 +69,27 @@ inline Vector3D Calc_RoundedCatmullRomCurve( const Vector3D& a, const Vector3D& 
 		return c;
 	
 	const Vector3D cb = c - b;
-	if ( !cb.IsZeroPositive() )
+	if ( !cb.IsZeroOrLess() )
 		return b;
 
 	Vector3D ab = a - b;
-	if ( !ab.IsZeroPositive() )
+	if ( !ab.IsZeroOrLess() )
 		ab = Vector3D(0,1,0);
 
 	Vector3D bVelocity = cb.Normal() - ab.Normal();
-	if ( !bVelocity.IsZeroPositive() )
+	if ( !bVelocity.IsZeroOrLess() )
 		bVelocity.Normalize();
 	else
 		bVelocity = Vector3D(0,1,0);
 
 	Vector3D dc = d - c;
-	if ( !dc.IsZeroPositive() )
+	if ( !dc.IsZeroOrLess() )
 		dc = Vector3D(0,1,0);
 	
 	Vector3D bc = -cb;
 	
 	Vector3D cVelocity = dc.Normal() - bc.Normal();
-	if ( cVelocity.IsZeroPositive() )
+	if ( cVelocity.IsZeroOrLess() )
 		cVelocity.Normalize();
 	else
 		cVelocity = Vector3D(0,1,0);
