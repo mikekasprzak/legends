@@ -348,6 +348,10 @@ public:
 		return *this = Temp;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline void Multiply( const Matrix4x4& _Vs ) {
+		(*this) = _Vs * (*this);
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	// Calculate Adjoint of Matrix //
 	inline const Matrix4x4 Transpose() const {
 		return Matrix4x4(
