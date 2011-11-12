@@ -33,13 +33,13 @@ public:
 	}
 	
 	enum {
-		ALIGN_LEFT = 	0x1 << 0,
-		ALIGN_HCENTER =	0x2 << 0,
-		ALIGN_RIGHT = 	0x3 << 0,
+		ALIGN_LEFT = 		0x1 << 0,
+		ALIGN_HCENTER =		0x2 << 0,
+		ALIGN_RIGHT = 		0x3 << 0,
 		
-		ALIGN_TOP =	 	0x1 << 2,
-		ALIGN_VCENTER =	0x2 << 2,
-		ALIGN_BOTTOM = 	0x3 << 2,
+		ALIGN_TOP =	 		0x1 << 2,
+		ALIGN_VCENTER =		0x2 << 2,
+		ALIGN_BOTTOM = 		0x3 << 2,
 		ALIGN_BASELINE =	0x4 << 2,
 
 		ALIGN_CENTER = ALIGN_HCENTER | ALIGN_VCENTER,
@@ -67,6 +67,7 @@ public:
 		else if ( Align & ALIGN_RIGHT ) {
 			Pos.x -= Width * Scalar * ScaleW_F;
 		}
+		
 		if ( Align & ALIGN_VCENTER ) {
 			Pos.y -= (Height>>1) * Scalar * ScaleH_F;
 		}
@@ -101,10 +102,11 @@ public:
 					V1 *= Scalar;
 					V2 *= Scalar;
 
+					// NOTE: HACK: I CHANGED THE Y's AROUND! I DUNNO WHY THEY WERE UPSIDE DOWN! //
 					int UV1_x = Glyph[Ch]->x * GEL_UV_ONE / ScaleW;
-					int UV1_y = Glyph[Ch]->y * GEL_UV_ONE / ScaleH;
+					int UV2_y = Glyph[Ch]->y * GEL_UV_ONE / ScaleH;
 					int UV2_x = (Glyph[Ch]->x + Glyph[Ch]->Width) * GEL_UV_ONE / ScaleW;
-					int UV2_y = (Glyph[Ch]->y + Glyph[Ch]->Height) * GEL_UV_ONE / ScaleH;
+					int UV1_y = (Glyph[Ch]->y + Glyph[Ch]->Height) * GEL_UV_ONE / ScaleH;
 					
 					Vert.Add( Vector3D( V1.x, V1.y, 0) + CurPos );
 					Vert.Add( Vector3D( V2.x, V1.y, 0) + CurPos );
@@ -120,7 +122,7 @@ public:
 					UV.Add( UVSet<GelUV>( UV1_x, UV2_y ) );
 					UV.Add( UVSet<GelUV>( UV1_x, UV1_y ) );
 				
-					CharsDrawn++;	
+					CharsDrawn++;
 				}
 				
 				CurPos.x += Glyph[Ch]->AdvanceX * Scalar * ScaleW_F;
