@@ -610,7 +610,7 @@ void cGame::Step() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
-	gelLoadMatrix( ModelViewMatrix );
+	gelLoadMatrix( ObserverCamera.ProjectionView );
 	gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
 	
 	gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
@@ -650,14 +650,14 @@ extern float smoothaccel_z;
 #ifdef USES_HIDAPI
 	Look = Look * Matrix4x4::RotationMatrixXY( SpaceNavigator[5] * 32.0f );
 #endif // USES_HIDAPI //
-	
+
 	// Camera //
 	Real Near = _TV(10);
 	Real Length = _TV(100);
 	
 	Real Far = Near + Length;
 	Real CenterPlanePos = _TV(0.50f);
-	
+
 	Real CameraPos = Near + ((Far - Near) * CenterPlanePos);
 
 	CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
@@ -673,6 +673,18 @@ extern float smoothaccel_z;
 	ModelViewMatrix = ViewMatrix;
 	ModelViewMatrix.Multiply( CameraMatrix );
 	ModelViewMatrix.Multiply( Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) );
+
+//	ObserverCamera.SetFrustum( 
+//		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+//		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+//		_TV(10),
+//		_TV(100)
+//		);
+//	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
+//	ObserverCamera.Target = CameraWorldPos;
+//	ObserverCamera.UpdateMatrix();
+	
+	ObserverCamera.ProjectionView = ModelViewMatrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawScene() {
@@ -682,7 +694,7 @@ void cGame::DrawScene() {
 
 	gelDrawModeColors();	
 	for ( size_t idx = 0; idx < Room.size(); idx++ ) {
-		gelLoadMatrix( ModelViewMatrix );
+		gelLoadMatrix( ObserverCamera.ProjectionView );
 		Room[idx]->Draw();
 	}
 //	gelDrawModeNull();
@@ -690,17 +702,17 @@ void cGame::DrawScene() {
 	gelDrawModeTextured();	// To disable some features //
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-		//gelLoadMatrix( ModelViewMatrix );
-		RoomMesh[idx]->Draw( UberShader[US_TEXTWOBLEND], ModelViewMatrix );
+		//gelLoadMatrix( ObserverCamera.ProjectionView );
+		RoomMesh[idx]->Draw( UberShader[US_TEXTWOBLEND], ObserverCamera.ProjectionView );
 	}
 
 //	gelDrawModeTextured();	
 	// Monkey Head //
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-		//gelLoadMatrix( ModelViewMatrix );
+		//gelLoadMatrix( ObserverCamera.ProjectionView );
 		// Changing Alpha no longer works because depth test is removing backfaces //
-		Obj3[ Obj3_Sort[idx] ]->Draw( UberShader[US_TEXTWOBLEND], ModelViewMatrix );
+		Obj3[ Obj3_Sort[idx] ]->Draw( UberShader[US_TEXTWOBLEND], ObserverCamera.ProjectionView );
 	}
 
 	gelDisableDepthWriting();	// Just writing. Depth Testing is still enabled. //
@@ -709,7 +721,7 @@ void cGame::DrawScene() {
 	// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 	gelDrawModeTextured();		
 	for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
-		gelLoadMatrix( ModelViewMatrix );
+		gelLoadMatrix( ObserverCamera.ProjectionView );
 		Obj[ Obj_Sort[idx] ]->Draw();
 	}
 	gelSetColor( GEL_RGB_DEFAULT );
@@ -721,19 +733,19 @@ void cGame::DrawScene() {
 		gelDrawModeFlat();
 
 		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
+			gelLoadMatrix( ObserverCamera.ProjectionView );
 			Obj3[ idx ]->DrawDebug();
 		}
 		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
+			gelLoadMatrix( ObserverCamera.ProjectionView );
 			Obj[ idx ]->DrawDebug();
 		}
 		for ( size_t idx = 0; idx < Room.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
+			gelLoadMatrix( ObserverCamera.ProjectionView );
 			Room[ idx ]->DrawDebug();
 		}
 		for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-			gelLoadMatrix( ModelViewMatrix );
+			gelLoadMatrix( ObserverCamera.ProjectionView );
 			RoomMesh[ idx ]->DrawDebug();
 		}
 		
@@ -741,7 +753,7 @@ void cGame::DrawScene() {
 	}
 
 	if ( CameraFollow ) {
-		gelLoadMatrix( ModelViewMatrix );
+		gelLoadMatrix( ObserverCamera.ProjectionView );
 		
 		gelDrawModeTextured();
 		AssetPool::Set( txCursorAttack );
@@ -771,7 +783,7 @@ void cGame::DrawSceneGlow() {
 		gelDrawModeFlat();	
 		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
-				gelLoadMatrix( ModelViewMatrix );
+				gelLoadMatrix( ObserverCamera.ProjectionView );
 				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
 			}
 		}
@@ -780,7 +792,7 @@ void cGame::DrawSceneGlow() {
 		gelDrawModeTextured();		
 		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
 			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
-				gelLoadMatrix( ModelViewMatrix );
+				gelLoadMatrix( ObserverCamera.ProjectionView );
 				Obj[ Obj_Sort[idx] ]->DrawGlow();
 			}
 		}

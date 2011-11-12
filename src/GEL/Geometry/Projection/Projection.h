@@ -149,7 +149,7 @@ inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const V
 //		Right.x, Up.x, ViewDirection.x, 0,
 //		Right.y, Up.y, ViewDirection.y, 0,
 //		Right.z, Up.z, ViewDirection.z, 0,
-//		-Src.x, -Src.y, -Src.z, 1
+//		Src.x, Src.y, Src.z, 1
 //		);
 }
 // - ------------------------------------------------------------------------------------------ - //
