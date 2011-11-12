@@ -313,6 +313,10 @@ void cGame::LoadMap() {
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
 	Log( "+ Start of Init..." );
+
+	// Depth Buffer Ranges //
+	gelSetDepthRange( 0, 1 );
+	gelSetDepthFunc( GEL_LESSEQUAL );
 	
 	// Initialize the Virtual Machine... //
 	vm_Init();
@@ -653,9 +657,6 @@ extern float smoothaccel_z;
 	
 	Real Far = Near + Length;
 	Real CenterPlanePos = _TV(0.50f);
-
-	gelSetDepthRange( 0, 1 );
-	gelSetDepthFunc( GEL_LESSEQUAL );
 	
 	Real CameraPos = Near + ((Far - Near) * CenterPlanePos);
 
