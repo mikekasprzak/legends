@@ -318,10 +318,15 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Root //
 	inline const Real Sqrt() const {
-		if ( !IsZero() )
-			return std::sqrt( *this );
-		else
+		if ( IsZero() )
 			return Real::Zero;
+		else
+			return std::sqrt( *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Square Root //
+	inline const Real Sqrt_() const {
+		return std::sqrt( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine //
@@ -631,10 +636,15 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Root //
 	inline static const Real Sqrt( _RealType Value ) {
-		if ( !IsZero( Value ) )
-			return std::sqrt( Value );
-		else
+		if ( IsZero( Value ) )
 			return Real::Zero;
+		else
+			return std::sqrt( Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Square Root //
+	inline static const Real Sqrt_( _RealType Value ) {
+		return std::sqrt( Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine //
