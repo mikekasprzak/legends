@@ -346,16 +346,16 @@ void cGame::Init() {
 		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 1, 0 );
 
 	RenderTarget[RT_BLURY] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 
 	RenderTarget[RT_BLURY2] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 			
 	RenderTarget[RT_MINI1] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 	
 	RenderTarget[RT_MINI2] = 
-		new cRenderTarget( ActualScreen::Width>>1, ActualScreen::Height>>1, 1, 0, 0 );
+		new cRenderTarget( ActualScreen::Width>>0, ActualScreen::Height>>0, 1, 0, 0 );
 	
 	UberShader.resize(3);
 	UberShader[US_POSTPROCESS] =
@@ -720,14 +720,12 @@ void cGame::DrawScene() {
 	}
 	gelDrawModeNull();
 
-//	gelDrawModeTextured();	// To disable some features //
-	gelEnableTexturing();
+//	gelEnableTexturing();
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
 		RoomMesh[idx]->Draw( UberShader[US_TEXTWOBLEND], ObserverCamera.ProjectionView );
 	}
 
-//	gelDrawModeTextured();	
 	// Monkey Head //
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
@@ -791,13 +789,11 @@ void cGame::DrawSceneGlow() {
 	gelSetClearColor( GEL_RGBA(0,0,0,0) );
 	gelClear();
 
-
 //	gelEnableAlphaBlending();
 
 	// Glow Render //
 	{
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
-
 		
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
 		gelDrawModeFlat();	
@@ -830,7 +826,12 @@ void cGame::Draw() {
 
 	UpdateCameraMatrix();
 
-	RenderTarget[RT_PRIMARY]->Bind();
+	int CurrentRT = 0;
+	int ScalarX = FullRefScreen::Width>>1;
+	int ScalarY = FullRefScreen::Height>>1;
+
+	CurrentRT = RT_PRIMARY;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		gelEnableDepthWriting();
 
@@ -846,7 +847,8 @@ void cGame::Draw() {
 		DrawScene();
 	}
 
-	RenderTarget[RT_MINI1]->Bind();
+	CurrentRT = RT_MINI1;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		DrawSceneGlow();
 	}
@@ -879,10 +881,9 @@ void cGame::Draw() {
 */
 
 	gelDisableBlending();
-	int ScalarX = FullRefScreen::Width>>1;
-	int ScalarY = FullRefScreen::Height>>1;
-	
-	RenderTarget[RT_MINI2]->Bind();
+
+	CurrentRT = RT_MINI2;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		gelSetClearColor( GEL_RGBA(0,0,0,0) );
 		gelClear();
@@ -897,7 +898,8 @@ void cGame::Draw() {
 			);
 	}
 
-	RenderTarget[RT_BLURY]->Bind();
+	CurrentRT = RT_BLURY;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		gelSetClearColor( GEL_RGBA(0,0,0,0) );
 		gelClear();
@@ -912,7 +914,8 @@ void cGame::Draw() {
 			);
 	}
 
-	RenderTarget[RT_BLURY2]->Bind();
+	CurrentRT = RT_BLURY2;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		gelSetClearColor( GEL_RGBA(0,0,0,0) );
 		gelClear();
@@ -927,7 +930,8 @@ void cGame::Draw() {
 			);
 	}
 
-	RenderTarget[RT_BLURY]->Bind();
+	CurrentRT = RT_BLURY;
+	RenderTarget[CurrentRT]->Bind();
 	{
 		gelSetClearColor( GEL_RGBA(0,0,0,0) );
 		gelClear();
@@ -943,14 +947,12 @@ void cGame::Draw() {
 	}
 
 	cRenderTarget::UnBind();	// Back to Screen //
+	CurrentRT = 0;
 
 	gelEnableDepthWriting();
 	gelClearDepth();
 
 	{
-		int ScalarX = FullRefScreen::Width>>1;
-		int ScalarY = FullRefScreen::Height>>1;
-
 		{
 			gelDrawModeTextured();
 			gelLoadMatrix( UICamera.ProjectionView );
@@ -973,9 +975,6 @@ void cGame::Draw() {
 	//		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
 			UberShader[US_EDGEBLEND]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 			UberShader[US_EDGEBLEND]->BindUniform2f( "AspectScalar", 1.0f, 1.0f / ActualScreen::AspectRatio );
-	
-//			ScalarX *= 0.5;
-//			ScalarY *= 0.5;
 	
 			gelDrawRectFillTextured_( 
 				Vector3D( -ScalarX, ScalarY, 0 ),
