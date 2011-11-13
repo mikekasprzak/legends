@@ -147,18 +147,17 @@ inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Src, const Vector3D& Dest, con
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Matrix4x4 Calc_LookAt( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {	
-	Vector3D ViewDirection = (Dest - Src).Normal();
-	Real Dot = ViewDirection * CameraUp;
-	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
-//	Vector3D Up = (CameraUp % ViewDirection).Normal();
-	Vector3D Right = Up % ViewDirection;
+inline Matrix4x4 Calc_LookAt( const Vector3D& Pos, const Vector3D& Look, const Vector3D& CameraUp ) {
+	// Build the 3 basis vectors required to create an orientation //
+	Vector3D Forward = (Look - Pos).Normal();
+	Vector3D Right = Forward % CameraUp;
+	Vector3D Up = Forward % Right;
 
 	return Matrix4x4(
-		Right.x, Up.x, ViewDirection.x, 0.0f,
-		Right.y, Up.y, ViewDirection.y, 0.0f,
-		Right.z, Up.z, ViewDirection.z, 0.0f,
-		Src.x, -Src.y, Src.z, 1.0f
+		Right.x, Up.x, Forward.x, 0.0f,
+		Right.y, Up.y, Forward.y, 0.0f,
+		Right.z, Up.z, Forward.z, 0.0f,
+		-Pos.x, Pos.y, Pos.z, 1.0f
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -166,7 +165,7 @@ inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const 
 	Vector3D ViewDirection = (Dest - Src).Normal();
 //	Real Dot = ViewDirection * CameraUp;
 //	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
-	Vector3D Up = (CameraUp % ViewDirection).Normal();
+	Vector3D Up = (CameraUp % ViewDirection).Normal(); // This is wrong //
 	Vector3D Right = Up % ViewDirection;
 
 	return Matrix4x4(
