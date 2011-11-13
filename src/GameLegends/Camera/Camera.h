@@ -11,7 +11,9 @@
 class GelCamera {
 public:
 	Vector3D Pos;				// Where the camera is //
-	Vector3D Target;			// What the camera is looking at //
+	Vector3D Look;				// What the camera is looking at //
+
+	Vector3D Up;				// Up Vector //
 
 public:	
 	Real NearPlane;
@@ -22,7 +24,7 @@ public:
 	
 public:	
 	Matrix4x4 Projection;		// Projection Component //
-	Matrix4x4 View;				// View Component (Camera Pos->Target) //
+	Matrix4x4 View;				// View Component (Camera Pos->Look) //
 	
 	Matrix4x4 ProjectionView;	// Combined Matrix //
 public:
@@ -34,7 +36,8 @@ public:
 		FarPlane( 100 )
 	{
 		Pos = Vector3D(0,0,0);
-		Target = Vector3D(0,0,-1);		
+		Look = Vector3D(0,0,1);
+		Up = Vector3D(0,1,0);
 	}
 	
 	GelCamera( const Real _Width, const Real _Height, const Real _Near, const Real _Far ) :
@@ -44,7 +47,8 @@ public:
 		FarPlane( _Far )
 	{
 		Pos = Vector3D(0,0,0);
-		Target = Vector3D(0,0,-1);
+		Look = Vector3D(0,0,1);
+		Up = Vector3D(0,1,0);
 	}
 	
 	void SetFrustum( const Real _Width, const Real _Height, const Real _Near, const Real _Far ) {
@@ -56,8 +60,7 @@ public:
 	
 	void UpdateMatrix() {
 		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane );		
-		// NOTE: Camera Up should not be hardcoded! //
-		View = Calc_LookAt( Pos, Target, Vector3D(0,-1,0) );
+		View = Calc_LookAt( Pos, Look, Up );
 	
 		ProjectionView = Projection;
 		ProjectionView.Multiply( View );

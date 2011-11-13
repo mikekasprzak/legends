@@ -502,16 +502,16 @@ void cGame::Step() {
 #ifdef USES_SDL		
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_UP] ) {
-			Stick.y = -CameraSpeed;
-		}
-		if ( keystate[SDL_SCANCODE_DOWN] ) {
 			Stick.y = CameraSpeed;
 		}
+		if ( keystate[SDL_SCANCODE_DOWN] ) {
+			Stick.y = -CameraSpeed;
+		}
 		if ( keystate[SDL_SCANCODE_LEFT] ) {
-			Stick.x = -CameraSpeed;
+			Stick.x = CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_RIGHT] ) {
-			Stick.x = CameraSpeed;
+			Stick.x = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_PAGEUP] ) {
 			CameraWorldPos += Vector3D(0,0,2.5f);
@@ -683,7 +683,7 @@ extern float smoothaccel_z;
 		_TV(100)
 		);
 	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,2,64); // Y=0 BREAKS //
-	ObserverCamera.Target = CameraWorldPos;
+	ObserverCamera.Look = CameraWorldPos;
 	ObserverCamera.UpdateMatrix();
 	
 //	ObserverCamera.ProjectionView = ModelViewMatrix;
