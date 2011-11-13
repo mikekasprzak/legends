@@ -5,6 +5,7 @@
 // Include this first, as I know how the rest of the code works... well, most of it. Later didn't work //
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
+#include <BulletCollision/CollisionShapes/btShapeHull.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
@@ -124,10 +125,21 @@ public:
 	cPhysicsObject* AddConvexHull( Vector3D& Pos, Real Radius, float* Points, int Count, int Size ) {
 		cPhysicsObject* obj = new cPhysicsObject;
 		
-		// Create a ball (radius) //
-		obj->shape = new btConvexHullShape(
-			(btScalar*)Points, Count, Size
+		// Create a Hull //
+		btConvexHullShape* DummyShape = new btConvexHullShape( (btScalar*)Points, Count, Size );
+		
+		btShapeHull* OptimizedHull = new btShapeHull( DummyShape );
+		OptimizedHull->buildHull( DummyShape->getMargin() );
+	
+		delete DummyShape;
+
+		obj->shape = new btConvexHullShape( 
+			(btScalar*)OptimizedHull->getVertexPointer(), 
+			OptimizedHull->numVertices(), 
+			sizeof(btVector3) 
 			);
+			
+		delete OptimizedHull;
 		
 		// Ball Orientation //
 		obj->motionState = new btDefaultMotionState( btTransform( btQuaternion(0,0,0,1), btVector3( Pos.x, Pos.y, Pos.z ) ) );
