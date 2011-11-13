@@ -168,9 +168,9 @@ void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real 
 	unsigned short* Faces = (unsigned short*)&(RMesh->Mesh[0].FaceGroup[0].Face[0].a);
 	unsigned int FaceCount = RMesh->Mesh[0].FaceGroup[0].Face.size();
 	
-	std::vector< int > FaceHack;
+	RoomMesh.back()->FaceHack.clear();
 	for ( int idx = 0; idx < FaceCount*3; idx++ ) {
-		FaceHack.push_back( Faces[idx] );
+		RoomMesh.back()->FaceHack.push_back( Faces[idx] );
 	}
 
 	RoomMesh.back()->PhysicsObject = Physics.AddStaticMesh( 
@@ -180,7 +180,7 @@ void cGame::AddOldRoomMesh( const Vector3D& _Pos, const char* _File, const Real 
 		RMesh->Mesh[0].Vertex.size(), 
 		sizeof(cPMEVertex),
 		
-		&(FaceHack[0]), 
+		&(RoomMesh.back()->FaceHack[0]), 
 		FaceCount
 		);
 }
@@ -300,7 +300,7 @@ void cGame::LoadMap() {
 							);
 					}
 			
-					AddOldRoomMesh( Pos, cJSON_GetObjectItem( Element, "Mesh" )->valuestring );
+					AddOldRoom( Pos, cJSON_GetObjectItem( Element, "Mesh" )->valuestring );
 				}
 			}
 			
@@ -407,7 +407,7 @@ void cGame::Init() {
 	// Follow the 1st object //
 	CameraFollow = Obj[0];
 	CameraWorldPos = CameraFollow->Pos;
-/*
+
 	AddObject3D( Vector3D( 4, 4, 4+2 ), "/Skull.pme", Real(1.2) );
 	Obj3.back()->Color = GEL_RGB_RED;
 	Obj3.back()->GlowColor = GEL_RGBA(64,64,0,64);
@@ -421,7 +421,7 @@ void cGame::Init() {
 //	AddObject3D( Vector3D( 4+8, 4+4, 4+2 ), "/Shield.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4, 4+8, 4+2 ), "/CandleStick.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.4) );
-	*/
+	
 //	AddObject3D( Vector3D( 4+4, 8+4, 4+2 ), "/Key_Boxy.pme", Real(0.8) );
 //	AddObject3D( Vector3D( 4, 4+8, 4 ), "/Table_SquareCenter.pme", Real(0.8) );
 	AddObject3D( Vector3D( -14, 4, 8+4 ), "/Sword.pme", Real(2) );
