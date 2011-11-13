@@ -682,11 +682,30 @@ extern float smoothaccel_z;
 		_TV(10),
 		_TV(100)
 		);
-	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,2,64); // Y=0 BREAKS //
+	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
 	ObserverCamera.Look = CameraWorldPos;
 	ObserverCamera.UpdateMatrix();
 	
 //	ObserverCamera.ProjectionView = ModelViewMatrix;
+
+	Real Near = _TV(100);
+	Real Length = _TV(800);
+	
+	Real Far = Near + Length;
+	Real PlanePos = _TV(0.5f);
+	
+	Real CameraPos = Near + ((Far - Near) * PlanePos);
+
+	UICamera.SetFrustum(
+		ActualScreen::Width / RefScreen::Scalar,
+		ActualScreen::Height / RefScreen::Scalar,
+		Near,
+		Far,
+		PlanePos
+		);
+	UICamera.Pos = Vector3D(0,0,CameraPos);
+	UICamera.Look = Vector3D(0,0,0);
+	UICamera.UpdateMatrix();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::DrawScene() {
@@ -699,12 +718,12 @@ void cGame::DrawScene() {
 		gelLoadMatrix( ObserverCamera.ProjectionView );
 		Room[idx]->Draw();
 	}
-//	gelDrawModeNull();
+	gelDrawModeNull();
 
-	gelDrawModeTextured();	// To disable some features //
+//	gelDrawModeTextured();	// To disable some features //
+	gelEnableTexturing();
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < RoomMesh.size(); idx++ ) {
-		//gelLoadMatrix( ObserverCamera.ProjectionView );
 		RoomMesh[idx]->Draw( UberShader[US_TEXTWOBLEND], ObserverCamera.ProjectionView );
 	}
 
@@ -712,7 +731,6 @@ void cGame::DrawScene() {
 	// Monkey Head //
 	UberShader[US_TEXTWOBLEND]->Bind( 0 );
 	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-		//gelLoadMatrix( ObserverCamera.ProjectionView );
 		// Changing Alpha no longer works because depth test is removing backfaces //
 		Obj3[ Obj3_Sort[idx] ]->Draw( UberShader[US_TEXTWOBLEND], ObserverCamera.ProjectionView );
 	}
@@ -832,7 +850,7 @@ void cGame::Draw() {
 	{
 		DrawSceneGlow();
 	}
-
+/*
 	// Reset Camera for UI //
 	Matrix4x4 CameraViewMatrix;
 	{
@@ -858,7 +876,7 @@ void cGame::Draw() {
 		CameraViewMatrix = ViewMatrix;
 		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
 	}
-
+*/
 
 	gelDisableBlending();
 	int ScalarX = FullRefScreen::Width>>1;
@@ -870,12 +888,12 @@ void cGame::Draw() {
 		gelClear();
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_VBLUR);
-		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, -ScalarY, 0 ),
-			Vector3D( ScalarX, ScalarY, 0 )
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
 
@@ -885,12 +903,12 @@ void cGame::Draw() {
 		gelClear();
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
-		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, -ScalarY, 0 ),
-			Vector3D( ScalarX, ScalarY, 0 )
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
 
@@ -900,12 +918,12 @@ void cGame::Draw() {
 		gelClear();
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
-		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 		RenderTarget[RT_BLURY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, -ScalarY, 0 ),
-			Vector3D( ScalarX, ScalarY, 0 )
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
 
@@ -915,12 +933,12 @@ void cGame::Draw() {
 		gelClear();
 
 		UberShader[US_POSTPROCESS]->Bind(US_PP_BLUR);
-		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+		UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 		RenderTarget[RT_BLURY2]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, -ScalarY, 0 ),
-			Vector3D( ScalarX, ScalarY, 0 )
+			Vector3D( -ScalarX, ScalarY, 0 ),
+			Vector3D( ScalarX, -ScalarY, 0 )
 			);
 	}
 
@@ -935,13 +953,13 @@ void cGame::Draw() {
 
 		{
 			gelDrawModeTextured();
-			gelLoadMatrix( CameraViewMatrix );
+			gelLoadMatrix( UICamera.ProjectionView );
 			RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
 			gelSetColor( GEL_RGBA(255,255,255,255) );
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, -ScalarY, 0 ),
-				Vector3D( ScalarX, ScalarY, 0 )
+				Vector3D( -ScalarX, ScalarY, 0 ),
+				Vector3D( ScalarX, -ScalarY, 0 )
 				);
 		}
 
@@ -953,15 +971,15 @@ void cGame::Draw() {
 	//		glActiveTexture( GL_TEXTURE0 );
 			RenderTarget[RT_BLURY]->BindAsTexture();
 	//		UberShader[US_EDGEBLEND]->BindUniform1i( "TexImage0", 0 );
-			UberShader[US_EDGEBLEND]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+			UberShader[US_EDGEBLEND]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 			UberShader[US_EDGEBLEND]->BindUniform2f( "AspectScalar", 1.0f, 1.0f / ActualScreen::AspectRatio );
 	
 //			ScalarX *= 0.5;
 //			ScalarY *= 0.5;
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, -ScalarY, 0 ),
-				Vector3D( ScalarX, ScalarY, 0 )
+				Vector3D( -ScalarX, ScalarY, 0 ),
+				Vector3D( ScalarX, -ScalarY, 0 )
 				);		
 		}
 
@@ -969,13 +987,13 @@ void cGame::Draw() {
 			gelEnablePremultipliedAlphaBlending();
 	
 			UberShader[US_POSTPROCESS]->Bind(US_PP_HBLUR);
-			UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", CameraViewMatrix );
+			UberShader[US_POSTPROCESS]->BindUniformMatrix4x4( "ViewMatrix", UICamera.ProjectionView );
 			RenderTarget[RT_MINI2]->BindAsTexture();
 //			RenderTarget[RT_MINI1]->BindAsTexture();
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, -ScalarY, 0 ),
-				Vector3D( ScalarX, ScalarY, 0 )
+				Vector3D( -ScalarX, ScalarY, 0 ),
+				Vector3D( ScalarX, -ScalarY, 0 )
 				);
 		}
 
@@ -984,7 +1002,7 @@ void cGame::Draw() {
 #endif // USES_HIDAPI //
 		
 		gelDrawModeTextured();
-		gelLoadMatrix( CameraViewMatrix );
+		gelLoadMatrix( UICamera.ProjectionView );
 
 		gelEnablePremultipliedAlphaBlending();
 		gelSetColor( GEL_RGB_YELLOW );

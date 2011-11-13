@@ -91,7 +91,7 @@ inline void LinkShader( const cUberShader_Shader& Program ) {
 	VLog( "* Program Linked. Done." );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* Attribute ) {
+inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribute ) {
 	cJSON* Attrib = Attribute->child;
 	
 	while ( Attrib ) {
@@ -108,6 +108,11 @@ inline void AssignShaderAttributes( const cUberShader_Shader& Program, cJSON* At
 			Index, 
 			Name
 			);
+		
+		// Store a copy of all attributes, so they can be enabled correctly //
+		Program.Attributes.push_back( Index );
+		
+		// TODO: store negatives when explicit disabled requested //
 		
 		// Next Attribute //
 		Attrib = Attrib->next;
@@ -238,6 +243,16 @@ cUberShader::~cUberShader() {
 void cUberShader::Bind( const GelShaderHandle Index ) {
 	CurrentShader = &Shader[Index];
 	glUseProgram( Shader[Index].Program );
+
+	// Skipping Zero, since I never disable zero //	
+	for ( int idx = 1; idx < Shader[Index].Attributes.size(); idx++ ) {
+		if ( Shader[Index].Attributes[idx] > 0 ) {
+			glEnableVertexAttribArray( Shader[Index].Attributes[idx] );
+		}
+		else {
+			glDisableVertexAttribArray( -Shader[Index].Attributes[idx] );
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 GelShaderHandle cUberShader::Find( const char* ShaderName ) {

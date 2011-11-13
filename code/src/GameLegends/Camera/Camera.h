@@ -13,7 +13,7 @@ public:
 	Vector3D Pos;				// Where the camera is //
 	Vector3D Look;				// What the camera is looking at //
 
-	Vector3D Up;				// Up Vector //
+	Vector3D Up;				// Up Vector - REMEMBER TO UPDATE THIS IF NOT FIXED! //
 
 public:	
 	Real NearPlane;
@@ -21,6 +21,8 @@ public:
 	
 	Real PlaneWidth;
 	Real PlaneHeight;
+	
+	Real PlanePos;				// Still undecided if I need this //
 	
 public:	
 	Matrix4x4 Projection;		// Projection Component //
@@ -40,26 +42,29 @@ public:
 		Up = Vector3D(0,1,0);
 	}
 	
-	GelCamera( const Real _Width, const Real _Height, const Real _Near, const Real _Far ) :
+	GelCamera( const Real _Width, const Real _Height, const Real _Near, const Real _Far, const Real _PlanePos = Real::Half ) :
 		PlaneWidth( _Width ),
 		PlaneHeight( _Height ),
 		NearPlane( _Near ),
-		FarPlane( _Far )
+		FarPlane( _Far ),
+		PlanePos( _PlanePos )
 	{
 		Pos = Vector3D(0,0,0);
 		Look = Vector3D(0,0,1);
 		Up = Vector3D(0,1,0);
 	}
 	
-	void SetFrustum( const Real _Width, const Real _Height, const Real _Near, const Real _Far ) {
+	void SetFrustum( const Real _Width, const Real _Height, const Real _Near, const Real _Far, const Real _PlanePos = Real::Half ) {
 		PlaneWidth = _Width;
 		PlaneHeight = _Height;
 		NearPlane = _Near;
 		FarPlane = _Far;
+		
+		PlanePos = _PlanePos;
 	}
 	
 	void UpdateMatrix() {
-		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane );		
+		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos );		
 		View = Calc_LookAt( Pos, Look, Up );
 	
 		ProjectionView = Projection;

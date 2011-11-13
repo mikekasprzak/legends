@@ -61,6 +61,19 @@ inline void gels_DrawModeTexturedColors() {
 #endif // USES_OPENGL2 //
 }
 // - ------------------------------------------------------------------------------------------ - //
+#define GELS_DRAW_MODE_NULL
+// - ------------------------------------------------------------------------------------------ - //
+inline void gels_DrawModeNull() {
+#if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
+	gels_NullShaded();
+#else // USES_OPENGL2 //
+	glDisable(GL_TEXTURE_2D);
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+#endif // USES_OPENGL2 //
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_Graphics_OpenGL_Draw_Draw_Modes_H__ //

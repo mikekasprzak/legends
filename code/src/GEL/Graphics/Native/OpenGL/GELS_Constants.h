@@ -46,6 +46,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // DrawMode States //
 // - ------------------------------------------------------------------------------------------ - //
+#define GEL_DRAWMODE_NULL						-1
 #define GEL_DRAWMODE_FLAT						0
 #define GEL_DRAWMODE_COLORS						1
 #define GEL_DRAWMODE_TEXTURED					2

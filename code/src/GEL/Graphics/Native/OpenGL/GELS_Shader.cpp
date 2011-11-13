@@ -44,7 +44,7 @@ void gels_ColorShaded() {
 // - ------------------------------------------------------------------------------------------ - //
 void gels_TextureShaded() {
 	gels_SetShader( GELS_TextureShader_Prog );
-//	gelsApplyMatrix();	
+//	gelsApplyMatrix();
 //	gelsApplyColor( Current::Color );
 	glEnableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
@@ -56,6 +56,13 @@ void gels_TextureColorShaded() {
 //	gelsApplyColor( Current::Color );
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+}
+// - ------------------------------------------------------------------------------------------ - //
+void gels_NullShaded() {
+//	gels_SetShader( GELS_FlatShader_Prog );
+
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
