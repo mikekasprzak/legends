@@ -18,7 +18,7 @@ inline Matrix4x4 Calc_Simple_OrthoProjection( const Real& Width, const Real& Hei
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = ActualHeight;
+	Matrix[5] = -ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -47,7 +47,7 @@ inline Matrix4x4 Calc_Frustum_OrthoProjection( const Real& Width, const Real& He
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = ActualHeight;
+	Matrix[5] = -ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -76,7 +76,7 @@ inline Matrix4x4 Calc_Simple_PerspectiveProjection( const Real& Width, const Rea
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = ActualHeight;
+	Matrix[5] = -ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
@@ -106,7 +106,7 @@ inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Re
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = ActualHeight;
+	Matrix[5] = -ActualHeight;
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	

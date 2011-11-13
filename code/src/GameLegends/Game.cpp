@@ -680,14 +680,15 @@ extern float smoothaccel_z;
 		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
 		_TV(10),
-		_TV(100)
+		_TV(110)
 		);
 	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
 	ObserverCamera.Look = CameraWorldPos;
+	ObserverCamera.Up = Vector3D(0,1,0);
 	ObserverCamera.UpdateMatrix();
 	
-//	ObserverCamera.ProjectionView = ModelViewMatrix;
 
+	// UI Aligned Camera //
 	Real Near = _TV(100);
 	Real Length = _TV(800);
 	
@@ -705,6 +706,7 @@ extern float smoothaccel_z;
 		);
 	UICamera.Pos = Vector3D(0,0,CameraPos);
 	UICamera.Look = Vector3D(0,0,0);
+	UICamera.Up = Vector3D(0,1,0);
 	UICamera.UpdateMatrix();
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -1011,7 +1013,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"FPS: %i", FPS_Counter );
+			"FPS: %i (%i %i)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height );
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();

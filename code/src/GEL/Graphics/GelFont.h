@@ -54,7 +54,7 @@ public:
 		float ScaleW_F = 1.0f / (float)ScaleW; 
 		float ScaleH_F = 1.0f / (float)ScaleH;
 
-		Scalar *= size_BMFont( Font );
+		Scalar *= (float)size_BMFont( Font );
 
 		int Width = width_BMFont( Font, Text, Length );
 		int Height = height_BMFont( Font, Text, Length );
@@ -71,7 +71,7 @@ public:
 		if ( Align & ALIGN_VCENTER ) {
 			Pos.y -= (Height>>1) * Scalar * ScaleH_F;
 		}
-		else if ( Align & ALIGN_BOTTOM ) {
+		else if ( Align & ALIGN_TOP ) {
 			Pos.y -= Height * Scalar * ScaleH_F;
 		}
 		else if ( Align & ALIGN_BASELINE ) {
