@@ -46,6 +46,8 @@ void gels_ColorShaded();
 void gels_TextureShaded();
 #define GELS_TEXTURE_COLOR_SHADED
 void gels_TextureColorShaded();
+#define GELS_NULL_SHADED
+void gels_NullShaded();
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES_OPENGL2 //
 // - ------------------------------------------------------------------------------------------ - //

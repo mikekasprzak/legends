@@ -19,6 +19,9 @@ public:
 	GLuint Geometry;
 
 	GLuint Program;
+	
+	std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
+	// Remember, Attributes when disabled use a single value across all //
 
 public:		
 	cUberShader_Shader() :

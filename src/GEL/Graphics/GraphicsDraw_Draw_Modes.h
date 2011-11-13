@@ -30,6 +30,12 @@ inline void gelDrawModeTexturedColors_() {
 #endif // GELS_DRAW_MODE_TEXTURED_COLORS //
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawModeNull_() {
+#ifdef GELS_DRAW_MODE_NULL
+	gels_DrawModeNull();
+#endif // GELS_DRAW_MODE_NULL //
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -57,6 +63,12 @@ inline void gelDrawModeTexturedColors() {
 	gelDrawModeTexturedColors_();
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawModeNull() {
+	Current::OldDrawMode = Current::DrawMode;
+	Current::DrawMode = GEL_DRAWMODE_NULL;
+	gelDrawModeNull_();
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawModeRestore() {
@@ -72,6 +84,9 @@ inline void gelDrawModeRestore() {
 	}
 	else if ( Current::OldDrawMode == GEL_DRAWMODE_TEXTURED_COLORS ) {
 		gelDrawModeTexturedColors();
+	}
+	else if ( Current::OldDrawMode == GEL_DRAWMODE_NULL ) {
+		gelDrawModeNull();
 	}
 	else {
 		Log("* Unknown Draw Mode (%i)\n", Current::OldDrawMode );

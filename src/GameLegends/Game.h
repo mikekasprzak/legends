@@ -86,6 +86,7 @@ public:
 	Vector3D Input_MoveTarget; // ?? //
 
 	GelCamera ObserverCamera;
+	GelCamera UICamera;
 
 public:
 	std::vector< cRenderTarget* >	RenderTarget;
