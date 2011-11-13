@@ -30,8 +30,11 @@ void cGameSupport::MouseDraw() {
 #ifndef PRODUCT_NOMOUSECURSOR
 	gelDrawModeTextured();
 	{
-		if ( MouseVisible )
-			MouseCursor.DrawGraphic( 0, UIA_HLEFT | UIA_VTOP, Mouse.Pos - MouseCursor.Element[0].Pos, (Mouse.Button() == 1 ? Real(0.9) : Real(1)), CurrentAngle );
+		if ( MouseVisible ) {
+			Vector2D Pos = Mouse.Pos - MouseCursor.Element[0].Pos;
+			Pos.y = -Pos.y;	// Due to cartesian space //
+			MouseCursor.DrawGraphic( 0, UIA_HLEFT | UIA_VTOP, Pos, (Mouse.Button() == 1 ? Real(0.9) : Real(1)), CurrentAngle );
+		}
 	}
 #endif // PRODUCT_NOMOUSECURSOR //
 }

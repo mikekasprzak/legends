@@ -322,17 +322,17 @@ public:
 			P2.x += Half;
 		}
 		
-		// Y Axis Alignment //
+		// Y Axis Alignment (opposite behavior due to cartesian coods) //
 		if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
-			P2.y += Real( Graphic->h ) * Scale;
+			P2.y -= Real( Graphic->h ) * Scale;
 		}
 		else if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
-			P1.y -= Real( Graphic->h ) * Scale;
+			P1.y += Real( Graphic->h ) * Scale;
 		}
 		else {
 			Real Half = Real( Graphic->h >> 1 ) * Scale;
-			P1.y -= Half;
-			P2.y += Half;
+			P1.y += Half;
+			P2.y -= Half;
 		}
 		
 		// Add Vertices //
@@ -380,17 +380,17 @@ public:
 			P2.x += Half;
 		}
 		
-		// Y Axis Alignment //
+		// Y Axis Alignment (Opposite behavior due to cartesian space) //
 		if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
-			P2.y += Real( Graphic->h ) * Scale;
+			P2.y -= Real( Graphic->h ) * Scale;
 		}
 		else if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
-			P1.y -= Real( Graphic->h ) * Scale;
+			P1.y += Real( Graphic->h ) * Scale;
 		}
 		else {
 			Real Half = Real( Graphic->h >> 1 ) * Scale;
-			P1.y -= Half;
-			P2.y += Half;
+			P1.y += Half;
+			P2.y -= Half;
 		}
 		
 		// Add Vertices //
