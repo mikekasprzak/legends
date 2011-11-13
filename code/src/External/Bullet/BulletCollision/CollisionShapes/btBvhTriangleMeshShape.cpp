@@ -19,6 +19,11 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionShapes/btOptimizedBvh.h"
 #include "LinearMath/btSerializer.h"
 
+#ifdef DEBUG_TRIANGLE_MESH
+#include <stdio.h>
+#endif //DEBUG_TRIANGLE_MESH
+
+
 ///Bvh Concave triangle mesh is a static-triangle mesh shape with Bounding Volume Hierarchy optimization.
 ///Uses an interface to access the triangles to allow for sharing graphics/physics triangles.
 btBvhTriangleMeshShape::btBvhTriangleMeshShape(btStridingMeshInterface* meshInterface, bool useQuantizedAabbCompression, bool buildBvh)
@@ -287,16 +292,16 @@ void	btBvhTriangleMeshShape::processAllTriangles(btTriangleCallback* callback,co
 
 
 #ifdef DEBUG_TRIANGLE_MESH
-				printf("%d ,",graphicsindex);
+				printf("%x -- %d, ", gfxbase, graphicsindex);
 #endif //DEBUG_TRIANGLE_MESH
 				if (type == PHY_FLOAT)
 				{
 					float* graphicsbase = (float*)(vertexbase+graphicsindex*stride);
 					
 					m_triangle[j] = btVector3(
-																		graphicsbase[0]*meshScaling.getX(),
-																		graphicsbase[1]*meshScaling.getY(),
-																		graphicsbase[2]*meshScaling.getZ());
+						graphicsbase[0]*meshScaling.getX(),
+						graphicsbase[1]*meshScaling.getY(),
+						graphicsbase[2]*meshScaling.getZ());
 				}
 				else
 				{
@@ -308,7 +313,7 @@ void	btBvhTriangleMeshShape::processAllTriangles(btTriangleCallback* callback,co
 						btScalar(graphicsbase[2])*meshScaling.getZ());
 				}
 #ifdef DEBUG_TRIANGLE_MESH
-				printf("triangle vertices:%f,%f,%f\n",triangle[j].x(),triangle[j].y(),triangle[j].z());
+				printf("triangle vertices:%f,%f,%f\n",m_triangle[j].x(),m_triangle[j].y(),m_triangle[j].z());
 #endif //DEBUG_TRIANGLE_MESH
 			}
 

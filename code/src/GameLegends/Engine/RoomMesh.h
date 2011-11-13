@@ -21,6 +21,7 @@ public:
 	Matrix3x3 Orientation;
 	
 //	cPMEFile* Mesh;
+	std::vector< int > FaceHack;
 	GelAssetHandle MeshHandle;
 
 	cPhysicsObject* PhysicsObject;
