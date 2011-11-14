@@ -881,6 +881,8 @@ void cGame::Draw() {
 		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
 	}
 */
+		static float Bork = 0;
+		Bork+=0.01f;
 
 	gelDisableBlending();
 
@@ -895,8 +897,10 @@ void cGame::Draw() {
 		RenderTarget[RT_MINI1]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
+//			Vector3D( -ScalarX, -ScalarY * Real::Sin(Bork), 0 ),
+//			Vector3D( ScalarX, ScalarY * Real::Sin(Bork), 0 )
 			);
 	}
 
@@ -911,8 +915,8 @@ void cGame::Draw() {
 		RenderTarget[RT_PRIMARY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -927,8 +931,8 @@ void cGame::Draw() {
 		RenderTarget[RT_BLURY]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
@@ -943,13 +947,17 @@ void cGame::Draw() {
 		RenderTarget[RT_BLURY2]->BindAsTexture();
 	
 		gelDrawRectFillTextured_( 
-			Vector3D( -ScalarX, ScalarY, 0 ),
-			Vector3D( ScalarX, -ScalarY, 0 )
+			Vector3D( -ScalarX, -ScalarY, 0 ),
+			Vector3D( ScalarX, ScalarY, 0 )
 			);
 	}
 
 	cRenderTarget::UnBind();	// Back to Screen //
 	CurrentRT = 0;
+
+	// - -------------------------------------------------------------------------------------- - //
+	// NOTE: After this point, we need to use different coordinate systems to map UVs correctly. //
+	// I am not sure why this is the case. I am using the same matrix across all. TODO: Check NV. //
 
 	gelEnableDepthWriting();
 	gelClearDepth();
@@ -1013,7 +1021,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"FPS: %i (%i %i)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height );
+			"FPS: %i (%f)", FPS_Counter, 1.0f * Real::Sin(Bork) );
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
