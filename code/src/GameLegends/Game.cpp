@@ -957,7 +957,7 @@ void cGame::Draw() {
 
 	// - -------------------------------------------------------------------------------------- - //
 	// NOTE: After this point, we need to use different coordinate systems to map UVs correctly. //
-	// I am not sure why this is the case. I am using the same matrix across all. TODO: Check NV. //
+	// Hey remember the Cartesian vs UV corner disparity thing? This is that exact same thing. //
 
 	gelEnableDepthWriting();
 	gelClearDepth();
