@@ -3,6 +3,7 @@
 #define __LEGENDS_PHYSICS_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Include this first, as I know how the rest of the code works... well, most of it. Later didn't work //
+#include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
