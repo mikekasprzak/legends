@@ -12,6 +12,7 @@
 
 #include <AssetPool/AssetPool.h>
 #include <Graphics/GraphicsDraw.h>
+#include <Input/Input.h>
 #include <Graphics/Mesh/PMEFile.h>
 #include <Graphics/Mesh/PMEFile_SimpleSelfShadow.h>
 #include <Geometry/Projection/Projection.h>
@@ -1009,6 +1010,23 @@ void cGame::Draw() {
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();
 #endif // USES_HIDAPI //
+				
+		
+		gelEnablePremultipliedAlphaBlending();
+		Vector3D MouseRayStart( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.NearPlane+Real(1) );
+		Vector3D MouseRayEnd( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.FarPlane-Real(40) );
+		
+		MouseRayStart -= ObserverCamera.Pos;
+		MouseRayEnd -= ObserverCamera.Pos;
+		
+		gelDrawModeFlat();
+		gelLoadMatrix( ObserverCamera.ProjectionView );
+		gelDrawCircleFill( MouseRayStart, Real(0.3), GEL_RGBA(128,0,0,128) );
+		gelDrawCircleFill( MouseRayEnd, Real(0.3), GEL_RGBA(0,128,0,128) );
+		gelDrawModeColors();
+		gelLoadMatrix( ObserverCamera.ProjectionView );
+		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
+		
 		
 		gelDrawModeTextured();
 		gelLoadMatrix( UICamera.ProjectionView );
@@ -1025,6 +1043,7 @@ void cGame::Draw() {
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
+		
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //

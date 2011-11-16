@@ -5,20 +5,27 @@
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color) {
-//	gelSetColor( Color );
-
+inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
     float Verts[] = {
 		P1.x, P1.y, P1.z,
 		P2.x, P2.y, P2.z,
     };
  
  	gelDrawLines( (Vector3D*)Verts, 2, Color );
-   
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_LINES, 0, 2 );
-//
-//	gelRestoreColor( Color );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawLine( const Vector3D& P1, const Vector3D& P2, const GelColor Color1, const GelColor Color2 ) {
+    float Verts[] = {
+		P1.x, P1.y, P1.z,
+		P2.x, P2.y, P2.z,
+    };
+    
+    GelColor Colors[] = {
+    	Color1,
+    	Color2
+    };
+ 
+ 	gelDrawLinesColors_( (Vector3D*)Verts, (const unsigned int*)&Colors[0], 2 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 

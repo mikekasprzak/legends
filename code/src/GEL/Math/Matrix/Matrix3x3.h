@@ -239,7 +239,7 @@ public:
 		return *this = Temp;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Calculate Adjoint of Matrix //
+	// Calculate Transpose (Adjoint) of Matrix //
 	inline const Matrix3x3 Transpose() {
 		return Matrix3x3(
 			Array[0], Array[3], Array[6],
@@ -259,10 +259,10 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
-//	inline const Matrix3x3 Inverse() {
-//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-//		return Adjoint() / Determinant();
-//	}
+	inline const Matrix3x3 OrthogonalInverse() {
+		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
+		return Transpose() / Determinant();
+	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
