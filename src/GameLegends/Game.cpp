@@ -1014,23 +1014,63 @@ void cGame::Draw() {
 		
 		gelEnablePremultipliedAlphaBlending();
 
-		Vector3D MouseRayStart( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.NearPlane+Real(0.1) );
-		Vector3D MouseRayMiddle( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.CalcPlanePos( ObserverCamera.PlanePos ) );
-		Vector3D MouseRayEnd( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.FarPlane-Real(0.1) );
+		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
 		
+
+		Vector3D MouseRayStart = MouseScreen;
+		MouseRayStart.z = ObserverCamera.NearPlane+Real(0.1);
+		Vector3D MouseRayMiddle = MouseScreen;
+		MouseRayMiddle.z = ObserverCamera.CalcPlanePos( ObserverCamera.PlanePos );
+		Vector3D MouseRayEnd = MouseScreen;
+		MouseRayEnd.z = ObserverCamera.FarPlane-Real(0.1);
+		
+//		MouseRayStart = -ObserverCamera.Pos + MouseRayStart;
+//		MouseRayMiddle = -ObserverCamera.Pos + MouseRayMiddle;
+//		MouseRayEnd = -ObserverCamera.Pos + MouseRayEnd;
 //		MouseRayStart -= ObserverCamera.Pos;
+//		MouseRayMiddle -= ObserverCamera.Pos;
 //		MouseRayEnd -= ObserverCamera.Pos;
+
+//		MouseRayStart.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
+//		MouseRayMiddle.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
+//		MouseRayEnd.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
+
+//		MouseRayStart.ApplyMatrix( ObserverCamera.View );
+//		MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
+//		MouseRayEnd.ApplyMatrix( ObserverCamera.View );
+	
+
+		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
 		
 		gelDrawModeFlat();
-		gelLoadMatrix( ObserverCamera.Projection );
+		gelLoadMatrix( VisibleMatrix );
 		gelDrawCircleFill( MouseRayStart, Real(0.3), GEL_RGBA(128,0,0,128) );
-		gelDrawCircleFill( MouseRayMiddle, Real(0.3), GEL_RGBA(128,128,0,128) );
+		gelDrawCircleFill( MouseRayMiddle, Real(1), GEL_RGBA(128,128,0,128) );
 		gelDrawCircleFill( MouseRayEnd, Real(0.3), GEL_RGBA(0,128,0,128) );
 
-		gelDrawModeColors();
-		gelLoadMatrix( ObserverCamera.Projection );
-		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
+
+		btVector3 BTRayStart = btVector3( MouseRayStart.x, MouseRayStart.y, MouseRayStart.z );		
+		btVector3 BTRayEnd = btVector3( MouseRayEnd.x, MouseRayEnd.y, MouseRayEnd.z );		
 		
+		btCollisionWorld::ClosestRayResultCallback RayInfo( BTRayStart, BTRayEnd );
+		Physics.dynamicsWorld->rayTest( BTRayStart, BTRayEnd, RayInfo );
+
+//		gelLoadMatrix( ObserverCamera.ProjectionView );
+
+		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
+		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0,160 * 0.1f,60), Real(1), GEL_RGBA(128,128,128,128) );
+
+
+		Vector3D MouseRayContact( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
+		gelDrawCircleFill( MouseRayContact, Real(1), GEL_RGBA(0,128,128,128) );
+
+		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
+		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
+
+		gelDrawModeColors();
+		gelLoadMatrix( VisibleMatrix );
+		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
+				
 		
 		gelDrawModeTextured();
 		gelLoadMatrix( UICamera.ProjectionView );
@@ -1043,7 +1083,8 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"FPS: %i (%f)", FPS_Counter, 1.0f * Real::Sin(Bork) );
+			"FPS: %i (%f, %f)", FPS_Counter, 1.0f * Mouse.Pos.x, 1.0f * Mouse.Pos.y );
+//			"FPS: %i (%f)", FPS_Counter, 1.0f * Real::Sin(Bork) );
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
