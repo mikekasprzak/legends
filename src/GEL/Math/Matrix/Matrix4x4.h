@@ -352,7 +352,7 @@ public:
 		(*this) = _Vs * (*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Calculate Adjoint of Matrix //
+	// Calculate Transpose (Adjoint) of a Matrix //
 	inline const Matrix4x4 Transpose() const {
 		return Matrix4x4(
 			Array[0], Array[4], Array[8], Array[12],
@@ -413,10 +413,10 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
-//	inline const Matrix4x4 Inverse() const {
-//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-//		return Adjoint() / Determinant();
-//	}
+	inline const Matrix4x4 OrthogonalInverse() const {
+		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
+		return Transpose() / Determinant();
+	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
