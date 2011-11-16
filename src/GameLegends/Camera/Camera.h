@@ -70,6 +70,10 @@ public:
 		ProjectionView = Projection;
 		ProjectionView.Multiply( View );
 	}
+
+	inline Real CalcPlanePos( const Real a ) const {
+		return NearPlane + ((FarPlane-NearPlane) * a);
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_CAMERA_H__
