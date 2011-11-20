@@ -106,17 +106,14 @@ public:
 //		return Vector4D( (x * _Vs.x), (y * _Vs.y), (z * _Vs.z), (w * _Vs.w) );
 //	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Cross product //
-	// *note* this is the % sign because it is at the same level as the * and / signs, unlike the //
-	//        ^ sign, which is at the binary logic level (OR, AND, XOR). //
-//	inline const Vector4D operator % ( const Vector4D& _Vs ) const {
-//		// This is actually wrong, but I don't know how to do a 4D cross //
-//		return Vector4D(
-//			(y * _Vs.z) - (z * _Vs.y),
-//			(z * _Vs.x) - (x * _Vs.z),
-//			(x * _Vs.y) - (y * _Vs.x),
-//			);
-//	}
+	// Like the GLSL parallel, blends between two vectors by alpha (0 = a returned, 1 = b returned) //
+	inline const Vector4D mix( const Vector4D& _Vs, const Real Alpha ) const {
+		return ((*this) * (Real::One - Alpha)) + (_Vs * Alpha);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Vector4D mix( const Vector4D& a, const Vector4D& b, const Real Alpha ) {
+		return (a * (Real::One - Alpha)) + (b * Alpha);
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //
 	inline const Vector4D operator - ( ) const {
@@ -345,6 +342,10 @@ inline const Vector4D operator / ( const Real& a, const Vector4D& b ) {
 // -- ---------------------------------------------------------------------------------------- -- //
 inline const Real dot( const Vector4D& a, const Vector4D& b ) {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
+}
+// -- ---------------------------------------------------------------------------------------- -- //
+inline const Vector4D mix( const Vector4D& a, const Vector4D& b, const Real Alpha ) {
+	return (a * (Real::One - Alpha)) + (b * Alpha);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
