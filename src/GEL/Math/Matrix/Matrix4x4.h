@@ -422,10 +422,16 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
-	inline const Matrix4x4 OrthogonalInverse() const {
+	inline const Matrix4x4 Inverse() const {
 		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
 		return Adjoint() / Determinant();
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Calculate the Inverse //
+//	inline const Matrix4x4 OrthogonalInverse() const {
+//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
+//		return Adjoint() / Determinant();
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

@@ -278,10 +278,16 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
-	inline const Matrix3x3 OrthogonalInverse() {
+	inline const Matrix3x3 Inverse() {
 		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
 		return Adjoint() / Determinant();
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Calculate the Inverse //
+//	inline const Matrix3x3 OrthogonalInverse() {
+//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
+//		return Adjoint() / Determinant();
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

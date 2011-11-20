@@ -1016,9 +1016,9 @@ void cGame::Draw() {
 
 		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
 		
-//		MouseScreen.ApplyMatrix( UICamera.ProjectionView );
-		MouseScreen.ApplyMatrix( UICamera.Projection.OrthogonalInverse() );
-//		MouseScreen *= Real(0.1f);
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView );
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Inverse() );
+		MouseScreen *= Real(0.1f);
 
 		Vector3D MouseRayStart = MouseScreen;
 		MouseRayStart.z = ObserverCamera.NearPlane+Real(0.1);
@@ -1034,13 +1034,13 @@ void cGame::Draw() {
 //		MouseRayMiddle -= ObserverCamera.Pos;
 //		MouseRayEnd -= ObserverCamera.Pos;
 
-//		MouseRayStart.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
-//		MouseRayMiddle.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
-//		MouseRayEnd.ApplyMatrix( ObserverCamera.View.OrthogonalInverse() );
+		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View.Inverse() );
+		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View.Inverse() );
+		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View.Inverse() );
 
-//		MouseRayStart.ApplyMatrix( ObserverCamera.View );
-//		MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
-//		MouseRayEnd.ApplyMatrix( ObserverCamera.View );
+//		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View );
 	
 
 		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
