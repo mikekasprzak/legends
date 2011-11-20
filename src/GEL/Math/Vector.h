@@ -65,7 +65,7 @@ inline const Vector2D ClosestPointOnLine( const Vector2D& A, const Vector2D& B, 
 	
 	Vector2D Ray = P - A;
 	
-	Real DotLength = LineNormal * Ray;
+	Real DotLength = dot(LineNormal, Ray);
 	
 	if ( DotLength < Real::Zero ) {
 		DotLength = Real::Zero;

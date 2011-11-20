@@ -90,9 +90,17 @@ public:
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
 	// - -------------------------------------------------------------------------------------- - //
 	// Dot Product //
-	inline const Real operator * ( const Vector2D& _Vs ) const {
+	inline const Real dot( const Vector2D& _Vs ) const {
 		return (x * _Vs.x) + (y * _Vs.y);
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Real dot( const Vector2D& a, const Vector2D& b ) {
+		return (a.x * b.x) + (a.y * b.y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+//	inline const Real operator * ( const Vector2D& _Vs ) const {
+//		return (x * _Vs.x) + (y * _Vs.y);
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //
 	inline const Vector2D operator - ( ) const {
@@ -247,17 +255,17 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's an Acute angle between vectors, the dot will return a positive number //
 	inline const bool IsAcuteAngle( const Vector2D& _Vs ) const {
-		return ((*this) * _Vs.Tangent()) > Real::Zero;
+		return dot((*this), _Vs.Tangent()) > Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's an obtuse angle between vectors, the dot will return a negative number //
 	inline const bool IsObtuseAngle( const Vector2D& _Vs ) const {
-		return ((*this) * _Vs.Tangent()) < Real::Zero;
+		return dot((*this), _Vs.Tangent()) < Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's a 90 degree angle between vectors, the dot will return zero (or near zero) //
 	inline const bool IsRightAngle( const Vector2D& _Vs ) const {
-		return ((*this) * _Vs.Tangent()).IsZero();
+		return dot((*this), _Vs.Tangent()).IsZero();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -357,6 +365,15 @@ inline const Vector2D operator / ( const Real& a, const Vector2D& b ) {
 	return Ret;
 }
 // -- ---------------------------------------------------------------------------------------- -- //
+
+// -- ---------------------------------------------------------------------------------------- -- //
+// External Vector Operations, for GLSL familiar syntax //
+// -- ---------------------------------------------------------------------------------------- -- //
+inline const Real dot( const Vector2D& a, const Vector2D& b ) {
+	return (a.x * b.x) + (a.y * b.y);
+}
+// -- ---------------------------------------------------------------------------------------- -- //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
