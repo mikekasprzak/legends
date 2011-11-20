@@ -288,39 +288,39 @@ public:
 	// Element helper functions, for making some of the more complex code more readable //
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e11() const {
-		return operator()(0,0);
+		return Matrix(0,0);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e21() const {
-		return operator()(1,0);
+		return Matrix(1,0);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e31() const {
-		return operator()(2,0);
+		return Matrix(2,0);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e12() const {
-		return operator()(0,1);
+		return Matrix(0,1);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e22() const {
-		return operator()(1,1);
+		return Matrix(1,1);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e32() const {
-		return operator()(2,1);
+		return Matrix(2,1);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e13() const {
-		return operator()(0,2);
+		return Matrix(0,2);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e23() const {
-		return operator()(1,2);
+		return Matrix(1,2);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real e33() const {
-		return operator()(2,2);
+		return Matrix(2,2);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
