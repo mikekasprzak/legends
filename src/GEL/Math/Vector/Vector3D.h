@@ -291,8 +291,8 @@ public:
 	// Explicit Conversion Functions //
 	// - -------------------------------------------------------------------------------------- - //
 	inline const class Vector2D ToVector2D() const;
-	inline const class Vector3D ToHomoVector3D() const;
 	inline const class Vector4D ToVector4D() const;
+	inline const class Vector3D ToHomoVector3D() const;
 	inline const class Vector4D ToHomoVector4D() const;
 	
 //	inline const class Matrix2x1& ToMatrix2x1() const;
@@ -301,8 +301,6 @@ public:
 	inline const class Matrix1x3& ToMatrix1x3() const;
 	inline const class Matrix4x1 ToMatrix4x1() const;
 	inline const class Matrix1x4 ToMatrix1x4() const;
-	
-	inline const class ScalarVector3D& ToScalarVector() const;
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

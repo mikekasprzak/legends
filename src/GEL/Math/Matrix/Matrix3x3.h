@@ -15,8 +15,7 @@
 #include <External/boost/operators.hpp>
 
 #include <Math/Real.h>
-#include <Math/Vector/Vector2D.h>
-#include <Math/Vector/Vector3D.h>
+#include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

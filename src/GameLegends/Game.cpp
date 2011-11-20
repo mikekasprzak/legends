@@ -1016,6 +1016,9 @@ void cGame::Draw() {
 
 		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
 		
+		MouseScreen.ApplyMatrix( UICamera.ProjectionView );
+//		MouseScreen.ApplyMatrix( UICamera.Projection.OrthogonalInverse() );
+//		MouseScreen *= Real(0.1f);
 
 		Vector3D MouseRayStart = MouseScreen;
 		MouseRayStart.z = ObserverCamera.NearPlane+Real(0.1);
@@ -1085,6 +1088,13 @@ void cGame::Draw() {
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
 			"FPS: %i (%f, %f)", FPS_Counter, 1.0f * Mouse.Pos.x, 1.0f * Mouse.Pos.y );
 //			"FPS: %i (%f)", FPS_Counter, 1.0f * Real::Sin(Bork) );
+
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f, %f, %f)", 1.0f * MouseScreen.x, 1.0f * MouseScreen.y, 1.0f * MouseScreen.z );
+
 
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();

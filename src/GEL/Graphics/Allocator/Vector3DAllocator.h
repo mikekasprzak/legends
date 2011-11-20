@@ -2,7 +2,7 @@
 #ifndef __Vector3DAllocator_H__
 #define __Vector3DAllocator_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Math/Vector/Vector3D.h>
+#include <Math/Vector.h>
 #include "Allocator.h"
 // - ------------------------------------------------------------------------------------------ - //
 
