@@ -118,7 +118,7 @@ inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Re
 	Matrix[12] = 0.0f;
 	Matrix[13] = 0.0f;
 	Matrix[14] = -((2.0f*Far*Near)/(Far-Near));
-	Matrix[15] = 0.0f;
+	Matrix[15] = 1.0f;
 
 	return Matrix;
 }
