@@ -89,9 +89,18 @@ public:
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
 	// - -------------------------------------------------------------------------------------- - //
 	// Dot Product //
-	inline const Real operator * ( const Vector3D& _Vs ) const {
+	inline const Real dot( const Vector3D& _Vs ) const {
 		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z);
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Real dot( const Vector3D& a, const Vector3D& b ) {
+		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Component-wise Multipy (no longer dot product) //
+//	inline const Real operator * ( const Vector3D& _Vs ) const {
+//		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z);
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Cross product //
 	// *note* this is the % sign because it is at the same level as the * and / signs, unlike the //
@@ -259,17 +268,17 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's an Acute angle between vectors, the dot will return a positive number //
 	inline const bool IsAcuteAngle( const Vector3D& _Vs ) const {
-		return ((*this) * _Vs) > Real::Zero;
+		return dot((*this), _Vs) > Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's an obtuse angle between vectors, the dot will return a negative number //
 	inline const bool IsObtuseAngle( const Vector3D& _Vs ) const {
-		return ((*this) * _Vs) < Real::Zero;
+		return dot((*this), _Vs) < Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// If it's a 90 degree angle between vectors, the dot will return zero (or near zero) //
 	inline const bool IsRightAngle( const Vector3D& _Vs ) const {
-		return ((*this) * _Vs).IsZero();
+		return dot((*this), _Vs).IsZero();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -325,6 +334,14 @@ inline const Vector3D operator - ( const Real& a, const Vector3D& b ) {
 inline const Vector3D operator / ( const Real& a, const Vector3D& b ) {
 	Vector3D Ret( a / b.x, a / b.y, a / b.z );
 	return Ret;
+}
+// -- ---------------------------------------------------------------------------------------- -- //
+
+// -- ---------------------------------------------------------------------------------------- -- //
+// External Vector Operations, for GLSL familiar syntax //
+// -- ---------------------------------------------------------------------------------------- -- //
+inline const Real dot( const Vector3D& a, const Vector3D& b ) {
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 // -- ---------------------------------------------------------------------------------------- -- //
 
