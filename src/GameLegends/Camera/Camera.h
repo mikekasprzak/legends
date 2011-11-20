@@ -67,8 +67,12 @@ public:
 		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos );		
 		View = Calc_LookAt( Pos, Look, Up );
 	
+		CalculateProjectionView();
+	}
+	
+	void CalculateProjectionView() {
 		ProjectionView = Projection;
-		ProjectionView.Multiply( View );
+		ProjectionView.Multiply( View );		
 	}
 
 	inline Real CalcPlanePos( const Real a ) const {

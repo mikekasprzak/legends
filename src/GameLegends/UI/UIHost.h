@@ -348,9 +348,7 @@ public:
 			);
 
 		AssetPool::Set( Texture[ Index ] );
-		//gelSetSmoothTexturesMipMapped();
-					
-//		gelDrawTexturedPolygons(
+
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
 			(GelUV*)UV.Data,
@@ -407,7 +405,6 @@ public:
 
 		AssetPool::Set( Texture[ Index ] );
 					
-//		gelDrawTexturedPolygons(
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
 			(GelUV*)UV.Data,

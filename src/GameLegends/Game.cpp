@@ -960,6 +960,12 @@ void cGame::Draw() {
 	// NOTE: After this point, we need to use different coordinate systems to map UVs correctly. //
 	// Hey remember the Cartesian vs UV corner disparity thing? This is that exact same thing. //
 
+	// HACK: Fix the flipped matrix by manually un-flipping the matrix //
+//	UICamera.Projection.Matrix(1,1) = -UICamera.Projection.Matrix(1,1);
+//	UICamera.CalculateProjectionView();
+	ObserverCamera.Projection.Matrix(1,1) = -ObserverCamera.Projection.Matrix(1,1);
+	ObserverCamera.CalculateProjectionView();
+
 	gelEnableDepthWriting();
 	gelClearDepth();
 
@@ -1112,8 +1118,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"FPS: %i (%f, %f)", FPS_Counter, 1.0f * Mouse.Pos.x, 1.0f * Mouse.Pos.y );
-//			"FPS: %i (%f)", FPS_Counter, 1.0f * Real::Sin(Bork) );
+			"FPS: %i (%f, %f)", FPS_Counter, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
@@ -1135,6 +1140,7 @@ void cGame::Draw() {
 			1, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseRayEnd.x.ToFloat(), MouseRayEnd.y.ToFloat(), MouseRayEnd.z.ToFloat() );
+
 		gelSetColor( GEL_RGB_ORANGE );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
@@ -1142,10 +1148,23 @@ void cGame::Draw() {
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseRayContact.x.ToFloat(), MouseRayContact.y.ToFloat(), MouseRayContact.z.ToFloat() );
 
+		gelSetColor( GEL_RGB_YELLOW );
 
+		Matrix4x4 Check = ObserverCamera.View;
+//		Matrix4x4 Check = ObserverCamera.View.Minor44().ToMatrix4x4();
+//		Check = Check * Check.Transpose();
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -80, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
+
+		// *** //
+
+		gelDrawModeTextured();
+		gelLoadMatrix( UICamera.ProjectionView );
 		gelSetColor( GEL_RGB_DEFAULT );
-		gelEnableAlphaBlending();
-		
+		gelEnableAlphaBlending();		
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //

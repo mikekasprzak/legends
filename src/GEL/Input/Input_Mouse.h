@@ -90,6 +90,7 @@ public:
 			Pos = -ActualScreen::HalfShape;
 		}
 		Pos += Vector2D(x, y);
+		Pos.y = -Pos.y;					// New coord system, as of Legends //
 		Pos /= (RefScreen::Scalar);
 
 #ifdef USES_SDL		
