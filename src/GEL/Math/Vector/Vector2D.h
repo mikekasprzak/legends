@@ -98,8 +98,9 @@ public:
 		return (a.x * b.x) + (a.y * b.y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-//	inline const Real operator * ( const Vector2D& _Vs ) const {
-//		return (x * _Vs.x) + (y * _Vs.y);
+	// Component-wise Multipy (no longer dot product) //
+//	inline const Vector2D operator * ( const Vector2D& _Vs ) const {
+//		return Vector2D( (x * _Vs.x), (y * _Vs.y) );
 //	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //

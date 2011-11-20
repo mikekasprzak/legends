@@ -134,7 +134,7 @@ inline void Rotate_Matrix_XY( Matrix4x4& Matrix ) {
 // - ------------------------------------------------------------------------------------------ - //
 inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {
 	Vector3D ViewDirection = (Dest - Src).Normal();
-	Real Dot = ViewDirection * CameraUp;
+	Real Dot = dot(ViewDirection, CameraUp);
 	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
 //	Vector3D Up = (CameraUp % ViewDirection).Normal();
 	Vector3D Right = Up % ViewDirection;
@@ -172,7 +172,7 @@ inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const 
 		Right.x, Up.x, ViewDirection.x, 0,
 		Right.y, Up.y, ViewDirection.y, 0,
 		Right.z, Up.z, ViewDirection.z, 0,
-		-(Right * Src), -(Up * Src), -(ViewDirection * Src), 1
+		-dot(Right, Src), -dot(Up, Src), -dot(ViewDirection, Src), 1
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //

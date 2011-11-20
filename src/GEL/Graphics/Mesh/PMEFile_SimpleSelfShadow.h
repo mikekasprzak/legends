@@ -53,7 +53,7 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 
 			int Value = 255;
 			Real Constant(0.7);
-			Real Dot = (v[VertexIndex].Pos.Normal() * v[VertexIndex].Normal);
+			Real Dot = dot(v[VertexIndex].Pos.Normal(), v[VertexIndex].Normal);
 			if ( Dot < Constant )
 				Value = 255-(-(Dot-Constant) * Real(128));
 			
