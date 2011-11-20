@@ -678,8 +678,10 @@ extern float smoothaccel_z;
 	ModelViewMatrix.Multiply( Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) );
 */
 	ObserverCamera.SetFrustum( 
-		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
-		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+//		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+//		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+		FullRefScreen::Width * Real(0.1f),
+		FullRefScreen::Height * Real(0.1f),
 		_TV(10),
 		_TV(110)
 		);
@@ -699,8 +701,10 @@ extern float smoothaccel_z;
 	Real CameraPos = Near + ((Far - Near) * PlanePos);
 
 	UICamera.SetFrustum(
-		ActualScreen::Width / RefScreen::Scalar,
-		ActualScreen::Height / RefScreen::Scalar,
+//		ActualScreen::Width / RefScreen::Scalar,
+//		ActualScreen::Height / RefScreen::Scalar,
+		FullRefScreen::Width,
+		FullRefScreen::Height,
 		Near,
 		Far,
 		PlanePos
@@ -1029,15 +1033,18 @@ void cGame::Draw() {
 //		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Inverse() );
 //		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose() );
 //		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose().Inverse() );
-		MouseScreen *= Real(0.1f);
+//		MouseScreen *= Real(0.1f);
 //		MouseScreen /= RefScreen::Scalar;
 
+//		MouseScreen.x /= FullRefScreen::Width;
+//		MouseScreen.y /= FullRefScreen::Height;
+
 		Vector3D MouseRayStart = MouseScreen;
-		MouseRayStart.z = ObserverCamera.NearPlane+Real(0.1);
+		MouseRayStart.z = ObserverCamera.NearPlane+Real(1);
 		Vector3D MouseRayMiddle = MouseScreen;
 		MouseRayMiddle.z = ObserverCamera.CalcPlanePos( ObserverCamera.PlanePos );
 		Vector3D MouseRayEnd = MouseScreen;
-		MouseRayEnd.z = ObserverCamera.FarPlane-Real(0.1);
+		MouseRayEnd.z = ObserverCamera.FarPlane-Real(1);
 
 //		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
 //		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.Projection.Inverse() );
@@ -1066,9 +1073,25 @@ void cGame::Draw() {
 //		MouseRayMiddle -= ObserverCamera.Pos;
 //		MouseRayEnd -= ObserverCamera.Pos;
 
+//		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
+
+
 		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View.Inverse() );
 		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View.Inverse() );
 		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View.Inverse() );
+
+		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.Projection.Inverse() );
+		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.Projection.Inverse() );
+		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.Projection.Inverse() );
+
+//		MouseRayStart.x *= Real(0.1f);
+//		MouseRayMiddle.x *= Real(0.1f);
+//		MouseRayEnd.x *= Real(0.1f);
+//		MouseRayStart.y *= Real(0.1f);
+//		MouseRayMiddle.y *= Real(0.1f);
+//		MouseRayEnd.y *= Real(0.1f);
 
 //		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View );
 //		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
@@ -1095,7 +1118,7 @@ void cGame::Draw() {
 
 
 		Vector3D MouseRayContact( MouseScreen.x, MouseScreen.y, ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
-		MouseRayContact = MouseRayContact.ApplyMatrix( ObserverCamera.View.Inverse() );
+		MouseRayContact = MouseRayContact.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 		gelDrawCircleFill( MouseRayContact, Real(0.5f), GEL_RGBA(0,128,128,128) );
 
 		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
@@ -1118,7 +1141,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"FPS: %i (%f, %f)", FPS_Counter, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
+			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
