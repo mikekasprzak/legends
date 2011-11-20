@@ -98,20 +98,37 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Component-wise Multipy (no longer dot product) //
-//	inline const Real operator * ( const Vector3D& _Vs ) const {
-//		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z);
+//	inline const Vector3D operator * ( const Vector3D& _Vs ) const {
+//		return Vector3D( (x * _Vs.x), (y * _Vs.y), (z * _Vs.z) );
 //	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Cross product //
-	// *note* this is the % sign because it is at the same level as the * and / signs, unlike the //
-	//        ^ sign, which is at the binary logic level (OR, AND, XOR). //
-	inline const Vector3D operator % ( const Vector3D& _Vs ) const {
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector3D cross( const Vector3D& _Vs ) const {
 		return Vector3D(
 			(y * _Vs.z) - (z * _Vs.y),
 			(z * _Vs.x) - (x * _Vs.z),
 			(x * _Vs.y) - (y * _Vs.x)
 			);
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Vector3D cross( const Vector3D& a, const Vector3D b ) {
+		return Vector3D(
+			(a.y * b.z) - (a.z * b.y),
+			(a.z * b.x) - (a.x * b.z),
+			(a.x * b.y) - (a.y * b.x)
+			);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+//	// *note* this is the % sign because it is at the same level as the * and / signs, unlike the //
+//	//        ^ sign, which is at the binary logic level (OR, AND, XOR). //
+//	inline const Vector3D operator % ( const Vector3D& _Vs ) const {
+//		return Vector3D(
+//			(y * _Vs.z) - (z * _Vs.y),
+//			(z * _Vs.x) - (x * _Vs.z),
+//			(x * _Vs.y) - (y * _Vs.x)
+//			);
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //
 	inline const Vector3D operator - ( ) const {
@@ -342,6 +359,14 @@ inline const Vector3D operator / ( const Real& a, const Vector3D& b ) {
 // -- ---------------------------------------------------------------------------------------- -- //
 inline const Real dot( const Vector3D& a, const Vector3D& b ) {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+// - -------------------------------------------------------------------------------------- - //
+inline const Vector3D cross( const Vector3D& a, const Vector3D b ) {
+	return Vector3D(
+		(a.y * b.z) - (a.z * b.y),
+		(a.z * b.x) - (a.x * b.z),
+		(a.x * b.y) - (a.y * b.x)
+		);
 }
 // -- ---------------------------------------------------------------------------------------- -- //
 
