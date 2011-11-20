@@ -1015,10 +1015,16 @@ void cGame::Draw() {
 		gelEnablePremultipliedAlphaBlending();
 
 		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
-		
+
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.Projection.Inverse() );
+			
 //		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView );
 //		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Inverse() );
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose() );
+//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose().Inverse() );
 		MouseScreen *= Real(0.1f);
+//		MouseScreen /= RefScreen::Scalar;
 
 		Vector3D MouseRayStart = MouseScreen;
 		MouseRayStart.z = ObserverCamera.NearPlane+Real(0.1);
@@ -1026,6 +1032,26 @@ void cGame::Draw() {
 		MouseRayMiddle.z = ObserverCamera.CalcPlanePos( ObserverCamera.PlanePos );
 		Vector3D MouseRayEnd = MouseScreen;
 		MouseRayEnd.z = ObserverCamera.FarPlane-Real(0.1);
+
+//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.Projection.Inverse() );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.Projection.Inverse() );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.Projection.Inverse() );
+
+//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.ProjectionView );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.ProjectionView );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.ProjectionView );
+
+//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.ProjectionView.Inverse() );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.ProjectionView.Inverse() );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.ProjectionView.Inverse() );
+
+//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.View.Inverse() );
+//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.View.Inverse() );
+
 		
 //		MouseRayStart = -ObserverCamera.Pos + MouseRayStart;
 //		MouseRayMiddle = -ObserverCamera.Pos + MouseRayMiddle;
@@ -1094,6 +1120,27 @@ void cGame::Draw() {
 			1, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseScreen.x.ToFloat(), MouseScreen.y.ToFloat(), MouseScreen.z.ToFloat() );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f, %f, %f)", MouseRayStart.x.ToFloat(), MouseRayStart.y.ToFloat(), MouseRayStart.z.ToFloat() );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -32, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f, %f, %f)", MouseRayMiddle.x.ToFloat(), MouseRayMiddle.y.ToFloat(), MouseRayMiddle.z.ToFloat() );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -48, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f, %f, %f)", MouseRayEnd.x.ToFloat(), MouseRayEnd.y.ToFloat(), MouseRayEnd.z.ToFloat() );
+		gelSetColor( GEL_RGB_ORANGE );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
+			1, 
+			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			"(%f, %f, %f)", MouseRayContact.x.ToFloat(), MouseRayContact.y.ToFloat(), MouseRayContact.z.ToFloat() );
 
 
 		gelSetColor( GEL_RGB_DEFAULT );
