@@ -330,8 +330,6 @@ public:
 //	inline const class Matrix1x3& ToMatrix1x3() const;
 //	inline const class Matrix3x1& ToMatrix4x1() const;
 //	inline const class Matrix1x3& ToMatrix1x4() const;
-	
-	inline const class ScalarVector2D& ToScalarVector() const;
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

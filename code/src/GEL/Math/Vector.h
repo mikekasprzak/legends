@@ -9,25 +9,6 @@
 #include "Vector/Vector2D.h"
 #include "Vector/Vector3D.h"
 #include "Vector/Vector4D.h"
-#include "Vector/ScalarVector2D.h"
-#include "Vector/ScalarVector3D.h"
-#include "Vector/ScalarVector4D.h"
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-// Define the function that converts to a ScalarVector //
-// - ------------------------------------------------------------------------------------------ - //
-const ScalarVector2D& Vector2D::ToScalarVector() const {
-	return (const ScalarVector2D&)*this;
-}
-// - ------------------------------------------------------------------------------------------ - //
-const ScalarVector3D& Vector3D::ToScalarVector() const {
-	return (const ScalarVector3D&)*this;
-}
-// - ------------------------------------------------------------------------------------------ - //
-const ScalarVector4D& Vector4D::ToScalarVector() const {
-	return (const ScalarVector4D&)*this;
-}
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
