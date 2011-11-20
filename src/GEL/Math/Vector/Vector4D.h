@@ -101,8 +101,9 @@ public:
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-//	inline const Real operator * ( const Vector4D& _Vs ) const {
-//		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z) + (w * _Vs.w);
+	// Component-wise Multipy (no longer dot product) //
+//	inline const Vector4D operator * ( const Vector4D& _Vs ) const {
+//		return Vector4D( (x * _Vs.x), (y * _Vs.y), (z * _Vs.z), (w * _Vs.w) );
 //	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Cross product //

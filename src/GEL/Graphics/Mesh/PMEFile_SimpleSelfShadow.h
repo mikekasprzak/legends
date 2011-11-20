@@ -37,8 +37,10 @@ void SimpleSelfShadow( cPMEFile& Data ) {
 			
 			for ( size_t idx = 0; idx < Face.size(); idx++ ) {
 				Normal.push_back( 
-					((v[ Face[idx].b ].Pos) - (v[ Face[idx].a ].Pos)) %
-					((v[ Face[idx].c ].Pos) - (v[ Face[idx].a ].Pos)).Normal()
+					cross(	
+						((v[ Face[idx].b ].Pos) - (v[ Face[idx].a ].Pos)),
+						((v[ Face[idx].c ].Pos) - (v[ Face[idx].a ].Pos))
+						).Normal()
 					);
 			}
 			
