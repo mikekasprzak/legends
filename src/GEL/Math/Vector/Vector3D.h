@@ -130,6 +130,15 @@ public:
 //			);
 //	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Like the GLSL parallel, blends between two vectors by alpha (0 = a returned, 1 = b returned) //
+	inline const Vector3D mix( const Vector3D& _Vs, const Real Alpha ) const {
+		return ((*this) * (Real::One - Alpha)) + (_Vs * Alpha);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Vector3D mix( const Vector3D& a, const Vector3D& b, const Real Alpha ) {
+		return (a * (Real::One - Alpha)) + (b * Alpha);
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //
 	inline const Vector3D operator - ( ) const {
 		return Vector3D( -x, -y, -z );
@@ -367,6 +376,10 @@ inline const Vector3D cross( const Vector3D& a, const Vector3D b ) {
 		(a.z * b.x) - (a.x * b.z),
 		(a.x * b.y) - (a.y * b.x)
 		);
+}
+// -- ---------------------------------------------------------------------------------------- -- //
+inline const Vector3D mix( const Vector3D& a, const Vector3D& b, const Real Alpha ) {
+	return (a * (Real::One - Alpha)) + (b * Alpha);
 }
 // -- ---------------------------------------------------------------------------------------- -- //
 

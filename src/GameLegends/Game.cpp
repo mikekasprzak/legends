@@ -1093,7 +1093,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"(%f, %f, %f)", 1.0f * MouseScreen.x, 1.0f * MouseScreen.y, 1.0f * MouseScreen.z );
+			"(%f, %f, %f)", MouseScreen.x.ToFloat(), MouseScreen.y.ToFloat(), MouseScreen.z.ToFloat() );
 
 
 		gelSetColor( GEL_RGB_DEFAULT );

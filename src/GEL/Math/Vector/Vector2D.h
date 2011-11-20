@@ -103,6 +103,15 @@ public:
 //		return Vector2D( (x * _Vs.x), (y * _Vs.y) );
 //	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Like the GLSL parallel, blends between two vectors by alpha (0 = a returned, 1 = b returned) //
+	inline const Vector2D mix( const Vector2D& _Vs, const Real Alpha ) const {
+		return ((*this) * (Real::One - Alpha)) + (_Vs * Alpha);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline static const Vector2D mix( const Vector2D& a, const Vector2D& b, const Real Alpha ) {
+		return (a * (Real::One - Alpha)) + (b * Alpha);
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	// Negate Operator //
 	inline const Vector2D operator - ( ) const {
 		return Vector2D( -x, -y );
@@ -372,6 +381,10 @@ inline const Vector2D operator / ( const Real& a, const Vector2D& b ) {
 // -- ---------------------------------------------------------------------------------------- -- //
 inline const Real dot( const Vector2D& a, const Vector2D& b ) {
 	return (a.x * b.x) + (a.y * b.y);
+}
+// -- ---------------------------------------------------------------------------------------- -- //
+inline const Vector2D mix( const Vector2D& a, const Vector2D& b, const Real Alpha ) {
+	return (a * (Real::One - Alpha)) + (b * Alpha);
 }
 // -- ---------------------------------------------------------------------------------------- -- //
 
