@@ -1058,16 +1058,16 @@ void cGame::Draw() {
 		btCollisionWorld::ClosestRayResultCallback RayInfo( BTRayStart, BTRayEnd );
 		Physics.dynamicsWorld->rayTest( BTRayStart, BTRayEnd, RayInfo );
 
-//		gelLoadMatrix( ObserverCamera.ProjectionView );
-
 		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
-		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0,160 * 0.1f,60), Real(1), GEL_RGBA(128,128,128,128) );
+		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
 
 
-		Vector3D MouseRayContact( Mouse.Pos.x * Real(0.1f), Mouse.Pos.y * Real(0.1f), ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
-		gelDrawCircleFill( MouseRayContact, Real(1), GEL_RGBA(0,128,128,128) );
+		Vector3D MouseRayContact( MouseScreen.x, MouseScreen.y, ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
+		MouseRayContact = MouseRayContact.ApplyMatrix( ObserverCamera.View.Inverse() );
+		gelDrawCircleFill( MouseRayContact, Real(0.5f), GEL_RGBA(0,128,128,128) );
 
 		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
+//		HitPoint = HitPoint.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
 
 		gelDrawModeColors();
