@@ -1016,8 +1016,8 @@ void cGame::Draw() {
 
 		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
 		
-		MouseScreen.ApplyMatrix( UICamera.ProjectionView );
-//		MouseScreen.ApplyMatrix( UICamera.Projection.OrthogonalInverse() );
+//		MouseScreen.ApplyMatrix( UICamera.ProjectionView );
+		MouseScreen.ApplyMatrix( UICamera.Projection.OrthogonalInverse() );
 //		MouseScreen *= Real(0.1f);
 
 		Vector3D MouseRayStart = MouseScreen;
