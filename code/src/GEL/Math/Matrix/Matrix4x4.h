@@ -257,6 +257,10 @@ public:
 		return Array[ idx ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline const Real& operator [] ( const int& idx ) const {
+		return Array[ idx ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline Real& operator () ( const int& _x, const int& _y ) {
 		return Array[ (_y << 2) + _x ];
 	}
@@ -423,15 +427,17 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
 	inline const Matrix4x4 Inverse() const {
-		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-		return Adjoint() / Determinant();
+		Real Det = Determinant();
+
+		if ( Det == Real::Zero ) {
+			// Something bad //
+			return Matrix4x4::Zero;
+		}
+		
+		Det = Real::One / Det;
+		
+		return Adjoint() * Det;
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Calculate the Inverse //
-//	inline const Matrix4x4 OrthogonalInverse() const {
-//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-//		return Adjoint() / Determinant();
-//	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

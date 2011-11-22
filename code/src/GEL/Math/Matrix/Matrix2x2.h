@@ -152,10 +152,9 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate Adjoint of Matrix //
-//	inline const Matrix2x2 Adjoint() {
-//		// TODO: This might be incorrect... it might actually be 0 2 1 3
-//		return Matrix2x2( Array[3], -Array[1], -Array[2], Array[0] );
-//	}
+	inline const Matrix2x2 Adjoint() {
+		return Matrix2x2( Array[3], -Array[1], -Array[2], Array[0] );
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the determinant, for the inverse //
 	inline const Real Determinant() const {
@@ -165,10 +164,18 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
-//	inline const Matrix2x2 Inverse() {
-//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-//		return Adjoint() / Determinant();
-//	}
+	inline const Matrix2x2 Inverse() {
+		Real Det = Determinant();
+
+		if ( Det == Real::Zero ) {
+			// Something bad //
+			return Matrix2x2::Zero;
+		}
+		
+		Det = Real::One / Det;
+		
+		return Adjoint() * Det;
+	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

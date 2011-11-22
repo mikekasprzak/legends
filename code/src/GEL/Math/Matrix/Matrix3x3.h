@@ -194,6 +194,10 @@ public:
 		return Array[ idx ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline const Real& operator [] ( const int& idx ) const {
+		return Array[ idx ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline Real& operator () ( const int& _x, const int& _y ) {
 		//return Array[ (_y * 3) + _x ];
 		return Array[ ((_y << 1) + _y) + _x ];
@@ -279,15 +283,17 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Calculate the Inverse //
 	inline const Matrix3x3 Inverse() {
-		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-		return Adjoint() / Determinant();
+		Real Det = Determinant();
+
+		if ( Det == Real::Zero ) {
+			// Something bad //
+			return Matrix3x3::Zero;
+		}
+		
+		Det = Real::One / Det;
+		
+		return Adjoint() * Det;
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Calculate the Inverse //
-//	inline const Matrix3x3 OrthogonalInverse() {
-//		// Possible bug.  If the Determinant is 0, then the matrix has no inverse //
-//		return Adjoint() / Determinant();
-//	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
