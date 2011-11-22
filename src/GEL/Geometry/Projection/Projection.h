@@ -176,5 +176,60 @@ inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const 
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void __gluMultMatrixVecf( const Matrix4x4& matrix, const float in[4], float out[4] )
+{
+	for (int i=0; i<4; i++) {
+		out[i] = 
+			in[0] * matrix[0*4+i].ToFloat() +
+			in[1] * matrix[1*4+i].ToFloat() +
+			in[2] * matrix[2*4+i].ToFloat() +
+			in[3] * matrix[3*4+i].ToFloat();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline bool Calc_UnProject(
+	float winx, float winy, float winz,
+	const Matrix4x4& modelMatrix, 
+	const Matrix4x4& projMatrix,
+	const int viewport[4],
+	float *objx, float *objy, float *objz
+	)
+{
+    Matrix4x4 finalMatrix;
+    float in[4];
+    float out[4];
+
+	finalMatrix = (modelMatrix * projMatrix).Inverse();
+//    __gluMultMatricesf(modelMatrix, projMatrix, finalMatrix);  
+    //if (!__gluInvertMatrixf(finalMatrix, finalMatrix)) return(GL_FALSE);
+
+    in[0] = winx;
+    in[1] = winy;
+    in[2] = winz;
+    in[3] = 1.0f;
+
+    /* Map x and y from window coordinates */
+    in[0] = (in[0] - viewport[0]) / viewport[2];
+    in[1] = (in[1] - viewport[1]) / viewport[3];
+
+    /* Map to range -1 to 1 */
+    in[0] = in[0] * 2.0f - 1.0f;
+    in[1] = in[1] * 2.0f - 1.0f;
+    in[2] = in[2] * 2.0f - 1.0f;
+
+    __gluMultMatrixVecf(finalMatrix, in, out);
+    if (out[3] == 0.0f)
+    	return false;
+    	
+    out[0] /= out[3];
+    out[1] /= out[3];
+    out[2] /= out[3];
+    *objx = out[0];
+    *objy = out[1];
+    *objz = out[2];
+    
+    return true;
+}
+// - ------------------------------------------------------------------------------------------ - //
 #endif // __Geometry_Projection_H__ //
 // - ------------------------------------------------------------------------------------------ - //
