@@ -1024,28 +1024,14 @@ void cGame::Draw() {
 		
 		gelEnablePremultipliedAlphaBlending();
 
-		Vector3D MouseScreen = Mouse.Pos.ToVector3D();// * Real(0.1f) / RefScreen::Scalar;
+		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
+//		MouseRayStart.z = Real(-1);
+		MouseRayStart.z = ObserverCamera.NearPlane+Real(1);		
 
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.Projection.Inverse() );
-			
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView );
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Inverse() );
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose() );
-//		MouseScreen = MouseScreen.ApplyMatrix( UICamera.ProjectionView.Transpose().Inverse() );
-		MouseScreen *= Real(0.1f);
-//		MouseScreen /= RefScreen::Scalar;
-
-//		MouseScreen.x /= FullRefScreen::Width>>1;
-//		MouseScreen.y /= FullRefScreen::Height>>1;
-
-		Vector3D MouseRayStart = MouseScreen;
-		MouseRayStart.z = Real(-1);//ObserverCamera.NearPlane+Real(1);
-		Vector3D MouseRayMiddle = MouseScreen;
-		MouseRayMiddle.z = Real(0);//ObserverCamera.CalcPlanePos( ObserverCamera.PlanePos );
-		Vector3D MouseRayEnd = MouseScreen;
-		MouseRayEnd.z = Real(1);//ObserverCamera.FarPlane-Real(1);
-
+		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
+//		MouseRayEnd.z = Real(1);
+		MouseRayEnd.z = ObserverCamera.FarPlane-Real(1);
+/*
 //		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
 //		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.Projection.Inverse() );
 //		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.View.Inverse() );
@@ -1077,14 +1063,13 @@ void cGame::Draw() {
 //		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 //		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 
+		Matrix4x4 ObserverInverse = ObserverCamera.Projection * ObserverCamera.View;
+//		Matrix4x4 ObserverInverse = ObserverCamera.View * ObserverCamera.Projection;
+		ObserverInverse = ObserverInverse.Inverse();
 
-		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View.Inverse() );
-		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View.Inverse() );
-		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View.Inverse() );
-
-//		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.Projection.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.Projection.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.Projection.Inverse() );
+		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverInverse );
+		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverInverse );
+		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverInverse );
 
 //		MouseRayStart.x *= Real(0.1f);
 //		MouseRayMiddle.x *= Real(0.1f);
@@ -1104,14 +1089,35 @@ void cGame::Draw() {
 //		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
 //		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View );
 	
+//		MouseRayStart /= MouseRayStart.w;
+//		MouseRayMiddle /= MouseRayMiddle.w;
+//		MouseRayEnd /= MouseRayEnd.w;
+*/
+		Calc_UnProject( 
+			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0),
+			ObserverCamera.View,
+			ObserverCamera.Projection,
+			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+//			(const int[]){0,0,FullRefScreen::Width,FullRefScreen::Height},
+			(float*)&MouseRayStart.x,(float*)&MouseRayStart.y,(float*)&MouseRayStart.z
+			);
+
+		Calc_UnProject( 
+			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(1),
+			ObserverCamera.View,
+			ObserverCamera.Projection,
+			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+//			(const int[]){0,0,FullRefScreen::Width,FullRefScreen::Height},
+			(float*)&MouseRayEnd.x,(float*)&MouseRayEnd.y,(float*)&MouseRayEnd.z
+			);
+		
 
 		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
 		
 		gelDrawModeFlat();
 		gelLoadMatrix( VisibleMatrix );
-		gelDrawCircleFill( MouseRayStart, Real(0.3), GEL_RGBA(128,0,0,128) );
-		gelDrawCircleFill( MouseRayMiddle, Real(1), GEL_RGBA(128,128,0,128) );
-		gelDrawCircleFill( MouseRayEnd, Real(0.3), GEL_RGBA(0,128,0,128) );
+		gelDrawCircleFill( MouseRayStart - Vector3D(0,0,0.1), Real(0.3), GEL_RGBA(128,0,0,128) );
+		gelDrawCircleFill( MouseRayEnd + Vector3D(0,0,0.1), Real(0.3), GEL_RGBA(0,128,0,128) );
 
 
 		btVector3 BTRayStart = btVector3( MouseRayStart.x, MouseRayStart.y, MouseRayStart.z );		
@@ -1121,10 +1127,10 @@ void cGame::Draw() {
 		Physics.dynamicsWorld->rayTest( BTRayStart, BTRayEnd, RayInfo );
 
 		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
-		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
+		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0 * 0.1f,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
 
 
-		Vector3D MouseRayContact( MouseScreen.x, MouseScreen.y, ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
+		Vector3D MouseRayContact( Mouse.Pos.x, Mouse.Pos.y, ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
 		MouseRayContact = MouseRayContact.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 		gelDrawCircleFill( MouseRayContact, Real(0.5f), GEL_RGBA(0,128,128,128) );
 
@@ -1151,20 +1157,15 @@ void cGame::Draw() {
 			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
-			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
-			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"(%f, %f, %f)", MouseScreen.x.ToFloat(), MouseScreen.y.ToFloat(), MouseScreen.z.ToFloat() );
-		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseRayStart.x.ToFloat(), MouseRayStart.y.ToFloat(), MouseRayStart.z.ToFloat() );
-		Font->printf( 
-			Vector3D( FullRefScreen::Width>>1, -32, 0 ), 
-			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"(%f, %f, %f)", MouseRayMiddle.x.ToFloat(), MouseRayMiddle.y.ToFloat(), MouseRayMiddle.z.ToFloat() );
+//		Font->printf( 
+//			Vector3D( FullRefScreen::Width>>1, -32, 0 ), 
+//			1, 
+//			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+//			"(%f, %f, %f)", MouseRayMiddle.x.ToFloat(), MouseRayMiddle.y.ToFloat(), MouseRayMiddle.z.ToFloat() );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -48, 0 ), 
 			1, 
