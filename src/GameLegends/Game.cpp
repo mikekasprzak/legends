@@ -1021,7 +1021,6 @@ void cGame::Draw() {
 		SpaceNavigator_DrawValues();
 #endif // USES_HIDAPI //
 				
-		
 		gelEnablePremultipliedAlphaBlending();
 
 		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
@@ -1031,74 +1030,12 @@ void cGame::Draw() {
 		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
 //		MouseRayEnd.z = Real(1);
 		MouseRayEnd.z = ObserverCamera.FarPlane-Real(1);
-/*
-//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.Projection.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.Projection.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.Projection.Inverse() );
 
-//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.ProjectionView );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.ProjectionView );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.ProjectionView );
-
-//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.ProjectionView.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.ProjectionView.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.ProjectionView.Inverse() );
-
-//		MouseRayStart = MouseRayStart.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( UICamera.View.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( UICamera.View.Inverse() );
-
-		
-//		MouseRayStart = -ObserverCamera.Pos + MouseRayStart;
-//		MouseRayMiddle = -ObserverCamera.Pos + MouseRayMiddle;
-//		MouseRayEnd = -ObserverCamera.Pos + MouseRayEnd;
-//		MouseRayStart -= ObserverCamera.Pos;
-//		MouseRayMiddle -= ObserverCamera.Pos;
-//		MouseRayEnd -= ObserverCamera.Pos;
-
-//		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
-
-		Matrix4x4 ObserverInverse = ObserverCamera.Projection * ObserverCamera.View;
-//		Matrix4x4 ObserverInverse = ObserverCamera.View * ObserverCamera.Projection;
-		ObserverInverse = ObserverInverse.Inverse();
-
-		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverInverse );
-		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverInverse );
-		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverInverse );
-
-//		MouseRayStart.x *= Real(0.1f);
-//		MouseRayMiddle.x *= Real(0.1f);
-//		MouseRayEnd.x *= Real(0.1f);
-//		MouseRayStart.y *= Real(0.1f);
-//		MouseRayMiddle.y *= Real(0.1f);
-//		MouseRayEnd.y *= Real(0.1f);
-
-//		MouseRayStart.x *= FullRefScreen::Width * Real(0.1f);
-//		MouseRayMiddle.x *= FullRefScreen::Width * Real(0.1f);
-//		MouseRayEnd.x *= FullRefScreen::Width * Real(0.1f);
-//		MouseRayStart.y *= FullRefScreen::Height * Real(0.1f);
-//		MouseRayMiddle.y *= FullRefScreen::Height * Real(0.1f);
-//		MouseRayEnd.y *= FullRefScreen::Height * Real(0.1f);
-
-//		MouseRayStart = MouseRayStart.ApplyMatrix( ObserverCamera.View );
-//		MouseRayMiddle = MouseRayMiddle.ApplyMatrix( ObserverCamera.View );
-//		MouseRayEnd = MouseRayEnd.ApplyMatrix( ObserverCamera.View );
-	
-//		MouseRayStart /= MouseRayStart.w;
-//		MouseRayMiddle /= MouseRayMiddle.w;
-//		MouseRayEnd /= MouseRayEnd.w;
-*/
 		Calc_UnProject( 
 			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0),
 			ObserverCamera.View,
 			ObserverCamera.Projection,
 			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
-//			(const int[]){0,0,FullRefScreen::Width,FullRefScreen::Height},
 			(float*)&MouseRayStart.x,(float*)&MouseRayStart.y,(float*)&MouseRayStart.z
 			);
 
@@ -1107,18 +1044,9 @@ void cGame::Draw() {
 			ObserverCamera.View,
 			ObserverCamera.Projection,
 			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
-//			(const int[]){0,0,FullRefScreen::Width,FullRefScreen::Height},
 			(float*)&MouseRayEnd.x,(float*)&MouseRayEnd.y,(float*)&MouseRayEnd.z
 			);
 		
-
-		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
-		
-		gelDrawModeFlat();
-		gelLoadMatrix( VisibleMatrix );
-		gelDrawCircleFill( MouseRayStart - Vector3D(0,0,0.1), Real(0.3), GEL_RGBA(128,0,0,128) );
-		gelDrawCircleFill( MouseRayEnd + Vector3D(0,0,0.1), Real(0.3), GEL_RGBA(0,128,0,128) );
-
 
 		btVector3 BTRayStart = btVector3( MouseRayStart.x, MouseRayStart.y, MouseRayStart.z );		
 		btVector3 BTRayEnd = btVector3( MouseRayEnd.x, MouseRayEnd.y, MouseRayEnd.z );		
@@ -1126,23 +1054,25 @@ void cGame::Draw() {
 		btCollisionWorld::ClosestRayResultCallback RayInfo( BTRayStart, BTRayEnd );
 		Physics.dynamicsWorld->rayTest( BTRayStart, BTRayEnd, RayInfo );
 
+		// Draw //
+		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
+		
+		gelDrawModeFlat();
+		gelLoadMatrix( VisibleMatrix );
+		gelDrawCircleFill( MouseRayStart - Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(128,0,0,128) );
+		gelDrawCircleFill( MouseRayEnd + Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(0,128,0,128) );
+
 		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
 		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0 * 0.1f,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
 
-
-		Vector3D MouseRayContact( Mouse.Pos.x, Mouse.Pos.y, ObserverCamera.CalcPlanePos( Real(RayInfo.m_closestHitFraction) ) );
-		MouseRayContact = MouseRayContact.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
-		gelDrawCircleFill( MouseRayContact, Real(0.5f), GEL_RGBA(0,128,128,128) );
-
 		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
-//		HitPoint = HitPoint.ApplyMatrix( ObserverCamera.ProjectionView.Inverse() );
 		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
 
 		gelDrawModeColors();
 		gelLoadMatrix( VisibleMatrix );
 		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
 				
-		
+		// Text //		
 		gelDrawModeTextured();
 		gelLoadMatrix( UICamera.ProjectionView );
 
@@ -1177,7 +1107,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
 			1, 
 			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
-			"(%f, %f, %f)", MouseRayContact.x.ToFloat(), MouseRayContact.y.ToFloat(), MouseRayContact.z.ToFloat() );
+			"(%f, %f, %f)", HitPoint.x.ToFloat(), HitPoint.y.ToFloat(), HitPoint.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_YELLOW );
 
