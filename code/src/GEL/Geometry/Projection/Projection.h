@@ -176,6 +176,10 @@ inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const 
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// I borrowed+tweaked this Implementation: http://www.codng.com/2011/02/gluunproject-for-iphoneios.html
+// - ------------------------------------------------------------------------------------------ - //
 inline void __gluMultMatrixVecf( const Matrix4x4& matrix, const float in[4], float out[4] )
 {
 	for (int i=0; i<4; i++) {
@@ -186,6 +190,53 @@ inline void __gluMultMatrixVecf( const Matrix4x4& matrix, const float in[4], flo
 			in[3] * matrix[3*4+i].ToFloat();
 	}
 }
+// - ------------------------------------------------------------------------------------------ - //
+// I borrowed+tweaked this Implementation: http://www.codng.com/2011/02/gluunproject-for-iphoneios.html
+// - ------------------------------------------------------------------------------------------ - //
+inline bool Calc_Project(
+	float objx, float objy, float objz, 
+	const Matrix4x4& modelMatrix, 
+	const Matrix4x4& projMatrix,
+	const int viewport[4],
+	float *winx, float *winy, float *winz
+	)
+{
+    float in[4];
+    float out[4];
+
+    in[0]=objx;
+    in[1]=objy;
+    in[2]=objz;
+    in[3]=1.0;
+
+    __gluMultMatrixVecf(modelMatrix, in, out);
+    __gluMultMatrixVecf(projMatrix, out, in);
+
+    if (in[3] == 0.0) 
+    	return false;
+    in[0] /= in[3];
+    in[1] /= in[3];
+    in[2] /= in[3];
+    
+    /* Map x, y and z to range 0-1 */
+    in[0] = in[0] * 0.5 + 0.5;
+    in[1] = in[1] * 0.5 + 0.5;
+    in[2] = in[2] * 0.5 + 0.5;
+
+    /* Map x,y to viewport */
+    in[0] = in[0] * viewport[2] + viewport[0];
+    in[1] = in[1] * viewport[3] + viewport[1];
+
+    *winx=in[0];
+    *winy=in[1];
+    *winz=in[2];
+    
+    return true;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// I borrowed+tweaked this Implementation: http://www.codng.com/2011/02/gluunproject-for-iphoneios.html
 // - ------------------------------------------------------------------------------------------ - //
 inline bool Calc_UnProject(
 	float winx, float winy, float winz,
