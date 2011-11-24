@@ -10,12 +10,16 @@ options
 deployments
 {
 	["Default"]
-	name="Alone, The"
+#	name="Alone, The"
+	name="Alone The" 				# Comma does not work on playbook here #
 	provider="Michael Kasprzak"
 	version=0.1.0
 	networking=0
 	embed-icf=1
 	app-icf='AloneThe.icf'
+
+	playbook-author='Sykhronics Entertainment'
+	playbook-authorid='gYAAgILDj4StxnT_MBpS4IMyTO0'
 }
 
 
