@@ -1,0 +1,17 @@
+Archive-Manifest-Version: 1.2
+Archive-Created-By: BlackBerry BAR Packager v1.4
+
+Package-Author: Sykhronics Entertainment
+Package-Name: debug.token
+Package-Version: 0.0.0.1
+Package-Type: debug-token
+Package-Author-Certificate-Hash: lAJ8a53x7-1d_lgsg7soVXvaooj_RhIx0-jMaxQBzqhByrak9UuvCsYwccd7FVK7HRrewKqLrsOpjC-ezIk_hw
+Package-Author-Id: gYAAgILDj4StxnT_MBpS4IMyTO0
+Package-Id: gYABgIUG1IwrUlNmqWUcyMBvw1I
+Package-Version-Id: gYACgGu1aMWpIQbxqp5-C6TWZzo
+Package-Issue-Date: 2011-11-24T00:55:16Z
+
+Debug-Token-System-Actions: execute,multi_window,multi_instance,run_air_native,run_native
+Debug-Token-Expiry-Date: 2011-12-24T00:55:16Z
+Debug-Token-Device-Id: 1343314973
+
