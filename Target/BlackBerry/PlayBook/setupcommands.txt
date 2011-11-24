@@ -1,0 +1,14 @@
+blackberry-keytool -genkeypair -keystore sigtool.p12 -storepass BBThunder3BB -dname "cn=Sykhronics Entertainment" -alias author
+blackberry-signer -csksetup -cskpass BBThunder3BB
+blackberry-signer -register -csjpin bbsyko255 -cskpass BBThunder3BB client-RDK-3867484152.csj
+
+blackberry-debugtokenrequest -register -cskpass BBThunder3BB -csjpin bbsyko255 client-PBDT-3867484152.csj
+
+blackberry-debugtokenrequest -cskpass BBThunder3BB -keystore sigtool.p12 -storepass BBThunder3BB -deviceId 0x50115C1D sykhronicsdebug1.bar
+
+blackberry-deploy -installDebugToken sykhronicsdebug1.bar -device 192.168.1.223 -password thunder
+
+
+Sykhronics Entertainment
+gYAAgILDj4StxnT_MBpS4IMyTO0
+
