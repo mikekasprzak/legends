@@ -1,0 +1,10 @@
+blackberry-nativepackager -package AloneThe.bar -buildId buildId.txt -sign -storepass BBThunder3BB bar-descriptor.xml
+
+blackberry-nativepackager -package AloneThe.bar -devmode bar-descriptor.xml -DQNX_TARGET=$QNX_TARGET
+
+blackberry-deploy AloneThe.bar -device {DEVICE_IP} -password {DEVICE_PASSWORD}
+
+blackberry-deploy AloneThe.bar -device 192.168.1.223 -password thunder
+
+
+blackberry-connect -targetHost 192.168.1.223 -devicePassword thunder
