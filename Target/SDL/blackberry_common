@@ -1,60 +1,69 @@
-# - ------------------------------------------------------------------------ - #
-TreeTool			:=	Tools/TreeTool.sh
-TreeCache			:=	Tools/TreeCache.sh
-# - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-# Release Build Only #
+ifdef ARM_TARGET
 # - ------------------------------------------------------------------------ - #
-ifdef NDEBUG
-DEFINES				+=	NDEBUG
-LDFLAGS				+=	-s
+GCC_PREFIX			:=	ntoarmv7-
+# - ------------------------------------------------------------------------ - #
+else ifdef X86_TARGET
+# - ------------------------------------------------------------------------ - #
+GCC_PREFIX			:=	ntox86-
 # - ------------------------------------------------------------------------ - #
 else
 # - ------------------------------------------------------------------------ - #
-DEFINES				+=	
-CFLAGS				+=	-g
-CPPFLAGS			+=	-g
+GCC_PREFIX			:=	ntoarmv7-
+ARM_TARGET			:=	true
 # - ------------------------------------------------------------------------ - #
-endif # NDEBUG #
-# - ------------------------------------------------------------------------ - #
-
-# - ------------------------------------------------------------------------ - #
-# Allow Overloading of default GCC and G++ commands #
-# - ------------------------------------------------------------------------ - #
-ifndef GCC
-GCC					:=	$(GCC_PREFIX)gcc
-endif # GCC #
-# - ------------------------------------------------------------------------ - #
-ifndef GXX
-GXX					:=	$(GCC_PREFIX)g++
-endif # GXX #
-# - ------------------------------------------------------------------------ - #
-ifndef GLD
-GLD					:=	$(GCC_PREFIX)ld
-endif # GLD #
+endif
 # - ------------------------------------------------------------------------ - #
 
+
 # - ------------------------------------------------------------------------ - #
-ifdef OSIZE # Optimized for Size #
+ifdef ARM_TARGET
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-Os
-CPPFLAGS			+=	-Os
+# "unsafe-math-optimization" required by auto-vectorization if NEON (not IEEE)
+# "fpu16-format" defines the __fp16 type, an ARM-only 16bit float storage format
+# "float-abi" is either soft, softfp, or hard. softfp and hard both use the FPU.
 # - ------------------------------------------------------------------------ - #
-else ifdef O3 # Optimized for Space #
+CPUFLAGS			:=	-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=softfp \
+						-ftree-vectorize \
+ 						-funsafe-math-optimization \
+						-mfp16-format=alternative \
+#						-mtune=armv7 
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-O3
-CPPFLAGS			+=	-O3
+# Compiler and Linker Flags (specific to this target) #
+CFLAGS				+=	$(CPUFLAGS)
+CPPFLAGS			+=	$(CPUFLAGS)
+LDFLAGS				+=	
 # - ------------------------------------------------------------------------ - #
-else ifdef O0 # No Optimizations #
+# Release Build Only #
+ifdef NDEBUG
+LDFLAGS				+=	
+endif
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-O0
-CPPFLAGS			+=	-O0
+endif # ARM_TARGET #
 # - ------------------------------------------------------------------------ - #
-else # Default #
+
+
 # - ------------------------------------------------------------------------ - #
-CFLAGS				+=	-O2
-CPPFLAGS			+=	-O2
+ifdef X86_TARGET
 # - ------------------------------------------------------------------------ - #
-endif # Optimizations #
+CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
+# - ------------------------------------------------------------------------ - #
+# Compiler and Linker Flags (specific to this target) #
+CFLAGS				+=	$(CPUFLAGS)
+CPPFLAGS			+=	$(CPUFLAGS)
+LDFLAGS				+=	
+# - ------------------------------------------------------------------------ - #
+# Release Build Only #
+ifdef NDEBUG
+LDFLAGS				+=	
+endif
+# - ------------------------------------------------------------------------ - #
+endif # X86_TARGET #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+# File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
+BINARY_SUFFIX		:=	
 # - ------------------------------------------------------------------------ - #

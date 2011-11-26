@@ -1,0 +1,39 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for PLATFORM scope (no game) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/Main/Generic \
+						src/Main/BlackBerry \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_BLACKBERRY \
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
+# The SKU file may say that the game requires OpenGL 2.0 Grade Hardware //
+ifdef REQUIRES_OPENGL2
+include Target/SDL/common_opengl_es2
+else
+include Target/SDL/common_opengl_es
+endif
+# - ------------------------------------------------------------------------ - #
+include Target/SDL/blackberry_common
+# - ------------------------------------------------------------------------ - #
+# Finally, include the standard makefile body #
+include Target/SDL/common_makefile
+# - ------------------------------------------------------------------------ - #
