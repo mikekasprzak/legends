@@ -1,0 +1,3 @@
+
+ARM_TARGET		:=	TRUE
+include Target/SDL/makefile_blackberry
