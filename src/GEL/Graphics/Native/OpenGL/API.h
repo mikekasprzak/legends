@@ -20,7 +20,7 @@
 	#include <SDL/SDL_syswm.h>
 #endif // USES_SDL_EGLPROXY //
 // - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_MARMALADE) || defined(USES_ANDROID) || defined(USES_WINGLES)
+#elif defined(USES_MARMALADE) || defined(USES_ANDROID) || defined(USES_WINGLES) || defined(USES_BLACKBERRY)
 // - ------------------------------------------------------------------------------------------ - //
 #include <EGL/egl.h>
 #include <GLES/gl.h>
@@ -81,7 +81,7 @@
 	#include <SDL/SDL_syswm.h>
 #endif // USES_SDL_EGLPROXY //
 // - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_MARMALADE) || defined(USES_ANDROID) || defined(USES_WINGLES)
+#elif defined(USES_MARMALADE) || defined(USES_ANDROID) || defined(USES_WINGLES) || defined(USES_BLACKBERRY)
 // - ------------------------------------------------------------------------------------------ - //
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>

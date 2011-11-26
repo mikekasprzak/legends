@@ -12,7 +12,8 @@ INCLUDE_FOLDERS		+=
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_BLACKBERRY \
+DEFINES				+=	USES_BLACKBERRY USES_FBO \
+						NO_TWEAKVALUE \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	

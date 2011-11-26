@@ -2,7 +2,7 @@
 #ifndef __GEL_PLATFORM_H__
 #define __GEL_PLATFORM_H__
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(USES_UNIX) || defined(USES_IOS)
+#if defined(USES_UNIX) || defined(USES_IOS) || defined(USES_WEBOS) || defined(USES_BLACKBERRY)
 // - ------------------------------------------------------------------------------------------ - //
 
 #define USES_C_FILEHANDLER
@@ -22,14 +22,6 @@
 #else
 #define USES_UNIX_DIR
 #endif // _MSC_VER //
-
-// - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_WEBOS)
-// - ------------------------------------------------------------------------------------------ - //
-
-#define USES_C_FILEHANDLER
-#define USES_UNIX_TIMER
-#define USES_UNIX_DIR
 
 // - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_ANDROID)
