@@ -26,8 +26,8 @@ ifdef ARM_TARGET
 # - ------------------------------------------------------------------------ - #
 CPUFLAGS			:=	-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=softfp \
 						-ftree-vectorize \
- 						-funsafe-math-optimization \
-						-mfp16-format=alternative \
+# 						-funsafe-math-optimization \
+#						-mfp16-format=alternative \
 #						-mtune=armv7 
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
