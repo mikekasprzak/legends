@@ -415,7 +415,7 @@ void cGame::Init() {
 	Obj3.back()->IsGlowing = true;
 
 //	AddObject3D( Vector3D( 4+4, 4, 4+2 ), "/Skull.pme", Real(0.8) );
-	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle.pme", Real(0.8) );
+	AddObject3D( Vector3D( 4+8, 4, 4+2 ), "/Bottle.pme", Real(1.8) );
 
 	AddObject3D( Vector3D( 4, 4+4, 4+2 ), "/Book_Open.pme", Real(0.8) );
 	AddObject3D( Vector3D( 4+4, 4+4, 4+2 ), "/Shield.pme", Real(0.6) );
@@ -432,8 +432,8 @@ void cGame::Init() {
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest.pme" );
 
 //	cPMEFile MeshTest;
-//	MeshTest.Import( "Content/Models/Export/Sword.dae" );
-//	MeshTest.FileName = "Content/Models/Native/Sword.pme";
+//	MeshTest.Import( "Content/Models/Export/uvtest.dae" );
+//	MeshTest.FileName = "Content/Models/Native/uvtest.pme";
 //	MeshTest.TextSave();
 	
 	Log( "- End of Init" );
