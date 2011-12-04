@@ -432,8 +432,8 @@ void cGame::Init() {
 	AddOldRoomMesh( Vector3D( 0, 0, 0 ), "/RockTest.pme" );
 
 //	cPMEFile MeshTest;
-//	MeshTest.Import( "Content/Models/Export/Monkey.dae" );
-//	MeshTest.FileName = "Content/Models/Native/Monkey.pme";
+//	MeshTest.Import( "Content/Models/Export/Sword.dae" );
+//	MeshTest.FileName = "Content/Models/Native/Sword.pme";
 //	MeshTest.TextSave();
 	
 	Log( "- End of Init" );
@@ -509,10 +509,10 @@ void cGame::Step() {
 			Stick.y = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_LEFT] ) {
-			Stick.x = CameraSpeed;
+			Stick.x = -CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_RIGHT] ) {
-			Stick.x = -CameraSpeed;
+			Stick.x = CameraSpeed;
 		}
 		if ( keystate[SDL_SCANCODE_PAGEUP] ) {
 			CameraWorldPos += Vector3D(0,0,2.5f);
@@ -582,15 +582,15 @@ void cGame::Step() {
 			CameraFollow->PhysicsObject->rigidBody->activate(true);
 
 			CameraFollow->PhysicsObject->rigidBody->applyCentralForce( 
-				btVector3( 16.0 * -Input_MoveStick.x, 16.0 * -Input_MoveStick.y, 0 )
+				btVector3( 16.0 * Input_MoveStick.x, 16.0 * Input_MoveStick.y, 0 )
 				);
 
 //			CameraFollow->PhysicsObject->rigidBody->applyCentralImpulse( 
-//				btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 )
+//				btVector3( 500.0 * Input_MoveStick.x, 500.0 * Input_MoveStick.y, 0 )
 //				);
 
 //			CameraFollow->PhysicsObject->rigidBody->applyForce( 
-//				btVector3( 500.0 * -Input_MoveStick.x, 500.0 * -Input_MoveStick.y, 0 ), 
+//				btVector3( 500.0 * Input_MoveStick.x, 500.0 * Input_MoveStick.y, 0 ), 
 //				btVector3( 32.0 * Input_MoveStick.x, 32.0 * Input_MoveStick.y, 0 ) );
 		}
 	}
@@ -783,7 +783,7 @@ void cGame::DrawScene() {
 		gelDrawModeTextured();
 		AssetPool::Set( txCursorAttack );
 
-		gelDrawSquareFillTextured( CameraFollow->Pos + -Input_MoveStick.ToVector3D() * Real(2.4), Real(0.6), GEL_RGB(255,242,0) );
+		gelDrawSquareFillTextured( CameraFollow->Pos + Input_MoveStick.ToVector3D() * Real(2.4), Real(0.6), GEL_RGB(255,242,0) );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -1097,9 +1097,14 @@ void cGame::Draw() {
 			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
+			1, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
+			"Hello Gentlemen" );
+		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
-			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f, %f, %f)", MouseRayStart.x.ToFloat(), MouseRayStart.y.ToFloat(), MouseRayStart.z.ToFloat() );
 //		Font->printf( 
 //			Vector3D( FullRefScreen::Width>>1, -32, 0 ), 
@@ -1109,14 +1114,14 @@ void cGame::Draw() {
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -48, 0 ), 
 			1, 
-			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f, %f, %f)", MouseRayEnd.x.ToFloat(), MouseRayEnd.y.ToFloat(), MouseRayEnd.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_ORANGE );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
 			1, 
-			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f, %f, %f)", HitPoint.x.ToFloat(), HitPoint.y.ToFloat(), HitPoint.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_YELLOW );
@@ -1127,7 +1132,7 @@ void cGame::Draw() {
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -80, 0 ), 
 			1, 
-			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
 
 		// *** //

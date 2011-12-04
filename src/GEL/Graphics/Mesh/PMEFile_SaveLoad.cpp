@@ -325,12 +325,12 @@ void cPMEFile::Import( const aiScene* Scene ) {
 				for ( int idx = 0; idx < Scene->mMeshes[Meshes]->mNumVertices; idx++ ) {
 					Mesh.back().Vertex.push_back( cPMEVertex() );
 					Mesh.back().Vertex.back().Pos.x = Scene->mMeshes[Meshes]->mVertices[idx].x;
+					Mesh.back().Vertex.back().Pos.y = -Scene->mMeshes[Meshes]->mVertices[idx].z;
 					Mesh.back().Vertex.back().Pos.z = Scene->mMeshes[Meshes]->mVertices[idx].y;
-					Mesh.back().Vertex.back().Pos.y = Scene->mMeshes[Meshes]->mVertices[idx].z;
 
 					Mesh.back().Vertex.back().Normal.x = Scene->mMeshes[Meshes]->mNormals[idx].x;
+					Mesh.back().Vertex.back().Normal.y = -Scene->mMeshes[Meshes]->mNormals[idx].z;
 					Mesh.back().Vertex.back().Normal.z = Scene->mMeshes[Meshes]->mNormals[idx].y;
-					Mesh.back().Vertex.back().Normal.y = Scene->mMeshes[Meshes]->mNormals[idx].z;
 
 					Mesh.back().Vertex.back().Color = GEL_RGB_WHITE;
 
