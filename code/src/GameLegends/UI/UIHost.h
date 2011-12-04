@@ -342,9 +342,9 @@ public:
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
 			(Graphic->x * GEL_UV_ONE / Graphic->Width),
-			(Graphic->y * GEL_UV_ONE / Graphic->Height),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height),
 			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
+			(Graphic->y * GEL_UV_ONE / Graphic->Height)
 			);
 
 		AssetPool::Set( Texture[ Index ] );
@@ -398,9 +398,9 @@ public:
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
 			((Graphic->x) * GEL_UV_ONE / Graphic->Width),
-			((Graphic->y) * GEL_UV_ONE / Graphic->Height),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height),
 			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
+			((Graphic->y) * GEL_UV_ONE / Graphic->Height)
 			);
 
 		AssetPool::Set( Texture[ Index ] );
