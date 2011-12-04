@@ -44,6 +44,9 @@ public:
 
 		ALIGN_CENTER = ALIGN_HCENTER | ALIGN_VCENTER,
 		ALIGN_DEFAULT = ALIGN_HCENTER | ALIGN_BASELINE,
+		
+		ALIGN_HBITS = 		0x3 << 0,
+		ALIGN_VBITS =		0x7 << 2,
 	};
 	
 	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
@@ -51,31 +54,33 @@ public:
 		
 		int ScaleW = common_BMFont( Font )->ScaleW;
 		int ScaleH = common_BMFont( Font )->ScaleH;
-		float ScaleW_F = 1.0f / (float)ScaleW; 
-		float ScaleH_F = 1.0f / (float)ScaleH;
+		// Reciprocals //
+		float ScaleW_R_F = 1.0f / (float)ScaleW; 
+		float ScaleH_R_F = 1.0f / (float)ScaleH;
 
 		Scalar *= (float)size_BMFont( Font );
 
 		int Width = width_BMFont( Font, Text, Length );
 		int Height = height_BMFont( Font, Text, Length );
+		int BaseLine = baseline_BMFont( Font );
 		BMFont_Chars** Glyph = glyph_BMFont( Font );
 				
 		// Alignment //
-		if ( Align & ALIGN_HCENTER ) {
-			Pos.x -= (Width>>1) * Scalar * ScaleW_F;
+		if ( (Align & ALIGN_HBITS) == ALIGN_HCENTER ) {
+			Pos.x -= (Width>>1) * Scalar * ScaleW_R_F;
 		}
-		else if ( Align & ALIGN_RIGHT ) {
-			Pos.x -= Width * Scalar * ScaleW_F;
+		else if ( (Align & ALIGN_HBITS) == ALIGN_RIGHT ) {
+			Pos.x -= Width * Scalar * ScaleW_R_F;
 		}
 		
-		if ( Align & ALIGN_VCENTER ) {
-			Pos.y -= (Height>>1) * Scalar * ScaleH_F;
+		if ( (Align & ALIGN_VBITS) == ALIGN_VCENTER ) {
+			Pos.y -= (Height>>1) * Scalar * ScaleH_R_F;
 		}
-		else if ( Align & ALIGN_TOP ) {
-			Pos.y -= Height * Scalar * ScaleH_F;
+		else if ( (Align & ALIGN_VBITS) == ALIGN_TOP ) {
+			Pos.y -= Height * Scalar * ScaleH_R_F;
 		}
-		else if ( Align & ALIGN_BASELINE ) {
-			Pos.y -= baseline_BMFont( Font ) * Scalar * ScaleH_F;
+		else if ( (Align & ALIGN_VBITS) == ALIGN_BASELINE ) {
+			Pos.y -= BaseLine * Scalar * ScaleH_R_F;
 		}
 
 		Vector3DAllocator Vert( Length * 6 );
@@ -97,16 +102,17 @@ public:
 				
 				// If I'm on the correct texture page, draw the glyph //
 				if ( Glyph[Ch]->Page == Tex ) {
-					Vector2D V1( Glyph[Ch]->OffsetX * ScaleW_F, Glyph[Ch]->OffsetY * ScaleH_F );
-					Vector2D V2( (Glyph[Ch]->OffsetX + Glyph[Ch]->Width) * ScaleW_F, (Glyph[Ch]->OffsetY + Glyph[Ch]->Height) * ScaleH_F );
+					// NOTE: I now subtract the positions from the height, since we are creating coords that start from bottom left //
+					Vector2D V1( Glyph[Ch]->OffsetX * ScaleW_R_F, (Height - Glyph[Ch]->OffsetY) * ScaleH_R_F );
+					Vector2D V2( (Glyph[Ch]->OffsetX + Glyph[Ch]->Width) * ScaleW_R_F, (Height - (Glyph[Ch]->OffsetY + Glyph[Ch]->Height)) * ScaleH_R_F );
 					V1 *= Scalar;
 					V2 *= Scalar;
 
-					// NOTE: HACK: I CHANGED THE Y's AROUND! I DUNNO WHY THEY WERE UPSIDE DOWN! //
+					// NOTE: FORMER HACK: I (used to) CHANGED THE Y's AROUND! I DUNNO WHY THEY WERE UPSIDE DOWN! //
 					int UV1_x = Glyph[Ch]->x * GEL_UV_ONE / ScaleW;
-					int UV2_y = Glyph[Ch]->y * GEL_UV_ONE / ScaleH;
+					int UV1_y = Glyph[Ch]->y * GEL_UV_ONE / ScaleH;
 					int UV2_x = (Glyph[Ch]->x + Glyph[Ch]->Width) * GEL_UV_ONE / ScaleW;
-					int UV1_y = (Glyph[Ch]->y + Glyph[Ch]->Height) * GEL_UV_ONE / ScaleH;
+					int UV2_y = (Glyph[Ch]->y + Glyph[Ch]->Height) * GEL_UV_ONE / ScaleH;
 					
 					Vert.Add( Vector3D( V1.x, V1.y, 0) + CurPos );
 					Vert.Add( Vector3D( V2.x, V1.y, 0) + CurPos );
@@ -125,7 +131,7 @@ public:
 					CharsDrawn++;
 				}
 				
-				CurPos.x += Glyph[Ch]->AdvanceX * Scalar * ScaleW_F;
+				CurPos.x += Glyph[Ch]->AdvanceX * Scalar * ScaleW_R_F;
 			}
 
 			// Draw! //
@@ -137,7 +143,7 @@ public:
 			
 			if ( Length == CharsDrawn )
 				break;
-		}		
+		}
 	}
 	
 	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {

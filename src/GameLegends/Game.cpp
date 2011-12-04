@@ -852,6 +852,9 @@ void cGame::Draw() {
 		gelClear( true, true );
 
 		DrawScene();
+		gelDrawModeColors();
+		gelLoadMatrix( ObserverCamera.ProjectionView );	
+		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
 	}
 
 	CurrentRT = RT_MINI1;
@@ -967,8 +970,8 @@ void cGame::Draw() {
 	// HACK: Fix the flipped matrix by manually un-flipping the matrix //
 //	UICamera.Projection.Matrix(1,1) = -UICamera.Projection.Matrix(1,1);
 //	UICamera.CalculateProjectionView();
-	ObserverCamera.Projection.Matrix(1,1) = -ObserverCamera.Projection.Matrix(1,1);
-	ObserverCamera.CalculateProjectionView();
+//	ObserverCamera.Projection.Matrix(1,1) = -ObserverCamera.Projection.Matrix(1,1);
+//	ObserverCamera.CalculateProjectionView();
 
 	gelEnableDepthWriting();
 	gelClearDepth();
@@ -981,8 +984,8 @@ void cGame::Draw() {
 	
 			gelSetColor( GEL_RGBA(255,255,255,255) );
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);
 		}
 
@@ -998,8 +1001,8 @@ void cGame::Draw() {
 			UberShader[US_EDGEBLEND]->BindUniform2f( "AspectScalar", 1.0f, 1.0f / ActualScreen::AspectRatio );
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);		
 		}
 
@@ -1012,8 +1015,8 @@ void cGame::Draw() {
 //			RenderTarget[RT_MINI1]->BindAsTexture();
 	
 			gelDrawRectFillTextured_( 
-				Vector3D( -ScalarX, ScalarY, 0 ),
-				Vector3D( ScalarX, -ScalarY, 0 )
+				Vector3D( -ScalarX, -ScalarY, 0 ),
+				Vector3D( ScalarX, ScalarY, 0 )
 				);
 		}
 
@@ -1025,11 +1028,11 @@ void cGame::Draw() {
 
 		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
 //		MouseRayStart.z = Real(-1);
-		MouseRayStart.z = ObserverCamera.NearPlane+Real(1);		
+		MouseRayStart.z = ObserverCamera.NearPlane;//+Real(1);
 
 		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
 //		MouseRayEnd.z = Real(1);
-		MouseRayEnd.z = ObserverCamera.FarPlane-Real(1);
+		MouseRayEnd.z = ObserverCamera.FarPlane;//-Real(1);
 
 		Calc_UnProject( 
 			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0),
@@ -1071,6 +1074,13 @@ void cGame::Draw() {
 		gelDrawModeColors();
 		gelLoadMatrix( VisibleMatrix );
 		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
+	
+//		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
+
+
+		gelDrawModeColors();
+		gelLoadMatrix( UICamera.ProjectionView );	
+		gelDrawLine( Vector3D(-128,-128,0), Vector3D(128,128,0), GEL_RGB_GREEN, GEL_RGB_RED );
 				
 		// Text //		
 		gelDrawModeTextured();
@@ -1083,13 +1093,13 @@ void cGame::Draw() {
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
 			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseRayStart.x.ToFloat(), MouseRayStart.y.ToFloat(), MouseRayStart.z.ToFloat() );
 //		Font->printf( 
 //			Vector3D( FullRefScreen::Width>>1, -32, 0 ), 
@@ -1099,14 +1109,14 @@ void cGame::Draw() {
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -48, 0 ), 
 			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", MouseRayEnd.x.ToFloat(), MouseRayEnd.y.ToFloat(), MouseRayEnd.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_ORANGE );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
 			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
 			"(%f, %f, %f)", HitPoint.x.ToFloat(), HitPoint.y.ToFloat(), HitPoint.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_YELLOW );
@@ -1117,7 +1127,7 @@ void cGame::Draw() {
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -80, 0 ), 
 			1, 
-			GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
 			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
 
 		// *** //
