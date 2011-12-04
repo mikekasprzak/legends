@@ -32,6 +32,7 @@ void cGameSupport::MouseDraw() {
 	{
 		if ( MouseVisible ) {
 			Vector2D Pos = Mouse.Pos - MouseCursor.Element[0].Pos;
+//			Log("><> %i %i", (int)MouseCursor.Element[0].Pos.x, (int)MouseCursor.Element[0].Pos.y );
 			MouseCursor.DrawGraphic( 0, UIA_HLEFT | UIA_VTOP, Pos, (Mouse.Button() == 1 ? Real(0.9) : Real(1)), CurrentAngle );
 		}
 	}
