@@ -1,21 +1,42 @@
 
 # - ------------------------------------------------------------------------ - #
+# Non Native Target #
+# - ------------------------------------------------------------------------ - #
+FOREIGN				:=	true
+# - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
 ifdef ARM_TARGET
 # - ------------------------------------------------------------------------ - #
 GCC_PREFIX			:=	ntoarmv7-
+CPUVARDIR			:=	armle-v7
 # - ------------------------------------------------------------------------ - #
 else ifdef X86_TARGET
 # - ------------------------------------------------------------------------ - #
 GCC_PREFIX			:=	ntox86-
+CPUVARDIR			:=	x86
 # - ------------------------------------------------------------------------ - #
 else
 # - ------------------------------------------------------------------------ - #
 GCC_PREFIX			:=	ntoarmv7-
+CPUVARDIR			:=	armle-v7
 ARM_TARGET			:=	true
 # - ------------------------------------------------------------------------ - #
 endif
 # - ------------------------------------------------------------------------ - #
 
+# - ------------------------------------------------------------------------ - #
+# All BlackBerry Targets #
+# - ------------------------------------------------------------------------ - #
+CPUFLAGS			+=	-fstack-protector-all -D_FORTIFY_SOURCE=2 \
+						-I$(QNX_TARGET)/../target-override/usr/include \
+						-I$(QNX_TARGET)/usr/include/freetype2
+# - ------------------------------------------------------------------------ - #
+LIBRARIES			+=	-lbps -lpps -lscreen -lfreetype -lpng
+# - ------------------------------------------------------------------------ - #
+LDFLAGS				+=	-L$(QNX_TARGET)/../target-override/$(CPUVARDIR)/lib \
+						-L$(QNX_TARGET)/../target-override/$(CPUVARDIR)/usr/lib
+# - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
 ifdef ARM_TARGET
@@ -24,7 +45,7 @@ ifdef ARM_TARGET
 # "fpu16-format" defines the __fp16 type, an ARM-only 16bit float storage format
 # "float-abi" is either soft, softfp, or hard. softfp and hard both use the FPU.
 # - ------------------------------------------------------------------------ - #
-CPUFLAGS			:=	-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=softfp \
+CPUFLAGS			+=	-mcpu=cortex-a9 -mfpu=neon -mfloat-abi=softfp \
 						-ftree-vectorize \
 # 						-funsafe-math-optimization \
 #						-mfp16-format=alternative \
@@ -47,7 +68,7 @@ endif # ARM_TARGET #
 # - ------------------------------------------------------------------------ - #
 ifdef X86_TARGET
 # - ------------------------------------------------------------------------ - #
-CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
+CPUFLAGS			+=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
 CFLAGS				+=	$(CPUFLAGS)

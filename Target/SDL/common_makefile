@@ -45,7 +45,7 @@ TARGET_STUBS_CHECK	:=	$(shell Tools/FileExists.sh $(TARGET_STUBS))
 # - ------------------------------------------------------------------------ - #
 $(TARGET): $(TARGET_STUBS) $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(OTHER_FILES_DEP) startcache
 	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
-ifneq ($(COPY_FILES),)
+ifneq ($(strip $(COPY_FILES)),)
 	cp -t $(TARGET_DIR) $(COPY_FILES)
 endif
 	$(GXX) $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
