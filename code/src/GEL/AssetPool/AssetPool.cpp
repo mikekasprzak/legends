@@ -351,8 +351,9 @@ namespace AssetPool {
 		}
 		//ReadDir += String::Slash;
 		
+		Log( "+ Adding Asset Directory \"%s\"", ReadDir.c_str() );
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
-		Log( "+ Adding Asset Directory \"%s\" (%i Total)", ReadDir.c_str(), size_GelDirectory( Dir ) );
+		Log( "* %i Total Files in Directory", size_GelDirectory( Dir ) );
 		
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = String::Slash;

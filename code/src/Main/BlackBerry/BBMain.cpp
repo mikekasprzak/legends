@@ -100,6 +100,9 @@ int main(int argc, char *argv[]) {
 	
 	printf("OH SHIT: %s\n", AppBaseDir);
 	
+	extern int LogLevel;
+	LogLevel = 3;
+
 	int rc;
 	int exit_application = 0;
 	static screen_context_t screen_cxt;
