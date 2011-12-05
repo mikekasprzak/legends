@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <System/Path.h>
 
 extern int FPS_Counter;
 int FPS_Counter = 0;
@@ -41,43 +42,6 @@ void SkipTime() {
 
 #include "bbutil.h"
 
-static const GLfloat vertices[] =
-{
-      // front
-      -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
-       0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
-
-      // right
-      0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f,
-      0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f,
-
-      // back
-      0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f,
-      -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
-
-      // left
-      -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f,
-      -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f,
-
-      // top
-      -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f,
-       0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
-
-      // bottom
-      -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f,
-       0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f
-};
-
-
-static const GLfloat colors[] =
-{
-       /* front  */  0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f,
-       /* right  */  0.29296875f,0.66796875f,0.92578125f,1.0f,0.29296875f,0.66796875f,0.92578125f,1.0f, 0.29296875f,0.66796875f,0.92578125f,1.0f, 0.29296875f,0.66796875f,0.92578125f,1.0f, 0.29296875f,0.66796875f,0.92578125f,1.0f, 0.29296875f,0.66796875f,0.92578125f,1.0f,
-       /* back   */  0.52734375f,0.76171875f,0.92578125f,1.0f, 0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f, 0.52734375f,0.76171875f,0.92578125f,1.0f, 0.52734375f,0.76171875f,0.92578125f,1.0f, 0.52734375f,0.76171875f,0.92578125f,1.0f,
-       /* left   */  0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f,0.0625f,0.57421875f,0.92578125f,1.0f, 0.0625f,0.57421875f,0.92578125f,1.0f,
-       /* top    */  0.29296875f,0.66796875f,0.92578125f,1.0f, 0.29296875f,0.66796875f,0.92578125f,1.0f,0.29296875f,0.66796875f,0.92578125f,1.0f,0.29296875f,0.66796875f,0.92578125f,1.0f,0.29296875f,0.66796875f,0.92578125f,1.0f,0.29296875f,0.66796875f,0.92578125f,1.0f,
-       /* bottom */  0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f,0.52734375f,0.76171875f,0.92578125f,1.0f
-};
 
 void handleScreenEvent(bps_event_t *event)
 {
@@ -109,57 +73,32 @@ int initialize()
 	if (err != 0x3000) {
 		return EXIT_FAILURE;
 	}
-/*
-    glClearDepthf(1.0f);
-    glClearColor(0.0f,0.0f,0.0f,1.0f);
-    glEnable(GL_CULL_FACE);
-    glShadeModel(GL_SMOOTH);
+	
+	extern void Simple_Init( int Width, int Height );
+	Simple_Init( surface_width, surface_height );
 
-	glViewport(0, 0, surface_width, surface_height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	float nearClip = -2.0f;
-	float farClip  = 2.0f;
-	float yFOV  = 75.0f;
-	float yMax = nearClip * tan(yFOV*M_PI/360.0f);
-	float aspect = surface_width/surface_height;
-	float xMin = -yMax * aspect;
-	float xMax = yMax *aspect;
-
-	glFrustumf(xMin, xMax, -yMax, yMax, nearClip, farClip);
-	glScalef((float)surface_height/(float)surface_width, 1.0f, 1.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-*/
 	return EXIT_SUCCESS;
 }
 
 void render()
 {
-//    //Typical render pass
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//    glEnableClientState(GL_VERTEX_ARRAY);
-//    glVertexPointer(3, GL_FLOAT, 0, vertices);
-//
-//    glEnableClientState(GL_COLOR_ARRAY);
-//    glColorPointer(4, GL_FLOAT, 0, colors);
-//
-//    glRotatef(1.0f, 1.0f, 1.0f, 0.0f);
-//
-//    glDrawArrays(GL_TRIANGLES, 0 , 36);
-//
-//    glDisableClientState(GL_VERTEX_ARRAY);
-//    glDisableClientState(GL_COLOR_ARRAY);
+	extern void Simple_Step();
+	Simple_Step();
+
+	extern void Simple_Draw();
+	Simple_Draw();
 
     //Use utility code to update the screen
     bbutil_swap();
 }
 
 int main(int argc, char *argv[]) {
-	printf("OH SHIT\n");
+	extern char AppBaseDir[];
+	gelGetContentPath( AppBaseDir, 2048 );
+	extern char AppSaveDir[];
+	gelGetStoragePath( AppSaveDir, 2048 );
+	
+	printf("OH SHIT: %s\n", AppBaseDir);
 	
 	int rc;
 	int exit_application = 0;
@@ -172,7 +111,7 @@ int main(int argc, char *argv[]) {
 	bps_initialize();
 
 	//Use utility code to initialize EGL in landscape orientation
-	if (EXIT_SUCCESS != bbutil_init_egl(screen_cxt, GL_ES_1, LANDSCAPE)) {
+	if (EXIT_SUCCESS != bbutil_init_egl(screen_cxt, GL_ES_2, LANDSCAPE)) {
 		fprintf(stderr, "bbutil_init_egl failed\n");
 		bbutil_terminate();
 		screen_destroy_context(screen_cxt);
@@ -232,6 +171,9 @@ int main(int argc, char *argv[]) {
 
 	//Stop requesting events from libscreen
 	screen_stop_events(screen_cxt);
+	
+	extern void Simple_Exit();
+	Simple_Exit();
 
 	//Shut down BPS library for this process
 	bps_shutdown();

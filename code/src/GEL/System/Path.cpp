@@ -24,6 +24,13 @@
 #include <sys/stat.h>
 #include <mach-o/dyld.h>
 // - ------------------------------------------------------------------------------------------ - //
+#elif defined(USES_BLACKBERRY)
+// - ------------------------------------------------------------------------------------------ - //
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
+// - ------------------------------------------------------------------------------------------ - //
 #elif defined(USES_UNIX)
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdlib.h>
@@ -45,6 +52,11 @@ void gelGetContentPath( char* AppBaseDir, const size_t AppBaseDir_Size ) {
 //	Log( "+ WebOS Path\n" );
 	WebOS_PDL_GetCallingPath( AppBaseDir, AppBaseDir_Size );
 	//PDL_GetCallingPath( AppBaseDir, AppBaseDir_Size );
+#elif defined(USES_BLACKBERRY)
+	char cwd[PATH_MAX];
+	getcwd( cwd, PATH_MAX );
+
+	snprintf( AppBaseDir, AppBaseDir_Size, "file://%s/app/", cwd);
 #elif defined(USES_WINDOWS)
 //	Log( "+ Windows Path\n" );
 	GetModuleFileNameA( NULL, AppBaseDir, AppBaseDir_Size );
@@ -90,6 +102,11 @@ void gelGetContentPath( char* AppBaseDir, const size_t AppBaseDir_Size ) {
 void gelGetStoragePath( char* SaveDir, const size_t SaveDir_Size ) {
 #if defined(USES_WEBOS)
 	WebOS_PDL_GetDataFilePath( "", SaveDir, SaveDir_Size );
+#elif defined(USES_BLACKBERRY)
+	char cwd[PATH_MAX];
+	getcwd( cwd, PATH_MAX );
+
+	snprintf( SaveDir, SaveDir_Size, "file://%s/data/", cwd );
 #elif defined(USES_BADA)
 	sprintf( SaveDir, "/Home/" );
 #elif defined(USES_WINDOWS)
