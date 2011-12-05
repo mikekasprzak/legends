@@ -56,7 +56,7 @@ void gelGetContentPath( char* AppBaseDir, const size_t AppBaseDir_Size ) {
 	char cwd[PATH_MAX];
 	getcwd( cwd, PATH_MAX );
 
-	snprintf( AppBaseDir, AppBaseDir_Size, "file://%s/app/", cwd);
+	snprintf( AppBaseDir, AppBaseDir_Size, "%s/app/native/", cwd );
 #elif defined(USES_WINDOWS)
 //	Log( "+ Windows Path\n" );
 	GetModuleFileNameA( NULL, AppBaseDir, AppBaseDir_Size );
@@ -106,7 +106,7 @@ void gelGetStoragePath( char* SaveDir, const size_t SaveDir_Size ) {
 	char cwd[PATH_MAX];
 	getcwd( cwd, PATH_MAX );
 
-	snprintf( SaveDir, SaveDir_Size, "file://%s/data/", cwd );
+	snprintf( SaveDir, SaveDir_Size, "%s/data/", cwd );
 #elif defined(USES_BADA)
 	sprintf( SaveDir, "/Home/" );
 #elif defined(USES_WINDOWS)

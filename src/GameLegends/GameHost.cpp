@@ -3,10 +3,11 @@
 #include <AssetPool/AssetPool.h>
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::cGameHost() {
-	Log("- Begin GameHost Constructor");
+	Log("+ Begin GameHost Constructor");
 
 
 	// * * * * * //
+	
 
 		
 	// Setup Asset Pool //
@@ -69,7 +70,7 @@ cGameHost::cGameHost() {
 	// Game is null //
 	Game = 0;
 	
-	Log("+ End GameHost Constructor");
+	Log("- End GameHost Constructor");
 }
 // - ------------------------------------------------------------------------------------------ - //
 cGameHost::~cGameHost() {
