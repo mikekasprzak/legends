@@ -332,7 +332,9 @@ void cGame::Init() {
 	
 	ShowDebug = false;
 
-	Font = new GelFont( "Content/Misc/Fonts/Arial.fnt" );
+	extern char AppBaseDir[]; 
+	std::string Prefix = AppBaseDir;
+	Font = new GelFont( std::string( Prefix + "Content/Misc/Fonts/Arial.fnt").c_str() );
 //	Font = new GelFont( "Content/Misc/Fonts/CourierNew.fnt" );
 //	Font = new GelFont( "Content/Misc/Fonts/Fontin.fnt" );
 
@@ -360,13 +362,13 @@ void cGame::Init() {
 	
 	UberShader.resize(3);
 	UberShader[US_POSTPROCESS] =
-		new cUberShader( "Content/Scripts/glsl/PostProcess.json" );
+		new cUberShader( std::string( Prefix + "Content/Scripts/glsl/PostProcess.json").c_str() );
 
 	UberShader[US_EDGEBLEND] =
-		new cUberShader( "Content/Scripts/glsl/PPEdgeBlend.json" );
+		new cUberShader( std::string( Prefix + "Content/Scripts/glsl/PPEdgeBlend.json").c_str() );
 
 	UberShader[US_TEXTWOBLEND] =
-		new cUberShader( "Content/Scripts/glsl/TexTwoBlend.json" );
+		new cUberShader( std::string( Prefix + "Content/Scripts/glsl/TexTwoBlend.json").c_str() );
 	
 	// *** //
 	
@@ -395,15 +397,15 @@ void cGame::Init() {
 	//LoadMap();
 
 	// Add Rooms //	
-	AddOldRoom( Vector3D(0,0+64,0), "Content/Tests/Room01.tga" );
-	AddOldRoom( Vector3D(16,32+64,0), "Content/Tests/Room02.tga" );
-	AddOldRoom( Vector3D(16,64+64,0), "Content/Tests/Room03.tga" );
-	AddOldRoom( Vector3D(32+16,64+64,0), "Content/Tests/Room04.tga" );
+	AddOldRoom( Vector3D(0,0+64,0), std::string( Prefix + "Content/Tests/Room01.tga").c_str() );
+	AddOldRoom( Vector3D(16,32+64,0), std::string( Prefix + "Content/Tests/Room02.tga").c_str() );
+	AddOldRoom( Vector3D(16,64+64,0), std::string( Prefix + "Content/Tests/Room03.tga").c_str() );
+	AddOldRoom( Vector3D(32+16,64+64,0), std::string( Prefix + "Content/Tests/Room04.tga").c_str() );
 	
 	// Add some Objects //
-	AddObject( Vector3D(16,0,10+4+2), "Content/Objects/Discs/Player_disc.json", Real(1.2) );
+	AddObject( Vector3D(16,0,10+4+2), std::string( Prefix + "Content/Objects/Discs/Player_disc.json").c_str(), Real(1.2) );
 	Obj.back()->IsGlowing = true;
-	AddObject( Vector3D(0,64+4,10+4+2), "Content/Objects/Discs/Bat_disc.json", Real(1.2) );
+	AddObject( Vector3D(0,64+4,10+4+2), std::string( Prefix + "Content/Objects/Discs/Bat_disc.json").c_str(), Real(1.2) );
 
 	// Follow the 1st object //
 	CameraFollow = Obj[0];

@@ -4915,6 +4915,9 @@ void stb_nptr_recache(void)
 #ifdef _MSC_VER
   #define stb_rename(x,y)   _wrename(stb__from_utf8(x), stb__from_utf8_alt(y))
   #define stb_mktemp   _mktemp
+#elif defined(USES_BLACKBERRY)
+  #define stb_mktemp   mkstemp
+  #define stb_rename   rename
 #else
   #define stb_mktemp   mktemp
   #define stb_rename   rename

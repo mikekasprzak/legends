@@ -94,6 +94,10 @@ void LogAlways( const char* s, ... ) {
 	va_end( vl );
 
 	LOG_FUNC2( LOG_TARGET, (char*)"\n" );
+
+#ifdef ALWAYS_FLUSH
+	fflush(0);
+#endif // ALWAYS_FLUSH
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _LogAlways( const char* s, ... ) {
@@ -118,6 +122,26 @@ void _LogAlways( const char* s, ... ) {
 			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
 		} \
 	}
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef ALWAYS_FLUSH
+// - ------------------------------------------------------------------------------------------ - //
+#undef GEN_LOG_FUNCTION_CRLF
+#define GEN_LOG_FUNCTION_CRLF( _NAME, _LEVEL ) \
+	void _NAME( const char* s, ... ) { \
+		if ( LogLevel >= _LEVEL ) { \
+			va_list vl; \
+			va_start( vl, s ); \
+			PreLog( s ); \
+			LOG_FUNC( LOG_TARGET, s, vl ); \
+			va_end( vl ); \
+			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
+			fflush(0); \
+		} \
+	}
+// - ------------------------------------------------------------------------------------------ - //
+#endif // ALWAYS_FLUSH
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 #define GEN_LOG_FUNCTION( _NAME, _LEVEL ) \
 	void _NAME( const char* s, ... ) { \

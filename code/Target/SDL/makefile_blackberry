@@ -16,6 +16,7 @@ DEFINES				+=	PRODUCT_MOBILE \
 						USES_BLACKBERRY \
 						USES_FBO \
 						NO_TWEAKVALUE \
+						ALWAYS_FLUSH \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	
