@@ -141,7 +141,12 @@ cUberShader::cUberShader( const char* InFile ) :
 		
 		VLog( "* Loadinng Shader Sources..." );
 		VLog( "* File: %s", ShaderFile->valuestring );
-		DataBlock* ShaderSource = new_read_nullterminate_DataBlock( ShaderFile->valuestring );
+		
+		// HACK: Until I feel like doing this a better way //
+		extern char AppBaseDir[]; 
+		std::string Prefix = AppBaseDir;
+
+		DataBlock* ShaderSource = new_read_nullterminate_DataBlock( std::string( Prefix + ShaderFile->valuestring ).c_str() );
 		
 		if ( ShaderSource ) {
 			VLog( "* Shader Source Loaded (%i bytes).", ShaderSource->Size );
