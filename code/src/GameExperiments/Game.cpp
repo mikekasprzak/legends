@@ -90,7 +90,7 @@ void cGame::Init() {
 */	
 //	Log( "%i %i %i %i %i/n", MaxValue<int>(), MaxValue<short>(), MaxValue<char>(), MaxValue<unsigned char>(), MaxValue<unsigned short>() );
 
-
+/*
 	Vector3D RoomScale(128,128,64);
 
 	{
@@ -121,6 +121,7 @@ void cGame::Init() {
 	}
 
 	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
+	*/
 	
 //	txPlayer = AssetPool::Load( "/Player01" );
 //	txSword = AssetPool::Load( "/Sword01" );
@@ -130,7 +131,13 @@ void cGame::Init() {
 
 //	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
 	
+
+	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
+	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(0) ); // TODO: Should be positive //
+//	CameraFollow = 0;
+	CameraTilt = Vector3D(0,0,1024);
+
 	
 	Log("End of Init\n");
 }
@@ -143,14 +150,14 @@ void cGame::Exit() {
 	delete Obj[0];
 	delete Obj[1];
 
-	delete_Triangles( Room[0].Vert, Room[0].Index );
-	delete_OutlineList( Room[0].OutlineIndex );
-	delete_Triangles( Room[1].Vert, Room[1].Index );
-	delete_OutlineList( Room[1].OutlineIndex );
-	delete_Triangles( Room[2].Vert, Room[2].Index );
-	delete_OutlineList( Room[2].OutlineIndex );
-	delete_Triangles( Room[3].Vert, Room[3].Index );
-	delete_OutlineList( Room[3].OutlineIndex );
+//	delete_Triangles( Room[0].Vert, Room[0].Index );
+//	delete_OutlineList( Room[0].OutlineIndex );
+//	delete_Triangles( Room[1].Vert, Room[1].Index );
+//	delete_OutlineList( Room[1].OutlineIndex );
+//	delete_Triangles( Room[2].Vert, Room[2].Index );
+//	delete_OutlineList( Room[2].OutlineIndex );
+//	delete_Triangles( Room[3].Vert, Room[3].Index );
+//	delete_OutlineList( Room[3].OutlineIndex );
 
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -225,43 +232,92 @@ void cGame::Step() {
 
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
-			gelLoadMatrix( ModelViewMatrix );
-//			gelLoadMatrix( ViewMatrix );
-//			gelMultMatrix( CameraMatrix );
-//			gelMultMatrix( SpinMatrix );
-			gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
-			
-			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
-			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
-			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
-	
-//			gelDrawIndexedTriangleStrip( ThisRoom->Vert->Data, ThisRoom->Index->Data, 1024/*ThisRoom->Index->Size*/, GEL_RGBA(255,255,255,64) );
-////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
-//			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, 1024/*ThisRoom->OutlineIndex->Size*/, GEL_RGBA(0,255,0,64) );
+//
+//void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
+//			gelLoadMatrix( ModelViewMatrix );
+////			gelLoadMatrix( ViewMatrix );
+////			gelMultMatrix( CameraMatrix );
+////			gelMultMatrix( SpinMatrix );
+//			gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
+//			
+//			gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
+//////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
+//			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
 //			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
+//	
+////			gelDrawIndexedTriangleStrip( ThisRoom->Vert->Data, ThisRoom->Index->Data, 1024/*ThisRoom->Index->Size*/, GEL_RGBA(255,255,255,64) );
+//////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(0,255,0,64) );
+////			gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, 1024/*ThisRoom->OutlineIndex->Size*/, GEL_RGBA(0,255,0,64) );
+////			gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
+//	
+////			static int StripNum = 0;
+////			StripNum++;
+////			StripNum %= indexStripCount_Optimized_TriangleStrips(65);
+////			gelDrawIndexedTriangleStrip( 
+////				ThisRoom->Vert->Data,
+////				&ThisRoom->Index->Data[indexIndex_Optimized_TriangleStrips(65,StripNum,0)],
+////				indexStripSize_Optimized_TriangleStrips(65),
+////				GEL_RGBA(255,0,0,128)
+////				);	
+//}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::UpdateCameraMatrix() {
+	ObserverCamera.SetFrustum( 
+//		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
+//		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
+		FullRefScreen::Width * Real(0.1f),
+		FullRefScreen::Height * Real(0.1f),
+		_TV(10),
+		_TV(110)
+		);
+	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
+	ObserverCamera.Look = CameraWorldPos;
+	ObserverCamera.Up = Vector3D(0,1,0);
+	ObserverCamera.UpdateMatrix();
 	
-//			static int StripNum = 0;
-//			StripNum++;
-//			StripNum %= indexStripCount_Optimized_TriangleStrips(65);
-//			gelDrawIndexedTriangleStrip( 
-//				ThisRoom->Vert->Data,
-//				&ThisRoom->Index->Data[indexIndex_Optimized_TriangleStrips(65,StripNum,0)],
-//				indexStripSize_Optimized_TriangleStrips(65),
-//				GEL_RGBA(255,0,0,128)
-//				);	
+
+	// UI Aligned Camera //
+	Real Near = _TV(100);
+	Real Length = _TV(800);
+	
+	Real Far = Near + Length;
+	Real PlanePos = _TV(0.5f);
+	
+	Real CameraPos = Near + ((Far - Near) * PlanePos);
+
+	UICamera.SetFrustum(
+//		ActualScreen::Width / RefScreen::Scalar,
+//		ActualScreen::Height / RefScreen::Scalar,
+		FullRefScreen::Width,
+		FullRefScreen::Height,
+		Near,
+		Far,
+		PlanePos
+		);
+	UICamera.Pos = Vector3D(0,0,CameraPos);
+	UICamera.Look = Vector3D(0,0,0);
+	UICamera.Up = Vector3D(0,1,0);
+	UICamera.UpdateMatrix();
 }
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
 	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
-
-	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0), Vector3D(0,0,1) );
-//	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
-
 	
+	UpdateCameraMatrix();
+
+
+//	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0), Vector3D(0,0,1) );
+////	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
+//
+//	
 	gelEnableAlphaBlending();
+
+	gelDrawModeColors();
+	gelLoadMatrix( ObserverCamera.ProjectionView );	
+	gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
 	
 	/*
 	
@@ -327,9 +383,8 @@ void cGame::Draw() {
 	
 	*/
 	
-	gelDrawModeTextured();
 
-
+/*
 	// Reset Camera //
 	{
 		Real Near = 100;
@@ -357,6 +412,10 @@ void cGame::Draw() {
 	
 		gelLoadMatrix( CameraViewMatrix );
 	}
-	
+*/
+		gelDrawModeTextured();
+		gelLoadMatrix( UICamera.ProjectionView );
+		gelSetColor( GEL_RGB_DEFAULT );
+		gelEnableAlphaBlending();
 }
 // - ------------------------------------------------------------------------------------------ - //
