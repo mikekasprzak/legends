@@ -44,6 +44,9 @@ public:
 	void Exit();
 	void Step();
 	void Draw();
+
+	void GotFocus();
+	void LostFocus();
 	
 	
 	void DrawRoom( cRoom* ThisRoom, const Vector3D& Offset );

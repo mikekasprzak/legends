@@ -44,8 +44,8 @@ cRoom Room[4];
 cPMEFile* Mesh;
 // - ------------------------------------------------------------------------------------------ - //
 
-GelTextureID txPlayer;
-GelTextureID txSword;
+GelAssetHandle txPlayer;
+GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
@@ -122,13 +122,13 @@ void cGame::Init() {
 
 	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
 	
-	txPlayer = AssetPool::Load( "/Player01" );
-	txSword = AssetPool::Load( "/Sword01" );
+//	txPlayer = AssetPool::Load( "/Player01" );
+//	txSword = AssetPool::Load( "/Sword01" );
+//
+//	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
+//	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
 
-	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
-	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
-
-	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
+//	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
 	
 	CameraWorldPos = Vector3D(0,0,0);
 	
@@ -152,6 +152,17 @@ void cGame::Exit() {
 	delete_Triangles( Room[3].Vert, Room[3].Index );
 	delete_OutlineList( Room[3].OutlineIndex );
 
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::GotFocus() {
+//	ContentScan();
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cGame::LostFocus() {
+	
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -246,11 +257,13 @@ void cGame::Draw() {
 	gelSetClearColor( GEL_RGB_BLACK );
 	gelClear();
 
-	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0) );
+	Matrix4x4 Look = Calc_LookAt( Vector3D(0,256,1024), Vector3D(0,0,0), Vector3D(0,0,1) );
 //	Matrix4x4 Look = Calc_LookAt( Vector3D(0,32,1024), Vector3D(0,0,0) );
 
 	
 	gelEnableAlphaBlending();
+	
+	/*
 	
 	// Terrain //
 	{
@@ -311,6 +324,10 @@ void cGame::Draw() {
 		DrawRoom( &(Room[2]), Vector3D(128,512,0) );
 		DrawRoom( &(Room[3]), Vector3D(256+128,512,0) );
 	}
+	
+	*/
+	
+	gelDrawModeTextured();
 
 
 	// Reset Camera //
@@ -324,7 +341,7 @@ void cGame::Draw() {
 		Real CameraPos = Near + ((Far - Near) * PlanePos);
 
 		//Matrix4x4 Look2 = Calc_LookAt( Vector3D(0,0,0), Vector3D(0,150,800) );
-		Matrix4x4 Look2 = Calc_LookAt( Vector3D(0,0,0), Vector3D(0,0,800) );
+		Matrix4x4 Look2 = Calc_LookAt( Vector3D(0,0,0), Vector3D(0,0,800), Vector3D(0,0,1) );
 		CameraMatrix = Look2 * Matrix4x4::TranslationMatrix( -Vector3D( 0, 0, -CameraPos ) );
 		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
 			ActualScreen::Width / RefScreen::Scalar,
