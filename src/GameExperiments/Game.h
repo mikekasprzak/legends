@@ -3,9 +3,10 @@
 #define __Game_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Matrix.h>
-#include <Object/FdoHeightMap.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Engine/Room.h"
+#include "Camera/Camera.h"
+// - ------------------------------------------------------------------------------------------ - //
+//#include "Engine/Room.h"
 #include "Engine/Object.h"
 #include "Engine/Object3D.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -15,13 +16,22 @@ public:
 	bool Capture;
 
 public:
-	cFdoHeightMap HeightMap;
 	Matrix4x4 SpinMatrix;
 	Matrix4x4 CameraMatrix;
 	
 	Matrix4x4 ModelViewMatrix;
 	
 	Vector3D CameraWorldPos;
+	Vector3D CameraEyePos;
+//	cObject* CameraFollow;
+	Vector3D CameraTilt;
+	
+	Vector2D Input_MoveStick;
+	Vector3D Input_MoveTarget; // ?? //
+
+	GelCamera ObserverCamera;
+	GelCamera UICamera;
+	
 public:
 	cObject* Obj[2];
 	cObject3D* Obj3[1];
@@ -29,9 +39,7 @@ public:
 public:
 	cGame() :
 		FirstRun( true ),
-		Capture( false ),
-		
-		HeightMap(4,4)
+		Capture( false )
 	{
 		Init();
 	}
@@ -48,8 +56,9 @@ public:
 	void GotFocus();
 	void LostFocus();
 	
-	
-	void DrawRoom( cRoom* ThisRoom, const Vector3D& Offset );
+	void UpdateCameraMatrix();
+
+//	void DrawRoom( cRoom* ThisRoom, const Vector3D& Offset );
 public:
 	void ForcePaused() {
 	}
