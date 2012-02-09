@@ -15,6 +15,9 @@ public:
 	void Step();
 	void Draw();
 	
+	void GotFocus();
+	void LostFocus();
+	
 	void ForcePaused();
 	bool FirstRun();
 	void Save();

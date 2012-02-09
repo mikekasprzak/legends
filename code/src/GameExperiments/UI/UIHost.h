@@ -135,7 +135,7 @@ public:
 	int* GraphicBase;
 	int* TextBase;
 	
-	std::vector< GelTextureID > Texture;
+	std::vector< GelAssetHandle > Texture;
 	
 	PairView* View;
 	int* ElementView;
@@ -183,7 +183,7 @@ public:
 	
 //	void Load( const char* FileName ) {
 //		Log( "Loading Screen: \"%s\"...\n", FileName );
-//		Load( new_read_DataBlock( FileName ) );
+//		Load( new_DataBlock( FileName ) );
 //	}
 
 	void Load( DataBlock* _Data ) {
@@ -264,7 +264,7 @@ public:
 	void LoadTextures() {
 		for ( size_t idx = 0; idx < GraphicElementCount; idx++ ) {
 			char* FileName = &GraphicStrings[ GraphicElement[ idx ].StringOffset ];
-			GelTextureID Tx = AssetPool::Load( FileName );
+			GelAssetHandle Tx = AssetPool::Load( FileName );
 			Texture.push_back( Tx );
 		}
 	}
@@ -318,21 +318,21 @@ public:
 		}
 		else {
 			Real Half = Real( Graphic->w >> 1 ) * Scale;
-			P1.x -= Half;
 			P2.x += Half;
+			P1.x -= Half;
 		}
 		
-		// Y Axis Alignment //
-		if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
+		// Y Axis Alignment (opposite behavior due to cartesian coods) //
+		if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
 			P2.y += Real( Graphic->h ) * Scale;
 		}
-		else if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
+		else if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
 			P1.y -= Real( Graphic->h ) * Scale;
 		}
 		else {
 			Real Half = Real( Graphic->h >> 1 ) * Scale;
-			P1.y -= Half;
 			P2.y += Half;
+			P1.y -= Half;
 		}
 		
 		// Add Vertices //
@@ -342,15 +342,13 @@ public:
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
 			(Graphic->x * GEL_UV_ONE / Graphic->Width),
-			(Graphic->y * GEL_UV_ONE / Graphic->Height),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height),
 			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
+			(Graphic->y * GEL_UV_ONE / Graphic->Height)
 			);
 
-		gelSetTexture( Texture[ Index ] );
-		//gelSetSmoothTexturesMipMapped();
-					
-//		gelDrawTexturedPolygons(
+		AssetPool::Set( Texture[ Index ] );
+
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
 			(GelUV*)UV.Data,
@@ -376,21 +374,21 @@ public:
 		}
 		else {
 			Real Half = Real( Graphic->w >> 1 ) * Scale;
-			P1.x -= Half;
 			P2.x += Half;
+			P1.x -= Half;
 		}
 		
-		// Y Axis Alignment //
-		if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
+		// Y Axis Alignment (Opposite behavior due to cartesian space) //
+		if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
 			P2.y += Real( Graphic->h ) * Scale;
 		}
-		else if ( (Alignment & UIA_VMASK) == UIA_VBOTTOM ) {
+		else if ( (Alignment & UIA_VMASK) == UIA_VTOP ) {
 			P1.y -= Real( Graphic->h ) * Scale;
 		}
 		else {
 			Real Half = Real( Graphic->h >> 1 ) * Scale;
-			P1.y -= Half;
-			P2.y += Half;
+			P2.y -= Half;
+			P1.y += Half;
 		}
 		
 		// Add Vertices //
@@ -399,15 +397,14 @@ public:
 		// Add UV's //
 		// TODO: Division here can be optimized in to a shift //
 		UV.AddRect6( 
-			(Graphic->x * GEL_UV_ONE / Graphic->Width),
-			(Graphic->y * GEL_UV_ONE / Graphic->Height),
+			((Graphic->x) * GEL_UV_ONE / Graphic->Width),
+			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height),
 			((Graphic->x + Graphic->w) * GEL_UV_ONE / Graphic->Width),
-			((Graphic->y + Graphic->h) * GEL_UV_ONE / Graphic->Height)
+			((Graphic->y) * GEL_UV_ONE / Graphic->Height)
 			);
 
-		gelSetTexture( Texture[ Index ] );
+		AssetPool::Set( Texture[ Index ] );
 					
-//		gelDrawTexturedPolygons(
 		gelDrawTrianglesTextured(
 			(Vector2D*)Vert.Data,
 			(GelUV*)UV.Data,
