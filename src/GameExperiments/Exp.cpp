@@ -43,18 +43,18 @@ void CallExp() {
 	extern void CallExp_TinyXML();
 	CallExp_TinyXML();
 	
-	extern void CallExp_Bullet();
-	CallExp_Bullet();
+//	extern void CallExp_Bullet();
+//	CallExp_Bullet();
 
-#ifdef USES_ASSIMP
-	extern void CallExp_AssImp();
-	CallExp_AssImp();
-#endif // USES_ASSIMP //
+//#ifdef USES_ASSIMP
+//	extern void CallExp_AssImp();
+//	CallExp_AssImp();
+//#endif // USES_ASSIMP //
 	
 	extern void CallExp_Squirrel();
 	CallExp_Squirrel();
 
-
+/*
 	Log("+ Now Testing BMFont\n");
 	{
 		BMFont* MyFont = new_read_BMFont( "Content/Misc/Fonts/CourierNew.fnt" );
@@ -79,6 +79,7 @@ void CallExp() {
 	}
 	Log("- Done Testing BMFont\n");
 	Log("\n");
+*/
 
 /*	
 	//Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/TestFile.tga" );
