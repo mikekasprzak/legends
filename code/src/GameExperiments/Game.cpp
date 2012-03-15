@@ -49,88 +49,14 @@ GelAssetHandle txSword;
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Init() {
-#ifdef USES_PAWN
-	extern void CallExp_Pawn();
-	CallExp_Pawn();
-#endif // USES_PAWN //
-	
-#ifdef USES_WINDOWS		
-	extern void CallExp_GelDate();
-	CallExp_GelDate();
-#endif // USES_WINDOWS //
+	extern void ExpInit();
+	extern void CallExp();
+	extern void ExpExit();
 
-	extern void CallExp_Squirrel();
-	CallExp_Squirrel();
-
-	extern void CallExp_cJSON();
-	CallExp_cJSON();
-
-	extern void CallExp_TinyXML();
-	CallExp_TinyXML();
-	
-	extern void CallExp_Bullet();
-	CallExp_Bullet();
-
-
-//	typedef ABCSet<unsigned char> GType;
-//	typedef int GType;
-	typedef unsigned char GType;
-	Log( "%i\n", MaxValue<GType>() );
-/*	
-	//Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/TestFile.tga" );
-
-	Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
-
-//	save_BMP_Grid2D<GType>( MyGrid, "Content/Misc/Horse.bmp" );
-//	save_TGA_Grid2D<GType>( MyGrid, "Content/Misc/Horse.tga" );
-	
-	new_Optimized_TriangleStrips( MyGrid, &Vert, &Index, Vector3D(128,128,64) );
-	
-	delete_Grid2D( MyGrid );
-*/	
-//	Log( "%i %i %i %i %i/n", MaxValue<int>(), MaxValue<short>(), MaxValue<char>(), MaxValue<unsigned char>(), MaxValue<unsigned short>() );
-
-/*
-	Vector3D RoomScale(128,128,64);
-
-	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room01.tga" );
-////		new_Optimized_TriangleStrips( MyGrid, &Room[0].Vert, &Room[0].Index, Vector3D(128,128,64) );
-////		new_TriangleStrip_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
-		new_Optimized_Triangles( MyGrid, &Room[0].Vert, &Room[0].Index, RoomScale );
-		new_Triangles_OutlineList( Room[0].Index, &Room[0].OutlineIndex );
-		delete_Grid2D( MyGrid );
-	}
-	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room02.tga" );
-		new_Optimized_Triangles( MyGrid, &Room[1].Vert, &Room[1].Index, RoomScale );
-		new_Triangles_OutlineList( Room[1].Index, &Room[1].OutlineIndex );
-		delete_Grid2D( MyGrid );
-	}
-	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room03.tga" );
-		new_Optimized_Triangles( MyGrid, &Room[2].Vert, &Room[2].Index, RoomScale );
-		new_Triangles_OutlineList( Room[2].Index, &Room[2].OutlineIndex );
-		delete_Grid2D( MyGrid );
-	}
-	{
-		Grid2D<GType>* MyGrid = load_Grid2D<GType>( "Content/Misc/Room04.tga" );
-		new_Optimized_Triangles( MyGrid, &Room[3].Vert, &Room[3].Index, RoomScale );
-		new_Triangles_OutlineList( Room[3].Index, &Room[3].OutlineIndex );
-		delete_Grid2D( MyGrid );
-	}
-
-	Mesh = new cPMEFile( "Content/Misc/Monkey.pme" );
-	*/
-	
-//	txPlayer = AssetPool::Load( "/Player01" );
-//	txSword = AssetPool::Load( "/Sword01" );
-//
-//	Obj[0] = new cObject( Vector3D(128,256,32+16), txPlayer );
-//	Obj[1] = new cObject( Vector3D(128+64,256+32,32+16), txSword );
-
-//	Obj3[0] = new cObject3D( Vector3D( 0, 0, 32+16 ), Mesh );
-	
+	// Run experiments //
+	ExpInit();
+	CallExp();
+	ExpExit();
 
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
