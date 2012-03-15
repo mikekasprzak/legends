@@ -2,6 +2,9 @@
 #ifndef __AdvancedGeometry_PointVsShapeRect2D_H__
 #define __AdvancedGeometry_PointVsShapeRect2D_H__
 // - ------------------------------------------------------------------------------------------ - //
+// Point vs. a Rectangle that is defined by a Point and a vector describing its shape (width, height) //
+// Shape should be positive only //
+// - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector/Vector2D.h>
 // - ------------------------------------------------------------------------------------------ - //
 
