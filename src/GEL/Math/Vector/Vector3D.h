@@ -88,6 +88,17 @@ public:
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( *= );
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool operator == ( const Vector3D& _Vs ) const {
+		if ( (x - _Vs.x).IsZero() )
+			if ( (y - _Vs.y).IsZero() )
+				return (z - _Vs.z).IsZero();
+		return false;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// Dot Product //
 	inline const Real dot( const Vector3D& _Vs ) const {
 		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z);

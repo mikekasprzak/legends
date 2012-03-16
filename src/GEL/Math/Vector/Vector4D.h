@@ -92,6 +92,16 @@ public:
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( *= );
 	// OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
 	// - -------------------------------------------------------------------------------------- - //
+	inline bool operator == ( const Vector4D& _Vs ) const {
+		if ( (x - _Vs.x).IsZero() )
+			if ( (y - _Vs.y).IsZero() )
+				if ( (z - _Vs.z).IsZero() )
+					return (w - _Vs.w).IsZero();
+		return false;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// Dot Product //
 	inline const Real dot( const Vector4D& _Vs ) const {
 		return (x * _Vs.x) + (y * _Vs.y) + (z * _Vs.z) + (w * _Vs.w);

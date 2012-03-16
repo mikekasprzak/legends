@@ -32,7 +32,7 @@ inline const cNearest_PointInfo_On_Line3D Nearest_PointInfo_On_Line3D( const Vec
 	Info.LineLength = Info.LineNormal.NormalizeRet();
 
 	// Calculate how far 
-	Info.DistanceOnLine = Info.CornerToPoint * Info.LineNormal;
+	Info.DistanceOnLine = dot( Info.CornerToPoint, Info.LineNormal );
 	
 	// Set Point to a position on the line //
 	if ( Info.DistanceOnLine <= Real::Zero ) {
