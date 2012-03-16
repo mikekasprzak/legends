@@ -5,7 +5,7 @@
 #include "PointVsSphere2D.h"
 // - ------------------------------------------------------------------------------------------ - //
 inline bool Test_Sphere_Vs_Sphere2D( const Vector2D& Pos, const Real& Radius, const Vector2D& VsPos, const Real VsRadius ) {
-	return Test_Point_Vs_Point2D( Pos, VsPos, Radius + VsRadius );
+	return Test_Point_Vs_Sphere2D( Pos, VsPos, Radius + VsRadius );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline Vector2D Nearest_SpherePoint_On_Sphere2D( const Vector2D& Pos, const Real& Radius, const Vector2D& VsPos, const Real VsRadius ) {

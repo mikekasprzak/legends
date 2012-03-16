@@ -21,6 +21,9 @@
 #include <Types/Set.h>
 #include <Grid/Grid2D.h>
 
+#include <Geometry/Vs/2D.h>
+#include <Geometry/Vs/3D.h>
+
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_HIDAPI

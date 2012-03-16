@@ -1,25 +1,25 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __AdvancedGeometry_PointVsCapsuleChain2D_H__
-#define __AdvancedGeometry_PointVsCapsuleChain2D_H__
+#ifndef __AdvancedGeometry_PointVsCapsuleChain3D_H__
+#define __AdvancedGeometry_PointVsCapsuleChain3D_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Math/Vector/Vector2D.h>
-#include "PointVsChain2D.h"
-#include "PointVsSphere2D.h"
+#include <Math/Vector/Vector3D.h>
+#include "PointVsChain3D.h"
+#include "PointVsSphere3D.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline const bool Test_Point_Vs_CapsuleChain2D( const Vector2D& Pos, const Vector2D* VsPoints, const size_t VsCount, const Real VsRadius ) {
-	Vector2D VsPoint = Nearest_Point_On_Chain2D( Pos, VsPoints, VsCount );
-	return Test_Point_Vs_Sphere2D( Pos, VsPoint, VsRadius );
+inline const bool Test_Point_Vs_CapsuleChain3D( const Vector3D& Pos, const Vector3D* VsPoints, const size_t VsCount, const Real VsRadius ) {
+	Vector3D VsPoint = Nearest_Point_On_Chain3D( Pos, VsPoints, VsCount );
+	return Test_Point_Vs_Sphere3D( Pos, VsPoint, VsRadius );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // Get the nearest Edge Point //
-inline const Vector2D Nearest_EdgePoint_On_CapsuleChain2D( const Vector2D& Pos, const Vector2D* VsPoint, const size_t VsCount, const Real VsRadius ) {
-	cNearest_PointInfo_On_Chain2D Info = Nearest_PointInfo_On_Chain2D( Pos, VsPoint, VsCount );
+inline const Vector3D Nearest_EdgePoint_On_CapsuleChain3D( const Vector3D& Pos, const Vector3D* VsPoint, const size_t VsCount, const Real VsRadius ) {
+	cNearest_PointInfo_On_Chain3D Info = Nearest_PointInfo_On_Chain3D( Pos, VsPoint, VsCount );
 	
-	Vector2D Line = Info.Point - Pos;
+	Vector3D Line = Info.Point - Pos;
 	return Info.Point - (Line.Normal() * VsRadius);
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -27,19 +27,19 @@ inline const Vector2D Nearest_EdgePoint_On_CapsuleChain2D( const Vector2D& Pos, 
 
 // - ------------------------------------------------------------------------------------------ - //
 // Get the nearest Inner Edge Point //
-inline const Vector2D Nearest_InnerEdgePoint_On_CapsuleChain2D( const Vector2D& Pos, const Vector2D* VsPoint, const size_t VsCount, const Real VsRadius ) {
-	cNearest_PointInfo_On_Chain2D Info = Nearest_PointInfo_On_Chain2D( Pos, VsPoint, VsCount );
+inline const Vector3D Nearest_InnerEdgePoint_On_CapsuleChain3D( const Vector3D& Pos, const Vector3D* VsPoint, const size_t VsCount, const Real VsRadius ) {
+	cNearest_PointInfo_On_Chain3D Info = Nearest_PointInfo_On_Chain3D( Pos, VsPoint, VsCount );
 	if ( Info.Corner == 1 ) {
 		// If it's a concave angle //
 		if ( dot(Info.PreviousLine, Info.Normal) >= Real::Zero ) {
 			//printf( "%i - Concave\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point - (Line.Normal() * VsRadius);
 		}
 		// If it's a convex angle //
 		else {
 			//printf( "%i - Convex\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point + (Line.Normal() * VsRadius);
 		}
 	}
@@ -47,13 +47,13 @@ inline const Vector2D Nearest_InnerEdgePoint_On_CapsuleChain2D( const Vector2D& 
 		// If it's a concave angle //
 		if ( dot(Info.NextLine, Info.Normal) <= Real::Zero ) {
 			//printf( "%i + Concave\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point - (Line.Normal() * VsRadius);
 		}
 		// If it's a convex angle //
 		else {
 			//printf( "%i + Convex\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point + (Line.Normal() * VsRadius);
 		}
 	}
@@ -64,19 +64,19 @@ inline const Vector2D Nearest_InnerEdgePoint_On_CapsuleChain2D( const Vector2D& 
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Get the nearest Outer Edge Point //
-inline const Vector2D Nearest_OuterEdgePoint_On_CapsuleChain2D( const Vector2D& Pos, const Vector2D* VsPoint, const size_t VsCount, const Real VsRadius ) {
-	cNearest_PointInfo_On_Chain2D Info = Nearest_PointInfo_On_Chain2D( Pos, VsPoint, VsCount );
+inline const Vector3D Nearest_OuterEdgePoint_On_CapsuleChain3D( const Vector3D& Pos, const Vector3D* VsPoint, const size_t VsCount, const Real VsRadius ) {
+	cNearest_PointInfo_On_Chain3D Info = Nearest_PointInfo_On_Chain3D( Pos, VsPoint, VsCount );
 	if ( Info.Corner == 1 ) {
 		// If it's a concave angle //
 		if ( dot(Info.PreviousLine, Info.Normal) <= Real::Zero ) {
 			//printf( "%i - Concave\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point - (Line.Normal() * VsRadius);
 		}
 		// If it's a convex angle //
 		else {
 			//printf( "%i - Convex\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point + (Line.Normal() * VsRadius);
 		}
 	}
@@ -84,13 +84,13 @@ inline const Vector2D Nearest_OuterEdgePoint_On_CapsuleChain2D( const Vector2D& 
 		// If it's a concave angle //
 		if ( dot(Info.NextLine, Info.Normal) >= Real::Zero ) {
 			//printf( "%i + Concave\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point - (Line.Normal() * VsRadius);
 		}
 		// If it's a convex angle //
 		else {
 			//printf( "%i + Convex\n", Info.Corner );
-			Vector2D Line = Info.Point - Pos;
+			Vector3D Line = Info.Point - Pos;
 			return Info.Point + (Line.Normal() * VsRadius);
 		}
 	}
@@ -102,5 +102,5 @@ inline const Vector2D Nearest_OuterEdgePoint_On_CapsuleChain2D( const Vector2D& 
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __AdvancedGeometry_PointVsCapsuleChain2D_H__ //
+#endif // __AdvancedGeometry_PointVsCapsuleChain3D_H__ //
 // - ------------------------------------------------------------------------------------------ - //
