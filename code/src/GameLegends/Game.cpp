@@ -24,6 +24,8 @@
 #include <Geometry/Vs/2D.h>
 #include <Geometry/Vs/3D.h>
 
+#include "TreeForge/TFTree.h"
+
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_HIDAPI
