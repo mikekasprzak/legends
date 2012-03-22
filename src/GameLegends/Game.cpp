@@ -870,13 +870,13 @@ void cGame::Draw() {
 #ifdef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
 		gelSetClearColor( GEL_RGB_RED );
 #else // NDEBUG //
-		gelSetClearColor( GEL_RGB_WHITE );
-//		gelSetClearColor( GEL_RGB_BLACK );
+//		gelSetClearColor( GEL_RGB_WHITE );
+		gelSetClearColor( GEL_RGB_BLACK );
 #endif // NDEBUG //
 
 		gelClear( true, true );
 
-		DrawScene();
+//		DrawScene();
 		gelDrawModeColors();
 		gelLoadMatrix( ObserverCamera.ProjectionView );	
 		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
@@ -885,7 +885,7 @@ void cGame::Draw() {
 	CurrentRT = RT_MINI1;
 	RenderTarget[CurrentRT]->Bind();
 	{
-		DrawSceneGlow();
+//		DrawSceneGlow();
 	}
 /*
 	// Reset Camera for UI //
@@ -1166,6 +1166,10 @@ void cGame::Draw() {
 		gelLoadMatrix( UICamera.ProjectionView );
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
+		
+		static Real DummyAngle = Real(0);
+		DummyAngle += Real(0.003f);
+		gelMultMatrix( Matrix3x3::RotateY( DummyAngle ).ToMatrix4x4() );
 		
 		MyTree->Draw();
 
