@@ -25,6 +25,7 @@
 #include <Geometry/Vs/3D.h>
 
 #include "TreeForge/TFTree.h"
+#include <time.h>
 
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -379,6 +380,11 @@ void cGame::Init() {
 	
 	// *** //
 
+
+	{
+		srand ( time(NULL) );
+		int Blah = rand(); // Burn a random number //
+	}
 	cTFGenerator TreeGen;
 	MyTree = TreeGen.Generate();
 
