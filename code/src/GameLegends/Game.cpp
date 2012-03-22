@@ -380,7 +380,6 @@ void cGame::Init() {
 	
 	// *** //
 
-
 	{
 		srand ( time(NULL) );
 		int Blah = rand(); // Burn a random number //
@@ -543,6 +542,12 @@ void cGame::Step() {
 		
 		if ( keystate[SDL_SCANCODE_SPACE] ) {
 			vm_CallFunc( "DoAwesome" );
+		}
+		
+		if ( keystate[SDL_SCANCODE_TAB] ) {
+			delete MyTree;
+			cTFGenerator TreeGen;
+			MyTree = TreeGen.Generate();
 		}
 		
 		static bool KeyDown = false;

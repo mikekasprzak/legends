@@ -131,14 +131,18 @@ public:
 	
 		int Depth = 0;
 		
-		Real CurrentRadius( RootRadius );
-		Vector3D GrowthDirection = SunDirection;
-		Real GrowthLength( 48 );
-		
-		
+		Real Straightness = Real::Random() * Real(0.2f);
 		Real RandomAngle = Real::Random();
-		Log( "*>* HOCKEY %f", RandomAngle.ToFloat() );
 		Vector3D Tilt( Real::Cos( RandomAngle ), 0, Real::Sin( RandomAngle ) );
+		
+		Real CurrentRadius( RootRadius );
+		Real GrowthLength( 48 );
+
+		Vector3D GrowthDirection = SunDirection;
+		GrowthDirection += Tilt * Real( 0.3f );
+
+		RandomAngle = Real::Random();
+		Tilt = Vector3D( Real::Cos( RandomAngle ), 0, Real::Sin( RandomAngle ) );
 		
 		cTFNode* LastNode = new cTFNode( Depth++, CurrentRadius );
 		LastNode->Offset = Vector3D::Zero;
@@ -158,7 +162,7 @@ public:
 			CurrentNode->Radius = CurrentRadius;
 			
 			// Per Segment Tweak //
-			GrowthDirection += Tilt * Real( 0.1 );
+			GrowthDirection += Tilt * Straightness;
 			GrowthDirection.Normalize();
 			
 			GrowthLength *= 0.8;
