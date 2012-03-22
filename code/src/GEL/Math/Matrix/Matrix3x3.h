@@ -458,7 +458,7 @@ public:
 	// Regular Functions //
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a scaling Matrix from a vector //
-	inline static const Matrix3x3 Scaling( const Vector2D& _Vs ) {
+	inline static const Matrix3x3 Scale( const Vector2D& _Vs ) {
 		Matrix3x3 Matrix(
 			_Vs.x, Real::Zero, Real::Zero,
 			Real::Zero, _Vs.y, Real::Zero,
@@ -469,7 +469,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a scaling Matrix from a vector //
-	inline static const Matrix3x3 Scaling( const Vector3D& _Vs ) {
+	inline static const Matrix3x3 Scale( const Vector3D& _Vs ) {
 		Matrix3x3 Matrix(
 			_Vs.x, Real::Zero, Real::Zero,
 			Real::Zero, _Vs.y, Real::Zero,
@@ -480,7 +480,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a scaling matrix from a scalar //
-	inline static const Matrix3x3 Scaling( const Real& Scalar ) {
+	inline static const Matrix3x3 Scale( const Real& Scalar ) {
 		Matrix3x3 Matrix(
 			Scalar, Real::Zero, Real::Zero,
 			Real::Zero, Scalar, Real::Zero,
@@ -491,7 +491,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a translating Matrix from a vector //
-	inline static const Matrix3x3 Translating( const Vector2D& _Vs ) {
+	inline static const Matrix3x3 Translate( const Vector2D& _Vs ) {
 		Matrix3x3 Matrix(
 			Real::One, Real::Zero, Real::Zero,
 			Real::Zero, Real::One, Real::Zero,
@@ -502,7 +502,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a translating Matrix from a vector //
-	inline static const Matrix3x3 Translating( const Vector3D& _Vs ) {
+	inline static const Matrix3x3 Translate( const Vector3D& _Vs ) {
 		Matrix3x3 Matrix(
 			Real::One, Real::Zero, Real::Zero,
 			Real::Zero, Real::One, Real::Zero,
@@ -513,7 +513,51 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a rotation Matrix from a vector ((0,1) being an untransformed matrix) //
-	inline static const Matrix3x3 Rotating( const Vector2D& _Vs ) {
+	inline static const Matrix3x3 RotateX( const Vector2D& _Vs ) {
+		Matrix3x3 Matrix(
+			Real::One, Real::Zero, Real::Zero, 
+			Real::Zero, _Vs.y, -_Vs.x,
+			Real::Zero, _Vs.x, _Vs.y
+			);
+		
+		return Matrix;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Creates a rotation Matrix from an Angle //
+	inline static const Matrix3x3 RotateX( const Real& Angle ) {
+		Matrix3x3 Matrix(
+			Real::One, Real::Zero, Real::Zero, 
+			Real::Zero, Angle.Cos(), -Angle.Sin(),
+			Real::Zero, Angle.Sin(), Angle.Cos()
+			);
+		
+		return Matrix;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Creates a rotation Matrix from a vector ((0,1) being an untransformed matrix) //
+	inline static const Matrix3x3 RotateY( const Vector2D& _Vs ) {
+		Matrix3x3 Matrix(
+			_Vs.y, Real::Zero, -_Vs.x, 
+			Real::Zero, Real::One, Real::Zero, 
+			_Vs.x, Real::Zero, _Vs.y
+			);
+		
+		return Matrix;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Creates a rotation Matrix from an Angle //
+	inline static const Matrix3x3 RotateY( const Real& Angle ) {
+		Matrix3x3 Matrix(
+			Angle.Cos(), Real::Zero, -Angle.Sin(),
+			Real::Zero, Real::One, Real::Zero,
+			Angle.Sin(), Real::Zero, Angle.Cos()
+			);
+		
+		return Matrix;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Creates a rotation Matrix from a vector ((0,1) being an untransformed matrix) //
+	inline static const Matrix3x3 RotateZ( const Vector2D& _Vs ) {
 		Matrix3x3 Matrix(
 			_Vs.y, -_Vs.x, Real::Zero,
 			_Vs.x, _Vs.y, Real::Zero,
@@ -524,7 +568,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Creates a rotation Matrix from an Angle //
-	inline static const Matrix3x3 Rotating( const Real& Angle ) {
+	inline static const Matrix3x3 RotateZ( const Real& Angle ) {
 		Matrix3x3 Matrix(
 			Angle.Cos(), -Angle.Sin(), Real::Zero,
 			Angle.Sin(), Angle.Cos(), Real::Zero,
