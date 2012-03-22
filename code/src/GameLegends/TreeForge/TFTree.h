@@ -84,7 +84,13 @@ public:
 	void Draw() {
 		for ( int idx = 0; idx < Branch.size(); idx++ ) {
 			cTFNode* CurrentNode = Branch[idx]->Root;
-			Vector3D Pos = CurrentNode->Offset;
+			Vector3D Pos = CurrentNode->Offset - Vector3D(0,96,0);
+	
+			gelSetColor( GEL_RGB_YELLOW );
+			gelDrawDiamond( Pos, CurrentNode->Radius );
+			gelSetColor( GEL_RGB_DEFAULT );
+			gelDrawCircle( Pos, CurrentNode->Radius );
+	
 			while( CurrentNode->Next != 0 ) {
 				Vector3D NextPos = Pos + CurrentNode->Next->Offset;
 				
@@ -92,6 +98,8 @@ public:
 				
 				Pos = NextPos;
 				CurrentNode = CurrentNode->Next;
+
+				gelDrawCircle( Pos, CurrentNode->Radius );
 			}
 		}
 	}
@@ -112,7 +120,7 @@ public:
 		SunDirection( 0, 1, 0 ),		// TIP: Y should NEVER be zero. //
 		HorizonDirection( 0, 0, 1 ), 	// If the sun is never 0, this can be constant. Sun CROSS Horizon = Basis. //
 		
-		RootRadius( Real(16.0f) )
+		RootRadius( Real(8.0f) )
 	{
 	}
 	
@@ -125,11 +133,16 @@ public:
 		
 		Real CurrentRadius( RootRadius );
 		Vector3D GrowthDirection = SunDirection;
-		Real GrowthLength( 32 );
+		Real GrowthLength( 48 );
+		
+		
+		Real RandomAngle = Real::Random();
+		Log( "*>* HOCKEY %f", RandomAngle.ToFloat() );
+		Vector3D Tilt( Real::Cos( RandomAngle ), 0, Real::Sin( RandomAngle ) );
 		
 		cTFNode* LastNode = new cTFNode( Depth++, CurrentRadius );
 		LastNode->Offset = Vector3D::Zero;
-//		LastNode->Pos = Vector3D::Zero;
+		LastNode->Radius = CurrentRadius;
 		LastNode->Prev = 0; // NULL //
 		
 		Tree->Branch.back()->Root = LastNode;	// Store the Root Node //
@@ -142,12 +155,14 @@ public:
 			CurrentNode->Prev = LastNode;
 			
 			CurrentNode->Offset = GrowthLength * GrowthDirection;
+			CurrentNode->Radius = CurrentRadius;
 			
 			// Per Segment Tweak //
-			GrowthDirection += Vector3D(0.1,0,0);
+			GrowthDirection += Tilt * Real( 0.1 );
 			GrowthDirection.Normalize();
 			
 			GrowthLength *= 0.8;
+			CurrentRadius *= 0.7;
 			LastNode = CurrentNode;
 		}
 		
