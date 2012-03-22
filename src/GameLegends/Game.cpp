@@ -37,6 +37,8 @@ GelAssetHandle txCursorMove;
 GelAssetHandle txCursorStop;
 GelAssetHandle txCursorAttack;
 
+cTFTree* MyTree;
+
 // - ------------------------------------------------------------------------------------------ - //
 
 typedef int v4si __attribute__ ((vector_size (16)));
@@ -375,6 +377,11 @@ void cGame::Init() {
 	UberShader[US_TEXTWOBLEND] =
 		new cUberShader( std::string( Prefix + "Content/Scripts/glsl/TexTwoBlend.json").c_str() );
 	
+	// *** //
+
+	cTFGenerator TreeGen;
+	MyTree = TreeGen.Generate();
+
 	// *** //
 	
 #ifdef USES_HIDAPI
@@ -1141,6 +1148,16 @@ void cGame::Draw() {
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
+
+		// *** //
+		
+		gelDrawModeFlat();
+		gelLoadMatrix( UICamera.ProjectionView );
+		gelSetColor( GEL_RGB_DEFAULT );
+		gelEnableAlphaBlending();
+		
+		MyTree->Draw();
+
 
 		// *** //
 

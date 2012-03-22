@@ -2,45 +2,98 @@
 #ifndef __TreeForge_TFTree_H__
 #define __TreeForge_TFTree_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <vector>
+// - ------------------------------------------------------------------------------------------ - //
 #include <Math/Real.h>
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
 // - ------------------------------------------------------------------------------------------ - //
-#define TF_MAX_CHILDREN	7
-// - ------------------------------------------------------------------------------------------ - //
 class cTFNode {
 public:
-	cTFNode* Parent;					// NULL if the root node //
-	cTFNode* Child[TF_MAX_CHILDREN];	// NULL if the end node of a branch //
+	// NOTE: Data sorted for improved data alignments //
 	
-	int Depth;							// Used by Algorithms to weigh the effect //
+	Vector3D Offset;					// Direction of the segment //
+//	Real SegmentLength;					// Length of this branch segment //
+//
+//	Vector3D Pos;						// Current Position (may change) //
 	Real Radius;						// Size of the Capsule End //
+
+
+	cTFNode* Prev;						// NULL if the start node of a branch //
+	cTFNode* Next;						// NULL if the end node of a branch //
 	
-	Vector3D Offset;					// Positional offset from the last node //
+	cTFNode* Parent;					// Node to socket myself to //
+	int Depth;							// Used by Algorithms to weigh the effect //
 
 public:
-	cTFNode() {
+	inline cTFNode() {
 	}
 	
-	cTFNode( const int _Depth, const Real _Radius ) :
+	inline cTFNode( const int _Depth, const Real _Radius ) :
 		Depth( _Depth ),
-		Radius( _Radius )
+		Radius( _Radius ),
+		Parent( 0 )
 	{	
-		// Clear the children //
-		for ( int idx = 0; idx < TF_MAX_CHILDREN; idx++ ) {
-			Child[idx] = 0;
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
+class cTFBranch {
+public:
+	cTFNode* Root;					// Where the tree is sprouted from //
+
+public:
+	inline cTFBranch() :
+		Root( 0 )
+	{
+	}
+	
+	inline ~cTFBranch() {
+		if ( Root ) {
+			cTFNode* CurrentNode = Root;
+			while( CurrentNode->Next != 0 ) {
+				cTFNode* LastNode = CurrentNode;
+				CurrentNode = CurrentNode->Next;
+				delete LastNode;
+			};
+			delete CurrentNode;
 		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cTFTree {
 public:
-	cTFNode* Root;		// Where a tree begins //
+	std::vector<cTFBranch*> Branch;	// All branches of the tree //
+		
 public:
 	// Defaults //
-	cTFTree() :
-		Root( 0 )
+	inline cTFTree()
 	{
+	}
+	
+	inline ~cTFTree() {
+		for ( int idx = 0; idx < Branch.size(); idx++ ) {
+			if ( Branch[idx] != 0 ) {
+				delete Branch[idx];
+			}
+		}
+	}
+
+public:
+	void GenerateMesh( const int CapsuleSides );
+	
+	void Draw() {
+		for ( int idx = 0; idx < Branch.size(); idx++ ) {
+			cTFNode* CurrentNode = Branch[idx]->Root;
+			Vector3D Pos = CurrentNode->Offset;
+			while( CurrentNode->Next != 0 ) {
+				Vector3D NextPos = Pos + CurrentNode->Next->Offset;
+				
+				gelDrawLine( Pos, NextPos );
+				
+				Pos = NextPos;
+				CurrentNode = CurrentNode->Next;
+			}
+		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -55,21 +108,50 @@ public:
 	Real RootRadius;			// Starting fatness of the tree //
 	
 public:
-	cTFGenerator() :
+	inline cTFGenerator() :
 		SunDirection( 0, 1, 0 ),		// TIP: Y should NEVER be zero. //
 		HorizonDirection( 0, 0, 1 ), 	// If the sun is never 0, this can be constant. Sun CROSS Horizon = Basis. //
 		
-		RootRadius( Real(32.0f) )
+		RootRadius( Real(16.0f) )
 	{
 	}
 	
 public:
 	cTFTree* Generate() {
 		cTFTree* Tree = new cTFTree();
-		Tree.Root = new cTFNode( 0, RootRadius );
-		Tree.Root->Offset = Vector3D::Zero;
-		Tree.Root->Parent = 0; // NULL //
+		Tree->Branch.push_back( new cTFBranch() );
+	
+		int Depth = 0;
 		
+		Real CurrentRadius( RootRadius );
+		Vector3D GrowthDirection = SunDirection;
+		Real GrowthLength( 32 );
+		
+		cTFNode* LastNode = new cTFNode( Depth++, CurrentRadius );
+		LastNode->Offset = Vector3D::Zero;
+//		LastNode->Pos = Vector3D::Zero;
+		LastNode->Prev = 0; // NULL //
+		
+		Tree->Branch.back()->Root = LastNode;	// Store the Root Node //
+		
+		cTFNode* CurrentNode = 0; // NULL //
+		
+		for ( int idx = 0; idx < 4; idx++ ) {
+			CurrentNode = new cTFNode( Depth++, CurrentRadius );
+			LastNode->Next = CurrentNode;
+			CurrentNode->Prev = LastNode;
+			
+			CurrentNode->Offset = GrowthLength * GrowthDirection;
+			
+			// Per Segment Tweak //
+			GrowthDirection += Vector3D(0.1,0,0);
+			GrowthDirection.Normalize();
+			
+			GrowthLength *= 0.8;
+			LastNode = CurrentNode;
+		}
+		
+		CurrentNode->Next = 0; // NULL //
 		
 		return Tree;
 	}
