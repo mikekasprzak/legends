@@ -8,5 +8,5 @@ echo "// Begin PreJS.txt //">obj/PreJS.txt
 cat GelHTML/GelUtil.js>>obj/PreJS.txt
 cat GelHTML/GelGraphics2D.js>>obj/PreJS.txt
 
-~/Code/emscripten/emcc -O2 Main.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
+~/Code/emscripten/emcc -D NOT_GCC -I ../GEL -O2 Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
 
