@@ -10,6 +10,8 @@ extern "C" {
 	void gelSetColor( int r, int g, int b, int a );
 	void gelDrawCircle( float x, float y, float Radius );
 	void gelDrawCircleFill( float x, float y, float Radius );
+
+	void gelDrawLine( float x1, float y1, float x2, float y2 );
 	
 	//void gelDrawFillRect( float x, float y, float w, float h );
 // - ------------------------------------------------------------------------------------------ - //

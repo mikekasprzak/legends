@@ -9,6 +9,16 @@
 		'preRun': function() {
 		    // Pass canvas and context to the generated code, and do the actual run() here
 		    Module.canvas = document.getElementById('canvas');
+		    
+		   	Module.canvas.onmousedown = function() {
+//				Input_Mouse.x = (e.clientX - Canvas.offsetLeft) / Canvas_Scale;
+//				Input_Mouse.y = (e.clientY - Canvas.offsetTop) / Canvas_Scale;
+//				
+//				Input_MouseBits |= MOUSE_LMB;
+		   		
+		   		Module.run();
+		   	};
+
 //		
 //			Module.print("SHEEET");
 		},
@@ -27,6 +37,7 @@
       
 		dummy: null
 	};
+	
     </script>
     
    <body style='background-color: #333333; color: white'>
