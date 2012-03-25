@@ -198,7 +198,7 @@ public:
 			int MinimumDepth = 1 + (rand() % 3);
 
 			while( CurrentRootNode->Next != 0 ) {
-				for ( int NewBranchesCount = 0; NewBranchesCount = rand() % 5; NewBranchesCount++ ) {
+				for ( int NewBranchesCount = 0; NewBranchesCount < rand() % 5; NewBranchesCount++ ) {
 					Depth = CurrentRootNode->Depth;
 					BranchLength = 3 + (rand()&7);
 					
