@@ -9,15 +9,21 @@
 cTFTree* MyTree;
 
 // - ------------------------------------------------------------------------------------------ - //
+void NewGen() __attribute__((used));
+void NewGen() {
+	// Hack //
+	gelGraphicsInit( 640, 480 );
+
+	delete MyTree;
+	cTFGenerator TreeGen;
+	MyTree = TreeGen.Generate();
+	
+	MyTree->Draw();
+}
+// - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelGraphicsInit( 640, 480 );
 	
-	//gelSetColor( 255, 0, 0, 255 );
-	//gelDrawCircleFill( 240, 240, 32 );
-	
-	//gelDrawFillRect( 64, 64, 320-128, 128 );
-
-
 	{
 		srand ( time(NULL) );
 		int Blah = rand(); // Burn a random number //
