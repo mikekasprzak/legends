@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Demo</title>
+    <script type='text/javascript'>
+//	console.log("Start!");
+    	
+	var Module = {
+		noInitialRun: true,
+		'preRun': function() {
+		    // Pass canvas and context to the generated code, and do the actual run() here
+		    Module.canvas = document.getElementById('canvas');
+//		
+//			Module.print("SHEEET");
+		},
+      
+//		'print': function(text) {
+//			var element = document.getElementById('output')
+//			if ( element ) {
+//				// Print in Reverse Order (Newest on Top) //
+//				element.innerHTML = text.replace('\n', '<br>', 'g') + element.innerHTML;
+//			}
+//		},
+
+		'print': function(text) {
+			console.log(text);
+		},
+      
+		dummy: null
+	};
+    </script>
+    
+   <body style='background-color: #333333; color: white'>
+    <center>
+      <canvas id='canvas' width='320' height='200'></canvas>
+    </center>
+    <div id='output'></div>
+  </body>
+    
+    <script src='Sugar.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+      function onLoad() {
+        // Pass canvas and context to the generated code, and do the actual run() here
+        Module.canvas = document.getElementById('canvas');
+        Module.print( "Before\n" );
+        Module.run();
+        Module.print( "After\n" );
+      }
+    </script>
+<!--
+  <body onload='onLoad()' style='background-color: black; color: white'>
+    <center>
+      <canvas id='canvas' width='320' height='200'></canvas>
+    </center>
+    <div id='output'></div>
+  </body>
+-->
+</html>
