@@ -2,8 +2,11 @@
 
 #export CC='~/Code/emscripten/emcc'
 
-cat GelHTML/GelUtil.js>PreJS.txt
-cat GelHTML/GelGraphics2D.js>>PreJS.txt
+mkdir -p obj output
 
-~/Code/emscripten/emcc -O2 Main.cpp --pre-js PreJS.txt -o Sugar.js 
+echo "// Begin PreJS.txt //">obj/PreJS.txt
+cat GelHTML/GelUtil.js>>obj/PreJS.txt
+cat GelHTML/GelGraphics2D.js>>obj/PreJS.txt
+
+~/Code/emscripten/emcc -O2 Main.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
 
