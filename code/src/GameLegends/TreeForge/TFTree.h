@@ -80,11 +80,11 @@ public:
 
 public:
 	void GenerateMesh( const int CapsuleSides );
-	
+
+/*	
 	void Draw() {
 		for ( int idx = 0; idx < Branch.size(); idx++ ) {
 			cTFNode* CurrentNode = Branch[idx]->Root;
-//			Vector3D Pos = CurrentNode->Offset - Vector3D(0,96,0);
 			Vector3D Pos = (CurrentNode->Offset * Real(2));
 			Pos += Vector3D(320,30,0);//240+120+60,0);
 			CurrentNode->Pos = CurrentNode->Offset; // Cache Position //
@@ -95,13 +95,6 @@ public:
 				CurrentNode->Pos += CurrentNode->Parent->Pos;
 			}
 	
-//			gelSetColor( GEL_RGB_YELLOW );
-//			gelDrawDiamond( Pos, CurrentNode->Radius );
-//			gelSetColor( GEL_RGB_DEFAULT );
-//			gelDrawCircle( Pos, CurrentNode->Radius );
-
-//			gelSetColor( GEL_RGB_YELLOW );
-//			gelDrawDiamond( Pos, CurrentNode->Radius );
 			gelSetColor( 255,255,255,255 );
 			gelDrawCircle( Pos.x.ToFloat(), Pos.y.ToFloat(), CurrentNode->Radius.ToFloat() );
 	
@@ -109,17 +102,51 @@ public:
 				Vector3D NextPos = Pos + (CurrentNode->Next->Offset * Real(2));
 				CurrentNode->Next->Pos = CurrentNode->Pos + (CurrentNode->Next->Offset * Real(2)); // Cache Position //
 				
-//				gelDrawLine( Pos, NextPos );
 				gelDrawLine( Pos.x.ToFloat(), Pos.y.ToFloat(), NextPos.x.ToFloat(), NextPos.y.ToFloat() );
 				
 				Pos = NextPos;
 				CurrentNode = CurrentNode->Next;
 
 				gelDrawCircle( Pos.x.ToFloat(), Pos.y.ToFloat(), CurrentNode->Radius.ToFloat() );
-//				gelDrawCircle( Pos, CurrentNode->Radius );
 			}
 		}
 	}
+*/
+	
+	void Draw() {
+		for ( int idx = 0; idx < Branch.size(); idx++ ) {
+			cTFNode* CurrentNode = Branch[idx]->Root;
+			Vector3D Pos = CurrentNode->Offset - Vector3D(0,96,0);
+			CurrentNode->Pos = CurrentNode->Offset; // Cache Position //
+			
+			// If I have a parent set, position myself relative them //
+			if ( CurrentNode->Parent ) {
+				Pos += CurrentNode->Parent->Pos;
+				CurrentNode->Pos += CurrentNode->Parent->Pos;
+			}
+	
+			gelSetColor( GEL_RGB_YELLOW );
+			gelDrawDiamond( Pos, CurrentNode->Radius );
+			gelSetColor( GEL_RGB_DEFAULT );
+			gelDrawCircle( Pos, CurrentNode->Radius );
+
+			gelSetColor( GEL_RGB_YELLOW );
+			gelDrawDiamond( Pos, CurrentNode->Radius );
+	
+			while( CurrentNode->Next != 0 ) {
+				Vector3D NextPos = Pos + (CurrentNode->Next->Offset);
+				CurrentNode->Next->Pos = CurrentNode->Pos + (CurrentNode->Next->Offset); // Cache Position //
+				
+				gelDrawLine( Pos, NextPos );
+				
+				Pos = NextPos;
+				CurrentNode = CurrentNode->Next;
+
+				gelDrawCircle( Pos, CurrentNode->Radius );
+			}
+		}
+	}
+	
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cTFGenerator {

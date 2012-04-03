@@ -329,6 +329,10 @@ public:
 		return std::sqrt( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Repeating Patterns //
+	// - -------------------------------------------------------------------------------------- - //
 	// Sine //
 	inline const Real Sin() const {
 		return std::sin( *this * Real::TwoPi );
@@ -357,13 +361,13 @@ public:
 		return *this - Floor(*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// InvSawTooth Wave  |\ |\  .
+	// InvSawTooth Wave  |\ |\  
 	//                   | \| \ (2 periods shown, 0-1)
 	inline const Real InvSawTooth() const {
 		return (Real::One - *this).SawTooth();
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Saw Wave  /\  /\  .
+	// Saw Wave  /\  /\  
 	//          /  \/  \ (2 periods shown, 0-1)
 	// A period of 0 and 1 return a Sawtooth like curve //
 	inline const Real Saw( const Real& Period = Real::Half ) const {
@@ -377,10 +381,10 @@ public:
 			return Wave / Period;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Square Wave  |-| |-| 
-	//             _| |_| | (2 periods shown, 0-1)
+	// Pulse (Square) Wave  |-| |-| 
+	//                     _| |_| | (2 periods shown, 0-1)
 	// A period of 0 and 1 return constantly high //
-	inline const Real Square( const Real& Period = Real::Half ) const {
+	inline const Real Pulse( const Real& Period = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
 		if (Wave >= Period)
@@ -388,6 +392,8 @@ public:
 		else
 			return Real::Zero;
 	}
+	// - -------------------------------------------------------------------------------------- - //
+
 	// - -------------------------------------------------------------------------------------- - //
 	// Expands a value from 0-1 to -1 to +1 //
 	inline const Real Expand() const {
@@ -399,22 +405,26 @@ public:
 		return (*this * Real::Half) + Real::Half;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Clamps a value from 0-1 //
-	inline const Real Clamp() const {
-		if ( *this <= Real::Zero )
-			return Real::Zero;
-		else if ( *this >= Real::One )
-			return Real::One;
-	}
+
 	// - -------------------------------------------------------------------------------------- - //
-	// Inversely Clamps values outside 0-1 to their opposite //
-	inline const Real InvClamp() const {
-		if ( *this <= Real::Zero )
-			return Real::One;
-		else if ( *this >= Real::One )
-			return Real::Zero;
-	}
-	// - -------------------------------------------------------------------------------------- - //
+//	// Clamps a value from 0-1 //
+//	inline const Real Clamp() const {
+//		if ( *this <= Real::Zero )
+//			return Real::Zero;
+//		else if ( *this >= Real::One )
+//			return Real::One;
+//		return *this;
+//	}
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Inversely Clamps values outside 0-1 to their opposite //
+//	inline const Real InvClamp() const {
+//		if ( *this <= Real::Zero )
+//			return Real::One;
+//		else if ( *this >= Real::One )
+//			return Real::Zero;
+//		return *this;
+//	}
+//	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 	// *** TIP *** - Interpolation functions can be called more than once for greater impact! //
@@ -485,6 +495,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// These are Macros so that the code is pasted. Typically, the line that follows is a return. // 
+	// - -------------------------------------------------------------------------------------- - //
 	#define ZERO_ONE_CLAMP() \
 		if ( *this <= Real::Zero ) \
 			return Real::Zero; \
@@ -496,6 +508,14 @@ public:
 			return Real::One; \
 		else if ( *this >= Real::One ) \
 			return Real::Zero;
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Simple Clamping of values between 0 and 1  //
+	inline const Real Clamp() const {
+		ZERO_ONE_CLAMP();
+		return *this;
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Linear Interpolation    /--
 	//                      __/    (clamps at 0 and 1) 
