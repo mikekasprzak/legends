@@ -776,10 +776,10 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	static inline const cGrid2D< tType > FlipY( const cGrid2D< tType >& Src ) {
-		cGrid2D< tType > NewGrid( Width(), Height() );
+		cGrid2D< tType > NewGrid( Src.Width(), Src.Height() );
 		
-		size_t SrcWidth = Width();
-		size_t SrcHeight = Height();
+		size_t SrcWidth = Src.Width();
+		size_t SrcHeight = Src.Height();
 		for ( size_t _y = SrcHeight; _y--; ) {
 			for ( size_t _x = SrcWidth; _x--; ) {
 				NewGrid( _x, (SrcHeight-1)-_y ) = Src( _x, _y );
@@ -843,7 +843,7 @@ public:
 		size_t x2 = 0;
 		
 		bool BlockFound = false;
-		for ( size_t _x = Width() - 1; _x >= 0; _x-- ) {
+		for ( int _x = Width() - 1; _x >= 0; _x-- ) {
 			x2 = _x;
 			// For every item in the vertical row //
 			for ( size_t _y = Height(); _y--; ) {
@@ -863,10 +863,10 @@ public:
 		size_t y2 = 0;
 		
 		bool BlockFound = false;
-		for ( size_t _y = Height() - 1; _y >= 0; _y-- ) {
+		for ( int _y = Height() - 1; _y >= 0; _y-- ) {
 			y2 = _y;
 			// For every item in the vertical row //
-			for ( size_t _x = Width(); _x--; ) {
+			for ( int _x = Width(); _x--; ) {
 				// Test if it's not our zero //
 				if ( operator()( _x, _y ) != Zero )
 					BlockFound = true;
