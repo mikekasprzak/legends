@@ -98,8 +98,8 @@ void GameExit() {
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() __attribute__((used));
 void GameStep() {
-	CameraPos.x += gx * 4;
-	CameraPos.y += gy * 4;
+	CameraPos.x += gx * 2;
+	CameraPos.y += gy * 2;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() __attribute__((used));
@@ -112,18 +112,28 @@ void GameDraw() {
 	
 	int CameraOffsetX = CameraPos.x.ToFloat() - (ScreenWidth>>1);
 	int CameraOffsetY = CameraPos.y.ToFloat() - (ScreenHeight>>1);
+	int OffsetX = (int)CameraPos.x.ToFloat() & 7;
+	int OffsetY = (int)CameraPos.y.ToFloat() & 7;
 	
 	int StartX = CameraOffsetX >> 3;
-	if ( StartX < 0 )
+	if ( StartX < 0 ) {
 		StartX = 0;
-	if ( StartX > MapWidth - TilesWide + 1 )
+		OffsetX = 0;
+	}
+	if ( StartX > MapWidth - TilesWide + 1 ) {
 		StartX = MapWidth - TilesWide + 1;
+		OffsetX = 0;
+	}
 
 	int StartY = CameraOffsetY >> 3;
-	if ( StartY < 0 )
+	if ( StartY < 0 ) {
 		StartY = 0;
-	if ( StartY > MapHeight - TilesTall + 1 )
+		OffsetY = 0;
+	}
+	if ( StartY > MapHeight - TilesTall + 1 ) {
 		StartY = MapHeight - TilesTall + 1;
+		OffsetY = 0;
+	}
 
 	int EndX = StartX + TilesWide;
 	if ( EndX > MapWidth )
@@ -131,6 +141,7 @@ void GameDraw() {
 	int EndY = StartY + TilesTall;
 	if ( EndY > MapHeight )
 		EndY = MapHeight;
+	
 
 	gelBindImage( Tileset );
 	for ( size_t Layer = 0; Layer < (MapLayer->Size - 1); Layer++ ) {
@@ -140,8 +151,8 @@ void GameDraw() {
 				if ( Tile > 0 ) {
 					gelDrawTile( 
 						Tile-1, 
-						((_x-StartX) * 8), 
-						((_y-StartY) * 8)
+						((_x-StartX) * 8) - OffsetX, 
+						((_y-StartY) * 8) - OffsetY
 						);
 				}
 			}
@@ -149,7 +160,7 @@ void GameDraw() {
 	}
 		
 	gelSetColor( 255,0,0,255 );
-	gelDrawCircle( CameraPos.x.ToFloat() - (StartX<<3), CameraPos.y.ToFloat() - (StartY<<3), 10 );
+	gelDrawCircle( CameraPos.x.ToFloat() - (StartX<<3) - OffsetX, CameraPos.y.ToFloat() - (StartY<<3) - OffsetY, 10 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
