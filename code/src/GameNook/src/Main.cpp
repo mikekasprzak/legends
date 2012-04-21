@@ -1,6 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
 #include <time.h>
+#include <vector>
 
 #include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
@@ -25,7 +26,8 @@ void GameInput( float x, float y, int bits ) {
 float px, py;
 int Tileset;
 
-cGrid2D<short> MapLayer1;
+typedef cGrid2D<short> LayerData;
+std::vector< cGrid2D<short> > MapLayer;
 
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() __attribute__((used));
@@ -35,7 +37,8 @@ void GameInit() {
 	px = 100;
 	py = 100;
 	
-	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
+	Tileset = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
+//	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
 	
 	LogLevel = 3;
 	
@@ -67,16 +70,13 @@ void GameInit() {
 		for ( int idx = 0; idx < ArraySize; idx++ ) {
 			cJSON* obj = cJSON_GetArrayItem( Layers, idx );
 			
-			// HACK //
-			if ( idx > 0 )
-				break;
-				
-			MapLayer1.Resize( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
+			MapLayer.push_back( LayerData( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint ) );
+//			MapLayer.back().Resize( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
 			
 			cJSON* LayerData = cJSON_GetObjectItem( obj, "data" );
 			int LayerArraySize = cJSON_GetArraySize( LayerData );
 			for ( int idx = 0; idx < LayerArraySize; idx ++ ) {
-				MapLayer1[ idx ] = cJSON_GetArrayItem( LayerData, idx )->valueint;
+				MapLayer.back()[ idx ] = cJSON_GetArrayItem( LayerData, idx )->valueint;
 			}
 			
 //			Log( "%s -- %i, %i, %i", 
@@ -110,11 +110,20 @@ void GameDraw() __attribute__((used));
 void GameDraw() {
 	
 
+//	gelBindImage( Tileset );
+//	gelDrawImage( 0, 0 );
+//	
+//	gelDrawImageCrop( 0,0, 8,8, 160,120 );
+
 	gelBindImage( Tileset );
-	gelDrawImage( 0, 0 );
-	
-	gelDrawImageCrop( 0,0, 8,8, 160,120 );
-	
+	for ( int Layer = 0; Layer < MapLayer.size(); Layer++ ) {
+		for ( int _y = 0; _y < MapLayer[Layer].Height(); _y++ ) {
+			for ( int _x = 0; _x < MapLayer[Layer].Width(); _x++ ) {
+				gelDrawTile( MapLayer[Layer](_x, _y), _x * 8, _y * 8 );
+			}
+		}
+	}
+		
 	gelSetColor( 255,0,0,255 );
 	gelDrawCircle( px, py, 10 );
 	
