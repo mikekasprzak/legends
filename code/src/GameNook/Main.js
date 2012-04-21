@@ -54,7 +54,7 @@ function Main_Loop() {
 		for ( var idx = 0; idx < FramesToDo; idx++ ) {
 			GlobalCurrentFrame++;
 			Input_KeyUpdate();
-			__Z9GameInputffi( Input_Stick.x, Input_Stick.y, 0 );
+			__Z9GameInputffi( Input_Stick.x, Input_Stick.y, Input_KeyCurrent );
 			
 			//Game.Step();
 			//GameStep();

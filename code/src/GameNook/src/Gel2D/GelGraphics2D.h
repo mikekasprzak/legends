@@ -12,6 +12,7 @@ extern "C" {
 	void gelDrawCircleFill( float x, float y, float Radius );
 
 	void gelDrawLine( float x1, float y1, float x2, float y2 );
+	void gelDrawText( float x, float y, const char* Text );
 	
 	//void gelDrawFillRect( float x, float y, float w, float h );
 	
@@ -23,6 +24,7 @@ extern "C" {
 	int gelLoadTileset( const char* FileName, int w, int h );
 	void gelBindTileset( int ImageId );
 	void gelDrawTile( int Tile, float x, float y );
+	
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //

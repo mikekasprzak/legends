@@ -1,6 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
 #include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
@@ -16,18 +17,29 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void GameInit() __attribute__((used));
+void GameExit() __attribute__((used));
+void GameStep() __attribute__((used));
+void GameDraw() __attribute__((used));
+
+void GameInput( float x, float y, int bits ) __attribute__((used));
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 int ScreenWidth;
 int ScreenHeight;
+int HalfScreenWidth;
+int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
 float gy;
+int Button;
 
-void GameInput( float x, float y, int bits ) __attribute__((used));
 void GameInput( float x, float y, int bits ) {
 	gx = x;
 	gy = y;
-//	Input_Stick
+	Button = bits;
 }
 
 int Tileset; // ID //
@@ -38,14 +50,16 @@ typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
 
 // - ------------------------------------------------------------------------------------------ - //
-void GameInit() __attribute__((used));
 void GameInit() {
 	ScreenWidth = 320;
 	ScreenHeight = 240;
+	HalfScreenWidth = ScreenWidth >> 1;
+	HalfScreenHeight = ScreenHeight >> 1;
+	
 	gelGraphicsInit( ScreenWidth, ScreenHeight );
 	
-	CameraPos.x = Real( ScreenWidth >> 1 );
-	CameraPos.y = Real( ScreenHeight >> 1 );
+	CameraPos.x = Real( HalfScreenWidth );
+	CameraPos.y = Real( HalfScreenHeight );
 	
 	Tileset = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
 //	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
@@ -89,76 +103,106 @@ void GameInit() {
 	delete_DataBlock( OriginalMap );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GameExit() __attribute__((used));
 void GameExit() {
 	gelGraphicsExit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void GameStep() __attribute__((used));
 void GameStep() {
-	CameraPos.x += gx * 2;
-	CameraPos.y += gy * 2;
+	if ( Button & 0x10 ) {
+		CameraPos.x += gx * 4;
+		CameraPos.y += gy * 4;
+	}
+	else {
+		CameraPos.x += gx * 1;//0.5;
+		CameraPos.y += gy * 1;//0.5;
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GameDraw() __attribute__((used));
 void GameDraw() {
-	
-	int MapWidth = MapLayer->Data[0]->Width();
-	int MapHeight = MapLayer->Data[0]->Height();
+	int StartX, StartY;
+	int OffsetX, OffsetY;
+	float CameraOffsetX, CameraOffsetY;
+	float CameraOffsetXCenter, CameraOffsetYCenter;
+
 	int TilesWide = (ScreenWidth/8)+1;
 	int TilesTall = (ScreenHeight/8)+1;
-	
-	int CameraOffsetX = CameraPos.x.ToFloat() - (ScreenWidth>>1);
-	int CameraOffsetY = CameraPos.y.ToFloat() - (ScreenHeight>>1);
-	int OffsetX = (int)CameraPos.x.ToFloat() & 7;
-	int OffsetY = (int)CameraPos.y.ToFloat() & 7;
-	
-	int StartX = CameraOffsetX >> 3;
-	if ( StartX < 0 ) {
-		StartX = 0;
-		OffsetX = 0;
-	}
-	if ( StartX > MapWidth - TilesWide + 1 ) {
-		StartX = MapWidth - TilesWide + 1;
-		OffsetX = 0;
-	}
-
-	int StartY = CameraOffsetY >> 3;
-	if ( StartY < 0 ) {
-		StartY = 0;
-		OffsetY = 0;
-	}
-	if ( StartY > MapHeight - TilesTall + 1 ) {
-		StartY = MapHeight - TilesTall + 1;
-		OffsetY = 0;
-	}
-
-	int EndX = StartX + TilesWide;
-	if ( EndX > MapWidth )
-		EndX = MapWidth;
-	int EndY = StartY + TilesTall;
-	if ( EndY > MapHeight )
-		EndY = MapHeight;
-	
 
 	gelBindImage( Tileset );
 	for ( size_t Layer = 0; Layer < (MapLayer->Size - 1); Layer++ ) {
+		int MapWidth = MapLayer->Data[Layer]->Width();
+		int MapHeight = MapLayer->Data[Layer]->Height();
+		
+		float CameraScalar = 1.0f;
+		if ( Layer == 0 ) {
+			CameraScalar = 0.5f;
+		}
+		
+		CameraOffsetX = CameraPos.x.ToFloat();
+		CameraOffsetY = CameraPos.y.ToFloat();
+		CameraOffsetXCenter = (CameraOffsetX) - (float)(HalfScreenWidth);
+		CameraOffsetYCenter = (CameraOffsetY) - (float)(HalfScreenHeight);
+
+		CameraOffsetX *= CameraScalar;
+		CameraOffsetY *= CameraScalar;
+		CameraOffsetXCenter *= CameraScalar;
+		CameraOffsetYCenter *= CameraScalar;
+		
+		if ( CameraOffsetXCenter < 0 )
+			CameraOffsetXCenter = 0;
+		if ( CameraOffsetYCenter < 0 )
+			CameraOffsetYCenter = 0;
+		
+		OffsetX = ((int)floor(CameraOffsetXCenter) + HalfScreenWidth) % 8;			
+		OffsetY = ((int)floor(CameraOffsetYCenter) + HalfScreenHeight) % 8;
+		
+		StartX = CameraOffsetXCenter / 8;
+		if ( StartX < 0 ) {
+			StartX = 0;
+			OffsetX = 0;
+		}
+		if ( StartX >= (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1 ) {
+			StartX = (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1;
+			OffsetX = 0;
+		}
+	
+		StartY = CameraOffsetYCenter / 8;
+		if ( StartY < 0 ) {
+			StartY = 0;
+			OffsetY = 0;
+		}
+		if ( StartY >= (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1 ) {
+			StartY = (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1;
+			OffsetY = 0;
+		}
+	
+		int EndX = StartX + TilesWide;
+		if ( EndX > MapWidth )
+			EndX = MapWidth;
+		int EndY = StartY + TilesTall;
+		if ( EndY > MapHeight )
+			EndY = MapHeight;
+
+		char Blah[2048];
+		sprintf( Blah, "Pos: (%f %f) (%i, %i) (%i, %i)", CameraOffsetXCenter, CameraOffsetYCenter, StartX, StartY, OffsetX, OffsetY );
+		gelSetColor( 255,255,255,255 );
+		gelDrawText( 0, 120, Blah );
+
 		for ( int _y = StartY; _y < EndY; _y++ ) {
 			for ( int _x = StartX; _x < EndX; _x++ ) {
 				int Tile = (*MapLayer->Data[Layer])(_x, _y);
 				if ( Tile > 0 ) {
 					gelDrawTile( 
 						Tile-1, 
-						((_x-StartX) * 8) - OffsetX, 
-						((_y-StartY) * 8) - OffsetY
+						((_x - StartX) * 8) - OffsetX, 
+						((_y - StartY) * 8) - OffsetY
 						);
 				}
 			}
 		}
 	}
-		
+
 	gelSetColor( 255,0,0,255 );
 	gelDrawCircle( CameraPos.x.ToFloat() - (StartX<<3) - OffsetX, CameraPos.y.ToFloat() - (StartY<<3) - OffsetY, 10 );
 }

@@ -283,6 +283,21 @@ function _gelDrawLine( x1, y1, x2, y2 ) {
 	Module.ctx.stroke();
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawText( _x, _y, _Text ) {
+	var _Size = 16;
+	var _Font = "Commodore";
+	
+	Module.ctx.font = "" + _Size + "px " + _Font;
+	Module.ctx.textAlign = "left";
+	Module.ctx.textBaseline = "top";
+
+	// Hack: The C64 font I was using wouldn't perfectly Text Align center, so I manually center //
+	var TextWidth = Math.floor( Module.ctx.measureText(_Text).width ) >> 1;
+	var TextHeight = Math.floor( _Size ) >> 1;
+
+	Module.ctx.fillText( Pointer_stringify(_Text), Math.floor(_x - TextWidth), Math.floor(_y - TextHeight) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
 var ImageData = new Array();
@@ -348,3 +363,4 @@ function _gelDrawTile( Tile, dx, dy ) {
 		);
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+
