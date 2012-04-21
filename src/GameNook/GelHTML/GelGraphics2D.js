@@ -283,3 +283,29 @@ function _gelDrawLine( x1, y1, x2, y2 ) {
 	Module.ctx.stroke();
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+var ImageData = new Array();
+var CurrentImage;
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelLoadImage( FileName ) {
+	var NewImage = new Image;
+//	ImageData.Data.onload = function() {
+//		_super.CellW = _super.Data.width / _XCells;
+//		_super.CellH = _super.Data.height / _YCells;
+//	};
+	NewImage.src = Pointer_stringify(FileName);//allocate(intArrayFromString(FileName), 'i8', ALLOC_STACK);//FileName;
+	
+	var Index = ImageData.length;
+	ImageData.push( NewImage );
+	return Index;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelBindImage( ImageId ) {
+	CurrentImage = ImageData[ ImageId ];
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawImage( x, y ) {
+	Module.ctx.drawImage( CurrentImage, x, y );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
