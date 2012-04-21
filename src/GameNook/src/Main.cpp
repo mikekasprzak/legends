@@ -8,9 +8,16 @@
 #include <Core/GelDirectory.h>
 #include <Grid/Grid2D_Class.h>
 
+#include <Math/Vector.h>
+
 #include <cJSON.h>
 
 #include "Gel2D/GelGraphics2D.h"
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+int ScreenWidth;
+int ScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
@@ -23,8 +30,9 @@ void GameInput( float x, float y, int bits ) {
 //	Input_Stick
 }
 
-float px, py;
-int Tileset;
+int Tileset; // ID //
+
+Vector2D CameraPos;
 
 typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
@@ -32,28 +40,21 @@ GelArray< LayerType* >* MapLayer;
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() __attribute__((used));
 void GameInit() {
-	gelGraphicsInit( 320, 240 );
+	ScreenWidth = 320;
+	ScreenHeight = 240;
+	gelGraphicsInit( ScreenWidth, ScreenHeight );
 	
-	px = 100;
-	py = 100;
+	CameraPos.x = Real( ScreenWidth >> 1 );
+	CameraPos.y = Real( ScreenHeight >> 1 );
 	
 	Tileset = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
 //	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
 	
 	LogLevel = 3;
 	
-//	init_GelDirectory();
-//	GelDirectory* DirTree = new_GelDirectory( "Content" );
-//	populate_GelDirectory( DirTree );
-
-//	if ( exists_GelFile( "MapData.json" ) ) Log( "Exists 1" );
-//	if ( exists_GelFile( "MapData.jsonoo" ) ) Log( "Exists 2" );
-//	if ( exists_GelFile( "Content" ) ) Log( "Exists 3" );
-//	if ( exists_GelFile( "David" ) ) Log( "Exists 4" );
-	
 	DataBlock* OriginalMap = new_read_nullterminate_DataBlock( "MapData.json" );
 
-	Log( "Parsing file..." );
+	Log( "Parsing JSON Map File..." );
 	
 	cJSON* root = cJSON_Parse( OriginalMap->Data );
 	
@@ -72,9 +73,6 @@ void GameInit() {
 		for ( int idx = 0; idx < ArraySize; idx++ ) {
 			cJSON* obj = cJSON_GetArrayItem( Layers, idx );
 			
-//			MapLayer.push_back( LayerData( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint ) );
-//			MapLayer.back().Resize( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
-
 			MapLayer->Data[idx] = new LayerType( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
 			
 			cJSON* LayerData = cJSON_GetObjectItem( obj, "data" );
@@ -82,14 +80,8 @@ void GameInit() {
 			for ( int idx2 = 0; idx2 < LayerArraySize; idx2++ ) {
 				(*MapLayer->Data[ idx ])[ idx2 ] = cJSON_GetArrayItem( LayerData, idx2 )->valueint;
 			}
-			
-//			Log( "%s -- %i, %i, %i", 
-//				cJSON_GetObjectItem( obj, "file" )->valuestring, 
-//				cJSON_GetObjectItem( obj, "x" )->valueint, 
-//				cJSON_GetObjectItem( obj, "y" )->valueint,
-//				cJSON_GetObjectItem( obj, "z" )->valueint 
-//				);
 		}
+		Log( "Done Extracting Data." );
 	}
 	
 	cJSON_Delete( root );
@@ -106,36 +98,58 @@ void GameExit() {
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() __attribute__((used));
 void GameStep() {
-	px += gx * 4;
-	py += gy * 4;
+	CameraPos.x += gx * 4;
+	CameraPos.y += gy * 4;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() __attribute__((used));
 void GameDraw() {
 	
+	int MapWidth = MapLayer->Data[0]->Width();
+	int MapHeight = MapLayer->Data[0]->Height();
+	int TilesWide = (ScreenWidth/8)+1;
+	int TilesTall = (ScreenHeight/8)+1;
+	
+	int CameraOffsetX = CameraPos.x.ToFloat() - (ScreenWidth>>1);
+	int CameraOffsetY = CameraPos.y.ToFloat() - (ScreenHeight>>1);
+	
+	int StartX = CameraOffsetX >> 3;
+	if ( StartX < 0 )
+		StartX = 0;
+	if ( StartX > MapWidth - TilesWide + 1 )
+		StartX = MapWidth - TilesWide + 1;
 
-//	gelBindImage( Tileset );
-//	gelDrawImage( 0, 0 );
-//	
-//	gelDrawImageCrop( 0,0, 8,8, 160,120 );
+	int StartY = CameraOffsetY >> 3;
+	if ( StartY < 0 )
+		StartY = 0;
+	if ( StartY > MapHeight - TilesTall + 1 )
+		StartY = MapHeight - TilesTall + 1;
+
+	int EndX = StartX + TilesWide;
+	if ( EndX > MapWidth )
+		EndX = MapWidth;
+	int EndY = StartY + TilesTall;
+	if ( EndY > MapHeight )
+		EndY = MapHeight;
 
 	gelBindImage( Tileset );
-	for ( size_t Layer = 0; Layer < MapLayer->Size-1; Layer++ ) {
-//		for ( int _y = 0; _y < MapLayer->Data[Layer]->Height(); _y++ ) {
-//			for ( int _x = 0; _x < MapLayer->Data[Layer]->Width(); _x++ ) {
-		for ( int _y = 0; _y < (320/8)+1; _y++ ) {
-			for ( int _x = 0; _x < (240/8)+1; _x++ ) {
+	for ( size_t Layer = 0; Layer < (MapLayer->Size - 1); Layer++ ) {
+		for ( int _y = StartY; _y < EndY; _y++ ) {
+			for ( int _x = StartX; _x < EndX; _x++ ) {
 				int Tile = (*MapLayer->Data[Layer])(_x, _y);
 				if ( Tile > 0 ) {
-					gelDrawTile( Tile-1, _x * 8, _y * 8 );
+					gelDrawTile( 
+						Tile-1, 
+						((_x-StartX) * 8), 
+						((_y-StartY) * 8)
+						);
 				}
 			}
 		}
 	}
 		
 	gelSetColor( 255,0,0,255 );
-	gelDrawCircle( px, py, 10 );
-	
+	gelDrawCircle( CameraPos.x.ToFloat() - (StartX<<3), CameraPos.y.ToFloat() - (StartY<<3), 10 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
