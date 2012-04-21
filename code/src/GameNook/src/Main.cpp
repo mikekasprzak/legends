@@ -80,12 +80,15 @@ void GameStep() {
 void GameDraw() __attribute__((used));
 void GameDraw() {
 	
+
+	gelBindImage( Tileset );
+	gelDrawImage( 0, 0 );
+	
+	gelDrawImageCrop( 0,0, 8,8, 160,120 );
 	
 	gelSetColor( 255,0,0,255 );
 	gelDrawCircle( px, py, 10 );
 	
-	gelBindImage( Tileset );
-	gelDrawImage( 10, 10 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
