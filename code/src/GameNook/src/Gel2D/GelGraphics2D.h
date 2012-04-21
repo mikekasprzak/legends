@@ -14,6 +14,10 @@ extern "C" {
 	void gelDrawLine( float x1, float y1, float x2, float y2 );
 	
 	//void gelDrawFillRect( float x, float y, float w, float h );
+	
+	int gelLoadImage( const char* FileName );
+	void gelBindImage( int ImageId );
+	void gelDrawImage( float x, float y );
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //

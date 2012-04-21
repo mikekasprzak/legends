@@ -18,6 +18,6 @@ cat Load.js>>obj/PreJS.txt
 
 #$CC -D NOT_GCC -I ../GEL -O2 -s EXPORTED_FUNCTIONS='["__Z6NewGenv", "_main"]' Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
 
-$CC -D NOT_GCC -I ../GEL -O2 src/Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/nook.js 
+$CC -D NOT_GCC -I ../GEL -O0 src/Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/nook.js 
 
 rm a.out

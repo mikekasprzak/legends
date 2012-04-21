@@ -51,6 +51,8 @@ void GameInput( float x, float y, int bits ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 float px, py;
+
+int Tileset;
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() __attribute__((used));
 void GameInit() {
@@ -58,6 +60,8 @@ void GameInit() {
 	
 	px = 100;
 	py = 100;
+	
+	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameExit() __attribute__((used));
@@ -79,6 +83,9 @@ void GameDraw() {
 	
 	gelSetColor( 255,0,0,255 );
 	gelDrawCircle( px, py, 10 );
+	
+	gelBindImage( Tileset );
+	gelDrawImage( 10, 10 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
