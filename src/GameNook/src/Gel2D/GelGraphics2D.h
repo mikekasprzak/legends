@@ -19,6 +19,10 @@ extern "C" {
 	void gelBindImage( int ImageId );
 	void gelDrawImage( float x, float y );
 	void gelDrawImageCrop( float sx, float sy, float sw, float sh, float dx, float dy );
+
+	int gelLoadTileset( const char* FileName, int w, int h );
+	void gelBindTileset( int ImageId );
+	void gelDrawTile( int Tile, float x, float y );
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //

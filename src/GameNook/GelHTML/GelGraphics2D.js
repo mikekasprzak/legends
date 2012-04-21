@@ -313,3 +313,38 @@ function _gelDrawImageCrop( sx, sy, sw, sh, dx, dy ) {
 	Module.ctx.drawImage( CurrentImage, sx, sy, sw, sh, dx, dy, sw, sh );
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelLoadTileset( FileName, w, h ) {
+	var NewImage = new Image;
+	NewImage.src = Pointer_stringify(FileName);
+	
+	NewImage.Tileset = true;
+	NewImage.TileWidth = w;
+	NewImage.TileHeight = h;
+	
+	NewImage.onload = function() {
+		NewImage.WidthInTiles = NewImage.width / w;
+		NewImage.HeightInTiles = NewImage.height / h;
+	};
+	
+	var Index = ImageData.length;
+	ImageData.push( NewImage );
+	return Index;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelBindTileset( ImageId ) {
+	CurrentImage = ImageData[ ImageId ];
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTile( Tile, dx, dy ) {
+	Module.ctx.drawImage( 
+		CurrentImage, 
+		Math.floor( Tile % CurrentImage.WidthInTiles ) * CurrentImage.TileWidth, Math.floor( Tile / CurrentImage.WidthInTiles ) * CurrentImage.TileHeight,
+		CurrentImage.TileWidth, CurrentImage.TileHeight, 
+		dx, dy,
+		CurrentImage.TileWidth, CurrentImage.TileHeight 
+		);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
