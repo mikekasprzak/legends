@@ -5,6 +5,8 @@
 #include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
 #include <Core/GelDirectory.h>
+#include <Grid/Grid2D_Class.h>
+
 #include <cJSON.h>
 
 #include "Gel2D/GelGraphics2D.h"
@@ -21,8 +23,10 @@ void GameInput( float x, float y, int bits ) {
 }
 
 float px, py;
-
 int Tileset;
+
+cGrid2D<short> MapLayer1;
+
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() __attribute__((used));
 void GameInit() {
@@ -46,7 +50,6 @@ void GameInit() {
 	
 	DataBlock* OriginalMap = new_read_nullterminate_DataBlock( "MapData.json" );
 
-//	Log( "# %i\n%s", OriginalMap->Data, OriginalMap->Data );	
 	Log( "Parsing file..." );
 	
 	cJSON* root = cJSON_Parse( OriginalMap->Data );
@@ -58,18 +61,31 @@ void GameInit() {
 		Log( "Parsed!" );
 		Log( "Extracting Data..." );
 
-//		cJSON* terrain = cJSON_GetObjectItem( root, "terrain" );
-//		int ArraySize = cJSON_GetArraySize( terrain );
-//
-//		for ( int idx = 0; idx < ArraySize; idx++ ) {
-//			cJSON* obj = cJSON_GetArrayItem( terrain, idx );
+		cJSON* Layers = cJSON_GetObjectItem( root, "layers" );
+		int ArraySize = cJSON_GetArraySize( Layers );
+
+		for ( int idx = 0; idx < ArraySize; idx++ ) {
+			cJSON* obj = cJSON_GetArrayItem( Layers, idx );
+			
+			// HACK //
+			if ( idx > 0 )
+				break;
+				
+			MapLayer1.Resize( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
+			
+			cJSON* LayerData = cJSON_GetObjectItem( obj, "data" );
+			int LayerArraySize = cJSON_GetArraySize( LayerData );
+			for ( int idx = 0; idx < LayerArraySize; idx ++ ) {
+				MapLayer1[ idx ] = cJSON_GetArrayItem( LayerData, idx )->valueint;
+			}
+			
 //			Log( "%s -- %i, %i, %i", 
 //				cJSON_GetObjectItem( obj, "file" )->valuestring, 
 //				cJSON_GetObjectItem( obj, "x" )->valueint, 
 //				cJSON_GetObjectItem( obj, "y" )->valueint,
 //				cJSON_GetObjectItem( obj, "z" )->valueint 
 //				);
-//		}
+		}
 	}
 	
 	cJSON_Delete( root );
