@@ -458,6 +458,22 @@ function Input_TouchEnd( e ) {
 // - -------------------------------------------------------------------------------------------------------------- - //
 
 
+function explore(path) {
+  Module.print(path);
+  var ret = FS.analyzePath(path);
+  Module.print('  isRoot: ' + ret.isRoot);
+  Module.print('  exists: ' + ret.exists);
+  Module.print('  error: ' + ret.error);
+  Module.print('  path: ' + ret.path);
+  Module.print('  name: ' + ret.name);
+  Module.print('  object.contents: ' + (ret.object && JSON.stringify(Object.keys(ret.object.contents || {}))));
+  Module.print('  parentExists: ' + ret.parentExists);
+  Module.print('  parentPath: ' + ret.parentPath);
+  Module.print('  parentObject.contents: ' + (ret.parentObject && JSON.stringify(Object.keys(ret.parentObject.contents))));
+  Module.print('');
+}
+
+
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main() {
 	// If no console (Internet Explorer w/o F12 debugging open), make one //
@@ -481,6 +497,15 @@ function Main() {
 	Input_KeyInit();
 	
 	//Game = new cGame();
+	
+//	explore('');
+//	explore('/');
+//	explore('.');
+//	explore('Content');
+//	explore('Content/MapData.json');
+//	explore('/Content/MapData.json');
+//	explore('Content/MapData.jsonoo');
+//	explore('MapData.json');
 
 	window.onblur = Main_LoseFocus;
 	window.onfocus = Main_GainFocus;
