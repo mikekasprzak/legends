@@ -1,10 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
 #include <time.h>
-#include <vector>
 
 #include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
+#include <Core/GelArray.h>
 #include <Core/GelDirectory.h>
 #include <Grid/Grid2D_Class.h>
 
@@ -26,8 +26,8 @@ void GameInput( float x, float y, int bits ) {
 float px, py;
 int Tileset;
 
-typedef cGrid2D<short> LayerData;
-std::vector< cGrid2D<short> > MapLayer;
+typedef cGrid2D<short> LayerType;
+GelArray< LayerType* >* MapLayer;
 
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() __attribute__((used));
@@ -66,17 +66,21 @@ void GameInit() {
 
 		cJSON* Layers = cJSON_GetObjectItem( root, "layers" );
 		int ArraySize = cJSON_GetArraySize( Layers );
+		
+		MapLayer = new_GelArray<LayerType*>( ArraySize );
 
 		for ( int idx = 0; idx < ArraySize; idx++ ) {
 			cJSON* obj = cJSON_GetArrayItem( Layers, idx );
 			
-			MapLayer.push_back( LayerData( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint ) );
+//			MapLayer.push_back( LayerData( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint ) );
 //			MapLayer.back().Resize( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
+
+			MapLayer->Data[idx] = new LayerType( cJSON_GetObjectItem( obj, "width" )->valueint, cJSON_GetObjectItem( obj, "height" )->valueint, 0 );
 			
 			cJSON* LayerData = cJSON_GetObjectItem( obj, "data" );
 			int LayerArraySize = cJSON_GetArraySize( LayerData );
-			for ( int idx = 0; idx < LayerArraySize; idx ++ ) {
-				MapLayer.back()[ idx ] = cJSON_GetArrayItem( LayerData, idx )->valueint;
+			for ( int idx2 = 0; idx2 < LayerArraySize; idx2++ ) {
+				(*MapLayer->Data[ idx ])[ idx2 ] = cJSON_GetArrayItem( LayerData, idx2 )->valueint;
 			}
 			
 //			Log( "%s -- %i, %i, %i", 
@@ -102,8 +106,8 @@ void GameExit() {
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() __attribute__((used));
 void GameStep() {
-	px += gx;
-	py += gy;
+	px += gx * 4;
+	py += gy * 4;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() __attribute__((used));
@@ -116,10 +120,15 @@ void GameDraw() {
 //	gelDrawImageCrop( 0,0, 8,8, 160,120 );
 
 	gelBindImage( Tileset );
-	for ( int Layer = 0; Layer < MapLayer.size(); Layer++ ) {
-		for ( int _y = 0; _y < MapLayer[Layer].Height(); _y++ ) {
-			for ( int _x = 0; _x < MapLayer[Layer].Width(); _x++ ) {
-				gelDrawTile( MapLayer[Layer](_x, _y), _x * 8, _y * 8 );
+	for ( size_t Layer = 0; Layer < MapLayer->Size-1; Layer++ ) {
+//		for ( int _y = 0; _y < MapLayer->Data[Layer]->Height(); _y++ ) {
+//			for ( int _x = 0; _x < MapLayer->Data[Layer]->Width(); _x++ ) {
+		for ( int _y = 0; _y < (320/8)+1; _y++ ) {
+			for ( int _x = 0; _x < (240/8)+1; _x++ ) {
+				int Tile = (*MapLayer->Data[Layer])(_x, _y);
+				if ( Tile > 0 ) {
+					gelDrawTile( Tile-1, _x * 8, _y * 8 );
+				}
 			}
 		}
 	}
