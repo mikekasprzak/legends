@@ -305,7 +305,11 @@ function _gelBindImage( ImageId ) {
 	CurrentImage = ImageData[ ImageId ];
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
-function _gelDrawImage( x, y ) {
-	Module.ctx.drawImage( CurrentImage, x, y );
+function _gelDrawImage( sx, sy ) {
+	Module.ctx.drawImage( CurrentImage, sx, sy );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawImageCrop( sx, sy, sw, sh, dx, dy ) {
+	Module.ctx.drawImage( CurrentImage, sx, sy, sw, sh, dx, dy, sw, sh );
 }
 // - -------------------------------------------------------------------------------------------------------------- - //

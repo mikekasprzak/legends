@@ -18,6 +18,7 @@ extern "C" {
 	int gelLoadImage( const char* FileName );
 	void gelBindImage( int ImageId );
 	void gelDrawImage( float x, float y );
+	void gelDrawImageCrop( float sx, float sy, float sw, float sh, float dx, float dy );
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //
