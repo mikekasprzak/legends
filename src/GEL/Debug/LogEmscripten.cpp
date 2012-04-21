@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef EMSCRIPTEN
+#ifdef EMSCRIPTEN
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_LOGGING
 // - ------------------------------------------------------------------------------------------ - //
@@ -22,10 +22,7 @@ extern int LogLevel;
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 
-//#define FlushFunc fflush(0)
-#define LOG_FUNC		vfprintf
-#define LOG_FUNC2		fprintf
-#define LOG_TARGET		stdout
+#define LOG_FUNC		printf
 
 // - ------------------------------------------------------------------------------------------ - //
 int CurrentLogIndentation = 0;
@@ -38,7 +35,7 @@ void LogIndentation( int Count, const char Val = ' ' ) {
 		}
 		s[Count] = 0;
 		
-		LOG_FUNC2( LOG_TARGET, s );
+		LOG_FUNC( s );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -91,11 +88,11 @@ void LogAlways( const char* s, ... ) {
 	
 	PreLog( s );
 
-	LOG_FUNC( LOG_TARGET, s, vl );
+	LOG_FUNC( s, vl );
 
 	va_end( vl );
 
-	LOG_FUNC2( LOG_TARGET, (char*)"\n" );
+	LOG_FUNC( (char*)"\n" );
 
 #ifdef ALWAYS_FLUSH
 	fflush(0);
@@ -108,7 +105,7 @@ void _LogAlways( const char* s, ... ) {
 
 	PreLog( s );
 
-	LOG_FUNC( LOG_TARGET, s, vl );
+	LOG_FUNC( s, vl );
 
 	va_end( vl );
 }
@@ -119,9 +116,9 @@ void _LogAlways( const char* s, ... ) {
 			va_list vl; \
 			va_start( vl, s ); \
 			PreLog( s ); \
-			LOG_FUNC( LOG_TARGET, s, vl ); \
+			LOG_FUNC( s, vl ); \
 			va_end( vl ); \
-			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
+			LOG_FUNC( (char*)"\n" ); \
 		} \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -134,9 +131,9 @@ void _LogAlways( const char* s, ... ) {
 			va_list vl; \
 			va_start( vl, s ); \
 			PreLog( s ); \
-			LOG_FUNC( LOG_TARGET, s, vl ); \
+			LOG_FUNC( s, vl ); \
 			va_end( vl ); \
-			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
+			LOG_FUNC( (char*)"\n" ); \
 			fflush(0); \
 		} \
 	}
@@ -151,7 +148,7 @@ void _LogAlways( const char* s, ... ) {
 			va_list vl; \
 			va_start( vl, s ); \
 			PreLog( s ); \
-			LOG_FUNC( LOG_TARGET, s, vl ); \
+			LOG_FUNC( s, vl ); \
 			va_end( vl ); \
 		} \
 	}

@@ -2,7 +2,7 @@
 #ifndef __GEL_PLATFORM_H__
 #define __GEL_PLATFORM_H__
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(USES_UNIX) || defined(USES_IOS) || defined(USES_WEBOS) || defined(USES_BLACKBERRY)
+#if defined(EMSCRIPTEN) || defined(USES_UNIX) || defined(USES_IOS) || defined(USES_WEBOS) || defined(USES_BLACKBERRY)
 // - ------------------------------------------------------------------------------------------ - //
 
 #define USES_C_FILEHANDLER
