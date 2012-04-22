@@ -6,12 +6,15 @@ export CC='/d/Build/em2/emcc'
 mkdir -p obj output
 
 echo "// Begin PreJS.txt //">obj/PreJS.txt
+#cat external/buzz.js>>obj/PreJS.txt
+cat external/soundmanager2-nodebug-jsmin.js>>obj/PreJS.txt
+cat GelHTML/GelAudio.js>>obj/PreJS.txt
+#cat GelHTML/GelAudioBuzz.js>>obj/PreJS.txt
+#cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
 cat GelHTML/GelUtil.js>>obj/PreJS.txt
 cat GelHTML/GelMath.js>>obj/PreJS.txt
 cat GelHTML/GelGeometry.js>>obj/PreJS.txt
 cat GelHTML/GelGraphics2D.js>>obj/PreJS.txt
-cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
-#cat GelHTML/GelAudio.js>>obj/PreJS.txt
 cat Main.js>>obj/PreJS.txt
 cat Load.js>>obj/PreJS.txt
 

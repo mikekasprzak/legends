@@ -15,6 +15,8 @@ var SoundNames = {};
 // - -------------------------------------------------------------------------------------------------------------- - //
 function sndInit() {
 	SoundEnabled = !isMobileSafari();
+	
+	Log( "* Sound (BUZZ) Initialized" );
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 function sndExit() {
@@ -36,16 +38,6 @@ function sndLoad( _Name, _File ) {
 		autoplay: false,
 		loop: false
 	});
-/*		
-	soundManager.createSound({
-		id: _Name,
-		autoLoad: true,
-		autoPlay: false,
-		multiShot: true,
-		url: SoundFile_Prefix + _File + SoundFile_Ext,
-		volume: 50
-	});	
-*/
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 function sndLoadAndPlay( _Name, _File ) {
@@ -57,6 +49,18 @@ function sndLoadAndPlay( _Name, _File ) {
 		preload: true,
 		autoplay: true,
 		loop: false
+	});
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function sndLoadAndPlayAndLoop( _Name, _File ) {
+	if ( !SoundEnabled )
+		return;
+
+	SoundNames[_Name] = new buzz.sound( SoundFile_Prefix + _File, {
+		formats: [ "ogg" ],
+		preload: true,
+		autoplay: true,
+		loop: true
 	});
 }
 // - -------------------------------------------------------------------------------------------------------------- - //

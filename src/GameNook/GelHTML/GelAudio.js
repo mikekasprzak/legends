@@ -1,3 +1,14 @@
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+// ** Sound Manager 2 ** //
+soundManager.url = 'external/sm2/';
+soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in	
+//soundManager.waitForWindowLoad = true;
+//soundManager.debugMode = false;
+// ** Sound Manager 2 ** //
+// - -------------------------------------------------------------------------------------------------------------- - //
+
 // - -------------------------------------------------------------------------------------------------------------- - //
 var SoundEnabled = true;
 // - -------------------------------------------------------------------------------------------------------------- - //
@@ -43,6 +54,20 @@ function sndLoadAndPlay( _Name, _File ) {
 		id: _Name,
 		autoLoad: true,
 		autoPlay: true,
+		url: SoundFile_Prefix + _File + SoundFile_Ext,
+		volume: 50
+	});	
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function sndLoadAndPlayAndLoop( _Name, _File ) {
+	if ( !SoundEnabled )
+		return;
+
+	soundManager.createSound({
+		id: _Name,
+		autoLoad: true,
+		autoPlay: true,
+		loops: 999999,
 		url: SoundFile_Prefix + _File + SoundFile_Ext,
 		volume: 50
 	});	
