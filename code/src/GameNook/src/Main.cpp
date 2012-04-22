@@ -86,7 +86,7 @@ public:
 		FrameDelay = 0;
 		
 		Anchor.x = 32;
-		Anchor.y = 32;
+		Anchor.y = 64;
 	}
 	
 	void SetAnimation( const int* AnimationName ) {
@@ -104,6 +104,15 @@ public:
 	}
 	
 	void Step() {
+		// Physics //
+		{
+			Vector2D Velocity = Pos - Old;
+			Velocity += Vector2D( 0, 0.2f ); // Gravity //
+			Old = Pos;
+			Pos += Velocity;
+		}
+		
+		// Animation and Controls //
 		if ( gx != 0 ) {
 			SetAnimation( Nook_Run );
 		}
@@ -120,13 +129,20 @@ public:
 		}		
 	}
 	
-	void Draw() {
+	void Draw( const Vector2D& Camera ) {
 		gelBindImage( PlayerId );
 		gelDrawTile(
 			CurrentAnimation[ CurrentFrame + 1 ],
-			Pos.x - Anchor.x, 
-			Pos.y - Anchor.y
+			floor(Pos.x) - Anchor.x - Camera.x, 
+			floor(Pos.y) - Anchor.y - Camera.y
 			);
+			
+			gelSetColor( 255,0,0,255 );
+			gelDrawCircle( 
+				Pos.x - Camera.x,
+				Pos.y - Camera.y,
+				4 
+				);
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -299,35 +315,10 @@ void GameDraw() {
 		}
 	}
 	
-//	Vector2D Anchor;
-//	Anchor.x = 32;
-//	Anchor.y = 32;
-//	
-//	
-////	int* CurrentAnimation = Nook_Idle;
-////	int CurrentAnimation_Length = sizeof(Nook_Idle)/sizeof(int);
-//	const int* CurrentAnimation = Nook_Run;
-//	int CurrentAnimation_Length = sizeof(Nook_Run)/sizeof(int);
-//	
-//	static int FrameDelay = 0;
-//	static int Goo = 0;
-//	
-//	FrameDelay++;
-//	if ( FrameDelay == 3 ) {
-//		FrameDelay = 0;
-//		Goo++;
-//		if ( Goo == CurrentAnimation_Length )
-//		Goo = 0; 
-//	}
-//	
-//	gelBindImage( PlayerId );
-//	gelDrawTile(
-//		CurrentAnimation[Goo],
-//		floor(CameraPos.x.ToFloat() - (StartX<<3) - OffsetX) - Anchor.x.ToFloat(), 
-//		floor(CameraPos.y.ToFloat() - (StartY<<3) - OffsetY) - Anchor.y.ToFloat()
-//		);
 
-	Player->Draw();
+	Vector2D TransformedCameraPos = CameraPos - Vector2D( HalfScreenWidth, HalfScreenHeight );
+
+	Player->Draw( TransformedCameraPos );
 
 //	gelSetColor( 255,0,0,255 );
 //	gelDrawCircle( 
