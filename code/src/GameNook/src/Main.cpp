@@ -57,6 +57,9 @@ const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+const int TILE_COLLISION = 1857;
+const int TILE_NOGROW = 1858;
+// - ------------------------------------------------------------------------------------------ - //
 
 float gx;
 float gy;
@@ -128,7 +131,7 @@ public:
 	Vector2D Anchor;
 	Vector2D Shape;
 	
-	bool OnGround;
+	bool OnGround, WasOnGround;
 	bool OnCeiling;
 	int JumpPower;
 
@@ -151,6 +154,7 @@ public:
 		
 		
 		OnGround = false;
+		WasOnGround = false;
 		JumpPower = 0;
 		
 		FacingLeft = false;
@@ -221,7 +225,7 @@ public:
 			}
 			
 			if ( (JumpPower > 0) ) {
-				if ( Input_Key( KEY_UP ) ) {
+				if ( Input_Key( KEY_UP ) && NotTransforming() ) {
 					Velocity.y = -(Real(JumpPower) * Real(0.5));
 					JumpPower--;
 				}
@@ -266,11 +270,12 @@ public:
 			if ( EndY >= MapHeight )
 				EndY = MapHeight-1;
 			
+			WasOnGround = OnGround;
 			OnGround = false;
 			
 			for ( int _y = StartY; _y < EndY; _y++ ) {
 				for ( int _x = StartX; _x < EndX; _x++ ) {
-					if ( (*MapLayer->Data[ Layer ])(_x, _y) > 0 ) {
+					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
 						Rect2D VsRect( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 						
 						if ( Rect == VsRect ) {
@@ -294,7 +299,11 @@ public:
 											JumpPower = 16;
 										else
 											JumpPower = 10;
-									}	
+									}
+									if ( WasOnGround == false ) {
+										if ( IsBig )
+											SetIntermediateAnimation( Nook_TouchGround );
+									}
 									OnGround = true;
 								}
 								else if ( Line.y < Real::Zero ) {
