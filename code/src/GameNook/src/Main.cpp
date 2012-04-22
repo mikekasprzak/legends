@@ -140,7 +140,7 @@ public:
 			}
 			
 			Old = Pos;
-			Pos += Velocity * Real( 0.98 );
+			Pos += Velocity * (OnGround ? Real( 0.90 ) : Real( 0.96 ));
 		}
 
 		// Solve Versus Map //
