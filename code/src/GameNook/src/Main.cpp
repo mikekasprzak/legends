@@ -44,6 +44,13 @@ const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 // - ------------------------------------------------------------------------------------------ - //
+const int Nook_Sm_Idle[] = { 1, /**/ 15 };
+const int Nook_Sm_Run[] = { 4, /**/ 15,16,17,18 };
+//const int Nook_Sm_Anticipation[] = { 3, /**/ 0,10,11 };
+const int Nook_Sm_Jump[] = { 1, /**/ 19 };
+const int Nook_Sm_Fall[] = { 1, /**/ 20 };
+//const int Nook_Sm_TouchGround[] = { 1, /**/ 14 };
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -85,6 +92,8 @@ public:
 
 	bool FacingLeft;
 	
+	bool IsBig;
+	
 public:
 	cPlayer( float _x, float _y ) :
 		Pos( _x, _y ),
@@ -97,13 +106,28 @@ public:
 		Anchor.x = 32;
 		Anchor.y = 64;
 		
-		Shape.x = 18;
-		Shape.y = 28;
 		
 		OnGround = false;
 		JumpPower = 0;
 		
 		FacingLeft = false;
+		
+		SetBig( true );
+	}
+	
+	inline void SetBig( const bool _IsBig ) {
+		IsBig = _IsBig;
+		
+		if ( IsBig ) {
+			Shape.x = 18;
+			Shape.y = 28;
+			SetAnimation( Nook_Idle );
+		}
+		else {
+			Shape.x = 6;
+			Shape.y = 6;
+			SetAnimation( Nook_Sm_Idle );
+		}
 	}
 	
 	void SetAnimation( const int* AnimationName ) {
@@ -140,7 +164,7 @@ public:
 			}
 			
 			Old = Pos;
-			Pos += Velocity * (OnGround ? Real( 0.90 ) : Real( 0.96 ));
+			Pos += Velocity * ((OnGround && gx == 0) ? Real( 0.80 ) : Real( 0.96 ));
 		}
 
 		// Solve Versus Map //
@@ -198,7 +222,11 @@ public:
 								Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
 								
 								if ( Line.y > Real::Zero ) {
-									JumpPower = 16;
+									if ( IsBig )
+										JumpPower = 16;
+									else
+										JumpPower = 10;
+										
 									OnGround = true;
 								}
 								else if ( Line.y < Real::Zero ) {
@@ -227,10 +255,10 @@ public:
 		// Animation and Controls //
 		if ( OnGround ) {
 			if ( gx != 0 ) {
-				SetAnimation( Nook_Run );
+				SetAnimation( IsBig ? Nook_Run : Nook_Sm_Run );
 			}
 			else {
-				SetAnimation( Nook_Idle );
+				SetAnimation( IsBig ? Nook_Idle : Nook_Sm_Idle );
 			}
 			
 			// NOTE: This scope makes changing which way you face only work when on the ground //
@@ -243,11 +271,15 @@ public:
 		}
 		else {
 			if ( (Old - Pos).y > 0 ) {
-				SetAnimation( Nook_Jump );
+				SetAnimation( IsBig ? Nook_Jump : Nook_Sm_Jump );
 			}
 			else {
-				SetAnimation( Nook_Fall );
+				SetAnimation( IsBig ? Nook_Fall : Nook_Sm_Fall );
 			}
+		}
+
+		if ( Button & 0x10 ) {	
+			SetBig( !IsBig );
 		}
 		
 		FrameDelay++;
