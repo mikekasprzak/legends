@@ -21,18 +21,28 @@ var Canvas;
 //var Game;
 // - -------------------------------------------------------------------------------------------------------------- - //
 
+function InitSounds() {
+	Log( "* Init Sounds" );
+	sndInit();
+
+	sndLoadAndPlayAndLoop( 'BGMusic', '../POL-rescue-short' );
+	Log( "* Done Init Sounds" );
+}
+
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_Loop() {
 	if ( FirstRun ) {
 		//Game.Init();
 		//GameInit();
 		__Z8GameInitv();
+		
 		WorkTime = new Date().getTime();
 		FirstRun = false;
 	}
 	
 	if ( sndAvailable() && (HasInitSounds == false) ) {
 		//Game.InitSounds();
+		InitSounds();
 		WorkTime = new Date().getTime();
 		HasInitSounds = true;
 	}
@@ -114,7 +124,7 @@ function Main_LoseFocus() {
 	IntervalHandle = 0;
 	
 	// Pause Music //
-//M	sndPause( 'BGMusic' );
+	sndPause( 'BGMusic' );
 //	if ( soundManager.getSoundById('BGMusic') )
 //		soundManager.getSoundById('BGMusic').pause();
 	
