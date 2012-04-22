@@ -32,6 +32,15 @@ int HalfScreenWidth;
 int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+const int Nook_Idle[] = { 0,0,1,1,3,3,0,0,1,1,2,2 };
+const int Nook_Run[] = { 4,5,6,7,8,9 };
+const int Nook_Anticipation[] = { 0,10,11 };
+const int Nook_Jump[] = { 12 };
+const int Nook_Fall[] = { 13 };
+const int Nook_TouchGround[] = { 14 };
+// - ------------------------------------------------------------------------------------------ - //
+
 float gx;
 float gy;
 int Button;
@@ -42,7 +51,8 @@ void GameInput( float x, float y, int bits ) {
 	Button = bits;
 }
 
-int Tileset; // ID //
+int TilesetId; // ID //
+int PlayerId; // ID //
 
 Vector2D CameraPos;
 
@@ -61,8 +71,8 @@ void GameInit() {
 	CameraPos.x = Real( HalfScreenWidth );
 	CameraPos.y = Real( HalfScreenHeight );
 	
-	Tileset = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
-//	Tileset = gelLoadImage( "Content/Nook-Tileset.png" );
+	TilesetId = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
+	PlayerId = gelLoadTileset( "Content/Nook-Player.png", 64, 64 );
 	
 	LogLevel = 3;
 	
@@ -129,7 +139,7 @@ void GameDraw() {
 	int TilesWide = (ScreenWidth/8)+1;
 	int TilesTall = (ScreenHeight/8)+1;
 
-	gelBindImage( Tileset );
+	gelBindImage( TilesetId );
 	for ( size_t Layer = 0; Layer < (MapLayer->Size - 1); Layer++ ) {
 		int MapWidth = MapLayer->Data[Layer]->Width();
 		int MapHeight = MapLayer->Data[Layer]->Height();
@@ -184,10 +194,10 @@ void GameDraw() {
 		if ( EndY > MapHeight )
 			EndY = MapHeight;
 
-		char Blah[2048];
-		sprintf( Blah, "Pos: (%f %f) (%i, %i) (%i, %i)", CameraOffsetXCenter, CameraOffsetYCenter, StartX, StartY, OffsetX, OffsetY );
-		gelSetColor( 255,255,255,255 );
-		gelDrawText( 0, 120, Blah );
+//		char Blah[2048];
+//		sprintf( Blah, "Pos: (%f %f) (%i, %i) (%i, %i)", CameraOffsetXCenter, CameraOffsetYCenter, StartX, StartY, OffsetX, OffsetY );
+//		gelSetColor( 255,255,255,255 );
+//		gelDrawText( 0, 120, Blah );
 
 		for ( int _y = StartY; _y < EndY; _y++ ) {
 			for ( int _x = StartX; _x < EndX; _x++ ) {
@@ -202,9 +212,42 @@ void GameDraw() {
 			}
 		}
 	}
+	
+	Vector2D Anchor;
+	Anchor.x = 64;
+	Anchor.y = 64;
+	
+	
+//	int* CurrentAnimation = Nook_Idle;
+//	int CurrentAnimation_Length = sizeof(Nook_Idle)/sizeof(int);
+	const int* CurrentAnimation = Nook_Run;
+	int CurrentAnimation_Length = sizeof(Nook_Run)/sizeof(int);
+	
+	static int FrameDelay = 0;
+	static int Goo = 0;
+	
+	FrameDelay++;
+	if ( FrameDelay == 3 ) {
+		FrameDelay = 0;
+		Goo++;
+		if ( Goo == CurrentAnimation_Length )
+		Goo = 0; 
+	}
+	
+	gelBindImage( PlayerId );
+	gelDrawTile(
+		CurrentAnimation[Goo],
+		floor(CameraPos.x.ToFloat() - (StartX<<3) - OffsetX) - Anchor.x.ToFloat(), 
+		floor(CameraPos.y.ToFloat() - (StartY<<3) - OffsetY) - Anchor.y.ToFloat()
+		);
+		
 
-	gelSetColor( 255,0,0,255 );
-	gelDrawCircle( CameraPos.x.ToFloat() - (StartX<<3) - OffsetX, CameraPos.y.ToFloat() - (StartY<<3) - OffsetY, 10 );
+//	gelSetColor( 255,0,0,255 );
+//	gelDrawCircle( 
+//		CameraPos.x.ToFloat() - (StartX<<3) - OffsetX, 
+//		CameraPos.y.ToFloat() - (StartY<<3) - OffsetY, 
+//		10 
+//		);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
