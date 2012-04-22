@@ -286,7 +286,7 @@ public:
 
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
-				Pos += Vector2D( gx, 0 ) * Real(0.2);
+				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.1));
 			}
 			
 			Vector2D Velocity = Pos - Old;
