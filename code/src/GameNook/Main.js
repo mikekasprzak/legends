@@ -64,7 +64,7 @@ function Main_Loop() {
 		for ( var idx = 0; idx < FramesToDo; idx++ ) {
 			GlobalCurrentFrame++;
 			Input_KeyUpdate();
-			__Z9GameInputffi( Input_Stick.x, Input_Stick.y, Input_KeyCurrent );
+			__Z9GameInputffii( Input_Stick.x, Input_Stick.y, Input_KeyCurrent, Input_KeyLast );
 			
 			//Game.Step();
 			//GameStep();
@@ -101,8 +101,6 @@ function Main_GainFocus() {
 
 	// Resume Music //
 	sndResume( 'BGMusic' );
-//	if ( soundManager.getSoundById('BGMusic') )
-//		soundManager.getSoundById('BGMusic').resume();
 	
 	// Clear Keys (just in case) //
 	Input_KeyPanic();
@@ -125,8 +123,6 @@ function Main_LoseFocus() {
 	
 	// Pause Music //
 	sndPause( 'BGMusic' );
-//	if ( soundManager.getSoundById('BGMusic') )
-//		soundManager.getSoundById('BGMusic').pause();
 	
 	Main_ShowPaused();
 }

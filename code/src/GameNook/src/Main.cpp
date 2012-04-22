@@ -24,7 +24,7 @@ void GameExit() __attribute__((used));
 void GameStep() __attribute__((used));
 void GameDraw() __attribute__((used));
 
-void GameInput( float x, float y, int bits ) __attribute__((used));
+void GameInput( float x, float y, int Current, int Last ) __attribute__((used));
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -39,10 +39,13 @@ int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Idle[] = { 12, /**/ 0,0,1,1,3,3,0,0,1,1,2,2 };
 const int Nook_Run[] = { 6, /**/ 4,5,6,7,8,9 };
-const int Nook_Anticipation[] = { 3, /**/ 0,10,11 };
+const int Nook_PreJump[] = { 3, /**/ 0,10,11 };
 const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
+const int Nook_WallGrab[] = { 1, /**/ 42 };
+const int Nook_WallJump[] = { 1, /**/ 43 };
+const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
 const int Nook_Sm_Run[] = { 4, /**/ 15,16,17,18 };
@@ -50,19 +53,57 @@ const int Nook_Sm_Run[] = { 4, /**/ 15,16,17,18 };
 const int Nook_Sm_Jump[] = { 1, /**/ 19 };
 const int Nook_Sm_Fall[] = { 1, /**/ 20 };
 //const int Nook_Sm_TouchGround[] = { 1, /**/ 14 };
+const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
 float gy;
-int Button;
 
-void GameInput( float x, float y, int bits ) {
+int _Input_KeyCurrent;
+int _Input_KeyLast;
+
+const int KEY_UP = 			0x1;
+const int KEY_DOWN = 		0x2;
+const int KEY_LEFT = 		0x4;
+const int KEY_RIGHT = 		0x8;
+const int KEY_ACTION = 		0x10;
+const int KEY_ACTION2 = 	0x20;
+const int KEY_ACTION3 = 	0x40;
+const int KEY_ACTION4 = 	0x80;
+const int KEY_MENU =		0x800;
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+// Key pressed this frame //
+inline const int Input_Key( const int Mask = 0xFFFFFFFF ) {
+	return _Input_KeyCurrent & Mask;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+// Key pressed last frame //
+inline const int Input_KeyLast( const int Mask = 0xFFFFFFFF ) {
+	return _Input_KeyLast & Mask;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+// Key was just pressed this frame //
+inline const int Input_KeyPressed( const int Mask  = 0xFFFFFFFF ) {
+	return (_Input_KeyCurrent ^ _Input_KeyLast) & _Input_KeyCurrent & Mask;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+// Key was just released this frame //
+inline const int Input_KeyReleased( const int Mask  = 0xFFFFFFFF ) {
+	return (_Input_KeyCurrent ^ _Input_KeyLast) & _Input_KeyLast & Mask;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+void GameInput( float x, float y, int Current, int Last ) {
 	gx = x;
 	gy = y;
-	Button = bits;
+	_Input_KeyCurrent = Current;
+	_Input_KeyLast = Last;
 }
+// - -------------------------------------------------------------------------------------------------------------- - //
 
 int TilesetId; // ID //
 int PlayerId; // ID //
@@ -155,11 +196,13 @@ public:
 			Velocity += Vector2D( 0, 0.4f ); // Gravity //
 			Velocity += Vector2D( gx, 0 ) * Real(0.2);
 			
-			if ( (JumpPower > 0) && (gy < 0) ) {
-				Velocity.y = -(Real(JumpPower) * Real(0.5));
-				JumpPower--;
+			if ( (JumpPower > 0) ) {
+				if ( Input_Key( KEY_UP ) ) {
+					Velocity.y = -(Real(JumpPower) * Real(0.5));
+					JumpPower--;
+				}
 			}
-			if ( gy >= 0 ) {
+			if ( !Input_Key( KEY_UP ) ) {
 				JumpPower = 0;
 			}
 			
@@ -222,11 +265,12 @@ public:
 								Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
 								
 								if ( Line.y > Real::Zero ) {
-									if ( IsBig )
-										JumpPower = 16;
-									else
-										JumpPower = 10;
-										
+									if ( !Input_Key( KEY_UP ) ) {
+										if ( IsBig )
+											JumpPower = 16;
+										else
+											JumpPower = 10;
+									}	
 									OnGround = true;
 								}
 								else if ( Line.y < Real::Zero ) {
@@ -278,7 +322,7 @@ public:
 			}
 		}
 
-		if ( Button & 0x10 ) {	
+		if ( Input_KeyPressed( KEY_ACTION ) ) {	
 			SetBig( !IsBig );
 		}
 		
