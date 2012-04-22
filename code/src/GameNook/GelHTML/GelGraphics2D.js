@@ -363,4 +363,21 @@ function _gelDrawTile( Tile, dx, dy ) {
 		);
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
-
+function _gelDrawTileFlipX( Tile, dx, dy ) {
+	Module.ctx.scale(-1, 1);
+	_gelDrawTile( Tile, -dx-CurrentImage.TileWidth, dy );
+	Module.ctx.scale(-1, 1);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTileFlipY( Tile, dx, dy ) {
+	Module.ctx.scale(1, -1);
+	_gelDrawTile( Tile, dx, -dy-CurrentImage.TileHeight );
+	Module.ctx.scale(1, -1);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTileFlipXY( Tile, dx, dy ) {
+	Module.ctx.scale(-1, -1);
+	_gelDrawTile( Tile, -dx-CurrentImage.TileWidth, -dy-CurrentImage.TileHeight );
+	Module.ctx.scale(-1, -1);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //

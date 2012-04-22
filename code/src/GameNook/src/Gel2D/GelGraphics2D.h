@@ -27,6 +27,9 @@ extern "C" {
 	int gelLoadTileset( const char* FileName, int w, int h );
 	void gelBindTileset( int ImageId );
 	void gelDrawTile( int Tile, float x, float y );
+	void gelDrawTileFlipX( int Tile, float x, float y );
+	void gelDrawTileFlipY( int Tile, float x, float y );
+	void gelDrawTileFlipXY( int Tile, float x, float y );
 	
 // - ------------------------------------------------------------------------------------------ - //
 };

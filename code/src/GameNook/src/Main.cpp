@@ -78,7 +78,13 @@ public:
 	
 	Vector2D Anchor;
 	Vector2D Shape;
+	
+	bool OnGround;
+	bool OnCeiling;
+	int JumpPower;
 
+	bool FacingLeft;
+	
 public:
 	cPlayer( float _x, float _y ) :
 		Pos( _x, _y ),
@@ -91,8 +97,13 @@ public:
 		Anchor.x = 32;
 		Anchor.y = 64;
 		
-		Shape.x = 20;
+		Shape.x = 18;
 		Shape.y = 28;
+		
+		OnGround = false;
+		JumpPower = 0;
+		
+		FacingLeft = false;
 	}
 	
 	void SetAnimation( const int* AnimationName ) {
@@ -117,24 +128,126 @@ public:
 		// Physics //
 		{
 			Vector2D Velocity = Pos - Old;
-			Velocity += Vector2D( 0, 0.2f ); // Gravity //
+			Velocity += Vector2D( 0, 0.4f ); // Gravity //
+			Velocity += Vector2D( gx, 0 ) * Real(0.2);
+			
+			if ( (JumpPower > 0) && (gy < 0) ) {
+				Velocity.y = -(Real(JumpPower) * Real(0.5));
+				JumpPower--;
+			}
+			if ( gy >= 0 ) {
+				JumpPower = 0;
+			}
+			
 			Old = Pos;
-			Pos += Velocity;
+			Pos += Velocity * Real( 0.98 );
 		}
-		
+
 		// Solve Versus Map //
 		{
-			// Build Rectangle //
 			Rect2D Rect = GetRect();
+			
+			int Layer = MapLayer->Size-1;
+			
+			int StartX = (int)floor(Rect.P1().x.ToFloat()) >> 3;
+			int StartY = (int)floor(Rect.P1().y.ToFloat()) >> 3;
+			int EndX = ((int)ceil(Rect.P2().x.ToFloat()) >> 3) + 1;
+			int EndY = ((int)ceil(Rect.P2().y.ToFloat()) >> 3) + 1;
 
+			int MapWidth = MapLayer->Data[Layer]->Width();
+			int MapHeight = MapLayer->Data[Layer]->Height();
+			
+			if ( StartX < 0 )
+				StartX = 0;
+			if ( StartY < 0 )
+				StartY = 0;
+			if ( EndX < 0 )
+				EndX = 0;
+			if ( EndY < 0 )
+				EndY = 0;
+			
+			if ( StartX >= MapWidth )
+				StartX = MapWidth-1;
+			if ( StartY >= MapHeight )
+				StartY = MapHeight-1;
+			if ( EndX >= MapWidth )
+				EndX = MapWidth-1;
+			if ( EndY >= MapHeight )
+				EndY = MapHeight-1;
+			
+			OnGround = false;
+			
+			for ( int _y = StartY; _y < EndY; _y++ ) {
+				for ( int _x = StartX; _x < EndX; _x++ ) {
+					if ( (*MapLayer->Data[ Layer ])(_x, _y) > 0 ) {
+						Rect2D VsRect( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+						
+						if ( Rect == VsRect ) {
+							// Perform a Rectangle Union //
+							Rect2D Result = VsRect - Rect;
+							Vector2D Line = VsRect.Center() - Rect.Center(); 
+							
+//							Pos += Line.Normal() * (((8+20)/2) - Line.Magnitude()) * Real::Half;
+//							Rect = GetRect();
+
+//							gelSetColor( 255,0,0,255 );
+//							gelDrawRectFill( Result.P1().x, Result.P1().y, Result.Width(), Result.Height() );
+							
+							// If it's wider, solve tall //
+							if ( Result.Width() > Result.Height() ) {
+								Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+								
+								if ( Line.y > Real::Zero ) {
+									JumpPower = 16;
+									OnGround = true;
+								}
+								else if ( Line.y < Real::Zero ) {
+									JumpPower = 0;
+									OnCeiling = true;
+								}
+							}
+							else {
+								Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+							}
+
+							Rect = GetRect();
+
+//							gelSetColor( 0,255,0,64 );
+						}
+						else {						
+//							gelSetColor( 0,64,0,64 );
+						}
+
+//						gelDrawRectFill( VsRect.P1().x, VsRect.P1().y, VsRect.Width(), VsRect.Height() );
+					}
+				}
+			}
 		}
-		
+			
 		// Animation and Controls //
-		if ( gx != 0 ) {
-			SetAnimation( Nook_Run );
+		if ( OnGround ) {
+			if ( gx != 0 ) {
+				SetAnimation( Nook_Run );
+			}
+			else {
+				SetAnimation( Nook_Idle );
+			}
+			
+			// NOTE: This scope makes changing which way you face only work when on the ground //
+			if ( gx > 0 ) {
+				FacingLeft = false;
+			}
+			else if ( gx < 0 ) {
+				FacingLeft = true;
+			}
 		}
 		else {
-			SetAnimation( Nook_Idle );
+			if ( (Old - Pos).y > 0 ) {
+				SetAnimation( Nook_Jump );
+			}
+			else {
+				SetAnimation( Nook_Fall );
+			}
 		}
 		
 		FrameDelay++;
@@ -150,24 +263,33 @@ public:
 		{
 			Rect2D Rect = GetRect();
 			
-			gelSetColor( 255,255,0,255 );
-			gelDrawRectFill( Rect.P1().x, Rect.P1().y, Rect.Width(), Rect.Height() );
+			gelSetColor( 255,255,0,64 );
+			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
 		}
-
-
+		
 		gelBindImage( PlayerId );
-		gelDrawTile(
-			CurrentAnimation[ CurrentFrame + 1 ],
-			floor(Pos.x) - Anchor.x - Camera.x, 
-			floor(Pos.y) - Anchor.y - Camera.y
-			);
-			
-			gelSetColor( 255,0,0,255 );
-			gelDrawCircle( 
-				Pos.x - Camera.x,
-				Pos.y - Camera.y,
-				4 
+		
+		if ( FacingLeft ) {
+			gelDrawTileFlipX(
+				CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x) - Anchor.x - Camera.x, 
+				floor(Pos.y) - Anchor.y - Camera.y
 				);
+		}
+		else {
+			gelDrawTile(
+				CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x) - Anchor.x - Camera.x, 
+				floor(Pos.y) - Anchor.y - Camera.y
+				);
+		}
+			
+//			gelSetColor( 255,0,0,255 );
+//			gelDrawCircle( 
+//				Pos.x - Camera.x,
+//				Pos.y - Camera.y,
+//				4 
+//				);
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -231,7 +353,7 @@ void GameInit() {
 
 	// ---------------------- //
 
-	Player = new cPlayer( 112, 104 );
+	Player = new cPlayer( 112+16, 104 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameExit() {
@@ -245,16 +367,18 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() {
-	if ( Button & 0x10 ) {
-		CameraPos.x += gx * 4;
-		CameraPos.y += gy * 4;
-	}
-	else {
-		CameraPos.x += gx * 2;//0.5;
-		CameraPos.y += gy * 2;//0.5;
-	}
+//	if ( Button & 0x10 ) {
+//		CameraPos.x += gx * 4;
+//		CameraPos.y += gy * 4;
+//	}
+//	else {
+//		CameraPos.x += gx * 2;//0.5;
+//		CameraPos.y += gy * 2;//0.5;
+//	}
 	
 	Player->Step();
+	
+	CameraPos = Player->Pos;//+= (Player->Pos - CameraPos) * Real(0.25);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() {
@@ -339,10 +463,23 @@ void GameDraw() {
 			}
 		}
 	}
-	
+
+	int Layer = 0;
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
 
 	Vector2D TransformedCameraPos = CameraPos - Vector2D( HalfScreenWidth, HalfScreenHeight );
-
+	
+	if ( TransformedCameraPos.x < 0 )
+		TransformedCameraPos.x = 0;
+	if ( TransformedCameraPos.y < 0 )
+		TransformedCameraPos.y = 0;
+		
+	if ( TransformedCameraPos.x > (MapWidth<<3) - ScreenWidth )
+		TransformedCameraPos.x = (MapWidth<<3) - ScreenWidth;
+	if ( TransformedCameraPos.y > (MapHeight<<3) - ScreenHeight )
+		TransformedCameraPos.y = (MapHeight<<3) - ScreenHeight;
+		
 	Player->Draw( TransformedCameraPos );
 
 //	gelSetColor( 255,0,0,255 );
