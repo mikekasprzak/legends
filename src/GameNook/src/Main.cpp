@@ -133,6 +133,7 @@ public:
 	
 	bool OnGround, WasOnGround;
 	bool OnCeiling;
+	bool OnWall;
 	int JumpPower;
 
 	bool FacingLeft;
@@ -306,7 +307,7 @@ public:
 											JumpPower = 10;
 									}
 									if ( WasOnGround == false ) {
-										if ( IsBig )
+										if ( IsBig && NotTransforming() )
 											SetIntermediateAnimation( Nook_TouchGround );
 									}
 									OnGround = true;
