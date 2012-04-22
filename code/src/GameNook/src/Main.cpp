@@ -349,113 +349,154 @@ public:
 			OnCeiling = false;
 			OnWall = false;
 
-						
+			int CollisionBits = 0;
+			
+			static const int COLLISION_TOP_LEFT =		0x10;
+			static const int COLLISION_TOP_RIGHT =		0x20;
+			static const int COLLISION_BOTTOM_LEFT =	0x40;
+			static const int COLLISION_BOTTOM_RIGHT =	0x80;
+
+			static const int COLLISION_TOP =			0x1;
+			static const int COLLISION_BOTTOM =			0x2;
+			static const int COLLISION_LEFT =			0x4;
+			static const int COLLISION_RIGHT =			0x8;
+
+			Rect2D VsBottomRect;
+			Rect2D VsTopRect;
+			Rect2D VsLeftRect;
+			Rect2D VsRightRect;
+			
+			Rect2D VsTopLeftRect;
+			Rect2D VsTopRightRect;
+			Rect2D VsBottomLeftRect;
+			Rect2D VsBottomRightRect;
+			
+			// Corners //
+			{
+				if ( (*MapLayer->Data[ Layer ])(StartX, StartY) == TILE_COLLISION ) {
+					VsTopLeftRect = Rect2D( Vector2D( StartX << 3, StartY << 3), Vector2D( 8, 8 ) );
+					CollisionBits |= COLLISION_TOP_LEFT;
+				}
+				if ( (*MapLayer->Data[ Layer ])(EndX-1, StartY) == TILE_COLLISION ) {
+					VsTopRightRect = Rect2D( Vector2D( (EndX-1) << 3, StartY << 3), Vector2D( 8, 8 ) );
+					CollisionBits |= COLLISION_TOP_RIGHT;
+				}
+				if ( (*MapLayer->Data[ Layer ])(StartX, EndY-1) == TILE_COLLISION ) {
+					VsBottomLeftRect = Rect2D( Vector2D( StartX << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
+					CollisionBits |= COLLISION_BOTTOM_LEFT;
+				}
+				if ( (*MapLayer->Data[ Layer ])(EndX-1, EndY-1) == TILE_COLLISION ) {
+					VsBottomRightRect = Rect2D( Vector2D( (EndX-1) << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
+					CollisionBits |= COLLISION_BOTTOM_RIGHT;
+				}
+			}
+			
 			// Bottom Row //
 			{
 				bool Started = false;
 				bool NonFirst = true;
-				Rect2D VsRect;
 				
 				int _y = EndY - 1;
 				for ( int _x = StartX; _x < EndX; _x++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-						if ( _x != StartX )
-							NonFirst = true;
-						if ( StartX == EndX )
-							NonFirst = true;
+//						if ( _x != StartX )
+//							NonFirst = true;
+//						if ( StartX == EndX )
+//							NonFirst = true;
 
 						if ( Started ) {
-							VsRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 16 ) );
+							VsBottomRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 						}
 						else {
 //							if ( StartX != EndX )
 //								if ( _x == EndX - 1 )
 //									break;
 
-							VsRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 16 ) );
+							VsBottomRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 							Started = true;
+							CollisionBits |= COLLISION_BOTTOM;
 						}
 					}
 				}
 				
-				// If a Collision set was made //
-				if ( Started && NonFirst ) {
-					if ( Rect == VsRect ) {
-						Rect2D Result = VsRect - Rect;
-						
-						Pos.y -= Result.Height();// * Real::Half;
-						Pos.y = floor( Pos.y );
-						Rect = GetRect(); // Update Vs Rectangle //
-						
-						if ( !Input_Key( KEY_UP ) ) {
-							if ( IsBig )
-								JumpPower = 16;
-							else
-								JumpPower = 10;
-						}
-						if ( WasOnGround == false ) {
-							if ( IsBig && NotTransforming() )
-								SetIntermediateAnimation( Nook_TouchGround );
-						}
-						OnGround = true;
-						
-//						gelSetColor( 0,255,0,255 );
-					}
-					else {						
-//						gelSetColor( 0,64,0,255 );
-					}
-
-//					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-				}
+//				// If a Collision set was made //
+//				if ( Started && NonFirst ) {
+//					if ( Rect == VsRect ) {
+//						Rect2D Result = VsRect - Rect;
+//						
+//						Pos.y -= Result.Height();// * Real::Half;
+//						Pos.y = floor( Pos.y );
+//						Rect = GetRect(); // Update Vs Rectangle //
+//						
+//						if ( !Input_Key( KEY_UP ) ) {
+//							if ( IsBig )
+//								JumpPower = 16;
+//							else
+//								JumpPower = 10;
+//						}
+//						if ( WasOnGround == false ) {
+//							if ( IsBig && NotTransforming() )
+//								SetIntermediateAnimation( Nook_TouchGround );
+//						}
+//						OnGround = true;
+//						
+////						gelSetColor( 0,255,0,255 );
+//					}
+//					else {						
+////						gelSetColor( 0,64,0,255 );
+//					}
+//
+////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
+//				}
 			}
 			
 			// Left Row //
 			{
 				bool Started = false;
 				bool NonFirst = false;
-				Rect2D VsRect;
 				
 				int _x = StartX;
 				for ( int _y = StartY; _y < EndY; _y++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-						if ( _y != StartY )
-							NonFirst = true;
-						if ( StartY == EndY )
-							NonFirst = true;
+//						if ( _y != StartY )
+//							NonFirst = true;
+//						if ( StartY == EndY )
+//							NonFirst = true;
 						
 						if ( Started ) {
-							VsRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsLeftRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 						}
 						else {
-							if ( StartY != EndY )
-								if ( _y == EndY - 1 )
-									break;
+//							if ( StartY != EndY )
+//								if ( _y == EndY - 1 )
+//									break;
 
-							VsRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsLeftRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							CollisionBits |= COLLISION_LEFT;
 							Started = true;
 						}
 					}
 				}
 				
-				// If a Collision set was made //
-				if ( Started && NonFirst ) {
-					if ( Rect == VsRect ) {
-						Rect2D Result = VsRect - Rect;
-						
-						Pos.x += Result.Width();// * Real::Half;
-						Pos.x = floor( Pos.x );
-						Rect = GetRect(); // Update Vs Rectangle //
-						
-						OnWall = true;
-												
-//						gelSetColor( 0,255,255,255 );
-					}
-					else {						
-//						gelSetColor( 0,64,64,255 );
-					}
-
-//					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-				}
+//				// If a Collision set was made //
+//				if ( Started && NonFirst ) {
+//					if ( Rect == VsRect ) {
+//						Rect2D Result = VsRect - Rect;
+//						
+//						Pos.x += Result.Width();// * Real::Half;
+//						Pos.x = floor( Pos.x );
+//						Rect = GetRect(); // Update Vs Rectangle //
+//						
+//						OnWall = true;
+//												
+////						gelSetColor( 0,255,255,255 );
+//					}
+//					else {						
+////						gelSetColor( 0,64,64,255 );
+//					}
+//
+////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
+//				}
 			}
 
 
@@ -463,99 +504,200 @@ public:
 			{
 				bool Started = false;
 				bool NonFirst = true;
-				Rect2D VsRect;
 				
 				int _x = EndX - 1;
 				for ( int _y = StartY; _y < EndY; _y++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-						if ( _y != StartY )
-							NonFirst = true;
-						if ( StartY == EndY )
-							NonFirst = true;
+//						if ( _y != StartY )
+//							NonFirst = true;
+//						if ( StartY == EndY )
+//							NonFirst = true;
 
 						if ( Started ) {
-							VsRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsRightRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 						}
 						else {
-							if ( StartY != EndY )
-								if ( _y == EndY - 1 )
-									break;
-							VsRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+//							if ( StartY != EndY )
+//								if ( _y == EndY - 1 )
+//									break;
+
+							VsRightRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							CollisionBits |= COLLISION_RIGHT;
 							Started = true;
 						}
 					}
 				}
 				
-				// If a Collision set was made //
-				if ( Started && NonFirst ) {
-					if ( Rect == VsRect ) {
-						Rect2D Result = VsRect - Rect;
-						
-						Pos.x -= Result.Width();// * Real::Half;
-						Pos.x = floor( Pos.x );
-						Rect = GetRect(); // Update Vs Rectangle //
-
-						OnWall = true;
-						
-						
-//						gelSetColor( 255,255,0,255 );
-					}
-					else {						
-//						gelSetColor( 64,64,0,255 );
-					}
-
-//					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-				}
+//				// If a Collision set was made //
+//				if ( Started && NonFirst ) {
+//					if ( Rect == VsRect ) {
+//						Rect2D Result = VsRect - Rect;
+//						
+//						Pos.x -= Result.Width();// * Real::Half;
+//						Pos.x = floor( Pos.x );
+//						Rect = GetRect(); // Update Vs Rectangle //
+//
+//						OnWall = true;
+//						
+//						
+////						gelSetColor( 255,255,0,255 );
+//					}
+//					else {						
+////						gelSetColor( 64,64,0,255 );
+//					}
+//
+////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
+//				}
 			}
 
 			// Top Row //
 			{
 				bool Started = false;
 				bool NonFirst = false;
-				Rect2D VsRect;
 				
 				int _y = StartY;
 				for ( int _x = StartX; _x < EndX; _x++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-						if ( _x != StartX )
-							NonFirst = true;
-						if ( StartX == EndX )
-							NonFirst = true;
+//						if ( _x != StartX )
+//							NonFirst = true;
+//						if ( StartX == EndX )
+//							NonFirst = true;
 
 						if ( Started ) {
-							VsRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsTopRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
 						}
 						else {
-							if ( StartX != EndX )
-								if ( _x == EndX - 1 )
-									break;
+//							if ( StartX != EndX )
+//								if ( _x == EndX - 1 )
+//									break;
 
-							VsRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsTopRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							CollisionBits |= COLLISION_TOP;
 							Started = true;
 						}
 					}
 				}
 				
-				// If a Collision set was made //
-				if ( Started && NonFirst ) {
-					if ( Rect == VsRect ) {
-						Rect2D Result = VsRect - Rect;
+//				// If a Collision set was made //
+//				if ( Started && NonFirst ) {
+//					if ( Rect == VsRect ) {
+//						Rect2D Result = VsRect - Rect;
+//						
+//						Pos.y += Result.Height();// * Real::Half;
+//						Pos.y = floor( Pos.y );
+//						Rect = GetRect(); // Update Vs Rectangle //
+//						
+//						JumpPower = 0;
+//						OnCeiling = true;
+//												
+////						gelSetColor( 0,255,0,255 );
+//					}
+//					else {						
+////						gelSetColor( 0,64,0,255 );
+//					}
+//
+////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
+//				}
+			}
+			
+			// SOLVE! //
+			{
+				// TODO: Special case when you are smaller than a block //
+				
+				if ( CollisionBits & COLLISION_BOTTOM ) {
+					if ( Rect == VsBottomRect ) {
+						Rect2D Result = VsBottomRect - Rect;
+						Vector2D Line = VsBottomRect.Center() - Rect.Center(); 
 						
-						Pos.y += Result.Height();// * Real::Half;
-						Pos.y = floor( Pos.y );
-						Rect = GetRect(); // Update Vs Rectangle //
-						
-						JumpPower = 0;
-						OnCeiling = true;
-												
-//						gelSetColor( 0,255,0,255 );
+						if ( Result.Width() > Result.Height() ) {
+							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+								
+							if ( Line.y > Real::Zero ) {
+								if ( !Input_Key( KEY_UP ) ) {
+									if ( IsBig )
+										JumpPower = 16;
+									else
+										JumpPower = 10;
+								}
+								if ( WasOnGround == false ) {
+									if ( IsBig && NotTransforming() )
+										SetIntermediateAnimation( Nook_TouchGround );
+								}
+								OnGround = true;
+							}
+//							else if ( Line.y < Real::Zero ) {
+//								JumpPower = 0;
+//								OnCeiling = true;
+//							}
+						}
+						else {
+//							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+						}
 					}
-					else {						
-//						gelSetColor( 0,64,0,255 );
-					}
-
-//					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
 				}
+
+				if ( CollisionBits & COLLISION_TOP ) {
+					if ( Rect == VsTopRect ) {
+						Rect2D Result = VsTopRect - Rect;
+						Vector2D Line = VsTopRect.Center() - Rect.Center(); 
+						
+						if ( Result.Width() > Result.Height() ) {
+							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+								
+//							if ( Line.y > Real::Zero ) {
+//								if ( !Input_Key( KEY_UP ) ) {
+//									if ( IsBig )
+//										JumpPower = 16;
+//									else
+//										JumpPower = 10;
+//								}
+//								if ( WasOnGround == false ) {
+//									if ( IsBig && NotTransforming() )
+//										SetIntermediateAnimation( Nook_TouchGround );
+//								}
+//								OnGround = true;
+//							}
+//							else 
+							if ( Line.y < Real::Zero ) {
+								JumpPower = 0;
+								OnCeiling = true;
+							}
+						}
+						else {
+//							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+						}
+					}
+				}				
+
+
+				if ( CollisionBits & COLLISION_LEFT ) {
+					if ( Rect == VsLeftRect ) {
+						Rect2D Result = VsLeftRect - Rect;
+						Vector2D Line = VsLeftRect.Center() - Rect.Center(); 
+						
+						if ( Result.Width() > Result.Height() ) {
+//							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+						}
+						else {
+							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+						}
+					}
+				}
+				
+				if ( CollisionBits & COLLISION_RIGHT ) {
+					if ( Rect == VsRightRect ) {
+						Rect2D Result = VsRightRect - Rect;
+						Vector2D Line = VsRightRect.Center() - Rect.Center(); 
+						
+						if ( Result.Width() > Result.Height() ) {
+//							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+						}
+						else {
+							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+						}
+					}
+				}
+				
 			}
 									
 			/*
