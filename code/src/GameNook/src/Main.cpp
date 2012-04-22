@@ -33,12 +33,16 @@ int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-const int Nook_Idle[] = { 0,0,1,1,3,3,0,0,1,1,2,2 };
-const int Nook_Run[] = { 4,5,6,7,8,9 };
-const int Nook_Anticipation[] = { 0,10,11 };
-const int Nook_Jump[] = { 12 };
-const int Nook_Fall[] = { 13 };
-const int Nook_TouchGround[] = { 14 };
+// Number of Frames, followed by frame numbers //
+// - ------------------------------------------------------------------------------------------ - //
+const int Nook_Idle[] = { 12, /**/ 0,0,1,1,3,3,0,0,1,1,2,2 };
+const int Nook_Run[] = { 6, /**/ 4,5,6,7,8,9 };
+const int Nook_Anticipation[] = { 3, /**/ 0,10,11 };
+const int Nook_Jump[] = { 1, /**/ 12 };
+const int Nook_Fall[] = { 1, /**/ 13 };
+const int Nook_TouchGround[] = { 1, /**/ 14 };
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
@@ -59,6 +63,76 @@ Vector2D CameraPos;
 typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
 
+
+// - ------------------------------------------------------------------------------------------ - //
+class cPlayer {
+public:
+	Vector2D Pos;
+	Vector2D Old;
+	
+	const int* CurrentAnimation;
+	int CurrentFrame;
+	int FrameDelay;
+	
+	Vector2D Anchor;
+
+public:
+	cPlayer( float _x, float _y ) :
+		Pos( _x, _y ),
+		Old( _x, _y )
+	{
+		CurrentAnimation = Nook_Idle;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+		
+		Anchor.x = 32;
+		Anchor.y = 32;
+	}
+	
+	void SetAnimation( const int* AnimationName ) {
+		if ( CurrentAnimation != AnimationName ) {
+			CurrentAnimation = AnimationName;
+			CurrentFrame = 0;
+			FrameDelay = 0;
+		}
+	}
+	
+	void ForceAnimation( const int* AnimationName ) {
+		CurrentAnimation = AnimationName;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+	}
+	
+	void Step() {
+		if ( gx != 0 ) {
+			SetAnimation( Nook_Run );
+		}
+		else {
+			SetAnimation( Nook_Idle );
+		}
+		
+		FrameDelay++;
+		if ( FrameDelay >= 3 ) {
+			FrameDelay = 0;
+			CurrentFrame++;
+			if ( CurrentFrame == CurrentAnimation[0] )
+				CurrentFrame = 0;
+		}		
+	}
+	
+	void Draw() {
+		gelBindImage( PlayerId );
+		gelDrawTile(
+			CurrentAnimation[ CurrentFrame + 1 ],
+			Pos.x - Anchor.x, 
+			Pos.y - Anchor.y
+			);
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
+
+cPlayer* Player;
+
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
 	ScreenWidth = 320;
@@ -75,6 +149,8 @@ void GameInit() {
 	PlayerId = gelLoadTileset( "Content/Nook-Player.png", 64, 64 );
 	
 	LogLevel = 3;
+	
+	// ---------------------- //
 	
 	DataBlock* OriginalMap = new_read_nullterminate_DataBlock( "MapData.json" );
 
@@ -111,9 +187,17 @@ void GameInit() {
 	cJSON_Delete( root );
 	
 	delete_DataBlock( OriginalMap );
+
+	// ---------------------- //
+
+	Player = new cPlayer( 112, 104 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameExit() {
+	// TODO: Delete Map //
+	
+	delete Player;
+	
 	gelGraphicsExit();
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -128,6 +212,8 @@ void GameStep() {
 		CameraPos.x += gx * 2;//0.5;
 		CameraPos.y += gy * 2;//0.5;
 	}
+	
+	Player->Step();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() {
@@ -213,34 +299,35 @@ void GameDraw() {
 		}
 	}
 	
-	Vector2D Anchor;
-	Anchor.x = 32;
-	Anchor.y = 32;
-	
-	
-//	int* CurrentAnimation = Nook_Idle;
-//	int CurrentAnimation_Length = sizeof(Nook_Idle)/sizeof(int);
-	const int* CurrentAnimation = Nook_Run;
-	int CurrentAnimation_Length = sizeof(Nook_Run)/sizeof(int);
-	
-	static int FrameDelay = 0;
-	static int Goo = 0;
-	
-	FrameDelay++;
-	if ( FrameDelay == 3 ) {
-		FrameDelay = 0;
-		Goo++;
-		if ( Goo == CurrentAnimation_Length )
-		Goo = 0; 
-	}
-	
-	gelBindImage( PlayerId );
-	gelDrawTile(
-		CurrentAnimation[Goo],
-		floor(CameraPos.x.ToFloat() - (StartX<<3) - OffsetX) - Anchor.x.ToFloat(), 
-		floor(CameraPos.y.ToFloat() - (StartY<<3) - OffsetY) - Anchor.y.ToFloat()
-		);
-		
+//	Vector2D Anchor;
+//	Anchor.x = 32;
+//	Anchor.y = 32;
+//	
+//	
+////	int* CurrentAnimation = Nook_Idle;
+////	int CurrentAnimation_Length = sizeof(Nook_Idle)/sizeof(int);
+//	const int* CurrentAnimation = Nook_Run;
+//	int CurrentAnimation_Length = sizeof(Nook_Run)/sizeof(int);
+//	
+//	static int FrameDelay = 0;
+//	static int Goo = 0;
+//	
+//	FrameDelay++;
+//	if ( FrameDelay == 3 ) {
+//		FrameDelay = 0;
+//		Goo++;
+//		if ( Goo == CurrentAnimation_Length )
+//		Goo = 0; 
+//	}
+//	
+//	gelBindImage( PlayerId );
+//	gelDrawTile(
+//		CurrentAnimation[Goo],
+//		floor(CameraPos.x.ToFloat() - (StartX<<3) - OffsetX) - Anchor.x.ToFloat(), 
+//		floor(CameraPos.y.ToFloat() - (StartY<<3) - OffsetY) - Anchor.y.ToFloat()
+//		);
+
+	Player->Draw();
 
 //	gelSetColor( 255,0,0,255 );
 //	gelDrawCircle( 
