@@ -7,9 +7,11 @@
 #include <Core/DataBlock.h>
 #include <Core/GelArray.h>
 #include <Core/GelDirectory.h>
+
 #include <Grid/Grid2D_Class.h>
 
 #include <Math/Vector.h>
+#include <Geometry/Rect.h>
 
 #include <cJSON.h>
 
@@ -75,6 +77,7 @@ public:
 	int FrameDelay;
 	
 	Vector2D Anchor;
+	Vector2D Shape;
 
 public:
 	cPlayer( float _x, float _y ) :
@@ -87,6 +90,9 @@ public:
 		
 		Anchor.x = 32;
 		Anchor.y = 64;
+		
+		Shape.x = 20;
+		Shape.y = 28;
 	}
 	
 	void SetAnimation( const int* AnimationName ) {
@@ -103,6 +109,10 @@ public:
 		FrameDelay = 0;
 	}
 	
+	inline Rect2D GetRect() {
+		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
+	}
+	
 	void Step() {
 		// Physics //
 		{
@@ -110,6 +120,13 @@ public:
 			Velocity += Vector2D( 0, 0.2f ); // Gravity //
 			Old = Pos;
 			Pos += Velocity;
+		}
+		
+		// Solve Versus Map //
+		{
+			// Build Rectangle //
+			Rect2D Rect = GetRect();
+
 		}
 		
 		// Animation and Controls //
@@ -130,6 +147,14 @@ public:
 	}
 	
 	void Draw( const Vector2D& Camera ) {
+		{
+			Rect2D Rect = GetRect();
+			
+			gelSetColor( 255,255,0,255 );
+			gelDrawRectFill( Rect.P1().x, Rect.P1().y, Rect.Width(), Rect.Height() );
+		}
+
+
 		gelBindImage( PlayerId );
 		gelDrawTile(
 			CurrentAnimation[ CurrentFrame + 1 ],
