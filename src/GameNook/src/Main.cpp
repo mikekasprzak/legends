@@ -121,6 +121,7 @@ public:
 	Vector2D Old;
 	
 	const int* CurrentAnimation;
+	const int* IntermediateAnimation;
 	int CurrentFrame;
 	int FrameDelay;
 	
@@ -141,6 +142,7 @@ public:
 		Old( _x, _y )
 	{
 		CurrentAnimation = Nook_Idle;
+		IntermediateAnimation = 0;
 		CurrentFrame = 0;
 		FrameDelay = 0;
 		
@@ -153,40 +155,60 @@ public:
 		
 		FacingLeft = false;
 		
-		SetBig( true );
+		SetBig( true, false );
 	}
 	
-	inline void SetBig( const bool _IsBig ) {
+	inline void SetBig( const bool _IsBig, const bool _SetAnimation = true ) {
 		IsBig = _IsBig;
 		
 		if ( IsBig ) {
-			Shape.x = 18;
+			Shape.x = 16;
 			Shape.y = 28;
-			SetAnimation( Nook_Idle );
+			if ( _SetAnimation ) {
+				SetAnimation( Nook_Idle );
+				SetIntermediateAnimation( Nook_Sm_Transform );
+			}
 		}
 		else {
 			Shape.x = 6;
 			Shape.y = 6;
-			SetAnimation( Nook_Sm_Idle );
+			if ( _SetAnimation ) {
+				SetAnimation( Nook_Sm_Idle );
+				SetIntermediateAnimation( Nook_Transform );
+			}
 		}
 	}
 	
-	void SetAnimation( const int* AnimationName ) {
-		if ( CurrentAnimation != AnimationName ) {
-			CurrentAnimation = AnimationName;
+	inline void SetIntermediateAnimation( const int* AnimationName ) {
+		if ( IntermediateAnimation != AnimationName ) {
+			IntermediateAnimation = AnimationName;
 			CurrentFrame = 0;
 			FrameDelay = 0;
+		}	
+	}
+	
+	inline void SetAnimation( const int* AnimationName ) {
+		if ( CurrentAnimation != AnimationName ) {
+			CurrentAnimation = AnimationName;
+			if ( IntermediateAnimation == 0 ) {
+				CurrentFrame = 0;
+				FrameDelay = 0;
+			}
 		}
 	}
 	
-	void ForceAnimation( const int* AnimationName ) {
-		CurrentAnimation = AnimationName;
-		CurrentFrame = 0;
-		FrameDelay = 0;
-	}
+//	inline void ForceAnimation( const int* AnimationName ) {
+//		CurrentAnimation = AnimationName;
+//		CurrentFrame = 0;
+//		FrameDelay = 0;
+//	}
 	
 	inline Rect2D GetRect() {
 		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
+	}
+	
+	inline bool NotTransforming() {
+		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
 	}
 	
 	void Step() {
@@ -194,7 +216,9 @@ public:
 		{
 			Vector2D Velocity = Pos - Old;
 			Velocity += Vector2D( 0, 0.4f ); // Gravity //
-			Velocity += Vector2D( gx, 0 ) * Real(0.2);
+			if ( NotTransforming() ) {
+				Velocity += Vector2D( gx, 0 ) * Real(0.2);
+			}
 			
 			if ( (JumpPower > 0) ) {
 				if ( Input_Key( KEY_UP ) ) {
@@ -298,19 +322,21 @@ public:
 			
 		// Animation and Controls //
 		if ( OnGround ) {
-			if ( gx != 0 ) {
-				SetAnimation( IsBig ? Nook_Run : Nook_Sm_Run );
-			}
-			else {
-				SetAnimation( IsBig ? Nook_Idle : Nook_Sm_Idle );
-			}
-			
-			// NOTE: This scope makes changing which way you face only work when on the ground //
-			if ( gx > 0 ) {
-				FacingLeft = false;
-			}
-			else if ( gx < 0 ) {
-				FacingLeft = true;
+			if ( NotTransforming() ) {
+				if ( gx != 0 ) {
+					SetAnimation( IsBig ? Nook_Run : Nook_Sm_Run );
+				}
+				else {
+					SetAnimation( IsBig ? Nook_Idle : Nook_Sm_Idle );
+				}
+				
+				// NOTE: This scope makes changing which way you face only work when on the ground //
+				if ( gx > 0 ) {
+					FacingLeft = false;
+				}
+				else if ( gx < 0 ) {
+					FacingLeft = true;
+				}
 			}
 		}
 		else {
@@ -323,15 +349,25 @@ public:
 		}
 
 		if ( Input_KeyPressed( KEY_ACTION ) ) {	
-			SetBig( !IsBig );
+			if ( NotTransforming() ) {
+				SetBig( !IsBig );
+			}
 		}
 		
 		FrameDelay++;
 		if ( FrameDelay >= 3 ) {
 			FrameDelay = 0;
 			CurrentFrame++;
-			if ( CurrentFrame == CurrentAnimation[0] )
-				CurrentFrame = 0;
+			if ( IntermediateAnimation ) {
+				if ( CurrentFrame == IntermediateAnimation[0] ) {
+					CurrentFrame = 0;
+					IntermediateAnimation = 0;
+				}
+			}
+			else {
+				if ( CurrentFrame == CurrentAnimation[0] )
+					CurrentFrame = 0;
+			}
 		}		
 	}
 	
@@ -347,16 +383,16 @@ public:
 		
 		if ( FacingLeft ) {
 			gelDrawTileFlipX(
-				CurrentAnimation[ CurrentFrame + 1 ],
-				floor(Pos.x) - Anchor.x - Camera.x, 
-				floor(Pos.y) - Anchor.y - Camera.y
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
 				);
 		}
 		else {
 			gelDrawTile(
-				CurrentAnimation[ CurrentFrame + 1 ],
-				floor(Pos.x) - Anchor.x - Camera.x, 
-				floor(Pos.y) - Anchor.y - Camera.y
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
 				);
 		}
 			
