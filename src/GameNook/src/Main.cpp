@@ -39,12 +39,12 @@ int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Idle[] = { 12, /**/ 0,0,1,1,3,3,0,0,1,1,2,2 };
 const int Nook_Run[] = { 6, /**/ 4,5,6,7,8,9 };
-const int Nook_PreJump[] = { 3, /**/ 0,10,11 };
+const int Nook_PreJump[] = { 2, /**/ 10,11 };
 const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 1, /**/ 43 };
+const int Nook_WallJump[] = { 2, /**/ 43, 43 };
 const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
@@ -226,6 +226,11 @@ public:
 			
 			if ( (JumpPower > 0) ) {
 				if ( Input_Key( KEY_UP ) && NotTransforming() ) {
+					if ( Input_KeyPressed( KEY_UP ) ) {
+						if ( IsBig )
+							SetIntermediateAnimation( Nook_PreJump );
+					}
+
 					Velocity.y = -(Real(JumpPower) * Real(0.5));
 					JumpPower--;
 				}
