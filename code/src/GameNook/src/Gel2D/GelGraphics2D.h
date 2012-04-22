@@ -14,6 +14,9 @@ extern "C" {
 	void gelDrawLine( float x1, float y1, float x2, float y2 );
 	void gelDrawText( float x, float y, const char* Text );
 	
+	void gelDrawRect( float x, float y, float w, float h );
+	void gelDrawRectFill( float x, float y, float w, float h );
+	
 	//void gelDrawFillRect( float x, float y, float w, float h );
 	
 	int gelLoadImage( const char* FileName );
