@@ -118,6 +118,11 @@ GelArray< LayerType* >* MapLayer;
 
 
 // - ------------------------------------------------------------------------------------------ - //
+const int NOOK_BIG_WIDTH = 16;
+const int NOOK_BIG_HEIGHT = 28;
+const int NOOK_SM_WIDTH = 6;
+const int NOOK_SM_HEIGHT = 6;
+// - ------------------------------------------------------------------------------------------ - //
 class cPlayer {
 public:
 	Vector2D Pos;
@@ -167,16 +172,16 @@ public:
 		IsBig = _IsBig;
 		
 		if ( IsBig ) {
-			Shape.x = 16;
-			Shape.y = 28;
+			Shape.x = NOOK_BIG_WIDTH;
+			Shape.y = NOOK_BIG_HEIGHT;
 			if ( _SetAnimation ) {
 				SetAnimation( Nook_Idle );
 				SetIntermediateAnimation( Nook_Sm_Transform );
 			}
 		}
 		else {
-			Shape.x = 6;
-			Shape.y = 6;
+			Shape.x = NOOK_SM_WIDTH;
+			Shape.y = NOOK_SM_WIDTH;
 			if ( _SetAnimation ) {
 				SetAnimation( Nook_Sm_Idle );
 				SetIntermediateAnimation( Nook_Transform );
@@ -212,8 +217,65 @@ public:
 		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
 	}
 	
+	inline Rect2D GetRect( const Real ForcedWidth, const Real ForcedHeight) {
+		return Rect2D( Pos - Vector2D(ForcedWidth * Real::Half, ForcedHeight), Vector2D( ForcedWidth, ForcedHeight ) );
+	}
+
 	inline bool NotTransforming() {
 		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
+	}
+	
+	bool CanTransformHere() {
+		Rect2D Rect = GetRect( NOOK_BIG_WIDTH-2, NOOK_BIG_HEIGHT );
+		
+		int Layer = MapLayer->Size-1;
+		
+		int StartX = (int)floor(Rect.P1().x.ToFloat()) >> 3;
+		int StartY = (int)floor(Rect.P1().y.ToFloat()) >> 3;
+		int EndX = ((int)ceil(Rect.P2().x.ToFloat()) >> 3) + 1;
+		int EndY = ((int)ceil(Rect.P2().y.ToFloat()) >> 3) + 1;
+
+		int MapWidth = MapLayer->Data[Layer]->Width();
+		int MapHeight = MapLayer->Data[Layer]->Height();
+		
+		if ( StartX < 0 )
+			StartX = 0;
+		if ( StartY < 0 )
+			StartY = 0;
+		if ( EndX < 0 )
+			EndX = 0;
+		if ( EndY < 0 )
+			EndY = 0;
+		
+		if ( StartX >= MapWidth )
+			StartX = MapWidth-1;
+		if ( StartY >= MapHeight )
+			StartY = MapHeight-1;
+		if ( EndX >= MapWidth )
+			EndX = MapWidth-1;
+		if ( EndY >= MapHeight )
+			EndY = MapHeight-1;
+		
+		WasOnGround = OnGround;
+		OnGround = false;
+		
+		for ( int _y = StartY; _y < EndY; _y++ ) {
+			for ( int _x = StartX; _x < EndX; _x++ ) {
+				int TileToTest = (*MapLayer->Data[ Layer ])(_x, _y);
+				
+				
+				
+				if ( (TileToTest >= TILE_COLLISION) && (TileToTest <= TILE_NOGROW) ) {
+					Rect2D VsRect( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+					
+					if ( Rect == VsRect ) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	void Step() {
@@ -363,9 +425,19 @@ public:
 			}
 		}
 
-		if ( Input_KeyPressed( KEY_ACTION ) ) {	
+		if ( Input_KeyPressed( KEY_ACTION ) ) {
 			if ( NotTransforming() ) {
-				SetBig( !IsBig );
+				if ( IsBig == false ) {
+					if ( CanTransformHere() ) {
+						SetBig( !IsBig );
+					}
+					else {
+						// TODO: Honk Can't Transform //
+					}
+				}
+				else {
+					SetBig( !IsBig );
+				}
 			}
 		}
 		
