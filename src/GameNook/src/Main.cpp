@@ -125,8 +125,8 @@ void GameStep() {
 		CameraPos.y += gy * 4;
 	}
 	else {
-		CameraPos.x += gx * 1;//0.5;
-		CameraPos.y += gy * 1;//0.5;
+		CameraPos.x += gx * 2;//0.5;
+		CameraPos.y += gy * 2;//0.5;
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -214,8 +214,8 @@ void GameDraw() {
 	}
 	
 	Vector2D Anchor;
-	Anchor.x = 64;
-	Anchor.y = 64;
+	Anchor.x = 32;
+	Anchor.y = 32;
 	
 	
 //	int* CurrentAnimation = Nook_Idle;
