@@ -101,6 +101,7 @@ function Main_GainFocus() {
 
 	// Resume Music //
 	sndResume( 'BGMusic' );
+//	sndPlay( 'BGMusic' );
 	
 	// Clear Keys (just in case) //
 	Input_KeyPanic();
@@ -123,6 +124,8 @@ function Main_LoseFocus() {
 	
 	// Pause Music //
 	sndPause( 'BGMusic' );
+//	sndStop( 'BGMusic' );
+//	sndStopAll();
 	
 	Main_ShowPaused();
 }

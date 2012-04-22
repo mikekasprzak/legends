@@ -67,7 +67,8 @@ function sndLoadAndPlayAndLoop( _Name, _File ) {
 		id: _Name,
 		autoLoad: true,
 		autoPlay: true,
-		loops: 999999,
+//		loops: 0,
+		onfinish : function() { sndPlay( _Name ); },
 		url: SoundFile_Prefix + _File + SoundFile_Ext,
 		volume: 50
 	});	
@@ -99,6 +100,15 @@ function sndPause( _Name ) {
 function sndResume( _Name ) {
 	if ( soundManager.getSoundById(_Name) )
 		soundManager.getSoundById(_Name).resume();
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function sndStop( _Name ) {
+	if ( soundManager.getSoundById(_Name) )
+		soundManager.getSoundById(_Name).stop();
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function sndStopAll() {
+	soundManager.stopAll();
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 
