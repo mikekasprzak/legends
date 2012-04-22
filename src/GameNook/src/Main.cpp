@@ -44,7 +44,7 @@ const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 2, /**/ 43, 43 };
+const int Nook_WallJump[] = { 4, /**/ 43, 43, 43, 12 };
 const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
@@ -220,6 +220,10 @@ public:
 		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
 	}
 	
+	inline bool NotWallJumping() {
+		return IntermediateAnimation != Nook_WallJump;
+	}
+	
 	bool CanTransformHere() {
 		Rect2D Rect = GetRect( NOOK_BIG_WIDTH, NOOK_BIG_HEIGHT );
 		
@@ -281,7 +285,7 @@ public:
 //			}
 
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
-			if ( NotTransforming() ) {
+			if ( NotTransforming() && NotWallJumping() ) {
 				Pos += Vector2D( gx, 0 ) * Real(0.2);
 			}
 			
@@ -289,8 +293,20 @@ public:
 			if ( (JumpPower > 0) ) {
 				if ( Input_Key( KEY_UP ) && NotTransforming() ) {
 					if ( Input_KeyPressed( KEY_UP ) ) {
-						if ( IsBig )
-							SetIntermediateAnimation( Nook_PreJump );
+						if ( IsBig ) {
+							if ( OnGround )
+								SetIntermediateAnimation( Nook_PreJump );
+							else if ( OnWall ) {
+								if ( FacingLeft ) {
+									Velocity.x = +Real(5);
+								}
+								else {
+									Velocity.x = -Real(5);
+								}
+								FacingLeft = !FacingLeft;
+								SetIntermediateAnimation( Nook_WallJump );
+							}
+						}
 					}
 
 					Velocity.y = -(Real(JumpPower) * Real(0.5));
@@ -309,7 +325,16 @@ public:
 			
 			Velocity = Pos - Old;
 			Old = Pos;
-			Pos += Velocity * ((OnGround && gx == 0) ? Real( 0.80 ) : Real( 0.96 ));
+			
+			Real Scalar( 0.96 );
+			if ( OnGround && gx == 0 ) {
+				Scalar = Real( 0.8 );
+			}
+			if ( OnWall && (gx != 0) && (Velocity.y > 0) ) {
+				Scalar = Real( 0.3 );
+			}
+			
+			Pos += Velocity * Scalar;
 		}
 
 		// Solve Versus Map //
@@ -732,6 +757,17 @@ public:
 						}
 						else {
 							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+
+							if ( VsLeftRect.Height() > 24 ) {
+								if ( !Input_Key( KEY_UP ) ) {
+									if ( IsBig )
+										JumpPower = 12;
+								}
+															
+								OnWall = true;
+								if ( gx < 0 )
+									FacingLeft = true;
+							}
 						}
 					}
 				}
@@ -747,6 +783,17 @@ public:
 						}
 						else {
 							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+
+							if ( VsRightRect.Height() > 24 ) {
+								if ( !Input_Key( KEY_UP ) ) {
+									if ( IsBig )
+										JumpPower = 12;
+								}
+								
+								OnWall = true;
+								if ( gx > 0 )
+									FacingLeft = false;
+							}
 						}
 					}
 				}
@@ -835,7 +882,15 @@ public:
 				SetAnimation( IsBig ? Nook_Jump : Nook_Sm_Jump );
 			}
 			else {
-				SetAnimation( IsBig ? Nook_Fall : Nook_Sm_Fall );
+				if ( IsBig ) {
+					if ( OnWall )
+						SetAnimation( Nook_WallGrab );
+					else
+						SetAnimation( Nook_Fall );
+				}
+				else {
+					SetAnimation( Nook_Sm_Fall );
+				}
 			}
 		}
 
