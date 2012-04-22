@@ -118,7 +118,7 @@ GelArray< LayerType* >* MapLayer;
 
 
 // - ------------------------------------------------------------------------------------------ - //
-const int NOOK_BIG_WIDTH = 16;
+const int NOOK_BIG_WIDTH = 14;
 const int NOOK_BIG_HEIGHT = 28;
 const int NOOK_SM_WIDTH = 6;
 const int NOOK_SM_HEIGHT = 6;
@@ -221,7 +221,7 @@ public:
 	}
 	
 	bool CanTransformHere() {
-		Rect2D Rect = GetRect( NOOK_BIG_WIDTH-2, NOOK_BIG_HEIGHT );
+		Rect2D Rect = GetRect( NOOK_BIG_WIDTH, NOOK_BIG_HEIGHT );
 		
 		int Layer = MapLayer->Size-1;
 		
@@ -602,10 +602,60 @@ public:
 			
 			// SOLVE! //
 			{
+				int ActualCollisionBits = 0;
+
+				if ( CollisionBits & COLLISION_BOTTOM )
+					if ( VsBottomRect.Width() > 8 )
+						if ( Rect == VsBottomRect )
+							ActualCollisionBits |= COLLISION_BOTTOM;
+				if ( CollisionBits & COLLISION_TOP )
+					if ( VsTopRect.Width() > 8 )
+						if ( Rect == VsTopRect )
+							ActualCollisionBits |= COLLISION_TOP;
+				if ( CollisionBits & COLLISION_LEFT )
+					if ( VsLeftRect.Height() > 8 )
+						if ( Rect == VsLeftRect )
+							ActualCollisionBits |= COLLISION_LEFT;
+				if ( CollisionBits & COLLISION_RIGHT )
+					if ( VsRightRect.Height() > 8 )
+						if ( Rect == VsRightRect )
+							ActualCollisionBits |= COLLISION_RIGHT;
+
+				if ( ActualCollisionBits == 0 ) {
+					if ( CollisionBits & COLLISION_BOTTOM )
+						if ( Rect == VsBottomRect )
+							ActualCollisionBits |= COLLISION_BOTTOM;
+					if ( CollisionBits & COLLISION_TOP )
+						if ( Rect == VsTopRect )
+							ActualCollisionBits |= COLLISION_TOP;
+					if ( CollisionBits & COLLISION_LEFT )
+						if ( Rect == VsLeftRect )
+							ActualCollisionBits |= COLLISION_LEFT;
+					if ( CollisionBits & COLLISION_RIGHT )
+						if ( Rect == VsRightRect )
+							ActualCollisionBits |= COLLISION_RIGHT;
+				}
+				
+//				if ( CollisionBits & COLLISION_TOP_LEFT )
+//					if ( Rect == VsTopLeftRect )
+//						ActualCollisionBits |= COLLISION_TOP_LEFT;
+//				if ( CollisionBits & COLLISION_TOP_RIGHT )
+//					if ( Rect == VsTopRightRect )
+//						ActualCollisionBits |= COLLISION_TOP_RIGHT;
+//				if ( CollisionBits & COLLISION_BOTTOM_LEFT )
+//					if ( Rect == VsBottomLeftRect )
+//						ActualCollisionBits |= COLLISION_BOTTOM_LEFT;
+//				if ( CollisionBits & COLLISION_BOTTOM_RIGHT )
+//					if ( Rect == VsBottomRightRect )
+//						ActualCollisionBits |= COLLISION_BOTTOM_RIGHT;
+
+				
 				// TODO: Special case when you are smaller than a block //
 				
-				if ( CollisionBits & COLLISION_BOTTOM ) {
-					if ( Rect == VsBottomRect ) {
+				
+				if ( ActualCollisionBits & COLLISION_BOTTOM ) {
+					//if ( Rect == VsBottomRect ) 
+					{
 						Rect2D Result = VsBottomRect - Rect;
 						Vector2D Line = VsBottomRect.Center() - Rect.Center(); 
 						
@@ -636,8 +686,9 @@ public:
 					}
 				}
 
-				if ( CollisionBits & COLLISION_TOP ) {
-					if ( Rect == VsTopRect ) {
+				if ( ActualCollisionBits & COLLISION_TOP ) {
+					//if ( Rect == VsTopRect ) 
+					{
 						Rect2D Result = VsTopRect - Rect;
 						Vector2D Line = VsTopRect.Center() - Rect.Center(); 
 						
@@ -670,8 +721,9 @@ public:
 				}				
 
 
-				if ( CollisionBits & COLLISION_LEFT ) {
-					if ( Rect == VsLeftRect ) {
+				if ( ActualCollisionBits & COLLISION_LEFT ) {
+					//if ( Rect == VsLeftRect ) 
+					{
 						Rect2D Result = VsLeftRect - Rect;
 						Vector2D Line = VsLeftRect.Center() - Rect.Center(); 
 						
@@ -684,8 +736,9 @@ public:
 					}
 				}
 				
-				if ( CollisionBits & COLLISION_RIGHT ) {
-					if ( Rect == VsRightRect ) {
+				if ( ActualCollisionBits & COLLISION_RIGHT ) {
+					//if ( Rect == VsRightRect ) 
+					{
 						Rect2D Result = VsRightRect - Rect;
 						Vector2D Line = VsRightRect.Center() - Rect.Center(); 
 						
