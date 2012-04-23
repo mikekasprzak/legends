@@ -112,8 +112,13 @@ void GameInput( float x, float y, int Current, int Last ) {
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 
-int TilesetId; // ID //
-int PlayerId; // ID //
+int TilesetId;
+int PlayerId;
+int HudId;
+int DoorId;
+int StarsId;
+int TitleId;
+int WinId;
 
 Vector2D CameraPos;
 
@@ -838,6 +843,12 @@ void GameInit() {
 	
 	TilesetId = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
 	PlayerId = gelLoadTileset( "Content/Nook-Player.png", 64, 64 );
+	HudId = gelLoadTileset( "Content/Hud-Things.png", 32, 32 );
+	DoorId = gelLoadTileset( "Content/Door.png", 32, 32 );
+	StarsId = gelLoadTileset( "Content/Stars-and-keys.png", 32, 32 );
+	
+	TitleId = gelLoadImage( "Content/Title.png" );
+	WinId = gelLoadImage( "Content/Win.png" );
 	
 	LogLevel = 3;
 	
