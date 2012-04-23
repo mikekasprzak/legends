@@ -39,6 +39,12 @@ int HalfScreenWidth;
 int HalfScreenHeight;
 // - ------------------------------------------------------------------------------------------ - //
 
+const int STATE_TITLE =	1;
+const int STATE_PLAY =	2;
+const int STATE_WIN =	3;
+
+int GameState;
+
 // - ------------------------------------------------------------------------------------------ - //
 // Number of Frames, followed by frame numbers //
 // - ------------------------------------------------------------------------------------------ - //
@@ -66,8 +72,10 @@ const int Key_Idle[] = { 1, /**/ 11 };
 const int Key_Sm_Idle[] = { 1, /**/ 12 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Door_Closed[] = { 1, /**/ 0 };
-const int Door_Open[] = { 4, /**/ 0,1,2,3 };
-const int Door_Opened[] = { 1, /**/ 0 };
+const int Door_Open[] = { 4, /**/ 1,2,3,4 };
+const int Door_Opened[] = { 1, /**/ 4 };
+const int Exit_Closed[] = { 1, /**/ 5 };
+const int Exit_Opened[] = { 1, /**/ 6 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -170,6 +178,12 @@ public:
 	
 	bool IsBig;
 	
+	int TotalStars;
+	int TotalKeys;
+
+	int StarSpin;
+	int StarSpinPreDelay;
+	
 public:
 	cPlayer( float _x, float _y ) :
 		Pos( _x, _y ),
@@ -193,6 +207,12 @@ public:
 		JumpPower = 0;
 		
 		FacingLeft = false;
+		
+		TotalStars = 0;
+		TotalKeys = 0;
+		
+		StarSpin = 0;
+		StarSpinPreDelay = 0;
 		
 		SetBig( true, false );
 	}
@@ -239,6 +259,10 @@ public:
 	
 	inline Rect2D GetRect() {
 		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
+	}
+
+	inline Rect2D GetRectPlus( const Real _w, const Real _h ) {
+		return Rect2D( Pos - Vector2D((Shape.x + _w) * Real::Half, Shape.y + _h), Shape + Vector2D(_w,_h) );
 	}
 	
 	inline Rect2D GetRect( const Real ForcedWidth, const Real ForcedHeight) {
@@ -303,8 +327,101 @@ public:
 		
 		return true;
 	}
-	
+
+	void CollectItems() {
+		Rect2D Rect = GetRectPlus(2,2);
+		
+		int Layer = MapLayer->Size-1;
+		
+		int StartX = (int)floor(Rect.P1().x.ToFloat()) >> 3;
+		int StartY = (int)floor(Rect.P1().y.ToFloat()) >> 3;
+		int EndX = ((int)ceil(Rect.P2().x.ToFloat()) >> 3) + 1;
+		int EndY = ((int)ceil(Rect.P2().y.ToFloat()) >> 3) + 1;
+
+		int MapWidth = MapLayer->Data[Layer]->Width();
+		int MapHeight = MapLayer->Data[Layer]->Height();
+		
+		if ( StartX < 0 )
+			StartX = 0;
+		if ( StartY < 0 )
+			StartY = 0;
+		if ( EndX < 0 )
+			EndX = 0;
+		if ( EndY < 0 )
+			EndY = 0;
+		
+		if ( StartX >= MapWidth )
+			StartX = MapWidth-1;
+		if ( StartY >= MapHeight )
+			StartY = MapHeight-1;
+		if ( EndX >= MapWidth )
+			EndX = MapWidth-1;
+		if ( EndY >= MapHeight )
+			EndY = MapHeight-1;
+				
+		for ( int _y = StartY; _y < EndY; _y++ ) {
+			for ( int _x = StartX; _x < EndX; _x++ ) {
+				int TileToTest = (*MapLayer->Data[ Layer ])(_x, _y);
+				
+				if ( (TileToTest >= TILE_BIGSTAR) && (TileToTest <= TILE_SMKEY) ) {
+					Rect2D VsRect( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+					
+					// TODO: Particle Effect
+					if ( Rect == VsRect ) {
+						(*MapLayer->Data[ Layer ])(_x, _y) = 0;
+
+						if ( (TileToTest == TILE_BIGSTAR) || (TileToTest == TILE_SMSTAR) ) {
+							sndPlay( "StarPickup" );
+							TotalStars++;
+						}
+						else if ( (TileToTest == TILE_BIGKEY) || (TileToTest == TILE_SMKEY) ) {
+							sndPlay( "KeyPickup" );
+							TotalKeys++;
+						}
+					}
+				}
+				else if ( TileToTest == TILE_DOOR ) {
+					if ( TotalKeys > 0 ) {
+						Rect2D VsRect( Vector2D( _x << 3, (_y-7) << 3), Vector2D( 8, 64 ) );
+
+						// TODO: Particle Effect
+						if ( Rect == VsRect ) {
+							(*MapLayer->Data[ Layer ])(_x, _y) = 0;
+
+							sndPlay( "Unlock" );
+							TotalKeys--;
+						}
+					}
+				}
+				else if ( TileToTest == TILE_EXIT ) {
+					if ( TotalKeys > 0 ) {
+						Rect2D VsRect( Vector2D( _x << 3, (_y-7) << 3), Vector2D( 16, 64 ) );
+
+						// TODO: Particle Effect
+						if ( Rect == VsRect ) {
+							(*MapLayer->Data[ Layer ])(_x, _y) = 0;
+
+							sndPlay( "Unlock" );
+							sndPlay( "Win" );
+							GameState = STATE_WIN;
+							TotalKeys--;
+						}
+					}
+				}
+			}
+		}
+	}
+		
 	void Step() {
+		StarSpinPreDelay++;
+		if ( StarSpinPreDelay == 2 ) {
+			StarSpinPreDelay = 0;
+			StarSpin++;
+			if ( StarSpin == Star_Idle[0] )
+				StarSpin = 0;
+		}
+				
+		
 		// Physics //
 		{
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
@@ -735,6 +852,8 @@ public:
 				}
 			}
 			*/
+			
+			CollectItems();
 		}
 			
 		// Animation and Controls //
@@ -850,13 +969,6 @@ public:
 
 cPlayer* Player;
 
-
-const int STATE_TITLE =	1;
-const int STATE_PLAY =	2;
-const int STATE_WIN =	3;
-
-int GameState;
-
 // - ------------------------------------------------------------------------------------------ - //
 extern "C" {
 	size_t mrGetLayerCount();
@@ -884,7 +996,7 @@ void GameInit() {
 	TilesetId = gelLoadTileset( "Content/Nook-Tileset.png", 8, 8 );
 	PlayerId = gelLoadTileset( "Content/Nook-Player.png", 64, 64 );
 	HudId = gelLoadTileset( "Content/Hud-Things.png", 32, 32 );
-	DoorId = gelLoadTileset( "Content/Door.png", 32, 32 );
+	DoorId = gelLoadTileset( "Content/Door.png", 64, 64 );
 	StarsId = gelLoadTileset( "Content/Stars-and-keys.png", 32, 32 );
 	
 	TitleId = gelLoadImage( "Content/Title.png" );
@@ -1128,13 +1240,14 @@ void DrawObjectLayer( const int Layer ) {
 		for ( int _x = StartX; _x < EndX; _x++ ) {
 			int Tile = (*MapLayer->Data[Layer])(_x, _y);
 			int ArtIndex = 0;
+			bool Baseline = false;
 			
 			if ( Tile == 0 ) {
 				continue;
 			}
 			else if ( Tile == TILE_BIGSTAR ) {
 				gelBindTileset( StarsId );
-				ArtIndex = Star_Idle[1];
+				ArtIndex = Star_Idle[Player->StarSpin + 1];
 			}
 			else if ( Tile == TILE_BIGKEY ) {
 				gelBindTileset( StarsId );
@@ -1151,17 +1264,28 @@ void DrawObjectLayer( const int Layer ) {
 			else if ( Tile == TILE_DOOR ) {
 				gelBindTileset( DoorId );
 				ArtIndex = Door_Closed[1];
+				Baseline = true;
 			}
 			else if ( Tile == TILE_EXIT ) {
 				gelBindTileset( DoorId );
-				ArtIndex = Door_Open[1];
+				ArtIndex = Exit_Closed[1];
+				Baseline = true;
 			}
 						
-			gelDrawTileCentered( 
-				ArtIndex, 
-				((_x - StartX) * 8) - OffsetX + 4, 
-				((_y - StartY) * 8) - OffsetY + 4
-				);
+			if ( Baseline ) {
+				gelDrawTileBaseline( 
+					ArtIndex, 
+					((_x - StartX) * 8) - OffsetX + 8, 
+					((_y - StartY) * 8) - OffsetY + 8
+					);
+			}
+			else {
+				gelDrawTileCentered( 
+					ArtIndex, 
+					((_x - StartX) * 8) - OffsetX + 4, 
+					((_y - StartY) * 8) - OffsetY + 4
+					);
+			}
 		}
 	}
 }
@@ -1201,6 +1325,13 @@ void EngineDraw() {
 	DrawLayer( MapLayer->Size - 3 );
 	
 	// Draw UI //
+	gelSetColor( 255, 254, 100, 255 );
+	char Text[64];
+	sprintf( Text, "%i", Player->TotalKeys );
+	gelDrawTextLeft( Text, 32+0, 16+0, 24, "FourB" );
+	sprintf( Text, "%i", Player->TotalStars );
+	gelDrawTextRight( Text, 320-32-0, 16+0, 24, "FourB" );
+	
 	gelBindImage( HudId );
 	gelDrawTile( 0, /**/ 0, 0 );
 	gelDrawTile( 1, /**/ 320-32-0, 0 );
@@ -1227,6 +1358,12 @@ void GameDraw() {
 	case STATE_WIN: {
 		gelBindImage( WinId );
 		gelDrawImage(0,0);
+
+		gelSetColor( 255, 254, 100, 255 );
+		char Text[64];
+		sprintf( Text, "%i", Player->TotalStars );
+		gelDrawTextLeft( Text, 140, 150, 48, "FourB" );
+
 		break;
 	}
 };
