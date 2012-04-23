@@ -37,7 +37,7 @@ function _gelCenterImage( img, x, y, scale_x, scale_y ) {
 // - -------------------------------------------------------------------------------------------------------------- - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
-function _gelDrawTextCenter( _Text, _x, _y, _Size, _Font ) {
+function gelDrawTextCenter( _Text, _x, _y, _Size, _Font ) {
 	Module.ctx.font = "" + _Size + "px " + _Font;
 	Module.ctx.textAlign = "left";
 	Module.ctx.textBaseline = "top";
@@ -47,6 +47,42 @@ function _gelDrawTextCenter( _Text, _x, _y, _Size, _Font ) {
 	var TextHeight = Math.floor( _Size ) >> 1;
 
 	Module.ctx.fillText( _Text, Math.floor(_x - TextWidth), Math.floor(_y - TextHeight) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTextCenter( _Text, _x, _y, _Size, _Font ) {
+	gelDrawTextCenter( Pointer_stringify(_Text), _x, _y, _Size, Pointer_stringify(_Font) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function gelDrawTextLeft( _Text, _x, _y, _Size, _Font ) {
+	Module.ctx.font = "" + _Size + "px " + _Font;
+	Module.ctx.textAlign = "left";
+	Module.ctx.textBaseline = "top";
+	
+	// Hack: The C64 font I was using wouldn't perfectly Text Align center, so I manually center //
+//	var TextWidth = Math.floor( Module.ctx.measureText(_Text).width ) >> 1;
+	var TextHeight = Math.floor( _Size ) >> 1;
+
+	Module.ctx.fillText( _Text, Math.floor(_x), Math.floor(_y - TextHeight) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTextLeft( _Text, _x, _y, _Size, _Font ) {
+	gelDrawTextLeft( Pointer_stringify(_Text), _x, _y, _Size, Pointer_stringify(_Font) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function gelDrawTextRight( _Text, _x, _y, _Size, _Font ) {
+	Module.ctx.font = "" + _Size + "px " + _Font;
+	Module.ctx.textAlign = "left";
+	Module.ctx.textBaseline = "top";
+	
+	// Hack: The C64 font I was using wouldn't perfectly Text Align center, so I manually center //
+	var TextWidth = Math.floor( Module.ctx.measureText(_Text).width );
+	var TextHeight = Math.floor( _Size ) >> 1;
+
+	Module.ctx.fillText( _Text, Math.floor(_x - TextWidth), Math.floor(_y - TextHeight) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTextRight( _Text, _x, _y, _Size, _Font ) {
+	gelDrawTextRight( Pointer_stringify(_Text), _x, _y, _Size, Pointer_stringify(_Font) );
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 

@@ -13,6 +13,10 @@ extern "C" {
 
 	void gelDrawLine( float x1, float y1, float x2, float y2 );
 	void gelDrawText( float x, float y, const char* Text );
+
+	void gelDrawTextCenter( const char* Text, float x, float y, int SizePx, const char* Font );
+	void gelDrawTextLeft( const char* Text, float x, float y, int SizePx, const char* Font );
+	void gelDrawTextRight( const char* Text, float x, float y, int SizePx, const char* Font );
 	
 	void gelDrawRect( float x, float y, float w, float h );
 	void gelDrawRectFill( float x, float y, float w, float h );
