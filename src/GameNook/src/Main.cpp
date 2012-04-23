@@ -325,8 +325,15 @@ public:
 			Pos -= (Pos-Old) - Velocity;
 			
 			// Clamp to Speed //
-			if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
-				Pos = Old + ((Pos - Old).Normal() * Real(8));
+			if ( IsBig ) {
+				if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
+					Pos = Old + ((Pos - Old).Normal() * Real(8));
+				}
+			}
+			else {
+				if ( (Pos - Old).MagnitudeSquared() > 6*6 ) {
+					Pos = Old + ((Pos - Old).Normal() * Real(6));
+				}
 			}
 			
 			Velocity = Pos - Old;
