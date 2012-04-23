@@ -23,6 +23,7 @@ void GameInit() __attribute__((used));
 void GameExit() __attribute__((used));
 void GameStep() __attribute__((used));
 void GameDraw() __attribute__((used));
+void GameDrawPaused() __attribute__((used));
 
 void GameInput( float x, float y, int Current, int Last ) __attribute__((used));
 // - ------------------------------------------------------------------------------------------ - //
@@ -1053,9 +1054,18 @@ void EngineDraw() {
 	// Draw Top Layers //
 	gelBindImage( TilesetId );
 	DrawLayer( MapLayer->Size - 3 );
+	
+	// Draw UI //
+	gelBindImage( HudId );
+	gelDrawTile( 0, /**/ 0, 0 );
+	gelDrawTile( 1, /**/ 320-32-0, 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+void GameDrawPaused() {
+	
+}
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() {
 	switch ( GameState ) {
