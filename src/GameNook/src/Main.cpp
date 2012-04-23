@@ -149,7 +149,29 @@ Vector2D CameraPos;
 typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
 
+int TotalStarsInMap;
 
+// - ------------------------------------------------------------------------------------------ - //
+int CountStars( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int StarCount = 0;
+
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			
+			if ( Tile == TILE_BIGSTAR )
+				StarCount++;
+
+			if ( Tile == TILE_SMSTAR )
+				StarCount++;
+		}
+	}
+	
+	return StarCount;
+}
 // - ------------------------------------------------------------------------------------------ - //
 const int NOOK_BIG_WIDTH = 14;
 const int NOOK_BIG_HEIGHT = 28;
@@ -982,6 +1004,44 @@ extern "C" {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void LoadMap() {
+	if ( MapLayer ) {
+		for ( int idx = 0; idx < mrGetLayerCount(); idx++ ) {
+			delete MapLayer->Data[idx];
+		}
+		delete_GelArray<LayerType*>( MapLayer );
+	}
+
+	if ( Player ) {
+		delete Player;
+	}
+
+	// ---------------------- //
+
+	// Start New Level //
+	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
+
+	int LayerCount = mrGetLayerCount();
+
+	for ( int idx = 0; idx < LayerCount; idx++ ) {
+		mrBindLayer( idx );
+		MapLayer->Data[idx] = new LayerType( mrGetWidth(), mrGetHeight(), 0 );
+		
+		int LayerSize = mrGetSize();	
+		for ( int idx2 = 0; idx2 < LayerSize; idx2++ ) {
+			(*MapLayer->Data[ idx ])[ idx2 ] = mrIndex( idx2 );
+		}
+	}
+
+	// ---------------------- //
+	
+	TotalStarsInMap = CountStars( MapLayer->Size - 1 );
+
+	Player = new cPlayer( 112+16+32, 104+32 );
+	
+	CameraPos = Player->Pos;
+}
+// - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
 	ScreenWidth = 320;
 	ScreenHeight = 240;
@@ -1007,7 +1067,9 @@ void GameInit() {
 	GameState = STATE_TITLE;
 	
 	// ---------------------- //
-
+	
+	LoadMap();
+/*
 	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
 
 	int LayerCount = mrGetLayerCount();
@@ -1021,7 +1083,7 @@ void GameInit() {
 			(*MapLayer->Data[ idx ])[ idx2 ] = mrIndex( idx2 );
 		}
 	}
-
+*/
 	// ---------------------- //
 /*	
 	DataBlock* OriginalMap = new_read_nullterminate_DataBlock( "MapData.json" );
@@ -1061,8 +1123,6 @@ void GameInit() {
 	delete_DataBlock( OriginalMap );
 */
 	// ---------------------- //
-
-	Player = new cPlayer( 112+16+32, 104+32 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameExit() {
@@ -1098,6 +1158,7 @@ void GameStep() {
 		case STATE_WIN: {
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				// TODO: Reset Game //
+				LoadMap();
 				
 				GameState = STATE_PLAY;
 			}
@@ -1106,6 +1167,7 @@ void GameStep() {
 	};
 }
 // - ------------------------------------------------------------------------------------------ - //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 void DrawLayer( const int Layer ) {
@@ -1329,7 +1391,7 @@ void EngineDraw() {
 	char Text[64];
 	sprintf( Text, "%i", Player->TotalKeys );
 	gelDrawTextLeft( Text, 32+0, 16+0, 24, "FourB" );
-	sprintf( Text, "%i", Player->TotalStars );
+	sprintf( Text, "%i / %i", Player->TotalStars, TotalStarsInMap );
 	gelDrawTextRight( Text, 320-32-0, 16+0, 24, "FourB" );
 	
 	gelBindImage( HudId );
@@ -1345,27 +1407,31 @@ void GameDrawPaused() {
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() {
 	switch ( GameState ) {
-	case STATE_TITLE: {
-		gelBindImage( TitleId );
-		gelDrawImage(0,0);
-		break;
+		case STATE_TITLE: {
+			gelBindImage( TitleId );
+			gelDrawImage(0,0);
+			break;
+		}
+		case STATE_PLAY: {
+			EngineDraw();
+	
+			break;	
+		}
+		case STATE_WIN: {
+			gelBindImage( WinId );
+			gelDrawImage(0,0);
+	
+			gelSetColor( 255, 254, 100, 255 );
+			char Text[64];
+			sprintf( Text, "%i", Player->TotalStars );
+			gelDrawTextLeft( Text, 140, 150, 48, "FourB" );
+	
+			break;
+		}
+	};
+	
+	if ( Input_KeyPressed( KEY_MENU ) ) {
+		LoadMap();
 	}
-	case STATE_PLAY: {
-		EngineDraw();
-
-		break;	
-	}
-	case STATE_WIN: {
-		gelBindImage( WinId );
-		gelDrawImage(0,0);
-
-		gelSetColor( 255, 254, 100, 255 );
-		char Text[64];
-		sprintf( Text, "%i", Player->TotalStars );
-		gelDrawTextLeft( Text, 140, 150, 48, "FourB" );
-
-		break;
-	}
-};
 }
 // - ------------------------------------------------------------------------------------------ - //
