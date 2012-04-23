@@ -44,7 +44,7 @@ const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 4, /**/ 43, 43, 43, 12 };
+const int Nook_WallJump[] = { 3, /**/ 43, 43, 12 };
 const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
@@ -849,7 +849,7 @@ void GameInit() {
 
 	// ---------------------- //
 
-	Player = new cPlayer( 112+16, 104 );
+	Player = new cPlayer( 112+16+32, 104+32 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameExit() {
@@ -943,11 +943,6 @@ void DrawLayer( const int Layer ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameDraw() {
-//	int StartX, StartY;
-//	int OffsetX, OffsetY;
-//	float CameraOffsetX, CameraOffsetY;
-//	float CameraOffsetXCenter, CameraOffsetYCenter;
-
 	// Draw Bottom Layers //
 	gelBindImage( TilesetId );
 	for ( size_t Layer = 0; Layer < (MapLayer->Size - 3); Layer++ ) {
@@ -977,13 +972,6 @@ void GameDraw() {
 	// Draw Top Layers //
 	gelBindImage( TilesetId );
 	DrawLayer( MapLayer->Size - 3 );
-
-//	gelSetColor( 255,0,0,255 );
-//	gelDrawCircle( 
-//		CameraPos.x.ToFloat() - (StartX<<3) - OffsetX, 
-//		CameraPos.y.ToFloat() - (StartY<<3) - OffsetY, 
-//		10 
-//		);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
