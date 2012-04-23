@@ -45,6 +45,19 @@ const int STATE_WIN =	3;
 
 int GameState;
 
+int TilesetId;
+int PlayerId;
+int HudId;
+int DoorId;
+int StarsId;
+int TitleId;
+int WinId;
+
+Vector2D CameraPos;
+
+typedef cGrid2D<short> LayerType;
+GelArray< LayerType* >* MapLayer;
+
 // - ------------------------------------------------------------------------------------------ - //
 // Number of Frames, followed by frame numbers //
 // - ------------------------------------------------------------------------------------------ - //
@@ -136,18 +149,253 @@ void GameInput( float x, float y, int Current, int Last ) {
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 
-int TilesetId;
-int PlayerId;
-int HudId;
-int DoorId;
-int StarsId;
-int TitleId;
-int WinId;
+int CountDoors( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int Count = 0;
 
-Vector2D CameraPos;
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			
+			if ( Tile == TILE_DOOR )
+				Count++;
+		}
+	}
+	
+	return Count;
+}
+// - ------------------------------------------------------------------------------------------ - //
+int CountExits( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int Count = 0;
 
-typedef cGrid2D<short> LayerType;
-GelArray< LayerType* >* MapLayer;
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+	
+			if ( Tile == TILE_EXIT )
+				Count++;
+		}
+	}
+	
+	return Count;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+class cDoor {
+public:
+	Vector2D Pos;
+	
+	const int* CurrentAnimation;
+	const int* IntermediateAnimation;
+	int CurrentFrame;
+	int FrameDelay;
+	
+	Vector2D Anchor;
+	Vector2D Shape;
+	
+	bool IsOpen;
+	bool FacingLeft;
+	
+public:
+	cDoor( float _x, float _y ) :
+		Pos( _x, _y )
+	{
+		CurrentAnimation = Door_Closed;
+		IntermediateAnimation = 0;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+		
+		Anchor.x = 32;
+		Anchor.y = 64;
+
+		Shape.x = 8;
+		Shape.y = 64;
+		
+		IsOpen = false;
+		FacingLeft = false;
+	}	
+
+	inline void SetIntermediateAnimation( const int* AnimationName ) {
+		if ( IntermediateAnimation != AnimationName ) {
+			IntermediateAnimation = AnimationName;
+			CurrentFrame = 0;
+			FrameDelay = 0;
+		}	
+	}
+	
+	inline void SetAnimation( const int* AnimationName ) {
+		if ( CurrentAnimation != AnimationName ) {
+			CurrentAnimation = AnimationName;
+			if ( IntermediateAnimation == 0 ) {
+				CurrentFrame = 0;
+				FrameDelay = 0;
+			}
+		}
+	}
+
+	inline Rect2D GetRect() {
+		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
+	}
+
+
+	void Step() {		
+		FrameDelay++;
+		if ( FrameDelay >= 3 ) {
+			FrameDelay = 0;
+			CurrentFrame++;
+			if ( IntermediateAnimation ) {
+				if ( CurrentFrame == IntermediateAnimation[0] ) {
+					CurrentFrame = 0;
+					IntermediateAnimation = 0;
+				}
+			}
+			else {
+				if ( CurrentFrame == CurrentAnimation[0] )
+					CurrentFrame = 0;
+			}
+		}		
+	}
+
+	void Draw( const Vector2D& Camera ) {
+		gelBindImage( DoorId );		
+
+		if ( FacingLeft ) {
+			gelDrawTileFlipX(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
+				);
+		}
+		else {
+			gelDrawTile(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
+				);
+		}
+			
+		{
+			Rect2D Rect = GetRect();
+			
+			gelSetColor( 255,255,0,64 );
+			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
+		}
+			
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
+class cExit {
+public:
+	Vector2D Pos;
+	
+	const int* CurrentAnimation;
+	const int* IntermediateAnimation;
+	int CurrentFrame;
+	int FrameDelay;
+	
+	Vector2D Anchor;
+	Vector2D Shape;
+	
+	bool IsOpen;
+	bool FacingLeft;
+	
+public:
+	cExit( float _x, float _y ) :
+		Pos( _x, _y )
+	{
+		CurrentAnimation = Exit_Closed;
+		IntermediateAnimation = 0;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+		
+		Anchor.x = 32;
+		Anchor.y = 64;
+
+		Shape.x = 32;
+		Shape.y = 48;
+		
+		IsOpen = false;
+		FacingLeft = false;
+	}	
+
+	inline void SetIntermediateAnimation( const int* AnimationName ) {
+		if ( IntermediateAnimation != AnimationName ) {
+			IntermediateAnimation = AnimationName;
+			CurrentFrame = 0;
+			FrameDelay = 0;
+		}	
+	}
+	
+	inline void SetAnimation( const int* AnimationName ) {
+		if ( CurrentAnimation != AnimationName ) {
+			CurrentAnimation = AnimationName;
+			if ( IntermediateAnimation == 0 ) {
+				CurrentFrame = 0;
+				FrameDelay = 0;
+			}
+		}
+	}
+
+	inline Rect2D GetRect() {
+		return Rect2D( Pos - Vector2D(Shape.x * Real::Half, Shape.y), Shape );
+	}
+
+
+	void Step() {		
+		FrameDelay++;
+		if ( FrameDelay >= 3 ) {
+			FrameDelay = 0;
+			CurrentFrame++;
+			if ( IntermediateAnimation ) {
+				if ( CurrentFrame == IntermediateAnimation[0] ) {
+					CurrentFrame = 0;
+					IntermediateAnimation = 0;
+				}
+			}
+			else {
+				if ( CurrentFrame == CurrentAnimation[0] )
+					CurrentFrame = 0;
+			}
+		}		
+	}
+
+	void Draw( const Vector2D& Camera ) {
+		gelBindImage( DoorId );		
+
+		if ( FacingLeft ) {
+			gelDrawTileFlipX(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
+				);
+		}
+		else {
+			gelDrawTile(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor(Pos.x - Anchor.x - Camera.x), 
+				floor(Pos.y - Anchor.y - Camera.y)
+				);
+		}
+			
+		{
+			Rect2D Rect = GetRect();
+			
+			gelSetColor( 255,255,0,64 );
+			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
+		}
+			
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
+
+GelArray< cDoor* >* MapDoor;
+GelArray< cExit* >* MapExit;
 
 int TotalStarsInMap;
 
@@ -172,6 +420,8 @@ int CountStars( const int Layer ) {
 	
 	return StarCount;
 }
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 const int NOOK_BIG_WIDTH = 14;
 const int NOOK_BIG_HEIGHT = 28;
@@ -252,7 +502,7 @@ public:
 		}
 		else {
 			Shape.x = NOOK_SM_WIDTH;
-			Shape.y = NOOK_SM_WIDTH;
+			Shape.y = NOOK_SM_HEIGHT;
 			if ( _SetAnimation ) {
 				SetAnimation( Nook_Sm_Idle );
 				SetIntermediateAnimation( Nook_Transform );
@@ -951,7 +1201,7 @@ public:
 				if ( CurrentFrame == CurrentAnimation[0] )
 					CurrentFrame = 0;
 			}
-		}		
+		}
 	}
 	
 	void Draw( const Vector2D& Camera ) {
@@ -1004,6 +1254,55 @@ extern "C" {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void ProcessObjectLayer( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int DoorCount = CountDoors( Layer );
+	int ExitCount = CountExits( Layer );
+	
+	if ( MapDoor ) {
+		for ( int idx = 0; idx < DoorCount; idx++ ) {
+			delete MapDoor->Data[idx];
+		}
+		delete_GelArray<cDoor*>( MapDoor );
+	}
+
+	MapDoor = new_GelArray<cDoor*>( DoorCount );
+	
+	if ( MapExit ) {
+		for ( int idx = 0; idx < ExitCount; idx++ ) {
+			delete MapExit->Data[idx];
+		}
+		delete_GelArray<cExit*>( MapExit );
+	}
+
+	MapExit = new_GelArray<cExit*>( ExitCount );
+	
+	int CurrentDoor = 0;
+	int CurrentExit = 0;
+
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapHeight; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+
+			if ( Tile == 0 ) {
+				continue;
+			}
+			else if ( Tile == TILE_DOOR ) {
+				MapDoor->Data[CurrentDoor++] = new cDoor( (_x) << 3, (_y+1) << 3 );
+				
+				(*MapLayer->Data[Layer])(_x, _y) = 0;
+			}
+			else if ( Tile == TILE_EXIT ) {
+				MapExit->Data[CurrentExit++] = new cExit( (_x) << 3, (_y+1) << 3 );
+
+				(*MapLayer->Data[Layer])(_x, _y) = 0;
+			}			
+		}
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
 void LoadMap() {
 	if ( MapLayer ) {
 		for ( int idx = 0; idx < mrGetLayerCount(); idx++ ) {
@@ -1037,9 +1336,11 @@ void LoadMap() {
 	
 	TotalStarsInMap = CountStars( MapLayer->Size - 1 );
 
-	Player = new cPlayer( 112+16+32, 104+32 );
+	Player = new cPlayer( 25 << 3, 43 << 3 );
 	
 	CameraPos = Player->Pos;
+	
+	ProcessObjectLayer( MapLayer->Size - 1 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
@@ -1137,9 +1438,85 @@ void GameExit() {
 // - ------------------------------------------------------------------------------------------ - //
 void EngineStep() {
 	Player->Step();
+
+	// Solve Player Vs Doors //
+	{
+		Rect2D PlayerRect = Player->GetRect();
+		for ( int idx = 0; idx < MapDoor->Size; idx++ ) {
+			// Solve Vs //
+			if ( MapDoor->Data[idx]->GetRect() == PlayerRect ) {
+				if ( MapDoor->Data[idx]->IsOpen ) {
+					// If Open do Nothing //
+				}
+				else { 
+					if ( Player->TotalKeys > 0 ) {
+						// Use a Key //
+						sndPlay( "Unlock" );
+						Player->TotalKeys--;
+						
+						MapDoor->Data[idx]->IsOpen = true;
+						MapDoor->Data[idx]->FacingLeft = Player->FacingLeft;
+						
+						// TODO: Start Animation //
+						MapDoor->Data[idx]->SetAnimation( Door_Opened );
+						MapDoor->Data[idx]->SetIntermediateAnimation( Door_Open );
+					}
+					else {
+						// No Keys, Do Collision //
+						Rect2D Diff = PlayerRect - MapDoor->Data[idx]->GetRect();
+						Vector2D Line = PlayerRect.Center() - MapDoor->Data[idx]->GetRect().Center();
+						
+						Player->Pos.x += Line.x.Normal() * Diff.Width();
+					}
+				}
+			}
+	
+			// Step (Animation) //
+			MapDoor->Data[idx]->Step();
+		}
+	}
+
+	// Solve Player Vs Exits //
+	{
+		Rect2D PlayerRect = Player->GetRect();
+		for ( int idx = 0; idx < MapExit->Size; idx++ ) {
+			// Solve Vs //
+			if ( MapExit->Data[idx]->GetRect() == PlayerRect ) {
+				if ( MapExit->Data[idx]->IsOpen ) {
+					// If Open do Nothing //
+				}
+				else { 
+					if ( Player->TotalKeys > 0 ) {
+						// Use a Key //
+						Player->TotalKeys--;
+
+						sndPlay( "Unlock" );
+						sndPlay( "Win" );
+						GameState = STATE_WIN;
+						
+						MapExit->Data[idx]->IsOpen = true;
+//						MapExit->Data[idx]->FacingLeft = Player->FacingLeft;
+						
+						// TODO: Start Animation //
+						MapExit->Data[idx]->SetAnimation( Exit_Opened );
+//						MapExit->Data[idx]->SetIntermediateAnimation( Door_Open );
+					}
+					else {
+//						// No Keys, Do Collision //
+//						Rect2D Diff = PlayerRect - MapExit->Data[idx]->GetRect();
+//						Vector2D Line = PlayerRect.Center() - MapExit->Data[idx]->GetRect().Center();
+//						
+//						Player->Pos.x += Line.x.Normal() * Diff.Width();
+					}
+				}
+			}
+	
+			// Step (Animation) //
+			MapExit->Data[idx]->Step();
+		}	
+	}
 	
 	CameraPos += (Player->Pos - CameraPos) * Real(0.125);
-//	CameraPos = Player->Pos;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() {
@@ -1378,6 +1755,14 @@ void EngineDraw() {
 		TransformedCameraPos.y = (MapHeight<<3) - ScreenHeight;
 
 	// Draw Objects //		
+	for ( int idx = 0; idx < MapDoor->Size; idx++ ) {
+		MapDoor->Data[idx]->Draw( TransformedCameraPos );
+	}
+	
+	for ( int idx = 0; idx < MapExit->Size; idx++ ) {
+		MapExit->Data[idx]->Draw( TransformedCameraPos );
+	}
+	
 	Player->Draw( TransformedCameraPos );
 
 	// Draw Top Layers //
