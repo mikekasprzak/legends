@@ -80,9 +80,9 @@ const int Nook_Sm_Fall[] = { 1, /**/ 20 };
 const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Star_Idle[] = { 10, /**/ 0,1,2,3,4,5,6,7,8,9 };
-const int Star_Sm_Idle[] = { 1, /**/ 10 };
-const int Key_Idle[] = { 1, /**/ 11 };
-const int Key_Sm_Idle[] = { 1, /**/ 12 };
+const int Star_Sm_Idle[] = { 4, /**/ 10,13,14,15 };
+const int Key_Idle[] = { 4, /**/ 16,17,18,19 };
+const int Key_Sm_Idle[] = { 4, /**/ 20,21,22,23 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Door_Closed[] = { 1, /**/ 0 };
 const int Door_Open[] = { 4, /**/ 1,2,3,4 };
@@ -455,6 +455,12 @@ public:
 
 	int StarSpin;
 	int StarSpinPreDelay;
+	int SmStarSpin;
+	int SmStarSpinPreDelay;
+	int KeySpin;
+	int KeySpinPreDelay;
+	int SmKeySpin;
+	int SmKeySpinPreDelay;
 	
 public:
 	cPlayer( float _x, float _y ) :
@@ -485,6 +491,15 @@ public:
 		
 		StarSpin = 0;
 		StarSpinPreDelay = 0;
+		
+		SmStarSpin = 0;
+		SmStarSpinPreDelay = 0;
+		
+		KeySpin = 0;
+		KeySpinPreDelay = 0;
+		
+		SmKeySpin = 0;
+		SmKeySpinPreDelay = 0;
 		
 		SetBig( true, false );
 	}
@@ -692,7 +707,30 @@ public:
 			if ( StarSpin == Star_Idle[0] )
 				StarSpin = 0;
 		}
+
+		SmStarSpinPreDelay++;
+		if ( SmStarSpinPreDelay == 2 ) {
+			SmStarSpinPreDelay = 0;
+			SmStarSpin++;
+			if ( SmStarSpin == Star_Sm_Idle[0] )
+				SmStarSpin = 0;
+		}
 				
+		KeySpinPreDelay++;
+		if ( KeySpinPreDelay == 2 ) {
+			KeySpinPreDelay = 0;
+			KeySpin++;
+			if ( KeySpin == Key_Idle[0] )
+				KeySpin = 0;
+		}
+
+		SmKeySpinPreDelay++;
+		if ( SmKeySpinPreDelay == 2 ) {
+			SmKeySpinPreDelay = 0;
+			SmKeySpin++;
+			if ( SmKeySpin == Key_Sm_Idle[0] )
+				SmKeySpin = 0;
+		}
 		
 		// Physics //
 		{
@@ -1687,45 +1725,45 @@ void DrawObjectLayer( const int Layer ) {
 			}
 			else if ( Tile == TILE_BIGSTAR ) {
 				gelBindTileset( StarsId );
-				ArtIndex = Star_Idle[Player->StarSpin + 1];
+				ArtIndex = Star_Idle[ Player->StarSpin + 1 ];
 			}
 			else if ( Tile == TILE_BIGKEY ) {
 				gelBindTileset( StarsId );
-				ArtIndex = Key_Idle[1];
+				ArtIndex = Key_Idle[ Player->KeySpin + 1 ];
 			}
 			else if ( Tile == TILE_SMSTAR ) {
 				gelBindTileset( StarsId );
-				ArtIndex = Star_Sm_Idle[1];
+				ArtIndex = Star_Sm_Idle[ Player->SmStarSpin + 1 ];
 			}
 			else if ( Tile == TILE_SMKEY ) {
 				gelBindTileset( StarsId );
-				ArtIndex = Key_Sm_Idle[1];
+				ArtIndex = Key_Sm_Idle[ Player->SmKeySpin + 1 ];
 			}
-			else if ( Tile == TILE_DOOR ) {
-				gelBindTileset( DoorId );
-				ArtIndex = Door_Closed[1];
-				Baseline = true;
-			}
-			else if ( Tile == TILE_EXIT ) {
-				gelBindTileset( DoorId );
-				ArtIndex = Exit_Closed[1];
-				Baseline = true;
-			}
+//			else if ( Tile == TILE_DOOR ) {
+//				gelBindTileset( DoorId );
+//				ArtIndex = Door_Closed[1];
+//				Baseline = true;
+//			}
+//			else if ( Tile == TILE_EXIT ) {
+//				gelBindTileset( DoorId );
+//				ArtIndex = Exit_Closed[1];
+//				Baseline = true;
+//			}
 						
-			if ( Baseline ) {
-				gelDrawTileBaseline( 
-					ArtIndex, 
-					((_x - StartX) * 8) - OffsetX + 8, 
-					((_y - StartY) * 8) - OffsetY + 8
-					);
-			}
-			else {
+//			if ( Baseline ) {
+//				gelDrawTileBaseline( 
+//					ArtIndex, 
+//					((_x - StartX) * 8) - OffsetX + 8, 
+//					((_y - StartY) * 8) - OffsetY + 8
+//					);
+//			}
+//			else {
 				gelDrawTileCentered( 
 					ArtIndex, 
 					((_x - StartX) * 8) - OffsetX + 4, 
 					((_y - StartY) * 8) - OffsetY + 4
 					);
-			}
+//			}
 		}
 	}
 }
@@ -1776,9 +1814,9 @@ void EngineDraw() {
 	char Text[64];
 	
 	sprintf( Text, "%i", Player->TotalKeys );
-	gelSetColor( 0xC7, 0x85, 0x00, 255 );
+	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
 	gelDrawTextLeft( Text, 32+0, 16+1, 23, "FourB" );
-	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelSetColor( 0x82, 0xBA, 0xF4, 255 );
 	gelDrawTextLeft( Text, 32+0, 16+0, 23, "FourB" );
 	
 	sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
@@ -1817,9 +1855,9 @@ void GameDraw() {
 			char Text[64];
 			sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
 			gelSetColor( 0xC7, 0x85, 0x00, 255 );
-			gelDrawTextLeft( Text, 140, 150+2, 46, "FourB" );
+			gelDrawTextLeft( Text, 140-36, 150+2, 46, "FourB" );
 			gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-			gelDrawTextLeft( Text, 140, 150, 46, "FourB" );
+			gelDrawTextLeft( Text, 140-36, 150, 46, "FourB" );
 	
 			break;
 		}
