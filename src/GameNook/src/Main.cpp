@@ -843,6 +843,18 @@ const int STATE_WIN =	3;
 int GameState;
 
 // - ------------------------------------------------------------------------------------------ - //
+extern "C" {
+	size_t mrGetLayerCount();
+	void mrBindLayer( const int _Layer );
+	size_t mrGetWidth();
+	size_t mrGetHeight();
+	int mrGet( int _x, int _y );
+	size_t mrGetSize();
+	int mrIndex( size_t Index );
+};
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
 	ScreenWidth = 320;
 	ScreenHeight = 240;
@@ -868,7 +880,23 @@ void GameInit() {
 	GameState = STATE_TITLE;
 	
 	// ---------------------- //
-	
+
+	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
+
+	int LayerCount = mrGetLayerCount();
+
+	for ( int idx = 0; idx < LayerCount; idx++ ) {
+		mrBindLayer( idx );
+		MapLayer->Data[idx] = new LayerType( mrGetWidth(), mrGetHeight(), 0 );
+		
+		int LayerSize = mrGetSize();	
+		for ( int idx2 = 0; idx2 < LayerSize; idx2++ ) {
+			(*MapLayer->Data[ idx ])[ idx2 ] = mrIndex( idx2 );
+		}
+	}
+
+	// ---------------------- //
+/*	
 	DataBlock* OriginalMap = new_read_nullterminate_DataBlock( "MapData.json" );
 
 	Log( "Parsing JSON Map File..." );
@@ -904,7 +932,7 @@ void GameInit() {
 	cJSON_Delete( root );
 	
 	delete_DataBlock( OriginalMap );
-
+*/
 	// ---------------------- //
 
 	Player = new cPlayer( 112+16+32, 104+32 );
