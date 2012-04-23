@@ -690,6 +690,8 @@ public:
 						if ( (TileToTest == TILE_BIGSTAR) || (TileToTest == TILE_SMSTAR) ) {
 							sndPlay( "StarPickup" );
 							TotalStars++;
+							if ( TotalStars == TotalStarsInMap )
+								sndPlay( "Win" );
 						}
 						else if ( (TileToTest == TILE_BIGKEY) || (TileToTest == TILE_SMKEY) ) {
 							sndPlay( "KeyPickup" );
@@ -1567,7 +1569,6 @@ void EngineStep() {
 						Player->TotalKeys--;
 						Player->KeysUsed++;
 
-						sndPlay( "Unlock" );
 						sndPlay( "Win" );
 						GameState = STATE_WIN;
 						
