@@ -1792,6 +1792,9 @@ void EngineDraw() {
 		TransformedCameraPos.x = (MapWidth<<3) - ScreenWidth;
 	if ( TransformedCameraPos.y > (MapHeight<<3) - ScreenHeight )
 		TransformedCameraPos.y = (MapHeight<<3) - ScreenHeight;
+		
+	TransformedCameraPos.x = floor(TransformedCameraPos.x);
+	TransformedCameraPos.y = floor(TransformedCameraPos.y);
 
 	// Draw Objects //		
 	for ( int idx = 0; idx < MapDoor->Size; idx++ ) {
