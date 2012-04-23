@@ -21,6 +21,7 @@ var Canvas;
 //var Game;
 // - -------------------------------------------------------------------------------------------------------------- - //
 
+// - -------------------------------------------------------------------------------------------------------------- - //
 function InitSounds() {
 	Log( "* Init Sounds" );
 	
@@ -42,10 +43,82 @@ function InitSounds() {
 
 	Log( "* Done Init Sounds" );
 }
-
+// - -------------------------------------------------------------------------------------------------------------- - //
 function _sndPlay( SoundName ) {
 	sndPlay( Pointer_stringify( SoundName ) );
 }
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+var MapReader_CurrentLayer = 0;
+var MapReader_File = ContentMapData;
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrGetLayerCount() {
+	return MapReader_File.layers.length;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrBindLayer( _Layer ) {
+	MapReader_CurrentLayer = _Layer;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrGetWidth() {
+	return MapReader_File.layers[MapReader_CurrentLayer].width;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrGetHeight() {
+	return MapReader_File.layers[MapReader_CurrentLayer].height;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrGet( _x, _y ) {
+	return MapReader_File.layers[MapReader_CurrentLayer].data[ (_y * _mrGetWidth()) + _x ];
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrGetSize() {
+	return MapReader_File.layers[MapReader_CurrentLayer].data.length;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _mrIndex( _Index ) {
+	return MapReader_File.layers[MapReader_CurrentLayer].data[ _Index ];
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+function gelDrawTextCenter( _Text, _x, _y, _Size, _Font ) {
+	ctx = Canvas.getContext("2d");
+
+	ctx.font = "" + _Size + "px " + _Font;
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	
+	// Hack: The C64 font I was using wouldn't perfectly Text Align center, so I manually center //
+	var TextWidth = Math.floor( ctx.measureText(_Text).width ) >> 1;
+	var TextHeight = Math.floor( _Size ) >> 1;
+
+	ctx.fillText( _Text, Math.floor(_x - TextWidth), Math.floor(_y - TextHeight) );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+function gelSetColor( r, g, b, a ) {
+	ctx = Canvas.getContext("2d");
+
+//	Log( typeof a );
+	if ( typeof a === 'undefined' ) {
+		ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+		ctx.strokeStyle = ctx.fillStyle;
+	}
+	else {
+		ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (a / 255) + ")";
+		ctx.strokeStyle = ctx.fillStyle;
+	}
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function gelSetColorString( str ) {
+	ctx.fillStyle = str;
+	ctx.strokeStyle = str;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_Loop() {
@@ -113,7 +186,7 @@ function Main_Loop() {
 function Main_ShowPaused() {
 	//Game.ShowPaused();
 
-	_gelSetColor( 255,0,0,255 );
+	_gelSetColor( 255,254,100,255 );
 	_gelDrawTextCenter( "*PAUSED*", Canvas.width >> 1, Canvas.height >> 1, 48, "ShowG" );
 
 	__Z14GameDrawPausedv();
@@ -518,6 +591,9 @@ function Main() {
 	
 	Canvas = document.getElementById('canvas');
 
+	gelSetColor( 255,254,100,255 );
+	gelDrawTextCenter( "Loading...", Canvas.width >> 1, Canvas.height >> 1, 48, "ShowG" );
+
 	// Touch or Mouse //
 	if ( isMobile() )
 		Input_TouchInit();
@@ -544,7 +620,7 @@ function Main() {
 	window.scrollTo(0,1);
 
 	WorkTime = new Date().getTime();
-		
+
 	// Lock to 30fps //
 	IntervalHandle = setInterval( Main_Loop, FrameRate );
 }

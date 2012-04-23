@@ -16,19 +16,23 @@ cat external/soundmanager2-nodebug-jsmin.js>>obj/PreJS.txt
 cat GelHTML/GelAudio.js>>obj/PreJS.txt
 #cat GelHTML/GelAudioBuzz.js>>obj/PreJS.txt
 #cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
+
+echo "var ContentMapData = ">>obj/PreJS.txt
+cat Content/MapData.json>>obj/PreJS.txt
+echo ";">>obj/PreJS.txt
+
 cat GelHTML/GelUtil.js>>obj/PreJS.txt
 cat GelHTML/GelMath.js>>obj/PreJS.txt
 cat GelHTML/GelGeometry.js>>obj/PreJS.txt
 cat GelHTML/GelGraphics2D.js>>obj/PreJS.txt
 cat Main.js>>obj/PreJS.txt
 cat Load.js>>obj/PreJS.txt
-echo "var ContentMapData = ">>obj/PreJS.txt
-cat Content/MapData.json>>obj/PreJS.txt
-echo ";">>obj/PreJS.txt
 
 
 #$CC -D NOT_GCC -I ../GEL -O2 -s EXPORTED_FUNCTIONS='["__Z6NewGenv", "_main"]' Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
 
-$CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt --embed-file Content/MapData.json -o output/nook.js 
+$CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/nook.js 
+
+#--embed-file Content/MapData.json
 
 #rm a.out
