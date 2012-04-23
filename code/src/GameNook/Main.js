@@ -112,6 +112,11 @@ function Main_Loop() {
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_ShowPaused() {
 	//Game.ShowPaused();
+
+	_gelSetColor( 255,0,0,255 );
+	_gelDrawTextCenter( "*PAUSED*", Canvas.width >> 1, Canvas.height >> 1, 48, "ShowG" );
+
+	__Z14GameDrawPausedv();
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_GainFocus() {
@@ -119,7 +124,6 @@ function Main_GainFocus() {
 
 	// Resume Music //
 	sndResume( 'BGMusic' );
-//	sndPlay( 'BGMusic' );
 	
 	// Clear Keys (just in case) //
 	Input_KeyPanic();
@@ -142,8 +146,6 @@ function Main_LoseFocus() {
 	
 	// Pause Music //
 	sndPause( 'BGMusic' );
-//	sndStop( 'BGMusic' );
-//	sndStopAll();
 	
 	Main_ShowPaused();
 }
