@@ -26,6 +26,10 @@ void GameDraw() __attribute__((used));
 
 void GameInput( float x, float y, int Current, int Last ) __attribute__((used));
 // - ------------------------------------------------------------------------------------------ - //
+extern "C" {
+int sndPlay( const char* SoundName );
+};
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 int ScreenWidth;
@@ -137,8 +141,8 @@ public:
 	Vector2D Shape;
 	
 	bool OnGround, WasOnGround;
-	bool OnCeiling;
-	bool OnWall;
+	bool OnCeiling, WasOnCeiling;
+	bool OnWall, WasOnWall;
 	int JumpPower;
 
 	bool FacingLeft;
@@ -161,6 +165,10 @@ public:
 		
 		OnGround = false;
 		WasOnGround = false;
+		OnCeiling = false;
+		WasOnCeiling = false;
+		OnWall = false;
+		WasOnWall = false;
 		JumpPower = 0;
 		
 		FacingLeft = false;
@@ -288,6 +296,7 @@ public:
 				if ( Input_Key( KEY_UP ) && NotTransforming() ) {
 					if ( Input_KeyPressed( KEY_UP ) ) {
 						if ( IsBig ) {
+							sndPlay( "Jump01" );
 							if ( OnGround )
 								SetIntermediateAnimation( Nook_PreJump );
 							else if ( OnWall ) {
@@ -300,6 +309,9 @@ public:
 								FacingLeft = !FacingLeft;
 								SetIntermediateAnimation( Nook_WallJump );
 							}
+						}
+						else {
+							sndPlay( "Jump02" );
 						}
 					}
 
@@ -364,6 +376,8 @@ public:
 				EndY = MapHeight-1;
 			
 			WasOnGround = OnGround;
+			WasOnCeiling = OnCeiling;
+			WasOnWall = OnWall;
 			OnGround = false;
 			OnCeiling = false;
 			OnWall = false;
@@ -551,6 +565,7 @@ public:
 									JumpPower = 10;
 							}
 							if ( WasOnGround == false ) {
+								sndPlay( "Ground" );
 								if ( IsBig && NotTransforming() )
 									SetIntermediateAnimation( Nook_TouchGround );
 							}
@@ -571,6 +586,9 @@ public:
 							
 						if ( Line.y < Real::Zero ) {
 							JumpPower = 0;
+							if ( WasOnCeiling == false ) {
+								sndPlay( "Ceiling" );
+							}
 							OnCeiling = true;
 						}
 					}
@@ -618,7 +636,7 @@ public:
 								if ( IsBig )
 									JumpPower = 12;
 							}
-							
+						
 							OnWall = true;
 							if ( gx > 0 )
 								FacingLeft = false;
@@ -711,8 +729,12 @@ public:
 			}
 			else {
 				if ( IsBig ) {
-					if ( OnWall )
+					if ( OnWall ) {
+						if ( CurrentAnimation != Nook_WallGrab ) {
+							sndPlay( "Slide" );
+						}
 						SetAnimation( Nook_WallGrab );
+					}
 					else
 						SetAnimation( Nook_Fall );
 				}
@@ -727,13 +749,16 @@ public:
 				if ( IsBig == false ) {
 					if ( CanTransformHere() ) {
 						SetBig( !IsBig );
+						sndPlay( "Change" );
 					}
 					else {
 						// TODO: Honk Can't Transform //
+						sndPlay( "CantChange" );
 					}
 				}
 				else {
 					SetBig( !IsBig );
+					sndPlay( "Change" );
 				}
 			}
 		}

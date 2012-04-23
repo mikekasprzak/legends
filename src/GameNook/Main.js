@@ -23,10 +23,28 @@ var Canvas;
 
 function InitSounds() {
 	Log( "* Init Sounds" );
+	
 	sndInit();
 
+	sndLoad( 'Jump01', 'Jump01' );
+	sndLoad( 'Jump02', 'Jump02' );
+	sndLoad( 'Ground', 'Ground2' );
+	sndLoad( 'Ceiling', 'Ceiling' );
+	sndLoad( 'Slide', 'Slide' );
+	sndLoad( 'Change', 'Change' );
+	sndLoad( 'CantChange', 'CantChange' );
+	sndLoad( 'StarPickup', 'StarPickup' );
+	sndLoad( 'KeyPickup', 'KeyPickup2' );
+	sndLoad( 'Unlock', 'Unlock' );
+	sndLoad( 'Win', 'Win' );
+
 	sndLoadAndPlayAndLoop( 'BGMusic', '../POL-rescue-short' );
+
 	Log( "* Done Init Sounds" );
+}
+
+function _sndPlay( SoundName ) {
+	sndPlay( Pointer_stringify( SoundName ) );
 }
 
 // - -------------------------------------------------------------------------------------------------------------- - //
