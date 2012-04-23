@@ -363,6 +363,26 @@ function _gelDrawTile( Tile, dx, dy ) {
 		);
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTileCentered( Tile, dx, dy ) {
+	Module.ctx.drawImage( 
+		CurrentImage, 
+		Math.floor( Tile % CurrentImage.WidthInTiles ) * CurrentImage.TileWidth, Math.floor( Tile / CurrentImage.WidthInTiles ) * CurrentImage.TileHeight,
+		CurrentImage.TileWidth, CurrentImage.TileHeight, 
+		dx - (CurrentImage.TileWidth>>1), dy - (CurrentImage.TileHeight>>1),
+		CurrentImage.TileWidth, CurrentImage.TileHeight 
+		);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function _gelDrawTileBaseline( Tile, dx, dy ) {
+	Module.ctx.drawImage( 
+		CurrentImage, 
+		Math.floor( Tile % CurrentImage.WidthInTiles ) * CurrentImage.TileWidth, Math.floor( Tile / CurrentImage.WidthInTiles ) * CurrentImage.TileHeight,
+		CurrentImage.TileWidth, CurrentImage.TileHeight, 
+		dx - (CurrentImage.TileWidth>>1), dy - (CurrentImage.TileHeight),
+		CurrentImage.TileWidth, CurrentImage.TileHeight 
+		);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
 function _gelDrawTileFlipX( Tile, dx, dy ) {
 	Module.ctx.scale(-1, 1);
 	_gelDrawTile( Tile, -dx-CurrentImage.TileWidth, dy );
