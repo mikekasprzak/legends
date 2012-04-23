@@ -58,6 +58,8 @@ Vector2D CameraPos;
 typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
 
+int GlobalTotalKeys;
+
 // - ------------------------------------------------------------------------------------------ - //
 // Number of Frames, followed by frame numbers //
 // - ------------------------------------------------------------------------------------------ - //
@@ -183,6 +185,53 @@ int CountExits( const int Layer ) {
 	}
 	
 	return Count;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+int TotalStarsInMap;
+int TotalKeysInMap;
+
+// - ------------------------------------------------------------------------------------------ - //
+int CountStars( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int StarCount = 0;
+
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			
+			if ( Tile == TILE_BIGSTAR )
+				StarCount++;
+
+			if ( Tile == TILE_SMSTAR )
+				StarCount++;
+		}
+	}
+	
+	return StarCount;
+}
+// - ------------------------------------------------------------------------------------------ - //
+int CountKeys( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int StarCount = 0;
+
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			
+			if ( Tile == TILE_BIGKEY )
+				StarCount++;
+
+			if ( Tile == TILE_SMKEY )
+				StarCount++;
+		}
+	}
+	
+	return StarCount;
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -362,7 +411,11 @@ public:
 				if ( CurrentFrame == CurrentAnimation[0] )
 					CurrentFrame = 0;
 			}
-		}		
+		}
+		
+		if ( GlobalTotalKeys == TotalKeysInMap ) {
+			SetAnimation( Exit_Opened );
+		}
 	}
 
 	void Draw( const Vector2D& Camera ) {
@@ -397,31 +450,6 @@ public:
 GelArray< cDoor* >* MapDoor;
 GelArray< cExit* >* MapExit;
 
-int TotalStarsInMap;
-
-// - ------------------------------------------------------------------------------------------ - //
-int CountStars( const int Layer ) {
-	int MapWidth = MapLayer->Data[Layer]->Width();
-	int MapHeight = MapLayer->Data[Layer]->Height();
-	
-	int StarCount = 0;
-
-	for ( int _y = 0; _y < MapHeight; _y++ ) {
-		for ( int _x = 0; _x < MapWidth; _x++ ) {
-			int Tile = (*MapLayer->Data[Layer])(_x, _y);
-			
-			if ( Tile == TILE_BIGSTAR )
-				StarCount++;
-
-			if ( Tile == TILE_SMSTAR )
-				StarCount++;
-		}
-	}
-	
-	return StarCount;
-}
-// - ------------------------------------------------------------------------------------------ - //
-
 // - ------------------------------------------------------------------------------------------ - //
 const int NOOK_BIG_WIDTH = 14;
 const int NOOK_BIG_HEIGHT = 28;
@@ -452,6 +480,7 @@ public:
 	
 	int TotalStars;
 	int TotalKeys;
+	int KeysUsed;
 
 	int StarSpin;
 	int StarSpinPreDelay;
@@ -488,6 +517,7 @@ public:
 		
 		TotalStars = 0;
 		TotalKeys = 0;
+		KeysUsed = 0;
 		
 		StarSpin = 0;
 		StarSpinPreDelay = 0;
@@ -667,7 +697,7 @@ public:
 						}
 					}
 				}
-				else if ( TileToTest == TILE_DOOR ) {
+/*				else if ( TileToTest == TILE_DOOR ) {
 					if ( TotalKeys > 0 ) {
 						Rect2D VsRect( Vector2D( _x << 3, (_y-7) << 3), Vector2D( 8, 64 ) );
 
@@ -677,6 +707,7 @@ public:
 
 							sndPlay( "Unlock" );
 							TotalKeys--;
+							KeysUsed++;
 						}
 					}
 				}
@@ -689,12 +720,14 @@ public:
 							(*MapLayer->Data[ Layer ])(_x, _y) = 0;
 
 							sndPlay( "Unlock" );
-							sndPlay( "Win" );
+							//sndPlay( "Win" );
 							GameState = STATE_WIN;
 							TotalKeys--;
+							KeysUsed++;
 						}
 					}
 				}
+				*/
 			}
 		}
 	}
@@ -1374,12 +1407,15 @@ void LoadMap() {
 	// ---------------------- //
 	
 	TotalStarsInMap = CountStars( MapLayer->Size - 1 );
+	TotalKeysInMap = CountKeys( MapLayer->Size - 1 );
 
 	Player = new cPlayer( 25 << 3, 43 << 3 );
 	
 	CameraPos = Player->Pos;
 	
 	ProcessObjectLayer( MapLayer->Size - 1 );
+	
+	GlobalTotalKeys = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
@@ -1492,6 +1528,7 @@ void EngineStep() {
 						// Use a Key //
 						sndPlay( "Unlock" );
 						Player->TotalKeys--;
+						Player->KeysUsed++;
 						
 						MapDoor->Data[idx]->IsOpen = true;
 						MapDoor->Data[idx]->FacingLeft = Player->FacingLeft;
@@ -1525,9 +1562,10 @@ void EngineStep() {
 					// If Open do Nothing //
 				}
 				else { 
-					if ( Player->TotalKeys > 0 ) {
+					if ( Player->TotalKeys == TotalKeysInMap - Player->KeysUsed ) {
 						// Use a Key //
 						Player->TotalKeys--;
+						Player->KeysUsed++;
 
 						sndPlay( "Unlock" );
 						sndPlay( "Win" );
@@ -1556,6 +1594,14 @@ void EngineStep() {
 	}
 	
 	CameraPos += (Player->Pos - CameraPos) * Real(0.125);
+	
+	int OldGlobalTotalKeys = GlobalTotalKeys;
+	GlobalTotalKeys = Player->KeysUsed + Player->TotalKeys;
+	if ( GlobalTotalKeys == TotalKeysInMap ) {
+		if ( GlobalTotalKeys != OldGlobalTotalKeys ) {
+			sndPlay( "Win" );
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() {
@@ -1816,7 +1862,7 @@ void EngineDraw() {
 	// Draw UI //
 	char Text[64];
 	
-	sprintf( Text, "%i", Player->TotalKeys );
+	sprintf( Text, "%i/%i", Player->TotalKeys, TotalKeysInMap - Player->KeysUsed );
 	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
 	gelDrawTextLeft( Text, 32+0, 16+1, 23, "FourB" );
 	gelSetColor( 0xD6, 0xEB, 0xFF, 255 );
@@ -1866,8 +1912,8 @@ void GameDraw() {
 		}
 	};
 	
-	if ( Input_KeyPressed( KEY_MENU ) ) {
-		LoadMap();
-	}
+//	if ( Input_KeyPressed( KEY_MENU ) ) {
+//		LoadMap();
+//	}
 }
 // - ------------------------------------------------------------------------------------------ - //
