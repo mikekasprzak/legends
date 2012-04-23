@@ -80,9 +80,9 @@ const int Nook_Sm_Fall[] = { 1, /**/ 20 };
 const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Star_Idle[] = { 10, /**/ 0,1,2,3,4,5,6,7,8,9 };
-const int Star_Sm_Idle[] = { 4, /**/ 10,13,14,15 };
-const int Key_Idle[] = { 4, /**/ 16,17,18,19 };
-const int Key_Sm_Idle[] = { 4, /**/ 20,21,22,23 };
+const int Star_Sm_Idle[] = { 8, /**/ 10,10,13,13,14,14,15,15 };
+const int Key_Idle[] = { 8, /**/ 16,16,17,17,18,18,19,19};
+const int Key_Sm_Idle[] = { 8, /**/ 20,20,21,21,22,22,23,23 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Door_Closed[] = { 1, /**/ 0 };
 const int Door_Open[] = { 4, /**/ 1,2,3,4 };
@@ -280,12 +280,12 @@ public:
 				);
 		}
 			
-		{
-			Rect2D Rect = GetRect();
-			
-			gelSetColor( 255,255,0,64 );
-			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
-		}
+//		{
+//			Rect2D Rect = GetRect();
+//			
+//			gelSetColor( 255,255,0,64 );
+//			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
+//		}
 			
 	}
 };
@@ -383,12 +383,12 @@ public:
 				);
 		}
 			
-		{
-			Rect2D Rect = GetRect();
-			
-			gelSetColor( 255,255,0,64 );
-			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
-		}
+//		{
+//			Rect2D Rect = GetRect();
+//			
+//			gelSetColor( 255,255,0,64 );
+//			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
+//		}
 			
 	}
 };
@@ -1816,7 +1816,7 @@ void EngineDraw() {
 	sprintf( Text, "%i", Player->TotalKeys );
 	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
 	gelDrawTextLeft( Text, 32+0, 16+1, 23, "FourB" );
-	gelSetColor( 0x82, 0xBA, 0xF4, 255 );
+	gelSetColor( 0xD6, 0xEB, 0xFF, 255 );
 	gelDrawTextLeft( Text, 32+0, 16+0, 23, "FourB" );
 	
 	sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
