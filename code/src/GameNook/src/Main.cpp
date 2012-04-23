@@ -60,10 +60,25 @@ const int Nook_Sm_Fall[] = { 1, /**/ 20 };
 //const int Nook_Sm_TouchGround[] = { 1, /**/ 14 };
 const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
+const int Star_Idle[] = { 10, /**/ 0,1,2,3,4,5,6,7,8,9 };
+const int Star_Sm_Idle[] = { 1, /**/ 10 };
+const int Key_Idle[] = { 1, /**/ 11 };
+const int Key_Sm_Idle[] = { 1, /**/ 12 };
+// - ------------------------------------------------------------------------------------------ - //
+const int Door_Closed[] = { 1, /**/ 0 };
+const int Door_Open[] = { 4, /**/ 0,1,2,3 };
+const int Door_Opened[] = { 1, /**/ 0 };
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-const int TILE_COLLISION = 1857;
-const int TILE_NOGROW = 1858;
+const int TILE_COLLISION = 	1857;
+const int TILE_NOGROW = 	1858;
+const int TILE_BIGSTAR = 	1859;
+const int TILE_BIGKEY = 	1860;
+const int TILE_SMSTAR = 	1861;
+const int TILE_SMKEY = 		1862;
+const int TILE_DOOR =	 	1863;
+const int TILE_EXIT =	 	1864;
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
@@ -1052,6 +1067,106 @@ void DrawLayer( const int Layer ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+void DrawObjectLayer( const int Layer ) {
+	int TilesWide = (ScreenWidth/8)+1;
+	int TilesTall = (ScreenHeight/8)+1;
+
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	float CameraScalar = 1.0f;
+	if ( Layer == 0 ) {
+		CameraScalar = 0.5f;
+	}
+	
+	float CameraOffsetX = CameraPos.x.ToFloat();
+	float CameraOffsetY = CameraPos.y.ToFloat();
+	float CameraOffsetXCenter = (CameraOffsetX) - (float)(HalfScreenWidth);
+	float CameraOffsetYCenter = (CameraOffsetY) - (float)(HalfScreenHeight);
+
+	CameraOffsetX *= CameraScalar;
+	CameraOffsetY *= CameraScalar;
+	CameraOffsetXCenter *= CameraScalar;
+	CameraOffsetYCenter *= CameraScalar;
+	
+	if ( CameraOffsetXCenter < 0 )
+		CameraOffsetXCenter = 0;
+	if ( CameraOffsetYCenter < 0 )
+		CameraOffsetYCenter = 0;
+	
+	int OffsetX = ((int)floor(CameraOffsetXCenter) + HalfScreenWidth) % 8;			
+	int OffsetY = ((int)floor(CameraOffsetYCenter) + HalfScreenHeight) % 8;
+	
+	int StartX = CameraOffsetXCenter / 8;
+	if ( StartX < 0 ) {
+		StartX = 0;
+		OffsetX = 0;
+	}
+	if ( StartX >= (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1 ) {
+		StartX = (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1;
+		OffsetX = 0;
+	}
+
+	int StartY = CameraOffsetYCenter / 8;
+	if ( StartY < 0 ) {
+		StartY = 0;
+		OffsetY = 0;
+	}
+	if ( StartY >= (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1 ) {
+		StartY = (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1;
+		OffsetY = 0;
+	}
+
+	int EndX = StartX + TilesWide;
+	if ( EndX > MapWidth )
+		EndX = MapWidth;
+	int EndY = StartY + TilesTall;
+	if ( EndY > MapHeight )
+		EndY = MapHeight;
+
+	for ( int _y = StartY; _y < EndY; _y++ ) {
+		for ( int _x = StartX; _x < EndX; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			int ArtIndex = 0;
+			
+			if ( Tile == 0 ) {
+				continue;
+			}
+			else if ( Tile == TILE_BIGSTAR ) {
+				gelBindTileset( StarsId );
+				ArtIndex = Star_Idle[1];
+			}
+			else if ( Tile == TILE_BIGKEY ) {
+				gelBindTileset( StarsId );
+				ArtIndex = Key_Idle[1];
+			}
+			else if ( Tile == TILE_SMSTAR ) {
+				gelBindTileset( StarsId );
+				ArtIndex = Star_Sm_Idle[1];
+			}
+			else if ( Tile == TILE_SMKEY ) {
+				gelBindTileset( StarsId );
+				ArtIndex = Key_Sm_Idle[1];
+			}
+			else if ( Tile == TILE_DOOR ) {
+				gelBindTileset( DoorId );
+				ArtIndex = Door_Closed[1];
+			}
+			else if ( Tile == TILE_EXIT ) {
+				gelBindTileset( DoorId );
+				ArtIndex = Door_Open[1];
+			}
+						
+			gelDrawTileCentered( 
+				ArtIndex, 
+				((_x - StartX) * 8) - OffsetX + 4, 
+				((_y - StartY) * 8) - OffsetY + 4
+				);
+		}
+	}
+}
+
+// - ------------------------------------------------------------------------------------------ - //
 void EngineDraw() {
 	// Draw Bottom Layers //
 	gelBindImage( TilesetId );
@@ -1080,6 +1195,8 @@ void EngineDraw() {
 	Player->Draw( TransformedCameraPos );
 
 	// Draw Top Layers //
+	DrawObjectLayer( MapLayer->Size - 1 );
+	
 	gelBindImage( TilesetId );
 	DrawLayer( MapLayer->Size - 3 );
 	

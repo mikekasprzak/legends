@@ -31,6 +31,9 @@ extern "C" {
 	void gelDrawTileFlipY( int Tile, float x, float y );
 	void gelDrawTileFlipXY( int Tile, float x, float y );
 	
+	void gelDrawTileCentered( int Tile, float x, float y );
+	void gelDrawTileBaseline( int Tile, float x, float y );
+		
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //
