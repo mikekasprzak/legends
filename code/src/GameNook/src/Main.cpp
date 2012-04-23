@@ -48,7 +48,7 @@ const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 3, /**/ 43, 43, 12 };
+const int Nook_WallJump[] = { 2, /**/ 43, 12 };
 const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
@@ -345,8 +345,13 @@ public:
 			Old = Pos;
 			
 			Real Scalar( 0.96 );
-			if ( OnGround && gx == 0 ) {
-				Scalar = Real( 0.8 );
+			if ( OnGround ) {
+				if ( (gx > 0) && (Velocity.x < 0) )
+					Scalar = Real( 0.8 );
+				else if ( (gx < 0) && (Velocity.x > 0) )
+					Scalar = Real( 0.8 );
+				else if ( gx == 0 )
+					Scalar = Real( 0.8 );
 			}
 			if ( OnWall && (gx != 0) && (Velocity.y > 0) ) {
 				Scalar = Real( 0.3 );
@@ -829,6 +834,13 @@ public:
 
 cPlayer* Player;
 
+
+const int STATE_TITLE =	1;
+const int STATE_PLAY =	2;
+const int STATE_WIN =	3;
+
+int GameState;
+
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {
 	ScreenWidth = 320;
@@ -850,7 +862,9 @@ void GameInit() {
 	TitleId = gelLoadImage( "Content/Title.png" );
 	WinId = gelLoadImage( "Content/Win.png" );
 	
-	LogLevel = 3;
+//	LogLevel = 3;
+
+	GameState = STATE_TITLE;
 	
 	// ---------------------- //
 	
@@ -905,11 +919,35 @@ void GameExit() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void GameStep() {
+void EngineStep() {
 	Player->Step();
 	
-	CameraPos += (Player->Pos - CameraPos) * Real(0.25);
+	CameraPos += (Player->Pos - CameraPos) * Real(0.125);
 //	CameraPos = Player->Pos;
+}
+// - ------------------------------------------------------------------------------------------ - //
+void GameStep() {
+	switch ( GameState ) {
+		case STATE_TITLE: {
+			if ( Input_KeyPressed( KEY_ACTION ) ) {
+				GameState = STATE_PLAY;
+			}
+			break;
+		}
+		case STATE_PLAY: {
+			EngineStep();
+
+			break;	
+		}
+		case STATE_WIN: {
+			if ( Input_KeyPressed( KEY_ACTION ) ) {
+				// TODO: Reset Game //
+				
+				GameState = STATE_PLAY;
+			}
+			break;
+		}
+	};
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -985,7 +1023,7 @@ void DrawLayer( const int Layer ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GameDraw() {
+void EngineDraw() {
 	// Draw Bottom Layers //
 	gelBindImage( TilesetId );
 	for ( size_t Layer = 0; Layer < (MapLayer->Size - 3); Layer++ ) {
@@ -1018,3 +1056,24 @@ void GameDraw() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+void GameDraw() {
+	switch ( GameState ) {
+	case STATE_TITLE: {
+		gelBindImage( TitleId );
+		gelDrawImage(0,0);
+		break;
+	}
+	case STATE_PLAY: {
+		EngineDraw();
+
+		break;	
+	}
+	case STATE_WIN: {
+		gelBindImage( WinId );
+		gelDrawImage(0,0);
+		break;
+	}
+};
+}
+// - ------------------------------------------------------------------------------------------ - //
