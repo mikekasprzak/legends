@@ -3,7 +3,8 @@
 #export CC='~/Code/emscripten/emcc'
 export CC='/d/Build/em2/emcc'
 
-export CFLAGS='-O0 --closure 0'
+#export CFLAGS='-O0 --closure 0'
+export CFLAGS='-O2 --closure 0'
 export DEFINES='-D NOT_GCC -D EMSCRIPTEN -D USES_UNIX_DIR'
 export INCLUDES='-I ../GEL -I ../External/cJSON'
 export FILES='src/Main.cpp ../GEL/Math/Real.cpp ../GEL/Debug/LogEmscripten.cpp ../GEL/Math/Vector/Vector3D.cpp ../External/cJSON/cJSON.c'
@@ -34,5 +35,6 @@ cat Load.js>>obj/PreJS.txt
 $CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/nook.js 
 
 #--embed-file Content/MapData.json
+# --js-library external/soundmanager2-nodebug-jsmin.js
 
 #rm a.out
