@@ -18,9 +18,9 @@ cat GelHTML/GelAudio.js>>obj/PreJS.txt
 #cat GelHTML/GelAudioBuzz.js>>obj/PreJS.txt
 #cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
 
-echo "var ContentMapData = ">>obj/PreJS.txt
-cat Content/MapData.json>>obj/PreJS.txt
-echo ";">>obj/PreJS.txt
+#echo "var ContentMapData = ">>obj/PreJS.txt
+#cat Content/MapData.json>>obj/PreJS.txt
+#echo ";">>obj/PreJS.txt
 
 cat GelHTML/GelUtil.js>>obj/PreJS.txt
 cat GelHTML/GelMath.js>>obj/PreJS.txt
