@@ -707,8 +707,9 @@ public:
 					if ( Input_KeyPressed( KEY_UP ) ) {
 						if ( IsBig ) {
 							sndPlay( "Jump01" );
-							if ( OnGround )
-								SetIntermediateAnimation( Nook_PreJump );
+							if ( OnGround ) {
+							//	SetIntermediateAnimation( Nook_PreJump );
+							}
 							else if ( OnWall ) {
 								if ( FacingLeft ) {
 									Velocity.x = +Real(5);
@@ -1772,12 +1773,19 @@ void EngineDraw() {
 	DrawLayer( MapLayer->Size - 3 );
 	
 	// Draw UI //
-	gelSetColor( 255, 254, 100, 255 );
 	char Text[64];
+	
 	sprintf( Text, "%i", Player->TotalKeys );
-	gelDrawTextLeft( Text, 32+0, 16+0, 24, "FourB" );
-	sprintf( Text, "%i / %i", Player->TotalStars, TotalStarsInMap );
-	gelDrawTextRight( Text, 320-32-0, 16+0, 24, "FourB" );
+	gelSetColor( 0xC7, 0x85, 0x00, 255 );
+	gelDrawTextLeft( Text, 32+0, 16+1, 23, "FourB" );
+	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelDrawTextLeft( Text, 32+0, 16+0, 23, "FourB" );
+	
+	sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
+	gelSetColor( 0xC7, 0x85, 0x00, 255 );
+	gelDrawTextRight( Text, 320-32-0, 16+1, 23, "FourB" );
+	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelDrawTextRight( Text, 320-32-0, 16+0, 23, "FourB" );
 	
 	gelBindImage( HudId );
 	gelDrawTile( 0, /**/ 0, 0 );
@@ -1806,10 +1814,12 @@ void GameDraw() {
 			gelBindImage( WinId );
 			gelDrawImage(0,0);
 	
-			gelSetColor( 255, 254, 100, 255 );
 			char Text[64];
-			sprintf( Text, "%i", Player->TotalStars );
-			gelDrawTextLeft( Text, 140, 150, 48, "FourB" );
+			sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
+			gelSetColor( 0xC7, 0x85, 0x00, 255 );
+			gelDrawTextLeft( Text, 140, 150+2, 46, "FourB" );
+			gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+			gelDrawTextLeft( Text, 140, 150, 46, "FourB" );
 	
 			break;
 		}
