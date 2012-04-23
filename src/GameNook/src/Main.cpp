@@ -227,7 +227,7 @@ public:
 	bool CanTransformHere() {
 		Rect2D Rect = GetRect( NOOK_BIG_WIDTH, NOOK_BIG_HEIGHT );
 		
-		int Layer = MapLayer->Size-1;
+		int Layer = MapLayer->Size-2;
 		
 		int StartX = (int)floor(Rect.P1().x.ToFloat()) >> 3;
 		int StartY = (int)floor(Rect.P1().y.ToFloat()) >> 3;
@@ -278,15 +278,9 @@ public:
 	void Step() {
 		// Physics //
 		{
-//			Vector2D Velocity = Pos - Old;
-//			Velocity += Vector2D( 0, 0.4f ); // Gravity //
-//			if ( NotTransforming() ) {
-//				Velocity += Vector2D( gx, 0 ) * Real(0.2);
-//			}
-
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
-				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.1));
+				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.15));
 			}
 			
 			Vector2D Velocity = Pos - Old;
@@ -341,7 +335,7 @@ public:
 		{
 			Rect2D Rect = GetRect();
 			
-			int Layer = MapLayer->Size-1;
+			int Layer = MapLayer->Size-2;
 			
 			int StartX = (int)floor(Rect.P1().x.ToFloat()) >> 3;
 			int StartY = (int)floor(Rect.P1().y.ToFloat()) >> 3;
@@ -396,233 +390,101 @@ public:
 			Rect2D VsBottomLeftRect;
 			Rect2D VsBottomRightRect;
 			
-			// Corners //
-			{
-				if ( (*MapLayer->Data[ Layer ])(StartX, StartY) == TILE_COLLISION ) {
-					VsTopLeftRect = Rect2D( Vector2D( StartX << 3, StartY << 3), Vector2D( 8, 8 ) );
-					CollisionBits |= COLLISION_TOP_LEFT;
-				}
-				if ( (*MapLayer->Data[ Layer ])(EndX-1, StartY) == TILE_COLLISION ) {
-					VsTopRightRect = Rect2D( Vector2D( (EndX-1) << 3, StartY << 3), Vector2D( 8, 8 ) );
-					CollisionBits |= COLLISION_TOP_RIGHT;
-				}
-				if ( (*MapLayer->Data[ Layer ])(StartX, EndY-1) == TILE_COLLISION ) {
-					VsBottomLeftRect = Rect2D( Vector2D( StartX << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
-					CollisionBits |= COLLISION_BOTTOM_LEFT;
-				}
-				if ( (*MapLayer->Data[ Layer ])(EndX-1, EndY-1) == TILE_COLLISION ) {
-					VsBottomRightRect = Rect2D( Vector2D( (EndX-1) << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
-					CollisionBits |= COLLISION_BOTTOM_RIGHT;
-				}
-			}
+//			// Corners //
+//			{
+//				if ( (*MapLayer->Data[ Layer ])(StartX, StartY) == TILE_COLLISION ) {
+//					VsTopLeftRect = Rect2D( Vector2D( StartX << 3, StartY << 3), Vector2D( 8, 8 ) );
+//					CollisionBits |= COLLISION_TOP_LEFT;
+//				}
+//				if ( (*MapLayer->Data[ Layer ])(EndX-1, StartY) == TILE_COLLISION ) {
+//					VsTopRightRect = Rect2D( Vector2D( (EndX-1) << 3, StartY << 3), Vector2D( 8, 8 ) );
+//					CollisionBits |= COLLISION_TOP_RIGHT;
+//				}
+//				if ( (*MapLayer->Data[ Layer ])(StartX, EndY-1) == TILE_COLLISION ) {
+//					VsBottomLeftRect = Rect2D( Vector2D( StartX << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
+//					CollisionBits |= COLLISION_BOTTOM_LEFT;
+//				}
+//				if ( (*MapLayer->Data[ Layer ])(EndX-1, EndY-1) == TILE_COLLISION ) {
+//					VsBottomRightRect = Rect2D( Vector2D( (EndX-1) << 3, (EndY-1) << 3), Vector2D( 8, 8 ) );
+//					CollisionBits |= COLLISION_BOTTOM_RIGHT;
+//				}
+//			}
 			
 			// Bottom Row //
 			{
 				bool Started = false;
-				bool NonFirst = true;
 				
 				int _y = EndY - 1;
 				for ( int _x = StartX; _x < EndX; _x++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-//						if ( _x != StartX )
-//							NonFirst = true;
-//						if ( StartX == EndX )
-//							NonFirst = true;
-
 						if ( Started ) {
-							VsBottomRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsBottomRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 32 ) );
 						}
 						else {
-//							if ( StartX != EndX )
-//								if ( _x == EndX - 1 )
-//									break;
-
-							VsBottomRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsBottomRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 32 ) );
 							Started = true;
 							CollisionBits |= COLLISION_BOTTOM;
 						}
 					}
 				}
-				
-//				// If a Collision set was made //
-//				if ( Started && NonFirst ) {
-//					if ( Rect == VsRect ) {
-//						Rect2D Result = VsRect - Rect;
-//						
-//						Pos.y -= Result.Height();// * Real::Half;
-//						Pos.y = floor( Pos.y );
-//						Rect = GetRect(); // Update Vs Rectangle //
-//						
-//						if ( !Input_Key( KEY_UP ) ) {
-//							if ( IsBig )
-//								JumpPower = 16;
-//							else
-//								JumpPower = 10;
-//						}
-//						if ( WasOnGround == false ) {
-//							if ( IsBig && NotTransforming() )
-//								SetIntermediateAnimation( Nook_TouchGround );
-//						}
-//						OnGround = true;
-//						
-////						gelSetColor( 0,255,0,255 );
-//					}
-//					else {						
-////						gelSetColor( 0,64,0,255 );
-//					}
-//
-////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-//				}
 			}
 			
 			// Left Row //
 			{
 				bool Started = false;
-				bool NonFirst = false;
 				
 				int _x = StartX;
 				for ( int _y = StartY; _y < EndY; _y++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-//						if ( _y != StartY )
-//							NonFirst = true;
-//						if ( StartY == EndY )
-//							NonFirst = true;
-						
 						if ( Started ) {
-							VsLeftRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsLeftRect += Rect2D( Vector2D( (_x-3) << 3, _y << 3), Vector2D( 32, 8 ) );
 						}
 						else {
-//							if ( StartY != EndY )
-//								if ( _y == EndY - 1 )
-//									break;
-
-							VsLeftRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsLeftRect = Rect2D( Vector2D( (_x-3) << 3, _y << 3), Vector2D( 32, 8 ) );
 							CollisionBits |= COLLISION_LEFT;
 							Started = true;
 						}
 					}
 				}
-				
-//				// If a Collision set was made //
-//				if ( Started && NonFirst ) {
-//					if ( Rect == VsRect ) {
-//						Rect2D Result = VsRect - Rect;
-//						
-//						Pos.x += Result.Width();// * Real::Half;
-//						Pos.x = floor( Pos.x );
-//						Rect = GetRect(); // Update Vs Rectangle //
-//						
-//						OnWall = true;
-//												
-////						gelSetColor( 0,255,255,255 );
-//					}
-//					else {						
-////						gelSetColor( 0,64,64,255 );
-//					}
-//
-////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-//				}
 			}
 
 
 			// Right Row //
 			{
 				bool Started = false;
-				bool NonFirst = true;
 				
 				int _x = EndX - 1;
 				for ( int _y = StartY; _y < EndY; _y++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-//						if ( _y != StartY )
-//							NonFirst = true;
-//						if ( StartY == EndY )
-//							NonFirst = true;
-
 						if ( Started ) {
-							VsRightRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsRightRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 32, 8 ) );
 						}
 						else {
-//							if ( StartY != EndY )
-//								if ( _y == EndY - 1 )
-//									break;
-
-							VsRightRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsRightRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 32, 8 ) );
 							CollisionBits |= COLLISION_RIGHT;
 							Started = true;
 						}
 					}
 				}
-				
-//				// If a Collision set was made //
-//				if ( Started && NonFirst ) {
-//					if ( Rect == VsRect ) {
-//						Rect2D Result = VsRect - Rect;
-//						
-//						Pos.x -= Result.Width();// * Real::Half;
-//						Pos.x = floor( Pos.x );
-//						Rect = GetRect(); // Update Vs Rectangle //
-//
-//						OnWall = true;
-//						
-//						
-////						gelSetColor( 255,255,0,255 );
-//					}
-//					else {						
-////						gelSetColor( 64,64,0,255 );
-//					}
-//
-////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-//				}
 			}
 
 			// Top Row //
 			{
 				bool Started = false;
-				bool NonFirst = false;
 				
 				int _y = StartY;
 				for ( int _x = StartX; _x < EndX; _x++ ) {
 					if ( (*MapLayer->Data[ Layer ])(_x, _y) == TILE_COLLISION ) {
-//						if ( _x != StartX )
-//							NonFirst = true;
-//						if ( StartX == EndX )
-//							NonFirst = true;
-
 						if ( Started ) {
-							VsTopRect += Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsTopRect += Rect2D( Vector2D( _x << 3, (_y-3) << 3), Vector2D( 8, 32 ) );
 						}
 						else {
-//							if ( StartX != EndX )
-//								if ( _x == EndX - 1 )
-//									break;
-
-							VsTopRect = Rect2D( Vector2D( _x << 3, _y << 3), Vector2D( 8, 8 ) );
+							VsTopRect = Rect2D( Vector2D( _x << 3, (_y-3) << 3), Vector2D( 8, 32 ) );
 							CollisionBits |= COLLISION_TOP;
 							Started = true;
 						}
 					}
 				}
-				
-//				// If a Collision set was made //
-//				if ( Started && NonFirst ) {
-//					if ( Rect == VsRect ) {
-//						Rect2D Result = VsRect - Rect;
-//						
-//						Pos.y += Result.Height();// * Real::Half;
-//						Pos.y = floor( Pos.y );
-//						Rect = GetRect(); // Update Vs Rectangle //
-//						
-//						JumpPower = 0;
-//						OnCeiling = true;
-//												
-////						gelSetColor( 0,255,0,255 );
-//					}
-//					else {						
-////						gelSetColor( 0,64,0,255 );
-//					}
-//
-////					gelDrawRectFill( VsRect.P1().x - Camera.x, VsRect.P1().y - Camera.y, VsRect.Width(), VsRect.Height() );
-//				}
 			}
 			
 			// SOLVE! //
@@ -672,128 +534,94 @@ public:
 //						ActualCollisionBits |= COLLISION_BOTTOM_LEFT;
 //				if ( CollisionBits & COLLISION_BOTTOM_RIGHT )
 //					if ( Rect == VsBottomRightRect )
-//						ActualCollisionBits |= COLLISION_BOTTOM_RIGHT;
-
-				
-				// TODO: Special case when you are smaller than a block //
-				
+//						ActualCollisionBits |= COLLISION_BOTTOM_RIGHT;				
 				
 				if ( ActualCollisionBits & COLLISION_BOTTOM ) {
-					//if ( Rect == VsBottomRect ) 
-					{
-						Rect2D Result = VsBottomRect - Rect;
-						Vector2D Line = VsBottomRect.Center() - Rect.Center(); 
-						
-						if ( Result.Width() > Result.Height() ) {
-							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
-								
-							if ( Line.y > Real::Zero ) {
-								if ( !Input_Key( KEY_UP ) ) {
-									if ( IsBig )
-										JumpPower = 16;
-									else
-										JumpPower = 10;
-								}
-								if ( WasOnGround == false ) {
-									if ( IsBig && NotTransforming() )
-										SetIntermediateAnimation( Nook_TouchGround );
-								}
-								OnGround = true;
+					Rect2D Result = VsBottomRect - Rect;
+					Vector2D Line = VsBottomRect.Center() - Rect.Center(); 
+					
+					if ( Result.Width() > Result.Height() ) {
+						Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+							
+						if ( Line.y > Real::Zero ) {
+							if ( !Input_Key( KEY_UP ) ) {
+								if ( IsBig )
+									JumpPower = 16;
+								else
+									JumpPower = 10;
 							}
-//							else if ( Line.y < Real::Zero ) {
-//								JumpPower = 0;
-//								OnCeiling = true;
-//							}
+							if ( WasOnGround == false ) {
+								if ( IsBig && NotTransforming() )
+									SetIntermediateAnimation( Nook_TouchGround );
+							}
+							OnGround = true;
 						}
-						else {
-//							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
-						}
+					}
+					else {
+//						Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
 					}
 				}
 
 				if ( ActualCollisionBits & COLLISION_TOP ) {
-					//if ( Rect == VsTopRect ) 
-					{
-						Rect2D Result = VsTopRect - Rect;
-						Vector2D Line = VsTopRect.Center() - Rect.Center(); 
-						
-						if ( Result.Width() > Result.Height() ) {
-							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
-								
-//							if ( Line.y > Real::Zero ) {
-//								if ( !Input_Key( KEY_UP ) ) {
-//									if ( IsBig )
-//										JumpPower = 16;
-//									else
-//										JumpPower = 10;
-//								}
-//								if ( WasOnGround == false ) {
-//									if ( IsBig && NotTransforming() )
-//										SetIntermediateAnimation( Nook_TouchGround );
-//								}
-//								OnGround = true;
-//							}
-//							else 
-							if ( Line.y < Real::Zero ) {
-								JumpPower = 0;
-								OnCeiling = true;
-							}
-						}
-						else {
-//							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+					Rect2D Result = VsTopRect - Rect;
+					Vector2D Line = VsTopRect.Center() - Rect.Center(); 
+					
+					if ( Result.Width() > Result.Height() ) {
+						Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+							
+						if ( Line.y < Real::Zero ) {
+							JumpPower = 0;
+							OnCeiling = true;
 						}
 					}
-				}				
+					else {
+//						Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+					}
+				}
 
 
 				if ( ActualCollisionBits & COLLISION_LEFT ) {
-					//if ( Rect == VsLeftRect ) 
-					{
-						Rect2D Result = VsLeftRect - Rect;
-						Vector2D Line = VsLeftRect.Center() - Rect.Center(); 
-						
-						if ( Result.Width() > Result.Height() ) {
-//							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
-						}
-						else {
-							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+					Rect2D Result = VsLeftRect - Rect;
+					Vector2D Line = VsLeftRect.Center() - Rect.Center(); 
+					
+					if ( Result.Width() > Result.Height() ) {
+//						Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+					}
+					else {
+						Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
 
-							if ( VsLeftRect.Height() > 24 ) {
-								if ( !Input_Key( KEY_UP ) ) {
-									if ( IsBig )
-										JumpPower = 12;
-								}
-															
-								OnWall = true;
-								if ( gx < 0 )
-									FacingLeft = true;
+						if ( VsLeftRect.Height() > 24 ) {
+							if ( !Input_Key( KEY_UP ) ) {
+								if ( IsBig )
+									JumpPower = 12;
 							}
+														
+							OnWall = true;
+							if ( gx < 0 )
+								FacingLeft = true;
 						}
 					}
 				}
 				
 				if ( ActualCollisionBits & COLLISION_RIGHT ) {
-					//if ( Rect == VsRightRect ) 
-					{
-						Rect2D Result = VsRightRect - Rect;
-						Vector2D Line = VsRightRect.Center() - Rect.Center(); 
-						
-						if ( Result.Width() > Result.Height() ) {
-//							Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
-						}
-						else {
-							Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
+					Rect2D Result = VsRightRect - Rect;
+					Vector2D Line = VsRightRect.Center() - Rect.Center(); 
+					
+					if ( Result.Width() > Result.Height() ) {
+//						Pos.y -= Line.y.Normal() * Result.Height();// * Real::Half;
+					}
+					else {
+						Pos.x -= Line.x.Normal() * Result.Width();// * Real::Half;
 
-							if ( VsRightRect.Height() > 24 ) {
-								if ( !Input_Key( KEY_UP ) ) {
-									if ( IsBig )
-										JumpPower = 12;
-								}
-								
-								OnWall = true;
-								if ( gx > 0 )
-									FacingLeft = false;
+						if ( VsRightRect.Height() > 24 ) {
+							if ( !Input_Key( KEY_UP ) ) {
+								if ( IsBig )
+									JumpPower = 12;
 							}
+							
+							OnWall = true;
+							if ( gx > 0 )
+								FacingLeft = false;
 						}
 					}
 				}
@@ -928,12 +756,12 @@ public:
 	}
 	
 	void Draw( const Vector2D& Camera ) {
-		{
-			Rect2D Rect = GetRect();
-			
-			gelSetColor( 255,255,0,64 );
-			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
-		}
+//		{
+//			Rect2D Rect = GetRect();
+//			
+//			gelSetColor( 255,255,0,64 );
+//			gelDrawRectFill( Rect.P1().x - Camera.x, Rect.P1().y - Camera.y, Rect.Width(), Rect.Height() );
+//		}
 		
 		gelBindImage( PlayerId );
 		
@@ -1035,103 +863,98 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void GameStep() {
-//	if ( Button & 0x10 ) {
-//		CameraPos.x += gx * 4;
-//		CameraPos.y += gy * 4;
-//	}
-//	else {
-//		CameraPos.x += gx * 2;//0.5;
-//		CameraPos.y += gy * 2;//0.5;
-//	}
-	
 	Player->Step();
 	
-	CameraPos = Player->Pos;//+= (Player->Pos - CameraPos) * Real(0.25);
+	CameraPos += (Player->Pos - CameraPos) * Real(0.25);
+//	CameraPos = Player->Pos;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GameDraw() {
-	int StartX, StartY;
-	int OffsetX, OffsetY;
-	float CameraOffsetX, CameraOffsetY;
-	float CameraOffsetXCenter, CameraOffsetYCenter;
 
+// - ------------------------------------------------------------------------------------------ - //
+void DrawLayer( const int Layer ) {
 	int TilesWide = (ScreenWidth/8)+1;
 	int TilesTall = (ScreenHeight/8)+1;
 
-	gelBindImage( TilesetId );
-	for ( size_t Layer = 0; Layer < (MapLayer->Size - 1); Layer++ ) {
-		int MapWidth = MapLayer->Data[Layer]->Width();
-		int MapHeight = MapLayer->Data[Layer]->Height();
-		
-		float CameraScalar = 1.0f;
-		if ( Layer == 0 ) {
-			CameraScalar = 0.5f;
-		}
-		
-		CameraOffsetX = CameraPos.x.ToFloat();
-		CameraOffsetY = CameraPos.y.ToFloat();
-		CameraOffsetXCenter = (CameraOffsetX) - (float)(HalfScreenWidth);
-		CameraOffsetYCenter = (CameraOffsetY) - (float)(HalfScreenHeight);
-
-		CameraOffsetX *= CameraScalar;
-		CameraOffsetY *= CameraScalar;
-		CameraOffsetXCenter *= CameraScalar;
-		CameraOffsetYCenter *= CameraScalar;
-		
-		if ( CameraOffsetXCenter < 0 )
-			CameraOffsetXCenter = 0;
-		if ( CameraOffsetYCenter < 0 )
-			CameraOffsetYCenter = 0;
-		
-		OffsetX = ((int)floor(CameraOffsetXCenter) + HalfScreenWidth) % 8;			
-		OffsetY = ((int)floor(CameraOffsetYCenter) + HalfScreenHeight) % 8;
-		
-		StartX = CameraOffsetXCenter / 8;
-		if ( StartX < 0 ) {
-			StartX = 0;
-			OffsetX = 0;
-		}
-		if ( StartX >= (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1 ) {
-			StartX = (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1;
-			OffsetX = 0;
-		}
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
 	
-		StartY = CameraOffsetYCenter / 8;
-		if ( StartY < 0 ) {
-			StartY = 0;
-			OffsetY = 0;
-		}
-		if ( StartY >= (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1 ) {
-			StartY = (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1;
-			OffsetY = 0;
-		}
+	float CameraScalar = 1.0f;
+	if ( Layer == 0 ) {
+		CameraScalar = 0.5f;
+	}
 	
-		int EndX = StartX + TilesWide;
-		if ( EndX > MapWidth )
-			EndX = MapWidth;
-		int EndY = StartY + TilesTall;
-		if ( EndY > MapHeight )
-			EndY = MapHeight;
+	float CameraOffsetX = CameraPos.x.ToFloat();
+	float CameraOffsetY = CameraPos.y.ToFloat();
+	float CameraOffsetXCenter = (CameraOffsetX) - (float)(HalfScreenWidth);
+	float CameraOffsetYCenter = (CameraOffsetY) - (float)(HalfScreenHeight);
 
-//		char Blah[2048];
-//		sprintf( Blah, "Pos: (%f %f) (%i, %i) (%i, %i)", CameraOffsetXCenter, CameraOffsetYCenter, StartX, StartY, OffsetX, OffsetY );
-//		gelSetColor( 255,255,255,255 );
-//		gelDrawText( 0, 120, Blah );
+	CameraOffsetX *= CameraScalar;
+	CameraOffsetY *= CameraScalar;
+	CameraOffsetXCenter *= CameraScalar;
+	CameraOffsetYCenter *= CameraScalar;
+	
+	if ( CameraOffsetXCenter < 0 )
+		CameraOffsetXCenter = 0;
+	if ( CameraOffsetYCenter < 0 )
+		CameraOffsetYCenter = 0;
+	
+	int OffsetX = ((int)floor(CameraOffsetXCenter) + HalfScreenWidth) % 8;			
+	int OffsetY = ((int)floor(CameraOffsetYCenter) + HalfScreenHeight) % 8;
+	
+	int StartX = CameraOffsetXCenter / 8;
+	if ( StartX < 0 ) {
+		StartX = 0;
+		OffsetX = 0;
+	}
+	if ( StartX >= (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1 ) {
+		StartX = (int)((float)(MapWidth - TilesWide) * CameraScalar) + 1;
+		OffsetX = 0;
+	}
 
-		for ( int _y = StartY; _y < EndY; _y++ ) {
-			for ( int _x = StartX; _x < EndX; _x++ ) {
-				int Tile = (*MapLayer->Data[Layer])(_x, _y);
-				if ( Tile > 0 ) {
-					gelDrawTile( 
-						Tile-1, 
-						((_x - StartX) * 8) - OffsetX, 
-						((_y - StartY) * 8) - OffsetY
-						);
-				}
+	int StartY = CameraOffsetYCenter / 8;
+	if ( StartY < 0 ) {
+		StartY = 0;
+		OffsetY = 0;
+	}
+	if ( StartY >= (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1 ) {
+		StartY = (int)((float)(MapHeight - TilesTall) * CameraScalar) + 1;
+		OffsetY = 0;
+	}
+
+	int EndX = StartX + TilesWide;
+	if ( EndX > MapWidth )
+		EndX = MapWidth;
+	int EndY = StartY + TilesTall;
+	if ( EndY > MapHeight )
+		EndY = MapHeight;
+
+	for ( int _y = StartY; _y < EndY; _y++ ) {
+		for ( int _x = StartX; _x < EndX; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			if ( Tile > 0 ) {
+				gelDrawTile( 
+					Tile-1, 
+					((_x - StartX) * 8) - OffsetX, 
+					((_y - StartY) * 8) - OffsetY
+					);
 			}
 		}
 	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void GameDraw() {
+//	int StartX, StartY;
+//	int OffsetX, OffsetY;
+//	float CameraOffsetX, CameraOffsetY;
+//	float CameraOffsetXCenter, CameraOffsetYCenter;
 
+	// Draw Bottom Layers //
+	gelBindImage( TilesetId );
+	for ( size_t Layer = 0; Layer < (MapLayer->Size - 3); Layer++ ) {
+		DrawLayer( Layer );
+	}
+
+	// Transform Camera //
 	int Layer = 0;
 	int MapWidth = MapLayer->Data[Layer]->Width();
 	int MapHeight = MapLayer->Data[Layer]->Height();
@@ -1147,8 +970,13 @@ void GameDraw() {
 		TransformedCameraPos.x = (MapWidth<<3) - ScreenWidth;
 	if ( TransformedCameraPos.y > (MapHeight<<3) - ScreenHeight )
 		TransformedCameraPos.y = (MapHeight<<3) - ScreenHeight;
-		
+
+	// Draw Objects //		
 	Player->Draw( TransformedCameraPos );
+
+	// Draw Top Layers //
+	gelBindImage( TilesetId );
+	DrawLayer( MapLayer->Size - 3 );
 
 //	gelSetColor( 255,0,0,255 );
 //	gelDrawCircle( 
