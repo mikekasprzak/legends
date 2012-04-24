@@ -771,7 +771,7 @@ public:
 		{
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
-				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.125));
+				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.15));
 			}
 			
 			Vector2D Velocity = Pos - Old;
@@ -1122,7 +1122,7 @@ public:
 						if ( VsLeftRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 12;
+									JumpPower = 13;
 							}
 														
 							OnWall = true;
@@ -1145,7 +1145,7 @@ public:
 						if ( VsRightRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 12;
+									JumpPower = 13;
 							}
 						
 							OnWall = true;
