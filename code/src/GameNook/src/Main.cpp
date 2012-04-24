@@ -366,8 +366,8 @@ public:
 		Anchor.x = 32;
 		Anchor.y = 64;
 
-		Shape.x = 32;
-		Shape.y = 48;
+		Shape.x = 4;//32;
+		Shape.y = 8;//48;
 		
 		IsOpen = false;
 		FacingLeft = false;
@@ -771,7 +771,7 @@ public:
 		{
 			Pos += Vector2D( 0, 0.4f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
-				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.15));
+				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.125));
 			}
 			
 			Vector2D Velocity = Pos - Old;
@@ -810,27 +810,42 @@ public:
 			
 			// Clamp to Speed //
 			if ( IsBig ) {
-				if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
-					Pos = Old + ((Pos - Old).Normal() * Real(8));
+//				if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
+//					Pos = Old + ((Pos - Old).Normal() * Real(8));
+//				}
+				if ( (Pos.x - Old.x).Magnitude() > 4 ) {
+					Pos.x = Old.x + ((Pos.x - Old.x).Normal() * Real(4));
 				}
+				if ( (Pos.y - Old.y).Magnitude() > 6 ) {
+					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(6));
+				}
+
 			}
 			else {
-				if ( (Pos - Old).MagnitudeSquared() > 6*6 ) {
-					Pos = Old + ((Pos - Old).Normal() * Real(6));
+//				if ( (Pos - Old).MagnitudeSquared() > 6*6 ) {
+//					Pos = Old + ((Pos - Old).Normal() * Real(6));
+//				}
+
+				if ( (Pos.x - Old.x).Magnitude() > 4 ) {
+					Pos.x = Old.x + ((Pos.x - Old.x).Normal() * Real(4));
 				}
+				if ( (Pos.y - Old.y).Magnitude() > 4 ) {
+					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(4));
+				}
+
 			}
 			
 			Velocity = Pos - Old;
 			Old = Pos;
 			
-			Real Scalar( 0.96 );
+			Real Scalar( 0.95 );
 			if ( OnGround ) {
 				if ( (gx > 0) && (Velocity.x < 0) )
-					Scalar = Real( 0.8 );
+					Scalar = Real( 0.7 );
 				else if ( (gx < 0) && (Velocity.x > 0) )
-					Scalar = Real( 0.8 );
+					Scalar = Real( 0.7 );
 				else if ( gx == 0 )
-					Scalar = Real( 0.8 );
+					Scalar = Real( 0.4 );
 			}
 			if ( OnWall && (gx != 0) && (Velocity.y > 0) ) {
 				Scalar = Real( 0.3 );
@@ -1056,7 +1071,7 @@ public:
 						if ( Line.y > Real::Zero ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 16;
+									JumpPower = 17;
 								else
 									JumpPower = 10;
 							}
@@ -1861,7 +1876,7 @@ void EngineDraw() {
 	DrawLayer( MapLayer->Size - 3 );
 	
 	// Draw UI //
-	char Text[64];
+	char Text[128];
 	
 	sprintf( Text, "%i/%i", Player->TotalKeys, TotalKeysInMap - Player->KeysUsed );
 	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
@@ -1878,6 +1893,17 @@ void EngineDraw() {
 	gelBindImage( HudId );
 	gelDrawTile( 0, /**/ 0, 0 );
 	gelDrawTile( 1, /**/ 320-32-0, 0 );
+/*	
+	sprintf( Text, "(%f, %f)", Player->Pos.x.ToFloat(), Player->Pos.y.ToFloat() );
+	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelDrawTextLeft( Text, 0, 190, 15, "FourB" );
+	sprintf( Text, "(%f, %f)", Player->Pos.x.ToFloat() - Player->Old.x.ToFloat(), Player->Pos.y.ToFloat() - Player->Old.y.ToFloat() );
+	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelDrawTextLeft( Text, 0, 205, 15, "FourB" );
+	sprintf( Text, "(%f, %f)", gx, gy );
+	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
+	gelDrawTextLeft( Text, 0, 220, 15, "FourB" );
+*/
 }
 // - ------------------------------------------------------------------------------------------ - //
 
