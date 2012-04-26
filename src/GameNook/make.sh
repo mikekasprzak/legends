@@ -35,6 +35,7 @@ cat Load.js>>obj/PreJS.txt
 $CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/nook.emcc.js 
 
 java -jar bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js output/nook.emcc.js 2>output/nook.emcc.js.txt>output/nook.js
+#java -jar bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js Content/MapData.json.js >Content/MapData.json.js2
 
 #--embed-file Content/MapData.json
 # --js-library external/soundmanager2-nodebug-jsmin.js

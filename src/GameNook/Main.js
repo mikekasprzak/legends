@@ -169,6 +169,7 @@ function Main_Loop() {
 	if ( TimeDiff > FrameRate ) {
 		var FramesToDo = Math.floor( TimeDiff / FrameRate );
 	
+		var CurrentFrame = GlobalCurrentFrame;
 		for ( var idx = 0; idx < FramesToDo; idx++ ) {
 			GlobalCurrentFrame++;
 			Input_KeyUpdate();
@@ -179,14 +180,18 @@ function Main_Loop() {
 			__Z8GameStepv();
 		}
 		
-		//Game.Draw();
-		//GameDraw();
-		__Z8GameDrawv();
-		FPSClock_Draws++;
-		
-		if ( Hack_ShowFPS )
-			DrawFPS();
-
+		// NOTE: Uncomment these two lines for 60 FPS. Comment them for 30 FPS //
+//		if ( CurrentFrame != GlobalCurrentFrame ) {
+//			if ( ((GlobalCurrentFrame - CurrentFrame) > 1) || ((GlobalCurrentFrame & 1) == 0) ) {
+				//Game.Draw();
+				//GameDraw();
+				__Z8GameDrawv();
+				FPSClock_Draws++;
+				
+				if ( Hack_ShowFPS )
+					DrawFPS();
+//			}
+//		}
 		
 		WorkTime += FramesToDo * FrameRate;
 		
@@ -202,6 +207,37 @@ function Main_Loop() {
 	}
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+function EnableRequestFrame() {
+    // shim layer with setTimeout fallback
+    window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function DisableRequestFrame() {
+	window.requestAnimFrame = null;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function RunMainLoop() {
+	(function animloop(){
+      requestAnimFrame(animloop);
+      Main_Loop();
+    })();
+    // place the rAF *before* the render() to assure as close to 
+    // 60fps with the setTimeout fallback.
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+
 
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_ShowPaused() {
@@ -226,17 +262,20 @@ function Main_GainFocus() {
 	WorkTime = new Date().getTime();
 	
 	// Restart Clock //
-	if ( IntervalHandle == 0 ) {
-		IntervalHandle = setInterval( Main_Loop, FrameRate );
-	}
+	EnableRequestFrame();
+	RunMainLoop();
+//	if ( IntervalHandle == 0 ) {
+//		IntervalHandle = setInterval( Main_Loop, FrameRate );
+//	}
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main_LoseFocus() {
 	Log( "* Lost Focus" );
 
 	// Stop Clock //
-	clearInterval( IntervalHandle );
-	IntervalHandle = 0;
+//	clearInterval( IntervalHandle );
+//	IntervalHandle = 0;
+	DisableRequestFrame();
 	
 	// Pause Music //
 	sndPause( 'BGMusic' );
@@ -596,7 +635,6 @@ function explore(path) {
   Module.print('');
 }
 
-
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Main() {
 	// If no console (Internet Explorer w/o F12 debugging open), make one //
@@ -643,7 +681,10 @@ function Main() {
 	WorkTime = new Date().getTime();
 
 	// Lock to 30fps //
-	IntervalHandle = setInterval( Main_Loop, FrameRate );
+//	IntervalHandle = setInterval( Main_Loop, FrameRate );
+
+	EnableRequestFrame();
+	RunMainLoop();
 }
 
 window['Main'] = Main;
