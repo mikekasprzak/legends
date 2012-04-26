@@ -32,7 +32,9 @@ cat Load.js>>obj/PreJS.txt
 
 #$CC -D NOT_GCC -I ../GEL -O2 -s EXPORTED_FUNCTIONS='["__Z6NewGenv", "_main"]' Main.cpp ../GEL/Math/Real.cpp ../GEL/Math/Vector/Vector3D.cpp --pre-js obj/PreJS.txt -o output/Sugar.js 
 
-$CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/nook.js 
+$CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/nook.emcc.js 
+
+java -jar bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js output/nook.emcc.js 2>output/nook.emcc.js.txt>output/nook.js
 
 #--embed-file Content/MapData.json
 # --js-library external/soundmanager2-nodebug-jsmin.js
