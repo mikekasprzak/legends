@@ -5,7 +5,7 @@ var GlobalCurrentFrame = 0;
 var GlobalDebugMode = false;
 var GlobalCameraOffset = Vector2D(0,0);	// Hack //
 
-var FrameRate = 1000/30;
+var FrameRate = 1000/60;
 var WorkTime = 0;
 var FPSClock = 0;
 var FPSClock_Timer = 0;
@@ -365,7 +365,7 @@ function Input_KeyUpdate() {
 	}
 	
 	// Stop diagonals from being faster //
-	Input_Stick.Normalize();
+//	Input_Stick.Normalize();
 	
 	// Update the Current and Old //
 	Input_KeyLast = Input_KeyCurrent;

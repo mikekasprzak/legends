@@ -70,7 +70,7 @@ const int Nook_Jump[] = { 1, /**/ 12 };
 const int Nook_Fall[] = { 1, /**/ 13 };
 const int Nook_TouchGround[] = { 1, /**/ 14 };
 const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 2, /**/ 43, 12 };
+const int Nook_WallJump[] = { 3, /**/ 43, 43, 12 };
 const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Nook_Sm_Idle[] = { 1, /**/ 15 };
@@ -295,7 +295,7 @@ public:
 
 	void Step() {		
 		FrameDelay++;
-		if ( FrameDelay >= 3 ) {
+		if ( FrameDelay >= 6 ) {
 			FrameDelay = 0;
 			CurrentFrame++;
 			if ( IntermediateAnimation ) {
@@ -398,7 +398,7 @@ public:
 
 	void Step() {		
 		FrameDelay++;
-		if ( FrameDelay >= 3 ) {
+		if ( FrameDelay >= 6 ) {
 			FrameDelay = 0;
 			CurrentFrame++;
 			if ( IntermediateAnimation ) {
@@ -587,7 +587,14 @@ public:
 	}
 
 	inline bool NotTransforming() {
-		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
+		if (IntermediateAnimation == Nook_Sm_Transform)
+			return !(CurrentFrame < IntermediateAnimation[0] - 2);
+
+		if (IntermediateAnimation == Nook_Transform)
+			return !(CurrentFrame < IntermediateAnimation[0] - 2);
+		
+		return true;
+//		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
 	}
 	
 	inline bool NotWallJumping() {
@@ -736,7 +743,7 @@ public:
 		
 	void Step() {
 		StarSpinPreDelay++;
-		if ( StarSpinPreDelay == 2 ) {
+		if ( StarSpinPreDelay == 4 ) {
 			StarSpinPreDelay = 0;
 			StarSpin++;
 			if ( StarSpin == Star_Idle[0] )
@@ -744,7 +751,7 @@ public:
 		}
 
 		SmStarSpinPreDelay++;
-		if ( SmStarSpinPreDelay == 2 ) {
+		if ( SmStarSpinPreDelay == 4 ) {
 			SmStarSpinPreDelay = 0;
 			SmStarSpin++;
 			if ( SmStarSpin == Star_Sm_Idle[0] )
@@ -752,7 +759,7 @@ public:
 		}
 				
 		KeySpinPreDelay++;
-		if ( KeySpinPreDelay == 2 ) {
+		if ( KeySpinPreDelay == 4 ) {
 			KeySpinPreDelay = 0;
 			KeySpin++;
 			if ( KeySpin == Key_Idle[0] )
@@ -760,7 +767,7 @@ public:
 		}
 
 		SmKeySpinPreDelay++;
-		if ( SmKeySpinPreDelay == 2 ) {
+		if ( SmKeySpinPreDelay == 4 ) {
 			SmKeySpinPreDelay = 0;
 			SmKeySpin++;
 			if ( SmKeySpin == Key_Sm_Idle[0] )
@@ -769,9 +776,19 @@ public:
 		
 		// Physics //
 		{
-			Pos += Vector2D( 0, 0.4f ); // Gravity //
+			Pos += Vector2D( 0, 0.2f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
-				Pos += Vector2D( gx, 0 ) * (IsBig ? Real(0.2) : Real(0.15));
+				Vector2D Velocity = Pos - Old;
+				Real MoveScalar = (IsBig ? Real(0.2) : Real(0.15));
+				// Check if the velocity and the player are going the same direction //
+				if ( Velocity.x.ToFloat() * gx > 0 ) {
+					Real MoveRate = Real(2) - Velocity.x.Magnitude();
+					if ( MoveRate < Real::Zero )
+						MoveRate = 0;
+					MoveScalar *= MoveRate;// * MoveScalar.Magnitude();
+				}
+				
+				Pos += Vector2D( gx, 0 ) * MoveScalar;
 			}
 			
 			Vector2D Velocity = Pos - Old;
@@ -799,7 +816,7 @@ public:
 						}
 					}
 
-					Velocity.y = -(Real(JumpPower) * Real(0.5));
+					Velocity.y = -((Real(JumpPower) + Real(1)) * Real(0.5));
 					JumpPower--;
 				}
 			}
@@ -816,8 +833,8 @@ public:
 				if ( (Pos.x - Old.x).Magnitude() > 4 ) {
 					Pos.x = Old.x + ((Pos.x - Old.x).Normal() * Real(4));
 				}
-				if ( (Pos.y - Old.y).Magnitude() > 6 ) {
-					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(6));
+				if ( (Pos.y - Old.y).Magnitude() > 4 ) {
+					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(4));
 				}
 
 			}
@@ -1071,9 +1088,9 @@ public:
 						if ( Line.y > Real::Zero ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 17;
+									JumpPower = 21;
 								else
-									JumpPower = 10;
+									JumpPower = 9;
 							}
 							if ( WasOnGround == false ) {
 								sndPlay( "Ground" );
@@ -1098,6 +1115,7 @@ public:
 						if ( Line.y < Real::Zero ) {
 							JumpPower = 0;
 							if ( WasOnCeiling == false ) {
+								//JumpPower >>= 1;
 								sndPlay( "Ceiling" );
 							}
 							OnCeiling = true;
@@ -1122,7 +1140,7 @@ public:
 						if ( VsLeftRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 13;
+									JumpPower = 16;
 							}
 														
 							OnWall = true;
@@ -1145,7 +1163,7 @@ public:
 						if ( VsRightRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
 								if ( IsBig )
-									JumpPower = 13;
+									JumpPower = 16;
 							}
 						
 							OnWall = true;
@@ -1277,7 +1295,7 @@ public:
 		}
 		
 		FrameDelay++;
-		if ( FrameDelay >= 3 ) {
+		if ( FrameDelay >= 6 ) {
 			FrameDelay = 0;
 			CurrentFrame++;
 			if ( IntermediateAnimation ) {
@@ -1609,7 +1627,8 @@ void EngineStep() {
 		}	
 	}
 	
-	CameraPos += (Player->Pos - CameraPos) * Real(0.125);
+	//CameraPos += (Player->Pos - CameraPos) * Real(0.125);
+	CameraPos = Player->Pos;
 	
 	int OldGlobalTotalKeys = GlobalTotalKeys;
 	GlobalTotalKeys = Player->KeysUsed + Player->TotalKeys;
