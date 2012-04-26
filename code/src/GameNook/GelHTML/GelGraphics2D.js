@@ -437,3 +437,42 @@ function _gelDrawTileFlipXY( Tile, dx, dy ) {
 	Module.ctx.scale(-1, -1);
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
+
+
+function _gelDrawTiles( DataPtr, MapWidth, MapHeight, StartX, StartY, EndX, EndY, TileMod, OffsetX, OffsetY ) {
+	var Width = MapWidth * 2;
+//	OffsetX = Math.floor( OffsetX );
+//	OffsetY = Math.floor( OffsetY );
+
+	var dx;
+	var dy;
+	
+	for ( var _y = StartY; _y < EndY; _y++ ) {
+		for ( var _x = StartX; _x < EndX; _x++ ) {
+			//int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			var Tile = HEAP16[ (DataPtr + (Width*_y) + _x + _x) >> 1 ];//getValue( DataPtr + (Width*_y) + _x + _x, 'i16' );
+			if ( Tile > 0 ) {
+				Tile += TileMod;
+//				dx = ((_x - StartX) * 8) - OffsetX;
+//				dy = ((_y - StartY) * 8) - OffsetY;
+				dx = ((_x - StartX) << 3) - OffsetX;
+				dy = ((_y - StartY) << 3) - OffsetY;
+				
+				Module.ctx.drawImage( 
+					CurrentImage, 
+//					Math.floor( Tile % CurrentImage.WidthInTiles ) * CurrentImage.TileWidth, Math.floor( Tile / CurrentImage.WidthInTiles ) * CurrentImage.TileHeight,
+					(Tile & 0x3F) << 3, (Tile >> 6) << 3,
+					CurrentImage.TileWidth, CurrentImage.TileHeight, 
+					dx, dy,
+					CurrentImage.TileWidth, CurrentImage.TileHeight 
+					);
+					
+//				_gelDrawTile( 
+//					Tile, 
+//					((_x - StartX) * 8) - OffsetX, 
+//					((_y - StartY) * 8) - OffsetY
+//					);
+			}
+		}
+	}	
+}

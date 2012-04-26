@@ -194,7 +194,7 @@ function Main_Loop() {
 		if ( WorkTimeDiff > 0 ) {
 			FPSClock = FPSClock_Draws;
 			FPSClock_Draws = 0;
-			if ( WorkTimeDiff > 60 )
+			if ( WorkTimeDiff > 20 )
 				FPSClock_Timer = WorkTime;
 			else
 				FPSClock_Timer += 1000;

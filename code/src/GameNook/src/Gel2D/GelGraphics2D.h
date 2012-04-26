@@ -37,6 +37,15 @@ extern "C" {
 	
 	void gelDrawTileCentered( int Tile, float x, float y );
 	void gelDrawTileBaseline( int Tile, float x, float y );
+	
+	void gelDrawTiles( 
+		const short* DataPtr, 
+		int MapWidth, int MapHeight, 
+		int StartX, int StartY, 
+		int EndX, int EndY, 
+		int TileMod, 
+		int OffsetX, int OffsetY
+		);
 		
 // - ------------------------------------------------------------------------------------------ - //
 };

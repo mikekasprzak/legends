@@ -1724,18 +1724,27 @@ void DrawLayer( const int Layer ) {
 	if ( EndY > MapHeight )
 		EndY = MapHeight;
 
-	for ( int _y = StartY; _y < EndY; _y++ ) {
-		for ( int _x = StartX; _x < EndX; _x++ ) {
-			int Tile = (*MapLayer->Data[Layer])(_x, _y);
-			if ( Tile > 0 ) {
-				gelDrawTile( 
-					Tile-1, 
-					((_x - StartX) * 8) - OffsetX, 
-					((_y - StartY) * 8) - OffsetY
-					);
-			}
-		}
-	}
+	gelDrawTiles( 
+		&((*MapLayer->Data[Layer])[0]), 
+		MapWidth, MapHeight, 
+		StartX, StartY, 
+		EndX, EndY, 
+		-1, 
+		OffsetX, OffsetY 
+		);
+
+//	for ( int _y = StartY; _y < EndY; _y++ ) {
+//		for ( int _x = StartX; _x < EndX; _x++ ) {
+//			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+//			if ( Tile > 0 ) {
+//				gelDrawTile( 
+//					Tile-1, 
+//					((_x - StartX) * 8) - OffsetX, 
+//					((_y - StartY) * 8) - OffsetY
+//					);
+//			}
+//		}
+//	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void DrawObjectLayer( const int Layer ) {
