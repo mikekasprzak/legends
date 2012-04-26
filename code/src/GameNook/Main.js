@@ -14,6 +14,8 @@ var FPSClock_Draws = 0;
 var FirstRun = true;
 var HasInitSounds = false;
 
+var Hack_ShowFPS = false;
+
 var Canvas_Scale;
 
 var Canvas;
@@ -121,6 +123,21 @@ function gelSetColorString( str ) {
 // - -------------------------------------------------------------------------------------------------------------- - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
+function DrawFPS() {
+	ctx = Canvas.getContext("2d");
+	
+	if ( isMobile() )
+		ctx.fillStyle = "rgb(128,128,255)";
+	else
+		ctx.fillStyle = "rgb(255,255,0)";
+	ctx.font = "16px Commodore";
+	ctx.textAlign = "right";
+	ctx.textBaseline = "top";
+	ctx.fillText( FPSClock, Canvas.width - 1, 240-18 );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
 function Main_Loop() {
 	if ( FirstRun ) {
 		//Game.Init();
@@ -166,6 +183,10 @@ function Main_Loop() {
 		//GameDraw();
 		__Z8GameDrawv();
 		FPSClock_Draws++;
+		
+		if ( Hack_ShowFPS )
+			DrawFPS();
+
 		
 		WorkTime += FramesToDo * FrameRate;
 		
