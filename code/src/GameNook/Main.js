@@ -160,8 +160,12 @@ function Main_Loop() {
 	var TimeDiff = Math.floor(CurrentTime - WorkTime);
 	
 	// If too much time has passed, disregard clock //
-	if ( TimeDiff > 1000 ) {
+	if ( TimeDiff > 500 ) {
 		Log( "* WARNING: Too much time passed (" + TimeDiff + "). Throwing away clock." );
+		TimeDiff = 0;
+		WorkTime = CurrentTime;
+	}
+	else if ( TimeDiff < 0 ) {
 		TimeDiff = 0;
 		WorkTime = CurrentTime;
 	}
@@ -230,8 +234,10 @@ function DisableRequestFrame() {
 // - -------------------------------------------------------------------------------------------------------------- - //
 function RunMainLoop() {
 	(function animloop(){
-      requestAnimFrame(animloop);
-      Main_Loop();
+		if ( requestAnimFrame ) {
+		      requestAnimFrame(animloop);
+		      Main_Loop();
+		  }
     })();
     // place the rAF *before* the render() to assure as close to 
     // 60fps with the setTimeout fallback.
