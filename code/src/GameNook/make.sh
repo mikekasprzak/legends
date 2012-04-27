@@ -12,11 +12,11 @@ export FILES='src/Main.cpp ../GEL/Math/Real.cpp ../GEL/Debug/LogEmscripten.cpp .
 mkdir -p obj output
 
 echo "// Begin PreJS.txt //">obj/PreJS.txt
-#cat external/buzz.js>>obj/PreJS.txt
+cat external/buzz.js>>obj/PreJS.txt
 #cat external/soundmanager2-nodebug-jsmin.js>>obj/PreJS.txt
 #cat GelHTML/GelAudio.js>>obj/PreJS.txt
-#cat GelHTML/GelAudioBuzz.js>>obj/PreJS.txt
-cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
+cat GelHTML/GelAudioBuzz.js>>obj/PreJS.txt
+#cat GelHTML/GelAudioDummy.js>>obj/PreJS.txt
 
 #echo "var ContentMapData = ">>obj/PreJS.txt
 #cat Content/MapData.json>>obj/PreJS.txt
