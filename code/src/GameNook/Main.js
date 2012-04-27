@@ -184,7 +184,7 @@ function Main_Loop() {
 			__Z8GameStepv();
 		}
 		
-		// NOTE: Uncomment these two lines for 60 FPS. Comment them for 30 FPS //
+		// NOTE: Comment these two lines for 60 FPS. Uncomment them for 30 FPS //
 //		if ( CurrentFrame != GlobalCurrentFrame ) {
 //			if ( ((GlobalCurrentFrame - CurrentFrame) > 1) || ((GlobalCurrentFrame & 1) == 0) ) {
 				//Game.Draw();
