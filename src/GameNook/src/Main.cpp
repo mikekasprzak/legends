@@ -1642,18 +1642,23 @@ void EngineStep() {
 void GameStep() {
 	switch ( GameState ) {
 		case STATE_TITLE: {
-			if ( Input_KeyPressed( KEY_ACTION ) ) {
+			if ( Input_KeyPressed( KEY_ACTION ) || Input_KeyPressed( KEY_UP ) ) {
 				GameState = STATE_PLAY;
 			}
 			break;
 		}
 		case STATE_PLAY: {
 			EngineStep();
+			
+			if ( Input_KeyPressed( KEY_MENU ) ) {
+				GameState = STATE_TITLE;
+				LoadMap();
+			}
 
 			break;	
 		}
 		case STATE_WIN: {
-			if ( Input_KeyPressed( KEY_ACTION ) ) {
+			if ( Input_KeyPressed( KEY_ACTION ) || Input_KeyPressed( KEY_UP ) ) {
 				// TODO: Reset Game //
 				LoadMap();
 				
