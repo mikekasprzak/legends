@@ -62,25 +62,33 @@ GelArray< LayerType* >* MapLayer;
 // - ------------------------------------------------------------------------------------------ - //
 // Number of Frames, followed by frame numbers //
 // - ------------------------------------------------------------------------------------------ - //
-const int Player_Idle[] = { 1, /**/ 3 };
+const int Player_Idle[] = { 50, /**/ 11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,8,8,10,10,10,10,10,10,10,10,10,10,10,10,8,8,8,8,8,8,9,9,8,8,8,8 };
+const int Player_Run[] = { 4, /**/ 16,17,18,19 };
+const int Player_Jump[] = { 1, /**/ 24 };
 // - ------------------------------------------------------------------------------------------ - //
-const int Nook_Idle[] = { 12, /**/ 0,0,1,1,3,3,0,0,1,1,2,2 };
-const int Nook_Run[] = { 6, /**/ 4,5,6,7,8,9 };
-const int Nook_PreJump[] = { 2, /**/ 10,11 };
-const int Nook_Jump[] = { 1, /**/ 12 };
-const int Nook_Fall[] = { 1, /**/ 13 };
-const int Nook_TouchGround[] = { 1, /**/ 14 };
-const int Nook_WallGrab[] = { 1, /**/ 42 };
-const int Nook_WallJump[] = { 3, /**/ 43, 43, 12 };
-const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
+const int Player_GunIdle[] = { 50, /**/ 15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,12,12,14,14,14,14,14,14,14,14,14,14,14,14,12,12,12,12,12,12,13,13,12,12,12,12 };
+const int Player_GunRun[] = { 4, /**/ 20,21,22,23 };
+const int Player_GunJump[] = { 1, /**/ 28 };
 // - ------------------------------------------------------------------------------------------ - //
-const int Nook_Sm_Idle[] = { 1, /**/ 15 };
-const int Nook_Sm_Run[] = { 4, /**/ 15,16,17,18 };
-//const int Nook_Sm_Anticipation[] = { 3, /**/ 0,10,11 };
-const int Nook_Sm_Jump[] = { 1, /**/ 19 };
-const int Nook_Sm_Fall[] = { 1, /**/ 20 };
-//const int Nook_Sm_TouchGround[] = { 1, /**/ 14 };
-const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
+
+// - ------------------------------------------------------------------------------------------ - //
+//const int Nook_Idle[] = { 12, /**/ 0,0,1,1,3,3,0,0,1,1,2,2 };
+//const int Nook_Run[] = { 6, /**/ 4,5,6,7,8,9 };
+//const int Nook_PreJump[] = { 2, /**/ 10,11 };
+//const int Nook_Jump[] = { 1, /**/ 12 };
+//const int Nook_Fall[] = { 1, /**/ 13 };
+//const int Nook_TouchGround[] = { 1, /**/ 14 };
+//const int Nook_WallGrab[] = { 1, /**/ 42 };
+//const int Nook_WallJump[] = { 3, /**/ 43, 43, 12 };
+//const int Nook_Transform[] = { 12, /**/ 21,22,23,24,25,26,27,28,29,30,31,32 };
+//// - ------------------------------------------------------------------------------------------ - //
+//const int Nook_Sm_Idle[] = { 1, /**/ 15 };
+//const int Nook_Sm_Run[] = { 4, /**/ 15,16,17,18 };
+////const int Nook_Sm_Anticipation[] = { 3, /**/ 0,10,11 };
+//const int Nook_Sm_Jump[] = { 1, /**/ 19 };
+//const int Nook_Sm_Fall[] = { 1, /**/ 20 };
+////const int Nook_Sm_TouchGround[] = { 1, /**/ 14 };
+//const int Nook_Sm_Transform[] = { 9, /**/ 33,34,35,36,37,38,39,40,41 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Star_Idle[] = { 10, /**/ 0,1,2,3,4,5,6,7,8,9 };
 const int Star_Sm_Idle[] = { 8, /**/ 10,10,13,13,14,14,15,15 };
@@ -455,10 +463,8 @@ GelArray< cDoor* >* MapDoor;
 GelArray< cExit* >* MapExit;
 */
 // - ------------------------------------------------------------------------------------------ - //
-const int NOOK_BIG_WIDTH = 6;
-const int NOOK_BIG_HEIGHT = 7;
-const int NOOK_SM_WIDTH = 6;
-const int NOOK_SM_HEIGHT = 7;
+const int PLAYER_WIDTH = 6;
+const int PLAYER_HEIGHT = 7;
 // - ------------------------------------------------------------------------------------------ - //
 class cPlayer {
 public:
@@ -500,7 +506,7 @@ public:
 		Pos( _x, _y ),
 		Old( _x, _y )
 	{
-		CurrentAnimation = Nook_Idle;
+		CurrentAnimation = Player_Idle;
 		IntermediateAnimation = 0;
 		CurrentFrame = 0;
 		FrameDelay = 0;
@@ -535,28 +541,10 @@ public:
 		SmKeySpin = 0;
 		SmKeySpinPreDelay = 0;
 		
-		SetBig( true, false );
-	}
-	
-	inline void SetBig( const bool _IsBig, const bool _SetAnimation = true ) {
-		IsBig = _IsBig;
-		
-		if ( IsBig ) {
-			Shape.x = NOOK_BIG_WIDTH;
-			Shape.y = NOOK_BIG_HEIGHT;
-			if ( _SetAnimation ) {
-				SetAnimation( Nook_Idle );
-				SetIntermediateAnimation( Nook_Sm_Transform );
-			}
-		}
-		else {
-			Shape.x = NOOK_SM_WIDTH;
-			Shape.y = NOOK_SM_HEIGHT;
-			if ( _SetAnimation ) {
-				SetAnimation( Nook_Sm_Idle );
-				SetIntermediateAnimation( Nook_Transform );
-			}
-		}
+		Shape.x = PLAYER_WIDTH;
+		Shape.y = PLAYER_HEIGHT;
+
+		SetAnimation( Player_Idle );
 	}
 	
 	inline void SetIntermediateAnimation( const int* AnimationName ) {
@@ -591,18 +579,21 @@ public:
 	}
 
 	inline bool NotTransforming() {
-		if (IntermediateAnimation == Nook_Sm_Transform)
-			return !(CurrentFrame < IntermediateAnimation[0] - 2);
-
-		if (IntermediateAnimation == Nook_Transform)
-			return !(CurrentFrame < IntermediateAnimation[0] - 2);
+//		if (IntermediateAnimation == Nook_Sm_Transform)
+//			return !(CurrentFrame < IntermediateAnimation[0] - 2);
+//
+//		if (IntermediateAnimation == Nook_Transform)
+//			return !(CurrentFrame < IntermediateAnimation[0] - 2);
 		
 		return true;
-//		return (IntermediateAnimation != Nook_Sm_Transform) && (IntermediateAnimation != Nook_Transform);
 	}
 	
 	inline bool NotWallJumping() {
-		return IntermediateAnimation != Nook_WallJump;
+		return true;//IntermediateAnimation != Nook_WallJump;
+	}
+	
+	inline bool HasGun() {
+		return false;
 	}
 	
 //	bool CanTransformHere() {
@@ -779,10 +770,10 @@ public:
 		
 		// Physics //
 		{
-			Pos += Vector2D( 0, 0.2f ); // Gravity //
+			Pos += Vector2D( 0, 0.12f ); // Gravity //
 			if ( NotTransforming() && NotWallJumping() ) {
 				Vector2D Velocity = Pos - Old;
-				Real MoveScalar = (IsBig ? Real(0.2) : Real(0.15));
+				Real MoveScalar = Real(0.1);//;(HasGun() ? Real(0.15) : Real(0.15));
 				// Check if the velocity and the player are going the same direction //
 				if ( Velocity.x.ToFloat() * gx > 0 ) {
 					Real MoveRate = Real(2) - Velocity.x.Magnitude();
@@ -798,7 +789,6 @@ public:
 			if ( (JumpPower > 0) ) {
 				if ( Input_Key( KEY_UP ) && NotTransforming() ) {
 					if ( Input_KeyPressed( KEY_UP ) ) {
-						if ( IsBig ) {
 //							sndPlay( "Jump01" );
 							if ( OnGround ) {
 							//	SetIntermediateAnimation( Nook_PreJump );
@@ -811,15 +801,13 @@ public:
 									Velocity.x = -Real(5);
 								}
 								FacingLeft = !FacingLeft;
-								SetIntermediateAnimation( Nook_WallJump );
+//								SetIntermediateAnimation( Nook_WallJump );
 							}
-						}
-						else {
-//							sndPlay( "Jump02" );
-						}
 					}
 
 					Velocity.y = -((Real(JumpPower) + Real(1)) * Real(0.5));
+					if ( Velocity.y < -Real(3) )
+						Velocity.y = -Real(3);
 					JumpPower--;
 				}
 			}
@@ -829,19 +817,20 @@ public:
 			Pos -= (Pos-Old) - Velocity;
 			
 			// Clamp to Speed //
-			if ( IsBig ) {
-//				if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
-//					Pos = Old + ((Pos - Old).Normal() * Real(8));
+//			if ( IsBig ) {
+////				if ( (Pos - Old).MagnitudeSquared() > 8*8 ) {
+////					Pos = Old + ((Pos - Old).Normal() * Real(8));
+////				}
+//				if ( (Pos.x - Old.x).Magnitude() > 4 ) {
+//					Pos.x = Old.x + ((Pos.x - Old.x).Normal() * Real(4));
 //				}
-				if ( (Pos.x - Old.x).Magnitude() > 4 ) {
-					Pos.x = Old.x + ((Pos.x - Old.x).Normal() * Real(4));
-				}
-				if ( (Pos.y - Old.y).Magnitude() > 4 ) {
-					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(4));
-				}
-
-			}
-			else {
+//				if ( (Pos.y - Old.y).Magnitude() > 4 ) {
+//					Pos.y = Old.y + ((Pos.y - Old.y).Normal() * Real(4));
+//				}
+//
+//			}
+//			else 
+			{
 //				if ( (Pos - Old).MagnitudeSquared() > 6*6 ) {
 //					Pos = Old + ((Pos - Old).Normal() * Real(6));
 //				}
@@ -1090,15 +1079,12 @@ public:
 							
 						if ( Line.y > Real::Zero ) {
 							if ( !Input_Key( KEY_UP ) ) {
-								if ( IsBig )
-									JumpPower = 21;
-								else
-									JumpPower = 9;
+								JumpPower = 16;
 							}
 							if ( WasOnGround == false ) {
 //								sndPlay( "Ground" );
-								if ( IsBig && NotTransforming() )
-									SetIntermediateAnimation( Nook_TouchGround );
+//								if ( IsBig && NotTransforming() )
+//									SetIntermediateAnimation( Nook_TouchGround );
 							}
 							OnGround = true;
 						}
@@ -1142,8 +1128,7 @@ public:
 
 						if ( VsLeftRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
-								if ( IsBig )
-									JumpPower = 16;
+								JumpPower = 15;
 							}
 														
 							OnWall = true;
@@ -1165,8 +1150,7 @@ public:
 
 						if ( VsRightRect.Height() > 24 ) {
 							if ( !Input_Key( KEY_UP ) ) {
-								if ( IsBig )
-									JumpPower = 16;
+								JumpPower = 15;
 							}
 						
 							OnWall = true;
@@ -1242,10 +1226,10 @@ public:
 		if ( OnGround ) {
 			if ( NotTransforming() ) {
 				if ( gx != 0 ) {
-					SetAnimation( IsBig ? Nook_Run : Nook_Sm_Run );
+					SetAnimation( HasGun() ? Player_Run : Player_GunRun );
 				}
 				else {
-					SetAnimation( IsBig ? Nook_Idle : Nook_Sm_Idle );
+					SetAnimation( HasGun() ? Player_Idle : Player_GunIdle );
 				}
 				
 				// NOTE: This scope makes changing which way you face only work when on the ground //
@@ -1258,24 +1242,25 @@ public:
 			}
 		}
 		else {
-			if ( (Old - Pos).y > 0 ) {
-				SetAnimation( IsBig ? Nook_Jump : Nook_Sm_Jump );
+//			if ( (Old - Pos).y > 0 ) 
+			{
+				SetAnimation( HasGun() ? Player_Jump : Player_GunJump );
 			}
-			else {
-				if ( IsBig ) {
-					if ( OnWall ) {
-						if ( CurrentAnimation != Nook_WallGrab ) {
-//							sndPlay( "Slide" );
-						}
-						SetAnimation( Nook_WallGrab );
-					}
-					else
-						SetAnimation( Nook_Fall );
-				}
-				else {
-					SetAnimation( Nook_Sm_Fall );
-				}
-			}
+//			else {
+//				if ( IsBig ) {
+//					if ( OnWall ) {
+//						if ( CurrentAnimation != Nook_WallGrab ) {
+////							sndPlay( "Slide" );
+//						}
+//						SetAnimation( Nook_WallGrab );
+//					}
+//					else
+//						SetAnimation( Nook_Fall );
+//				}
+//				else {
+//					SetAnimation( Nook_Sm_Fall );
+//				}
+//			}
 		}
 
 //		if ( Input_KeyPressed( KEY_ACTION ) ) {
@@ -1451,9 +1436,9 @@ void LoadMap() {
 //	TotalStarsInMap = CountStars( MapLayer->Size - 1 );
 //	TotalKeysInMap = CountKeys( MapLayer->Size - 1 );
 
-	Player = new cPlayer( (15 << 3) - 4, 4 << 3 );
+	Player = new cPlayer( ((128-16+15) << 3) - 4, 4 << 3 );
 	
-	CameraPos = Player->Pos;
+	CameraPos = Player->Pos - Vector2D(0,32);
 	
 //	ProcessObjectLayer( MapLayer->Size - 1 );
 	
@@ -1461,8 +1446,8 @@ void LoadMap() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {	
-	ScreenWidth = 320;//160;//320;
-	ScreenHeight = 240;//120;//240;
+	ScreenWidth = 240;//160;//320;
+	ScreenHeight = 160;//120;//240;
 	HalfScreenWidth = ScreenWidth >> 1;
 	HalfScreenHeight = ScreenHeight >> 1;
 	
@@ -1635,8 +1620,8 @@ void EngineStep() {
 	}
 	*/
 	
-	//CameraPos += (Player->Pos - CameraPos) * Real(0.125);
-	CameraPos = Player->Pos;
+	CameraPos += (Player->Pos - Vector2D(0,32) - CameraPos) * Real(0.05);
+	//CameraPos = Player->Pos;
 	
 //	int OldGlobalTotalKeys = GlobalTotalKeys;
 //	GlobalTotalKeys = Player->KeysUsed + Player->TotalKeys;
@@ -1688,9 +1673,9 @@ void DrawLayer( const int Layer ) {
 	int MapHeight = MapLayer->Data[Layer]->Height();
 	
 	float CameraScalar = 1.0f;
-	if ( Layer == 0 ) {
-		CameraScalar = 0.5f;
-	}
+//	if ( Layer == 0 ) {
+//		CameraScalar = 0.5f;
+//	}
 	
 	float CameraOffsetX = CameraPos.x.ToFloat();
 	float CameraOffsetY = CameraPos.y.ToFloat();
