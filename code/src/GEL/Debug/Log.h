@@ -138,6 +138,14 @@ extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 */
 
+// Emscripten Hack //
+#ifdef EMSCRIPTEN
+#define Log( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+#define VLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+#define VVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+#define VVVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+#else // EMSCRIPTEN //
+
 // The "Forcefully Always Log" version // 
 void LogAlways( const char* s, ... );
 void _LogAlways( const char* s, ... );
@@ -153,6 +161,8 @@ void _Log( const char* s, ... );
 void _VLog( const char* s, ... );
 void _VVLog( const char* s, ... );
 void _VVVLog( const char* s, ... );
+
+#endif // EMSCRIPTEN //
 
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
