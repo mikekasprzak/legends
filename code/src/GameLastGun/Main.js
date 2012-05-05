@@ -44,6 +44,8 @@ function InitSounds() {
 	sndLoadAndPlayAndLoop( 'BGMusic', '../POL-rescue-short' );
 */
 
+	sndLoadAndPlayAndLoop( 'BGMusic', '../BGMusic' );
+
 	Log( "* Done Init Sounds" );
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
