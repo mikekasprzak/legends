@@ -18,4 +18,8 @@
    eJzt2DluwzAAAEED+f8j85NUaVyFimQeOwOwohsSWpHW68XOvr8+P4A16B+69A9dd3Wrf9iP/qHr7l71D/u488x2/sNenP/QpX/oeqJV/cMerrQ6Mq9/WNdoq1d/o39Yz+g3+9E5/cO6Rnu9Mq9/WJPv/9D11zv7f857/cOa9A9d+ocu/UOX/qFL/9Clf+jSP3TpH7r0D136hy79Q8eVXvUPZ9A/dH26zzveN08POMGKPcxuW/9U6GFMbb2cTf9jautlDbPvu+7/zfcda5j9vOtf/8zj+RtjnzjJif0/uZaT9glO7v+J9Zy0TzD7/+4u432/4ASzu9plvO8XcD79Q5f+oUv/0KV/6NI/dOkfuvQPXfqHLv1Dl/6hS//QpX/o0j906R+69A9d+ocu/UOX/qFL/9Clf+jSP3TpH7r0D136hy79Q5f+oUv/0KV/6NI/dOkfuvQPTb+t6x969A9d+ocu/UOX/qFL/9Clf+jSP3TpH7r0D136hy79Q5f+oUv/0KV/6NI/dOkfuvQPXfqHNv1Dl/6hS//QpX/o0j906R+69A9d+ocu/UOX/qFL/9Clf+jSP3TpH7r0D136hy79Q5f+oUv/0KV/6NI/dOkfuvQPXfqHLv1Dl/6hS//QpX/o0j906R+69A9d+ocu/UOX/qFL/9Clf+jSP3Tpfx8/b+FqHA==
   </data>
  </layer>
+ <objectgroup name="Objects" width="256" height="128">
+  <object type="CameraLock" x="896" y="0" width="232" height="152"/>
+  <object x="616" y="224" width="800" height="96"/>
+ </objectgroup>
 </map>
