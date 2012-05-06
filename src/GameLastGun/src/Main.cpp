@@ -65,10 +65,16 @@ GelArray< LayerType* >* MapLayer;
 const int Player_Idle[] = { 54, /**/ 11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,8,10,10,10,10,10,10,10,10,10,10,10,10,8,8,8,8,8,8,9,9,8,8,8,8,11,11,11,11,11 };
 const int Player_Run[] = { 4, /**/ 16,17,18,19 };
 const int Player_Jump[] = { 1, /**/ 24 };
+const int Player_Fall[] = { 1, /**/ 25 };
+const int Player_JumpForward[] = { 1, /**/ 24 };
+const int Player_JumpBack[] = { 1, /**/ 25 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Player_GunIdle[] = { 54, /**/ 15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,12,14,14,14,14,14,14,14,14,14,14,14,14,12,12,12,12,12,12,13,13,12,12,12,12,15,15,15,15,15 };
 const int Player_GunRun[] = { 4, /**/ 20,21,22,23 };
 const int Player_GunJump[] = { 1, /**/ 28 };
+const int Player_GunFall[] = { 1, /**/ 29 };
+const int Player_GunJumpForward[] = { 1, /**/ 28 };
+const int Player_GunJumpBack[] = { 1, /**/ 29 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -1226,10 +1232,10 @@ public:
 		if ( OnGround ) {
 			if ( NotTransforming() ) {
 				if ( gx != 0 ) {
-					SetAnimation( HasGun() ? Player_Run : Player_GunRun );
+					SetAnimation( HasGun() ? Player_GunRun : Player_Run );
 				}
 				else {
-					SetAnimation( HasGun() ? Player_Idle : Player_GunIdle );
+					SetAnimation( HasGun() ? Player_GunIdle : Player_Idle );
 				}
 				
 				// NOTE: This scope makes changing which way you face only work when on the ground //
@@ -1242,24 +1248,19 @@ public:
 			}
 		}
 		else {
-//			if ( (Old - Pos).y > 0 ) 
-			{
-				SetAnimation( HasGun() ? Player_Jump : Player_GunJump );
+			if ( (FacingLeft && ((Old - Pos).x >= Real::Zero)) || (!FacingLeft && ((Old - Pos).x <= Real::Zero)) ) {
+				SetAnimation( HasGun() ? Player_GunJumpForward : Player_JumpForward );
 			}
+			else {
+				SetAnimation( HasGun() ? Player_GunJumpBack : Player_JumpBack );
+			}
+
+
+//			if ( (Old - Pos).y > 0 ) {
+//				SetAnimation( HasGun() ? Player_GunJump : Player_Jump );
+//			}
 //			else {
-//				if ( IsBig ) {
-//					if ( OnWall ) {
-//						if ( CurrentAnimation != Nook_WallGrab ) {
-////							sndPlay( "Slide" );
-//						}
-//						SetAnimation( Nook_WallGrab );
-//					}
-//					else
-//						SetAnimation( Nook_Fall );
-//				}
-//				else {
-//					SetAnimation( Nook_Sm_Fall );
-//				}
+//				SetAnimation( HasGun() ? Player_GunFall : Player_Fall );
 //			}
 		}
 
