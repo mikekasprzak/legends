@@ -32,6 +32,41 @@
          "width":256,
          "x":0,
          "y":0
+        }, 
+        {
+         "height":128,
+         "name":"Objects",
+         "objects":[
+                {
+                 "height":152,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"CameraLock",
+                 "width":232,
+                 "x":896,
+                 "y":0
+                }, 
+                {
+                 "height":96,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "width":800,
+                 "x":616,
+                 "y":224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":256,
+         "x":0,
+         "y":0
         }],
  "orientation":"orthogonal",
  "properties":
