@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #export CC='~/Code/emscripten/emcc'
-export CC='/d/Build/em2/emcc'
+#export CC='/d/Build/em2/emcc'
+export CC='emcc'
 
 #export CFLAGS='-O0 --closure 0'
 export CFLAGS='-O2 --closure 0'
