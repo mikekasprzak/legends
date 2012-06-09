@@ -86,10 +86,11 @@ GelArray< LayerType* >* MapLayer;
 const int Player_Idle[] = { 64, /**/ 0,0,0,0,0,0,2,2,2,2,0,0,1,1,1,1,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,1,1,1,1,0,0,2,2,2,2,0,0,0,0,0,0,3,3,0,0, };
 const int Player_Maul[] = { 3, /**/ 4,4,4 };
 const int Player_Hop[] = { 3, /**/ 8,8,1 };
+const int Player_Kill[] = { 20, /**/ 4,4,4,4,4,4,4,4, 8,4,8,4,8,4,8,4,8,4,8,4, };
 const int Player_Dead[] = { 1, /**/ 12 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Enemy_Idle[] = { 1, /**/ 0 };
-const int Enemy_Shoot[] = { 4, /**/ 1,1,1,1 };
+const int Enemy_Shoot[] = { 8, /**/ 1,1,1,1,1,1,1,1 };
 const int Enemy_Kill[] = { 3, /**/ 0,0,0 };
 const int Enemy_Dead[] = { 1, /**/ 12 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -204,6 +205,7 @@ public:
 		
 	bool FacingLeft;
 	bool Alive;
+	bool Killer;
 
 public:
 	cEnemy( int _x, int _y ) :
@@ -219,6 +221,7 @@ public:
 		
 		FacingLeft = false;
 		Alive = true;
+		Killer = false;
 
 		SetAnimation( Enemy_Idle );
 	}
@@ -297,6 +300,29 @@ public:
 				floor( (Pos.x * TileSize) - Anchor.x - Camera.x ),
 				floor( (Pos.y * TileSize) - Anchor.y - Camera.y )
 				);
+		}
+		
+		// Hack: Trace death path //
+		if ( Killer && IntermediateAnimation ) {
+			int TileSize = 16;
+			int Layer = 0;
+			
+			int VsY = Pos.y;
+			int VsX = Pos.x;
+			
+			int XVector = 1;
+			if ( FacingLeft )
+				XVector = -1;
+			
+			while ( (*MapLayer->Data[Layer])(VsX, VsY) != TILE_COLLISION ) {
+				gelDrawTile(
+					2,
+					floor( (VsX * TileSize) - Anchor.x - Camera.x ),
+					floor( (VsY * TileSize) - Anchor.y - Camera.y )
+					);
+				
+				VsX += XVector;
+			}	
 		}
 	}
 };
@@ -434,11 +460,43 @@ public:
 				OffsetAnim++;
 		}
 		
-		if ( !IsHopping() ) {
+		if ( !IsHopping() && Alive ) {
 			int Layer = 0;
 
 			// Check if shot //
 			{
+				for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
+					if ( MapEnemy->Data[idx]->Alive ) {
+						int VsY = MapEnemy->Data[idx]->Pos.y;
+						int VsX = MapEnemy->Data[idx]->Pos.x;
+						
+						// Optimization here ONLY because enemies shoot left+right //
+						if ( Pos.y == VsY ) {
+							int XVector = 1;
+							if ( MapEnemy->Data[idx]->FacingLeft )
+								XVector = -1;
+							
+							while ( (*MapLayer->Data[Layer])(VsX, VsY) != TILE_COLLISION ) {
+								if ( Pos.x == VsX ) {
+									// I AM DEAD //
+									SetAnimation( Player_Dead );
+									SetIntermediateAnimation( Player_Kill );
+									
+									MapEnemy->Data[idx]->SetIntermediateAnimation( Enemy_Shoot );
+									MapEnemy->Data[idx]->Killer = true;
+									
+									KillDelay = 6*8;
+									KillCountdown = 64*3;
+									KillFlickerCountdown = 64*3;
+									
+									Alive = false;
+								}
+								
+								VsX += XVector;
+							}
+						}
+					}
+				}
 				
 			}
 			
@@ -463,7 +521,7 @@ public:
 			}
 			
 			// Do Movement //
-			{
+			if ( Alive ) {
 				int SX = 0;
 				int SY = 0;
 								
@@ -489,6 +547,11 @@ public:
 						if ( Tile != TILE_COLLISION )
 							SY = -1;
 					}
+				}
+				
+				if ( Input_KeyPressed( KEY_ACTION ) ) {
+					GameMoves++;
+					GameMoveCountdown = 60*2;	
 				}
 				
 				if ( (SX|SY) != 0 ) {
@@ -815,11 +878,11 @@ void EngineStep() {
 	if ( EatCountdown > 0 )
 		EatCountdown--;
 	
-	Player->Step();
-
 	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
 		MapEnemy->Data[idx]->Step( );
 	}
+
+	Player->Step();
 	
 	//CameraPos += (Player->Pos - Vector2D(0,32) - CameraPos) * Real(0.05);
 //	CameraPos = Player->Pos;
@@ -849,6 +912,10 @@ void GameStep() {
 			
 			if ( Input_KeyPressed( KEY_MENU ) ) {
 				GameState = STATE_TITLE;
+				LoadMap();
+			}
+			
+			if ( (!Player->Alive) && Input_KeyPressed( KEY_ACTION ) ) {
 				LoadMap();
 			}
 
@@ -953,12 +1020,16 @@ void DrawLayer( const int Layer ) {
 // - ------------------------------------------------------------------------------------------ - //
 void EngineDraw() {
 	int Red = 0;
-	if ( KillDelay == 0 ) {	
+	if ( KillDelay == 0 || KillFlickerCountdown > 0 ) {	
 		Red = KillCountdown * 2;
 		if ( Red > 255 )
 			Red = 255;
-	}
 	
+		if ( KillDelay == 0 )
+			if ( ((KillFlickerCountdown / 6) & 1) == 1 )
+				Red = 0;
+	}
+		
 	int Blue = 0;
 	Blue = EatCountdown * 4;
 	if ( Blue > 255 )
@@ -1077,9 +1148,5 @@ void GameDraw() {
 			break;
 		}
 	};
-	
-	if ( Input_KeyPressed( KEY_MENU ) ) {
-		LoadMap();
-	}
 }
 // - ------------------------------------------------------------------------------------------ - //
