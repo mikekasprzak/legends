@@ -468,3 +468,29 @@ function _gelDrawTiles( DataPtr, MapWidth, MapHeight, StartX, StartY, EndX, EndY
 		}
 	}	
 }
+
+function _gelDrawArc( _x, _y, _Radius, StartAngle, EndAngle, CW ) {
+	Module.ctx.beginPath();
+	
+	Module.ctx.arc( 
+		_x, _y, _Radius,
+		(StartAngle - 0.25) * 2.0 * Math.PI,
+		(EndAngle - 0.25) * 2.0 * Math.PI,
+		CW );
+	
+	Module.ctx.stroke();
+}
+
+function _gelDrawArcFill( _x, _y, _Radius, StartAngle, EndAngle, CW ) {
+	Module.ctx.beginPath();
+	
+	Module.ctx.arc( 
+		_x, _y, _Radius,
+		(StartAngle - 0.25) * 2.0 * Math.PI,
+		(EndAngle - 0.25) * 2.0 * Math.PI,
+		CW );
+	
+	Module.ctx.lineTo( _x, _y );
+	
+	Module.ctx.fill();
+}
