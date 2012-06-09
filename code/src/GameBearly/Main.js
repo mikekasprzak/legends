@@ -28,6 +28,16 @@ function InitSounds() {
 	Log( "* Init Sounds" );
 	
 	sndInit();
+
+	sndLoad( 'Maul', 'Maul' );
+	sndLoad( 'Move1', 'Move1' );
+	sndLoad( 'Move2', 'Move2' );
+	sndLoad( 'Death', 'Death' );
+	sndLoad( 'Eat1', 'Eat1' );
+	sndLoad( 'Eat2', 'Eat2' );
+	sndLoad( 'Start', 'Start' );
+	sndLoad( 'Win', 'Win' );
+
 /*
 	sndLoad( 'Jump01', 'Jump01' );
 	sndLoad( 'Jump02', 'Jump02' );
@@ -44,7 +54,7 @@ function InitSounds() {
 	sndLoadAndPlayAndLoop( 'BGMusic', '../POL-rescue-short' );
 */
 
-	sndLoadAndPlayAndLoop( 'BGMusic', '../BGMusic' );
+//	sndLoadAndPlayAndLoop( 'BGMusic', '../BGMusic' );
 
 	Log( "* Done Init Sounds" );
 }

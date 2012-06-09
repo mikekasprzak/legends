@@ -487,6 +487,7 @@ public:
 									// I AM DEAD //
 									SetAnimation( Player_Dead );
 									SetIntermediateAnimation( Player_Kill );
+									sndPlay( "Death" );
 									
 									MapEnemy->Data[idx]->SetIntermediateAnimation( Enemy_Shoot );
 									MapEnemy->Data[idx]->Killer = true;
@@ -512,17 +513,21 @@ public:
 				if ( Tile == TILE_FISH ) {
 					FishEaten++;
 					EatCountdown = 32;
+					sndPlay( "Eat1" );
 					
 					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
 				}
 				else if ( Tile == TILE_FRUIT ) {
 					FruitEaten++;
 					EatCountdown = 64;
+					sndPlay( "Eat2" );
 					
 					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
 				}
 				else if ( Tile == TILE_EXIT ) {
 					// Do Something //
+					sndPlay( "Win" );
+
 					GameState = STATE_WIN;
 				}
 			}
@@ -560,12 +565,22 @@ public:
 					GameMoves++;
 					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;	
+
+					if ( GameMoves & 1 )
+						sndPlay( "Move1" );
+					else
+						sndPlay( "Move2" );
 				}
 				
 				if ( (SX|SY) != 0 ) {
 					GameMoves++;
 					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;
+
+					if ( GameMoves & 1 )
+						sndPlay( "Move1" );
+					else
+						sndPlay( "Move2" );
 
 					Pos.x += SX;
 					Pos.y += SY;
@@ -591,6 +606,8 @@ public:
 						// Kill //
 						ForceIntermediateAnimation( Player_Maul );
 						Attacking = true;
+						
+						sndPlay( "Maul" );
 						
 						EnemiesEaten++;
 						
@@ -740,7 +757,7 @@ void LoadMap() {
 	}
 
 	// ---------------------- //
-	
+		
 	GameMoves = 0;
 	OldGameMoveCountdown = GameMoveCountdown;
 	GameMoveCountdown = 60*2;
@@ -880,6 +897,12 @@ void EngineStep() {
 			GameMoves++;
 			//OldGameMoveCountdown = GameMoveCountdown;
 			GameMoveCountdown = 60*2;
+
+			if ( GameMoves & 1 )
+				sndPlay( "Move1" );
+			else
+				sndPlay( "Move2" );
+
 		}
 		if ( OldGameMoveCountdown > 0 )
 			OldGameMoveCountdown--;
@@ -922,6 +945,7 @@ void GameStep() {
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				GameState = STATE_PLAY;
 				Bears = 0;
+				sndPlay( "Start" );
 			}
 			break;
 		}
@@ -936,6 +960,7 @@ void GameStep() {
 			if ( (!Player->Alive) && Input_KeyPressed( KEY_ACTION ) ) {
 				LoadMap();
 				Bears++;
+				sndPlay( "Start" );
 			}
 
 			break;	
