@@ -71,7 +71,7 @@ int TilesetId;
 int PlayerId;
 int EnemyId;
 //int HudId;
-//int TitleId;
+int TitleId;
 //int WinId;
 
 Vector2D CameraPos;
@@ -796,13 +796,13 @@ void GameInit() {
 //	HudId = gelLoadTileset( "Content/Hud-Things.png", 32, 32 );
 //	DoorId = gelLoadTileset( "Content/Door.png", 64, 64 );
 //	StarsId = gelLoadTileset( "Content/Stars-and-keys.png", 32, 32 );
-//	
-//	TitleId = gelLoadImage( "Content/Title.png" );
+	
+	TitleId = gelLoadImage( "Content/Title.png" );
 //	WinId = gelLoadImage( "Content/Win.png" );
 	
 //	LogLevel = 3;
 
-	GameState = STATE_PLAY;//STATE_TITLE;
+	GameState = STATE_TITLE;
 	
 	// ---------------------- //
 	
@@ -945,7 +945,7 @@ void GameStep() {
 				// TODO: Reset Game //
 				LoadMap();
 				
-				GameState = STATE_PLAY;
+				GameState = STATE_TITLE;
 				Bears = 0;
 			}
 			break;
@@ -1179,8 +1179,8 @@ void GameDrawPaused() {
 void GameDraw() {
 	switch ( GameState ) {
 		case STATE_TITLE: {
-//			gelBindImage( TitleId );
-//			gelDrawImage(0,0);
+			gelBindImage( TitleId );
+			gelDrawImage(0,0);
 			break;
 		}
 		case STATE_PLAY: {
