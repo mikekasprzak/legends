@@ -86,9 +86,12 @@ GelArray< LayerType* >* MapLayer;
 const int Player_Idle[] = { 64, /**/ 0,0,0,0,0,0,2,2,2,2,0,0,1,1,1,1,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,1,1,1,1,0,0,2,2,2,2,0,0,0,0,0,0,3,3,0,0, };
 const int Player_Maul[] = { 3, /**/ 4,4,4 };
 const int Player_Hop[] = { 3, /**/ 8,8,1 };
+const int Player_Dead[] = { 1, /**/ 12 };
 // - ------------------------------------------------------------------------------------------ - //
 const int Enemy_Idle[] = { 1, /**/ 0 };
 const int Enemy_Shoot[] = { 4, /**/ 1,1,1,1 };
+const int Enemy_Kill[] = { 3, /**/ 0,0,0 };
+const int Enemy_Dead[] = { 1, /**/ 12 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -99,7 +102,7 @@ const int TILE_FOOD =	 	(8*7)+1;
 const int TILE_FOOD_END =	(8*7)+8;
 
 const int TILE_FISH =	 	(8*7)+1;
-const int TILE_APPLE =	 	(8*7)+2;
+const int TILE_FRUIT =	 	(8*7)+2;
 
 
 const int TILE_ENEMY =		(8*7)+7;
@@ -174,6 +177,12 @@ int CountEnemies( const int Layer ) {
 // - -------------------------------------------------------------------------------------------------------------- - //
 int GameMoves = 0;
 int GameMoveCountdown = 60*2;
+
+int KillCountdown = 0;
+int KillDelay = 0;
+int KillFlickerCountdown = 0;
+
+int EatCountdown = 0;
 // - -------------------------------------------------------------------------------------------------------------- - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
@@ -194,6 +203,7 @@ public:
 	Vector2D Anchor;
 		
 	bool FacingLeft;
+	bool Alive;
 
 public:
 	cEnemy( int _x, int _y ) :
@@ -208,6 +218,7 @@ public:
 		Anchor.y = 8;
 		
 		FacingLeft = false;
+		Alive = true;
 
 		SetAnimation( Enemy_Idle );
 	}
@@ -245,8 +256,10 @@ public:
 	}
 	
 	void Step() {
-		// Set Facing Direction //
-		FacingLeft = ((GameMoves / 4) & 1) == 0;
+		if ( Alive ) {
+			// Set Facing Direction //
+			FacingLeft = ((GameMoves / 4) & 1) == 0;
+		}
 		
 		// Animation System //
 		FrameDelay++;
@@ -293,8 +306,8 @@ GelArray< cEnemy* >* MapEnemy;
 
 // - -------------------------------------------------------------------------------------------------------------- - //
 
-const int HopTable[] = { 0,0,0,1,1,2,2,3,3,3,3,3,3,2,2,1,0 };
-const int MaulTable[] = { 0,2,3,4,4,5,5,6,6,6,6,6,6,5,4,2,0 };
+const int HopTable[] = { 0,0,0,1,2,3,3,4,4,4,4,4,3,3,2,1,0 };
+const int MaulTable[] = { 0,1,3,6,8,10,11,12,12,12,12,11,10,8,5,3,1 };
 
 // - ------------------------------------------------------------------------------------------ - //
 class cPlayer {
@@ -317,6 +330,11 @@ public:
 	int OffsetAnim;
 	
 	bool FacingLeft;
+	bool Alive;
+	bool Attacking;
+	
+	int FishEaten;
+	int FruitEaten;
 	
 public:
 	cPlayer( int _x, int _y ) :
@@ -336,6 +354,11 @@ public:
 		
 		
 		FacingLeft = false;
+		Alive = true;
+		Attacking = false;
+		
+		FishEaten = 0;
+		FruitEaten = 0;
 
 		SetAnimation( Player_Idle );
 	}
@@ -412,18 +435,38 @@ public:
 		}
 		
 		if ( !IsHopping() ) {
+			int Layer = 0;
+
 			// Check if shot //
 			{
 				
-			}		
+			}
+			
+			// Check this tile //
+			{
+				int Tile = (*MapLayer->Data[Layer])(Pos.x, Pos.y);
+				if ( Tile == TILE_FISH ) {
+					FishEaten++;
+					EatCountdown = 32;
+					
+					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
+				}
+				else if ( Tile == TILE_FRUIT ) {
+					FruitEaten++;
+					EatCountdown = 64;
+					
+					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
+				}
+				else if ( Tile == TILE_EXIT ) {
+					// Do Something //
+				}
+			}
 			
 			// Do Movement //
 			{
 				int SX = 0;
 				int SY = 0;
-				
-				int Layer = 0;
-				
+								
 				if ( Input_Key( KEY_RIGHT ) ) {
 					int Tile = (*MapLayer->Data[Layer])(Pos.x+1, Pos.y);
 					if ( Tile != TILE_COLLISION )
@@ -451,18 +494,41 @@ public:
 				if ( (SX|SY) != 0 ) {
 					GameMoves++;
 					GameMoveCountdown = 60*2;
-					
-//					ForceIntermediateAnimation( Player_Maul );
-					ForceIntermediateAnimation( Player_Hop );
-					
-					ForceAnimation( Player_Idle );
-					
+
 					Pos.x += SX;
 					Pos.y += SY;
 					
 					OffsetX = SX * 16;
 					OffsetY = SY * 16;
 					OffsetAnim = 16;
+
+					int FoundEnemy = -1;
+
+					for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
+						if ( MapEnemy->Data[idx]->Pos.y == Pos.y )
+							if ( MapEnemy->Data[idx]->Pos.x == Pos.x )
+								if ( MapEnemy->Data[idx]->Alive )
+									FoundEnemy = idx;
+					}
+					
+					if ( FoundEnemy == -1 ) {
+						ForceIntermediateAnimation( Player_Hop );
+						Attacking = false;
+					}
+					else {
+						// Kill //
+						ForceIntermediateAnimation( Player_Maul );
+						Attacking = true;
+						
+						MapEnemy->Data[FoundEnemy]->Alive = false;
+						MapEnemy->Data[FoundEnemy]->SetIntermediateAnimation( Enemy_Kill );
+						MapEnemy->Data[FoundEnemy]->SetAnimation( Enemy_Dead );
+						
+						KillCountdown = 128;
+						KillDelay = 16;
+					}
+					
+					ForceAnimation( Player_Idle );
 				}
 			}
 		}
@@ -501,8 +567,8 @@ public:
 		const int* TweakTable;
 		
 		TweakTable = HopTable;
-//		if ( Attacking )
-//			TweakTable = MaulTable;
+		if ( Attacking )
+			TweakTable = MaulTable;
 		
 		if ( FacingLeft ) {
 			gelDrawTileFlipX(
@@ -555,7 +621,7 @@ void ProcessObjectLayer( const int Layer ) {
 	int EnemyCount = CountEnemies( Layer );
 	
 	if ( MapEnemy ) {
-		for ( int idx = 0; idx < EnemyCount; idx++ ) {
+		for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
 			delete MapEnemy->Data[idx];
 		}
 		delete_GelArray<cEnemy*>( MapEnemy );
@@ -566,7 +632,7 @@ void ProcessObjectLayer( const int Layer ) {
 	int CurrentEnemy = 0;
 
 	for ( int _y = 0; _y < MapHeight; _y++ ) {
-		for ( int _x = 0; _x < MapHeight; _x++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
 			int Tile = (*MapLayer->Data[Layer])(_x, _y);
 
 			if ( Tile == 0 ) {
@@ -624,12 +690,18 @@ void LoadMap() {
 	// ---------------------- //
 
 	Player = new cPlayer( 1, 1 );
-	
-	CameraPos = Vector2D( Player->Pos.x * 16, Player->Pos.y * 16);
-	
+		
 	ProcessObjectLayer( 0 );//MapLayer->Size - 1 );
+
+	CameraPos = Vector2D( Player->Pos.x * 16, Player->Pos.y * 16) + Vector2D(Player->Anchor.x,Player->Anchor.y);
 	
 //	GlobalTotalKeys = 0;
+
+	KillCountdown = 0;
+	KillDelay = 0;
+	KillFlickerCountdown = 0;
+	
+	EatCountdown = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {	
@@ -732,6 +804,16 @@ void EngineStep() {
 		GameMoves++;
 		GameMoveCountdown = 60*2;
 	}
+
+	if ( KillCountdown > 0 )
+		KillCountdown--;
+	if ( KillDelay > 0 )
+		KillDelay--;
+	if ( KillFlickerCountdown > 0 )
+		KillFlickerCountdown--;
+
+	if ( EatCountdown > 0 )
+		EatCountdown--;
 	
 	Player->Step();
 
@@ -742,7 +824,7 @@ void EngineStep() {
 	//CameraPos += (Player->Pos - Vector2D(0,32) - CameraPos) * Real(0.05);
 //	CameraPos = Player->Pos;
 	
-	CameraPos += (Vector2D( Player->Pos.x * 16, Player->Pos.y * 16) - CameraPos) * Real(0.05);
+	CameraPos += ((Vector2D( Player->Pos.x * 16, Player->Pos.y * 16) + Vector2D(Player->Anchor.x,Player->Anchor.y)) - CameraPos) * Real(0.05);
 
 	
 //	int OldGlobalTotalKeys = GlobalTotalKeys;
@@ -870,7 +952,19 @@ void DrawLayer( const int Layer ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void EngineDraw() {
-	gelSetColor( 0,0,0,255 );
+	int Red = 0;
+	if ( KillDelay == 0 ) {	
+		Red = KillCountdown * 2;
+		if ( Red > 255 )
+			Red = 255;
+	}
+	
+	int Blue = 0;
+	Blue = EatCountdown * 4;
+	if ( Blue > 255 )
+		Blue = 255;
+		
+	gelSetColor( Red, 0, Blue, 255 );
 	gelDrawRectFill( 0, 0, ScreenWidth, ScreenHeight );
 	
 	// Draw Bottom Layers //
