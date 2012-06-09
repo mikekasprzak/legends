@@ -1162,11 +1162,21 @@ void EngineDraw() {
 	}
 
 	if ( !Player->Alive && (Player->IntermediateAnimation == 0) ) {
-		const char* DeathText = "*push spaceBEAR*";	
+		const char* DeathText = "* push spaceBEAR *";
+
+		static int SpaceFlicker = 0;
+		SpaceFlicker++;
+		if ( ((SpaceFlicker >> 4) & 1) == 1 )
+			DeathText = "* PUSH SPACEbear *";
+
 		gelSetColor( 0, 0, 0, 255 );
-		gelDrawTextCenter( DeathText, 128, ScreenHeight+1-32, 16, "Commodore" );
-		gelSetColor( 255, 255, 255, 255 );
-		gelDrawTextCenter( DeathText, 128, ScreenHeight+0-32, 16, "Commodore" );
+//		gelDrawTextCenter( DeathText, 128, ScreenHeight+1-16, 16, "Commodore" );
+		gelDrawRectFill( 0, ScreenHeight-24-8-4, ScreenWidth, 16+4+4 );
+		if ( ((SpaceFlicker >> 4) & 1) == 1 )
+			gelSetColor( 255, 255, 255, 255 );
+		else
+			gelSetColor( 0x23, 0xc5, 0xfd, 255 );
+		gelDrawTextCenter( DeathText, 128, ScreenHeight+0-24, 16, "Commodore" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
