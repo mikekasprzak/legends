@@ -1,0 +1,156 @@
+<html>
+  <head>
+    <title>Bear-ly</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <script type='text/javascript'>
+//	console.log("Start!");
+    	
+	var Module = {
+		noInitialRun: true,
+		'preRun': function() {
+		    // Pass canvas and context to the generated code, and do the actual run() here
+		    Module.canvas = document.getElementById('canvas');
+		    
+		   	Module.canvas.onmousedown = function() {
+//				Input_Mouse.x = (e.clientX - Canvas.offsetLeft) / Canvas_Scale;
+//				Input_Mouse.y = (e.clientY - Canvas.offsetTop) / Canvas_Scale;
+//				
+//				Input_MouseBits |= MOUSE_LMB;
+		   		
+		   		//Module.run();
+//		   		Module.__Z6NewGenv();
+		   	};
+		   	
+		   	Module.canvas.ontouchstart = Module.canvas.onmousedown;
+
+
+//			Module.print("SHEEET");
+		},
+      
+//		'print': function(text) {
+//			var element = document.getElementById('output')
+//			if ( element ) {
+//				// Print in Reverse Order (Newest on Top) //
+//				element.innerHTML = text.replace('\n', '<br>', 'g') + element.innerHTML;
+//			}
+//		},
+
+		'print': function(text) {
+			console.log(text);
+		},
+      
+		dummy: null
+	};
+	
+    </script>
+    
+   <body onload='onLoad()' style='background-color: #333333; color: #666; font-family: sans-serif; font-size:11px'>
+    <center>
+      <canvas id='canvas' width='256' height='160'></canvas>
+      A game by <a href="http://www.sykhronics.com" target="_blank">Mike Kasprzak</a>. Best experienced in Full Screen (F11) on the latest Firefox and Chrome.
+    </center>
+    <div id='output'></div>
+  </body>
+    
+    <script src='Content/GameMap.json.js' type='text/javascript'></script>
+    <script src='output/game.emcc.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+      function onLoad() {
+        // Pass canvas and context to the generated code, and do the actual run() here
+        Module.canvas = document.getElementById('canvas');
+        Module.print( "Before\n" );
+        Module.run();
+        Module.print( "After\n" );
+        Main();
+      }
+    </script>
+    
+    	<style>
+		body {
+			background-color:#444;
+			margin: 0px;
+			padding: 0px;
+			-webkit-user-select: none;
+		}
+		
+		a:link {color:#888;}
+		a:visited {color:#888;}
+		a:hover {color:#FFF;}
+		a:active {color:#FFF;}
+
+		canvas {
+			position: absolute;
+			border: 0px solid #444;
+			cursor: none;
+			image-rendering: -moz-crisp-edges; 
+			image-rendering: -o-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+
+		@font-face {
+			font-family: Commodore;
+			src: url(Content/Fonts/C64_User_v1.0-STYLE.ttf);
+		}
+		
+		@font-face {
+			font-family: ShowG;
+			src: url(Content/Fonts/SHOWG.TTF);
+		}
+
+		@font-face {
+			font-family: FourB;
+			src: url(Content/Fonts/04B_19_.TTF);
+		}
+		
+		/*
+		@font-face {
+			font-family: CommodoreMono;
+			src: url(Content/Fonts/C64_User_Mono_v1.0-STYLE.ttf);
+		}
+		*/
+
+		#soundmanager-debug {
+			position:fixed;
+			_position:absolute; /* IE <7 */
+			bottom:1em;
+			right:1em;
+			width:38em;
+			height:10em;
+			overflow:auto;
+			padding:0px;
+			margin:1em;
+			font-family:monaco,"VT-100","lucida console",courier,system;
+			opacity:0.9;
+			color:#333;
+			border:1px solid #ccddee;
+			-moz-border-radius:3px;
+			-khtml-border-radius:3px;
+			-webkit-border-radius:3px;
+			background:#f3f9ff;
+		}
+		
+		/*
+		#soundmanager-debug code {
+			font-size:1.1em;
+			*font-size:1em;
+		}
+		*/
+		
+		#soundmanager-debug div {
+			font-size:x-small;
+			padding:0.2em;
+			margin:0px;
+		}
+	</style>
+<!--
+  <body onload='onLoad()' style='background-color: black; color: #888; font-family: sans-serif'>
+    <center>
+      <canvas id='canvas' width='320' height='240'></canvas>
+    </center>
+    <div id='output'></div>
+  </body>
+-->
+</html>
