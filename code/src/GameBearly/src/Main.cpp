@@ -1076,11 +1076,6 @@ void EngineDraw() {
 	TransformedCameraPos.x = floor(TransformedCameraPos.x);
 	TransformedCameraPos.y = floor(TransformedCameraPos.y);
 
-	// Draw Objects //		
-//	for ( int idx = 0; idx < MapDoor->Size; idx++ ) {
-//		MapDoor->Data[idx]->Draw( TransformedCameraPos );
-//	}
-	
 	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
 		MapEnemy->Data[idx]->Draw( TransformedCameraPos );
 	}
@@ -1140,34 +1135,20 @@ void EngineDraw() {
 		}
 	}
 	
-//	char Text[128];
+	char Text[128];
 	
-//	sprintf( Text, "%i/%i", Player->TotalKeys, TotalKeysInMap - Player->KeysUsed );
-//	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
-//	gelDrawTextLeft( Text, 32+0, 16+1, 23, "FourB" );
-//	gelSetColor( 0xD6, 0xEB, 0xFF, 255 );
-//	gelDrawTextLeft( Text, 32+0, 16+0, 23, "FourB" );
-	
-//	sprintf( Text, "%i/%i", Player->TotalStars, TotalStarsInMap );
-//	gelSetColor( 0xC7, 0x85, 0x00, 255 );
-//	gelDrawTextRight( Text, 320-32-0, 16+1, 23, "FourB" );
-//	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-//	gelDrawTextRight( Text, 320-32-0, 16+0, 23, "FourB" );
+	sprintf( Text, "%i", Player->FishEaten );
+	gelSetColor( 0, 0, 0, 255 );
+	gelDrawTextLeft( Text, 32+0, 16+1, 16, "Commodore" );
+	gelSetColor( 0xD6, 0xEB, 0xFF, 255 );
+	gelDrawTextLeft( Text, 32+0, 16+0, 16, "Commodore" );
 
-//	gelBindImage( HudId );
-//	gelDrawTile( 0, /**/ 0, 0 );
-//	gelDrawTile( 1, /**/ 320-32-0, 0 );
-	
-//	sprintf( Text, "(%f, %f)", Player->Pos.x.ToFloat(), Player->Pos.y.ToFloat() );
-//	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-//	gelDrawTextLeft( Text, 0, 190, 15, "FourB" );
-//	sprintf( Text, "(%f, %f)", Player->Pos.x.ToFloat() - Player->Old.x.ToFloat(), Player->Pos.y.ToFloat() - Player->Old.y.ToFloat() );
-//	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-//	gelDrawTextLeft( Text, 0, 205, 15, "FourB" );
-//	sprintf( Text, "(%f, %f)", gx, gy );
-//	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-//	gelDrawTextLeft( Text, 0, 220, 15, "FourB" );
+	gelBindImage( PlayerId );
+	gelDrawTile( 14, /**/ 0, 0 );
 
+	for ( int idx = 0; idx < Player->FruitEaten; idx++ ) {
+		gelDrawTile( 15, /**/ ScreenWidth-32-(idx*24), 0 );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
