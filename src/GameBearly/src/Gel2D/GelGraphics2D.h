@@ -46,7 +46,23 @@ extern "C" {
 		int TileMod, 
 		int OffsetX, int OffsetY
 		);
-		
+	
+	// Angles from 0-1 //
+	void gelDrawArc(
+		float x, float y,
+		float Radius,
+		float StartAngle,
+		float EndAngle,
+		bool CW
+		);
+
+	void gelDrawArcFill(
+		float x, float y,
+		float Radius,
+		float StartAngle,
+		float EndAngle,
+		bool CW
+		);
 // - ------------------------------------------------------------------------------------------ - //
 };
 // - ------------------------------------------------------------------------------------------ - //

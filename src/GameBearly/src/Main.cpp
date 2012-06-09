@@ -178,6 +178,7 @@ int CountEnemies( const int Layer ) {
 // - -------------------------------------------------------------------------------------------------------------- - //
 int GameMoves = 0;
 int GameMoveCountdown = 60*2;
+int OldGameMoveCountdown = 0;
 
 int KillCountdown = 0;
 int KillDelay = 0;
@@ -313,6 +314,8 @@ public:
 			int XVector = 1;
 			if ( FacingLeft )
 				XVector = -1;
+				
+			VsX += XVector;
 			
 			while ( (*MapLayer->Data[Layer])(VsX, VsY) != TILE_COLLISION ) {
 				gelDrawTile(
@@ -551,11 +554,13 @@ public:
 				
 				if ( Input_KeyPressed( KEY_ACTION ) ) {
 					GameMoves++;
+					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;	
 				}
 				
 				if ( (SX|SY) != 0 ) {
 					GameMoves++;
+					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;
 
 					Pos.x += SX;
@@ -731,6 +736,7 @@ void LoadMap() {
 	// ---------------------- //
 	
 	GameMoves = 0;
+	OldGameMoveCountdown = GameMoveCountdown;
 	GameMoveCountdown = 60*2;
 
 	// Start New Level //
@@ -865,8 +871,11 @@ void EngineStep() {
 	GameMoveCountdown--;
 	if ( GameMoveCountdown == 0 ) {
 		GameMoves++;
+		//OldGameMoveCountdown = GameMoveCountdown;
 		GameMoveCountdown = 60*2;
 	}
+	if ( OldGameMoveCountdown > 0 )
+		OldGameMoveCountdown--;
 
 	if ( KillCountdown > 0 )
 		KillCountdown--;
@@ -1078,15 +1087,60 @@ void EngineDraw() {
 	
 	Player->Draw( TransformedCameraPos );
 
-/*
-	// Draw Top Layers //
-//	DrawObjectLayer( MapLayer->Size - 1 );
-	
-//	gelBindImage( TilesetId );
-//	DrawLayer( MapLayer->Size - 3 );
-	
 	// Draw UI //
-	char Text[128];
+	{
+		int _x = 0 + 16;
+		int _y = ScreenHeight - 16;
+		
+		// Action Clock //
+		gelSetColor( 0,0,0,255 );
+//		gelDrawArcFill( _x,_y,10,  0,(((60.0f*2.0f)+1-(float)GameMoveCountdown)/(60.0f*2.0f)),  true );
+		gelDrawCircleFill( _x,_y, 10 );
+		gelSetColor( 0,255,255,192 );
+		gelDrawCircleFill( _x,_y, 9 );
+		gelSetColor( 0,255,255,255 );
+		
+		const float AngleScale = 30.0f*3.0f;
+		float Angle = (AngleScale - (float)GameMoveCountdown) / AngleScale;
+		if ( Angle < (1.0f / AngleScale) )
+			gelDrawCircleFill( _x,_y, 9 );
+		else
+			gelDrawArcFill( _x,_y,9,  0,Angle,  true );
+	
+		// Old Pulse //
+		{
+			int PrePulse = (OldGameMoveCountdown - (30*3));	
+			if ( PrePulse < 0 )
+				PrePulse = 0;
+	
+			int Pulse = PrePulse * 30;
+			if ( Pulse > 255 )
+				Pulse = 255;
+			
+			if ( Pulse > 0 ) {
+				gelSetColor( 255,255,255,Pulse );
+				gelDrawCircle( _x, _y, 8 + ((30-PrePulse) * 0.25f) );
+			}
+		}
+	
+		// Current Pulse //
+		{
+			int PrePulse = (GameMoveCountdown - (30*3));	
+			if ( PrePulse < 0 )
+				PrePulse = 0;
+	
+			int Pulse = PrePulse * 30;
+			if ( Pulse > 255 )
+				Pulse = 255;
+			
+			if ( Pulse > 0 ) {
+				gelSetColor( 255,255,255,Pulse );
+				gelDrawCircle( _x, _y, 8 + ((30-PrePulse) * 0.25f) );
+			}
+		}
+	}
+	
+//	char Text[128];
 	
 //	sprintf( Text, "%i/%i", Player->TotalKeys, TotalKeysInMap - Player->KeysUsed );
 //	gelSetColor( 0x6F, 0x82, 0xE4, 255 );
@@ -1099,7 +1153,7 @@ void EngineDraw() {
 //	gelDrawTextRight( Text, 320-32-0, 16+1, 23, "FourB" );
 //	gelSetColor( 0xFF, 0xE3, 0x00, 255 );
 //	gelDrawTextRight( Text, 320-32-0, 16+0, 23, "FourB" );
-*/
+
 //	gelBindImage( HudId );
 //	gelDrawTile( 0, /**/ 0, 0 );
 //	gelDrawTile( 1, /**/ 320-32-0, 0 );
