@@ -87,6 +87,9 @@ const int Player_Idle[] = { 64, /**/ 0,0,0,0,0,0,2,2,2,2,0,0,1,1,1,1,0,0,2,2,2,2
 const int Player_Maul[] = { 3, /**/ 4,4,4 };
 const int Player_Hop[] = { 3, /**/ 8,8,1 };
 // - ------------------------------------------------------------------------------------------ - //
+const int Enemy_Idle[] = { 1, /**/ 0 };
+const int Enemy_Shoot[] = { 4, /**/ 1,1,1,1 };
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 const int TILE_COLLISION = 	1;
@@ -97,6 +100,10 @@ const int TILE_FOOD_END =	(8*7)+8;
 
 const int TILE_FISH =	 	(8*7)+1;
 const int TILE_APPLE =	 	(8*7)+2;
+
+
+const int TILE_ENEMY =		(8*7)+7;
+const int TILE_START =		(8*7)+8;
 // - ------------------------------------------------------------------------------------------ - //
 
 float gx;
@@ -144,6 +151,146 @@ void GameInput( float x, float y, int Current, int Last ) {
 	_Input_KeyCurrent = Current;
 	_Input_KeyLast = Last;
 }
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+int CountEnemies( const int Layer ) {
+	int MapWidth = MapLayer->Data[Layer]->Width();
+	int MapHeight = MapLayer->Data[Layer]->Height();
+	
+	int Count = 0;
+
+	for ( int _y = 0; _y < MapHeight; _y++ ) {
+		for ( int _x = 0; _x < MapWidth; _x++ ) {
+			int Tile = (*MapLayer->Data[Layer])(_x, _y);
+			
+			if ( Tile == TILE_ENEMY )
+				Count++;
+		}
+	}
+	
+	return Count;
+}
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+int GameMoves = 0;
+int GameMoveCountdown = 60*2;
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+// - -------------------------------------------------------------------------------------------------------------- - //
+class cEnemy { 
+public:
+	struct cPos {
+		int x, y;
+		
+		cPos() : x(0), y(0) { }
+		cPos(int _x, int _y) : x(_x), y(_y) { }
+	} Pos;
+	
+	const int* CurrentAnimation;
+	const int* IntermediateAnimation;
+	int CurrentFrame;
+	int FrameDelay;
+	
+	Vector2D Anchor;
+		
+	bool FacingLeft;
+
+public:
+	cEnemy( int _x, int _y ) :
+		Pos( _x, _y )
+	{
+		CurrentAnimation = Enemy_Idle;
+		IntermediateAnimation = 0;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+		
+		Anchor.x = 8;
+		Anchor.y = 8;
+		
+		FacingLeft = false;
+
+		SetAnimation( Enemy_Idle );
+	}
+	
+	inline void SetIntermediateAnimation( const int* AnimationName ) {
+		if ( IntermediateAnimation != AnimationName ) {
+			IntermediateAnimation = AnimationName;
+			CurrentFrame = 0;
+			FrameDelay = 0;
+		}	
+	}
+	
+	inline void SetAnimation( const int* AnimationName ) {
+		if ( CurrentAnimation != AnimationName ) {
+			CurrentAnimation = AnimationName;
+			if ( IntermediateAnimation == 0 ) {
+				CurrentFrame = 0;
+				FrameDelay = 0;
+			}
+		}
+	}
+	
+	inline void ForceIntermediateAnimation( const int* AnimationName ) {
+		IntermediateAnimation = AnimationName;
+		CurrentFrame = 0;
+		FrameDelay = 0;
+	}
+	
+	inline void ForceAnimation( const int* AnimationName ) {
+		CurrentAnimation = AnimationName;
+		if ( IntermediateAnimation == 0 ) {
+			CurrentFrame = 0;
+			FrameDelay = 0;
+		}
+	}
+	
+	void Step() {
+		// Set Facing Direction //
+		FacingLeft = ((GameMoves / 4) & 1) == 0;
+		
+		// Animation System //
+		FrameDelay++;
+		if ( FrameDelay >= 6 ) {
+			FrameDelay = 0;
+			CurrentFrame++;
+			if ( IntermediateAnimation ) {
+				if ( CurrentFrame == IntermediateAnimation[0] ) {
+					CurrentFrame = 0;
+					IntermediateAnimation = 0;
+				}
+			}
+			else {
+				if ( CurrentFrame == CurrentAnimation[0] )
+					CurrentFrame = 0;
+			}
+		}
+	}
+	
+	void Draw( const Vector2D& Camera ) {
+		int TileSize = 16;
+		
+		gelBindImage( EnemyId );
+				
+		if ( FacingLeft ) {
+			gelDrawTileFlipX(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor( (Pos.x * TileSize) - Anchor.x - Camera.x ),
+				floor( (Pos.y * TileSize) - Anchor.y - Camera.y )
+				);
+		}
+		else {
+			gelDrawTile(
+				IntermediateAnimation ? IntermediateAnimation[ CurrentFrame + 1 ] : CurrentAnimation[ CurrentFrame + 1 ],
+				floor( (Pos.x * TileSize) - Anchor.x - Camera.x ),
+				floor( (Pos.y * TileSize) - Anchor.y - Camera.y )
+				);
+		}
+	}
+};
+// - -------------------------------------------------------------------------------------------------------------- - //
+
+GelArray< cEnemy* >* MapEnemy;
+
 // - -------------------------------------------------------------------------------------------------------------- - //
 
 const int HopTable[] = { 0,0,0,1,1,2,2,3,3,3,3,3,3,2,2,1,0 };
@@ -302,6 +449,9 @@ public:
 				}
 				
 				if ( (SX|SY) != 0 ) {
+					GameMoves++;
+					GameMoveCountdown = 60*2;
+					
 //					ForceIntermediateAnimation( Player_Maul );
 					ForceIntermediateAnimation( Player_Hop );
 					
@@ -398,34 +548,22 @@ extern "C" {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-/*
 void ProcessObjectLayer( const int Layer ) {
 	int MapWidth = MapLayer->Data[Layer]->Width();
 	int MapHeight = MapLayer->Data[Layer]->Height();
 	
-	int DoorCount = CountDoors( Layer );
-	int ExitCount = CountExits( Layer );
+	int EnemyCount = CountEnemies( Layer );
 	
-	if ( MapDoor ) {
-		for ( int idx = 0; idx < DoorCount; idx++ ) {
-			delete MapDoor->Data[idx];
+	if ( MapEnemy ) {
+		for ( int idx = 0; idx < EnemyCount; idx++ ) {
+			delete MapEnemy->Data[idx];
 		}
-		delete_GelArray<cDoor*>( MapDoor );
+		delete_GelArray<cEnemy*>( MapEnemy );
 	}
 
-	MapDoor = new_GelArray<cDoor*>( DoorCount );
+	MapEnemy = new_GelArray<cEnemy*>( EnemyCount );
 	
-	if ( MapExit ) {
-		for ( int idx = 0; idx < ExitCount; idx++ ) {
-			delete MapExit->Data[idx];
-		}
-		delete_GelArray<cExit*>( MapExit );
-	}
-
-	MapExit = new_GelArray<cExit*>( ExitCount );
-	
-	int CurrentDoor = 0;
-	int CurrentExit = 0;
+	int CurrentEnemy = 0;
 
 	for ( int _y = 0; _y < MapHeight; _y++ ) {
 		for ( int _x = 0; _x < MapHeight; _x++ ) {
@@ -434,20 +572,20 @@ void ProcessObjectLayer( const int Layer ) {
 			if ( Tile == 0 ) {
 				continue;
 			}
-			else if ( Tile == TILE_DOOR ) {
-				MapDoor->Data[CurrentDoor++] = new cDoor( (_x) << 3, (_y+1) << 3 );
-				
+			else if ( Tile == TILE_START ) {
+				Player->Pos.x = _x;
+				Player->Pos.y = _y;
+
 				(*MapLayer->Data[Layer])(_x, _y) = 0;
 			}
-			else if ( Tile == TILE_EXIT ) {
-				MapExit->Data[CurrentExit++] = new cExit( (_x) << 3, (_y+1) << 3 );
+			else if ( Tile == TILE_ENEMY ) {
+				MapEnemy->Data[CurrentEnemy++] = new cEnemy( _x, _y );
 
 				(*MapLayer->Data[Layer])(_x, _y) = 0;
 			}			
 		}
 	}	
 }
-*/
 // - ------------------------------------------------------------------------------------------ - //
 void LoadMap() {
 	if ( MapLayer ) {
@@ -462,6 +600,9 @@ void LoadMap() {
 	}
 
 	// ---------------------- //
+	
+	GameMoves = 0;
+	GameMoveCountdown = 60*2;
 
 	// Start New Level //
 	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
@@ -486,7 +627,7 @@ void LoadMap() {
 	
 	CameraPos = Vector2D( Player->Pos.x * 16, Player->Pos.y * 16);
 	
-//	ProcessObjectLayer( MapLayer->Size - 1 );
+	ProcessObjectLayer( 0 );//MapLayer->Size - 1 );
 	
 //	GlobalTotalKeys = 0;
 }
@@ -586,8 +727,17 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void EngineStep() {
+	GameMoveCountdown--;
+	if ( GameMoveCountdown == 0 ) {
+		GameMoves++;
+		GameMoveCountdown = 60*2;
+	}
+	
 	Player->Step();
 
+	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
+		MapEnemy->Data[idx]->Step( );
+	}
 	
 	//CameraPos += (Player->Pos - Vector2D(0,32) - CameraPos) * Real(0.05);
 //	CameraPos = Player->Pos;
@@ -756,12 +906,13 @@ void EngineDraw() {
 //	for ( int idx = 0; idx < MapDoor->Size; idx++ ) {
 //		MapDoor->Data[idx]->Draw( TransformedCameraPos );
 //	}
-//	
-//	for ( int idx = 0; idx < MapExit->Size; idx++ ) {
-//		MapExit->Data[idx]->Draw( TransformedCameraPos );
-//	}
+	
+	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
+		MapEnemy->Data[idx]->Draw( TransformedCameraPos );
+	}
 	
 	Player->Draw( TransformedCameraPos );
+
 /*
 	// Draw Top Layers //
 //	DrawObjectLayer( MapLayer->Size - 1 );
