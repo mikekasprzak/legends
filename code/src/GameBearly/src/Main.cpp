@@ -65,6 +65,7 @@ const int STATE_PLAY =	2;
 const int STATE_WIN =	3;
 
 int GameState;
+int Bears = 0;
 
 int TilesetId;
 int PlayerId;
@@ -364,6 +365,7 @@ public:
 	
 	int FishEaten;
 	int FruitEaten;
+	int EnemiesEaten;
 	
 public:
 	cPlayer( int _x, int _y ) :
@@ -388,6 +390,7 @@ public:
 		
 		FishEaten = 0;
 		FruitEaten = 0;
+		EnemiesEaten = 0;
 
 		SetAnimation( Player_Idle );
 	}
@@ -520,6 +523,7 @@ public:
 				}
 				else if ( Tile == TILE_EXIT ) {
 					// Do Something //
+					GameState = STATE_WIN;
 				}
 			}
 			
@@ -587,6 +591,8 @@ public:
 						// Kill //
 						ForceIntermediateAnimation( Player_Maul );
 						Attacking = true;
+						
+						EnemiesEaten++;
 						
 						MapEnemy->Data[FoundEnemy]->Alive = false;
 						MapEnemy->Data[FoundEnemy]->SetIntermediateAnimation( Enemy_Kill );
@@ -868,14 +874,16 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void EngineStep() {
-	GameMoveCountdown--;
-	if ( GameMoveCountdown == 0 ) {
-		GameMoves++;
-		//OldGameMoveCountdown = GameMoveCountdown;
-		GameMoveCountdown = 60*2;
+	if ( Player->Alive ) {
+		GameMoveCountdown--;
+		if ( GameMoveCountdown == 0 ) {
+			GameMoves++;
+			//OldGameMoveCountdown = GameMoveCountdown;
+			GameMoveCountdown = 60*2;
+		}
+		if ( OldGameMoveCountdown > 0 )
+			OldGameMoveCountdown--;
 	}
-	if ( OldGameMoveCountdown > 0 )
-		OldGameMoveCountdown--;
 
 	if ( KillCountdown > 0 )
 		KillCountdown--;
@@ -911,8 +919,9 @@ void EngineStep() {
 void GameStep() {
 	switch ( GameState ) {
 		case STATE_TITLE: {
-			if ( Input_KeyPressed( KEY_ACTION ) || Input_KeyPressed( KEY_UP ) ) {
+			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				GameState = STATE_PLAY;
+				Bears = 0;
 			}
 			break;
 		}
@@ -926,16 +935,18 @@ void GameStep() {
 			
 			if ( (!Player->Alive) && Input_KeyPressed( KEY_ACTION ) ) {
 				LoadMap();
+				Bears++;
 			}
 
 			break;	
 		}
 		case STATE_WIN: {
-			if ( Input_KeyPressed( KEY_ACTION ) || Input_KeyPressed( KEY_UP ) ) {
+			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				// TODO: Reset Game //
 				LoadMap();
 				
 				GameState = STATE_PLAY;
+				Bears = 0;
 			}
 			break;
 		}
@@ -1149,6 +1160,14 @@ void EngineDraw() {
 	for ( int idx = 0; idx < Player->FruitEaten; idx++ ) {
 		gelDrawTile( 15, /**/ ScreenWidth-32-(idx*24), 0 );
 	}
+
+	if ( !Player->Alive && (Player->IntermediateAnimation == 0) ) {
+		const char* DeathText = "*push spaceBEAR*";	
+		gelSetColor( 0, 0, 0, 255 );
+		gelDrawTextCenter( DeathText, 128, ScreenHeight+1-32, 16, "Commodore" );
+		gelSetColor( 255, 255, 255, 255 );
+		gelDrawTextCenter( DeathText, 128, ScreenHeight+0-32, 16, "Commodore" );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -1170,15 +1189,49 @@ void GameDraw() {
 			break;	
 		}
 		case STATE_WIN: {
-//			gelBindImage( WinId );
-//			gelDrawImage(0,0);
+			gelSetColor( 0, 0, 0, 255 );
+			gelDrawRectFill( 0, 0, ScreenWidth, ScreenHeight );
+
+			const char* HeaderText;
+			if ( Player->FishEaten < 10 )
+				HeaderText = "unBEARable!";
+			else if ( Player->FishEaten < 20 )
+				HeaderText = "BEARly!";
+			else if ( Player->FishEaten >= 20 ) {
+				if ( Player->FruitEaten >= 3 ) {
+					if ( Player->EnemiesEaten >= 7 ) {
+						HeaderText = "BEARdacious!";
+					}
+					else {
+						HeaderText = "unBEARlieve!";
+					}
+				}
+				else {
+					HeaderText = "BEARy good!";
+				}
+			}
+
+			gelSetColor( 255, 255, 0, 255 );
+			gelDrawTextCenter( HeaderText, 128, 32, 24, "Commodore" );
 	
-//			char Text[64];
-//			sprintf( Text, "%i", Player->TotalStars );
-//			gelSetColor( 0xC7, 0x85, 0x00, 255 );
-//			gelDrawTextLeft( Text, 140-36, 150+2, 46, "FourB" );
-//			gelSetColor( 0xFF, 0xE3, 0x00, 255 );
-//			gelDrawTextLeft( Text, 140-36, 150, 46, "FourB" );
+			int StatSpacing = 18;
+	
+			char Text[128];
+			sprintf( Text, "Fish: %i / 20", Player->FishEaten );
+			gelSetColor( 255, 255, 255, 255 );
+			gelDrawTextCenter( Text, 128, 64+(0*StatSpacing), 16, "Commodore" );
+			sprintf( Text, "Fruit: %i / 3", Player->FruitEaten );
+			gelSetColor( 255, 255, 255, 255 );
+			gelDrawTextCenter( Text, 128, 64+(1*StatSpacing), 16, "Commodore" );
+			sprintf( Text, "Hunters: %i / 7", Player->EnemiesEaten );
+			gelSetColor( 255, 255, 255, 255 );
+			gelDrawTextCenter( Text, 128, 64+(2*StatSpacing), 16, "Commodore" );
+			sprintf( Text, "Moves: %i", GameMoves );
+			gelSetColor( 255, 255, 255, 255 );
+			gelDrawTextCenter( Text, 128, 64+(3*StatSpacing), 16, "Commodore" );
+			sprintf( Text, "Bears Lost: %i", Bears );
+			gelSetColor( 255, 255, 255, 255 );
+			gelDrawTextCenter( Text, 128, 64+(4*StatSpacing), 16, "Commodore" );
 	
 			break;
 		}
