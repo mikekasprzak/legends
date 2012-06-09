@@ -36,7 +36,7 @@ cat Load.js>>obj/PreJS.txt
 
 $CC $DEFINES $INCLUDES $CFLAGS $FILES --pre-js obj/PreJS.txt -o output/$TARGET.emcc.js 
 
-java -jar bin/compiler.jar --compilation_level WHITESPACE_ONLY --js output/$TARGET.emcc.js 2>output/$TARGET.emcc.js.txt>output/$TARGET.js
+java -jar ../GameNook/bin/compiler.jar --compilation_level WHITESPACE_ONLY --js output/$TARGET.emcc.js 2>output/$TARGET.emcc.js.txt>output/$TARGET.js
 #java -jar bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js output/$TARGET.emcc.js 2>output/$TARGET.emcc.js.txt>output/$TARGET.js
 #cp output/$TARGET.emcc.js output/$TARGET.js
 #java -jar bin/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js Content/WorldMap.json.js >Content/WorldMap.json.js2
