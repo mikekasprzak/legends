@@ -1,0 +1,17 @@
+{  
+  "version": "1.0",  
+  "name": "Nook",  
+  "description": "A platforming adventure where size matters",  
+  "icons": {  
+    "16": "/img/icon-16.png",  
+    "32": "/img/icon-32.png",  
+    "64": "/img/icon-64.png",  
+    "128": "/img/icon-128.png"  
+  },  
+  "developer": {  
+    "name": "Mike Kasprzak (Sykhronics Entertainment)",  
+    "url": "http://sykhronics.com"  
+  },  
+  "installs_allowed_from": ["*"], 
+  "default_locale": "en"  
+}  
