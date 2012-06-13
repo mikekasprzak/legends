@@ -1,0 +1,14 @@
+{
+  "name": "Nook",
+  "description": "A platforming adventure where size matters",
+  "version": "1",
+  "app": {
+    "launch": {
+      "local_path": "index.html"
+    }
+  },
+  "icons": {
+    "16": "img/icon-16.png",
+    "128": "img/chrome-128.png"
+  }
+}

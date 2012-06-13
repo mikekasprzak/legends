@@ -1,0 +1,14 @@
+{
+  "name": "BEARly SEASONed",
+  "description": "Be the Bear in this Retro Arcade Game",
+  "version": "1",
+  "app": {
+    "launch": {
+      "local_path": "index.html"
+    }
+  },
+  "icons": {
+    "16": "img/icon-16.png",
+    "128": "img/chrome-128.png"
+  }
+}
