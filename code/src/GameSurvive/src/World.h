@@ -36,9 +36,11 @@ public:
 	}
 	
 	void Generate() {
-		Map.DrawRect( 0,0, Map.Width(),Map.Height(), SoilTile );
+		//Map.DrawRect( 0,0, Map.Width(),Map.Height(), SoilTile );
 		
-		Map.DrawRectFill( 4,4, 5,3, SoilTile );
+		//Map.DrawRectFill( 4,4, 5,3, SoilTile );
+		
+		Map.DrawLine( 2+6,2, 4+6,9, SoilTile );
 	}
 
 	void RadialGenerateBaseMap() {

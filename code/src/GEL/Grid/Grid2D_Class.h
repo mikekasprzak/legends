@@ -1656,11 +1656,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 public:
-	// Drawing Code //
-	//DrawRect
-	//DrawFilledRect
-	//DrawLine
-		
+	// Drawing Code //		
 	//DrawRadiusRect
 	//DrawRadiusFilledRect
 	
@@ -1765,6 +1761,72 @@ public:
 
 		for ( size_t idx = y; idx < y+h; idx++ ) {
 			_DrawHLine( x, idx, w, Value );
+		}
+	}
+	
+	inline void DrawLine( int x1, int y1, int x2, int y2, const tType& Value = tType() ) {
+		int xDiff = x2-x1;
+		int yDiff = y2-y1;
+		
+		// Swap X if backwards //
+		if ( xDiff < 0 ) {
+			xDiff = -xDiff;
+			int Temp = x2;
+			x2 = x1;
+			x1 = x2;
+		}
+
+		// Swap Y if backwards //
+		if ( yDiff < 0 ) {
+			yDiff = -yDiff;
+			int Temp = y2;
+			y2 = y1;
+			y1 = y2;
+		}
+		
+		// Wider than Tall //
+		if ( xDiff >= yDiff ) {
+			float Slope = 0;
+			if ( yDiff > 0 )
+				Slope = (float)yDiff / (float)xDiff;
+			
+			int StartX = 0;
+			if ( x1 < 0 )
+				StartX = -x1;
+			else if ( x1 > Width() )
+				return;
+
+			int EndX = xDiff+1;
+			if ( x2 < 0 )
+				return;
+			else if ( x2 > Width() )
+				EndX = (xDiff) - (x2-Width());
+			
+			for ( size_t idx = StartX; idx < EndX; idx++ ) {
+				operator()( x1 + idx, y1 + round(Slope*(float)idx) ) = Value;
+			}
+		}
+		// Taller than Wide //
+		else {
+			float Slope = 0;
+			if ( xDiff > 0 )
+				Slope = (float)xDiff / (float)yDiff;
+	
+			int StartY = 0;
+			if ( y1 < 0 )
+				StartY = -y1;
+			else if ( y1 > Height() )
+				return;
+
+			int EndY = yDiff+1;
+			if ( y2 < 0 )
+				return;
+			else if ( y2 > Height() )
+				EndY = (yDiff) - (y2-Height());
+		
+			for ( size_t idx = StartY; idx < EndY; idx++ ) {
+				operator()( x1 + round(Slope*(float)idx), y1 + idx ) = Value;
+			}			
 		}
 	}
 
