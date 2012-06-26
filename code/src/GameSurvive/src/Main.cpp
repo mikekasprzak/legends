@@ -1029,11 +1029,11 @@ void GameStep() {
 		case STATE_PLAY: {
 			EngineStep();
 			
-			if ( Input_KeyPressed( KEY_MENU ) ) {
+//			if ( Input_KeyPressed( KEY_MENU ) ) {
 //				GameState = STATE_TITLE;
 //				LoadMap();
-				GenerateMap( GenerationSeed++ );
-			}
+//				GenerateMap( GenerationSeed++ );
+//			}
 			
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				GenerateMap( GenerationSeed++ );

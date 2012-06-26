@@ -503,6 +503,22 @@ function Input_KeyDownEvent( e ) {
 			Input_KeyBits |= KEY_ACTION;		
 			return false;
 			break;
+		case 90: // Z //
+		case 59:  // : //
+		case 186: // : //
+			Input_KeyBits |= KEY_ACTION2;
+			return false;
+			break;
+		case 88: // X //
+		case 'Q': // Q //
+			Input_KeyBits |= KEY_ACTION3;		
+			return false;
+			break;
+		case 67: // C //
+		case 'J': // J //
+			Input_KeyBits |= KEY_ACTION4;		
+			return false;
+			break;
 	};
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
@@ -524,6 +540,19 @@ function Input_KeyUpEvent( e ) {
 		case 17: // CTRL //
 		case 32: // Space Bar //
 			Input_KeyBits &= ~KEY_ACTION;
+			break;
+		case 13: // Enter //
+		case 17: // CTRL //
+		case 32: // Space Bar //
+			Input_KeyBits &= ~KEY_ACTION2;		
+			break;
+		case 88: // X //
+		case 'Q': // Q //
+			Input_KeyBits &= ~KEY_ACTION3;		
+			break;
+		case 67: // C //
+		case 'J': // J //
+			Input_KeyBits &= ~KEY_ACTION4;
 			break;
 		case 27: // ESC //
 			Input_KeyBits &= ~KEY_MENU;

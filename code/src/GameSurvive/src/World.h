@@ -157,11 +157,15 @@ public:
 		for ( size_t y = 1; y < h-1; y++ ) {
 			Map(0,y).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(0,y)).Normal() * Scalar;
 			Map(w-1,y).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(w-1,y)).Normal() * Scalar;
+			Map(0,y).Water++;
+			Map(w-1,y).Water++;
 		}
 
 		for ( size_t x = 0; x < w; x++ ) {
 			Map(x,0).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(x,0)).Normal() * Scalar;
 			Map(x,h-1).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(x,h-1)).Normal() * Scalar;
+			Map(x,0).Water++;
+			Map(x,h-1).Water++;
 		}		
 	}
 	
@@ -172,6 +176,7 @@ public:
 				Map(x,y).Accumulator = Map(x,y).Motion;
 			}
 		}
+		// Move Water //
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
 				int _x = x + (int)(round(Map(x,y).Motion.MaxitudeNormal().x.ToFloat()));
@@ -183,12 +188,69 @@ public:
 				Skip |= ( _y < 0 );
 				Skip |= ( _y >= Map.Height() );
 
-				if ( !Skip )				
+				if ( !Skip ) {
+					int WaterToMove = Map(x,y).Water - Map(_x,_y).Water;
+					WaterToMove += (int)Map(x,y).Motion.Magnitude().ToFloat();
+					
+					if ( (Map(_x,_y).Water + WaterToMove) < 0 )
+						WaterToMove = Map(_x,_y).Water;
+					if ( (Map(x,y).Water - WaterToMove) < 0 )
+						WaterToMove = Map(x,y).Water;
+					
+					Map(_x,_y).Water += WaterToMove;
+					Map(x,y).Water -= WaterToMove;
+
 					Map(_x,_y).Accumulator += Map(x,y).Motion;
+				}
+				else {
+					// Source Water movement only //
+					int WaterToMove = Map(x,y).Water - WaterTile.Water;
+					WaterToMove = (int)Map(x,y).Motion.Magnitude().ToFloat();
+					Map(x,y).Water -= WaterToMove;
+				}
 
 				Map(x,y).Accumulator -= Map(x,y).Motion;
 			}
 		}
+		// Settle Water //
+		for ( size_t y = 0; y < Map.Height(); y++ ) {
+			for ( size_t x = 0; x < Map.Width(); x++ ) {
+				Vector2D Drain;
+				int MyWater = Map(x,y).Water;
+				int WaterSum = MyWater;
+				
+				cTile* T1 = &WaterTile;
+				if ( x > 0 ) T1 = &Map(x-1,y);
+				cTile* T2 = &WaterTile;
+				if ( x < Map.Width()-1 ) T2 = &Map(x+1,y);
+				cTile* T3 = &WaterTile;
+				if ( y > 0 ) T3 = &Map(x,y-1);
+				cTile* T4 = &WaterTile;
+				if ( y < Map.Height()-1 ) T4 = &Map(x,y+1);
+				
+				Drain += Vector2D( (T1->Water - MyWater)>>1, 0 );
+				Drain += Vector2D( (T2->Water - MyWater)>>1, 0 );
+				Drain += Vector2D( 0, (T3->Water - MyWater)>>1 );
+				Drain += Vector2D( 0, (T4->Water - MyWater)>>1 );
+				
+				WaterSum += T1->Water;
+				WaterSum += T2->Water;
+				WaterSum += T3->Water;
+				WaterSum += T4->Water;
+				if ( WaterSum < 0 )
+					WaterSum = 0;
+				
+				int WaterPart = WaterSum / 5;
+				
+				if (T1 != &WaterTile) T1->Water = WaterPart;
+				if (T2 != &WaterTile) T2->Water = WaterPart;
+				if (T3 != &WaterTile) T3->Water = WaterPart;
+				if (T4 != &WaterTile) T4->Water = WaterPart;
+				Map(x,y).Water = WaterPart + (WaterSum-(WaterPart*5));
+				
+				Map(x,y).Accumulator += Drain;
+			}
+		}		
 		// Write the accumulator to Motion //
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
@@ -199,7 +261,11 @@ public:
 
 public:
 	void Step() {
-//		SetOutsideMotion();
+		extern const int KEY_MENU;
+		extern const int Input_Key( const int Mask  = 0xFFFFFFFF );
+		if ( Input_Key( KEY_MENU ) ) {
+			SetOutsideMotion();
+		}
 		StepMotion();
 		
 		Iteration++;
@@ -217,7 +283,8 @@ public:
 				
 				gelSetColor( Red,Green,Blue,255 );
 				gelDrawRectFill( x*16,y*16, 16,16 );
-				
+
+/*				
 				// Draw Wind //
 				if ( Map(x,y).Motion.MagnitudeSquared() == Real::Zero ) {
 					gelSetColor( 255,255,255,128 );
@@ -226,6 +293,8 @@ public:
 				else {
 					
 				}
+*/
+
 			}
 		}
 	}
