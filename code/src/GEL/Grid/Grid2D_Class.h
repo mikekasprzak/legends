@@ -1764,7 +1764,6 @@ public:
 		}
 	}
 	
-	// This doesn't work. It gets caught up on octrant (not quadrant) slices. //
 	inline void DrawLine( int x1, int y1, int x2, int y2, const tType& Value = tType() ) {
 		int xDiff = x2-x1;
 		int yDiff = y2-y1;
@@ -1804,7 +1803,6 @@ public:
 			if ( xDiffABS != 0 ) {
 				Slope = (float)yDiff / (float)xDiff;
 				Slope *= SignX;
-				Slope *= SignY;
 			}
 			
 			int StartX = 0;
@@ -1820,7 +1818,7 @@ public:
 				EndX = (xDiff) - (x2-Width());
 			
 			for ( size_t idx = StartX; idx < EndX; idx++ ) {
-				operator()( x1 + idx, y1 + round(Slope*(float)(idx*SignY)) ) = Value;
+				operator()( x1 + idx, y1 + round(Slope*(float)(idx)) ) = Value;
 			}
 		}
 		// Taller than Wide //
@@ -1840,7 +1838,6 @@ public:
 			float Slope = 0;
 			if ( yDiffABS != 0 ) {
 				Slope = (float)xDiff / (float)yDiff;
-				Slope *= SignX;
 				Slope *= SignY;
 			}
 	
@@ -1857,7 +1854,7 @@ public:
 				EndY = (yDiff) - (y2-Height());
 		
 			for ( size_t idx = StartY; idx < EndY; idx++ ) {
-				operator()( x1 + round(Slope*(float)(idx*SignX)), y1 + idx ) = Value;
+				operator()( x1 + round(Slope*(float)(idx)), y1 + idx ) = Value;
 			}			
 		}
 	}

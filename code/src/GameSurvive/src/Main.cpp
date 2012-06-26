@@ -815,10 +815,12 @@ void ProcessWorld() {
 	
 	for ( size_t y = 0; y < World->Map.Height(); y++ ) {
 		for ( size_t x = 0; x < World->Map.Width(); x++ ) {
-			if ( World->Map(x,y).Water > World->Map(x,y).Soil )
-				Tile = 1;
-			else
+			if ( World->Map(x,y).Soil > World->Map(x,y).Water )
 				Tile = 3;
+			else if ( World->Map(x,y).Clay > World->Map(x,y).Water )
+				Tile = 2;
+			else
+				Tile = 1;
 				
 			(*MapLayer->Data[Layer])(x,y) = Tile;
 		}

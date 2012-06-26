@@ -8,18 +8,21 @@ class cTile {
 public:
 	int Water;
 	int Soil;
+	int Clay;
 
 public:
 	cTile() {}
-	cTile( const int _Water, const int _Soil ) :
+	cTile( const int _Water, const int _Soil, const int _Clay ) :
 		Water( _Water ),
-		Soil( _Soil )
+		Soil( _Soil ),
+		Clay( _Clay )
 	{
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-cTile WaterTile( /*W*/ 20, /*S*/ 0 );
-cTile SoilTile( /*W*/ 0, /*S*/ 10 );
+cTile WaterTile( /*W*/ 20, /*S*/  0, /*C*/  0 );
+cTile SoilTile(  /*W*/  0, /*S*/ 10, /*C*/  0 );
+cTile ClayTile(  /*W*/  0, /*S*/  0, /*C*/ 10 );
 
 // - ------------------------------------------------------------------------------------------ - //
 class cWorld {
@@ -41,8 +44,8 @@ public:
 		//Map.DrawRectFill( 4,4, 5,3, SoilTile );
 		
 		//Map.DrawLine( 2,2, 7,7, SoilTile );
-		//RadialGenerateBaseMap();
-		NoiseGenerateBaseMap();
+		RadialGenerateBaseMap();
+		//NoiseGenerateBaseMap();
 
 		// Fix outsides with water edge //
 		Map.DrawRect( 0,0, Map.Width(),Map.Height(), WaterTile );
@@ -56,14 +59,14 @@ public:
 	}
 
 	void RadialGenerateBaseMap() {
-		int Steps = 24;
+		int Steps = 48;
 		
-		int CenterX = 8;
-		int CenterY = 4;
+		int CenterX = 15;
+		int CenterY = 15;
 		
 		for ( int Angle = 0; Angle < Steps; Angle++ ) {
 			Vector2D Vec = Vector2D::Angle( Real((float)Angle / (float)Steps) );
-			Vec *= Real(6);//Real::Random() * Real( 8 );
+			Vec *= Real(5) + (Real::Random() * Real( 11 ));
 				
 			Map.DrawLine( 
 				CenterX,
