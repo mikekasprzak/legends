@@ -22,11 +22,19 @@ public:
 		Clay( _Clay )
 	{
 	}
+	
+	inline int Mass() {
+		return Water+Soil+Clay;
+	}
+	
+	inline int DryMass() {
+		return Soil+Clay;
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-cTile WaterTile( /*W*/ 10, /*S*/  0, /*C*/  0 );
-cTile SoilTile(  /*W*/  0, /*S*/ 10, /*C*/  0 );
-cTile ClayTile(  /*W*/  0, /*S*/  0, /*C*/ 10 );
+cTile WaterTile( /*W*/ 16, /*S*/  0, /*C*/  0 );
+cTile SoilTile(  /*W*/  0, /*S*/ 16, /*C*/  0 );
+cTile ClayTile(  /*W*/  0, /*S*/  0, /*C*/ 16 );
 
 // - ------------------------------------------------------------------------------------------ - //
 class cWorld {
@@ -157,15 +165,15 @@ public:
 		for ( size_t y = 1; y < h-1; y++ ) {
 			Map(0,y).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(0,y)).Normal() * Scalar;
 			Map(w-1,y).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(w-1,y)).Normal() * Scalar;
-			Map(0,y).Water++;
-			Map(w-1,y).Water++;
+//			Map(0,y).Water++;
+//			Map(w-1,y).Water++;
 		}
 
 		for ( size_t x = 0; x < w; x++ ) {
 			Map(x,0).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(x,0)).Normal() * Scalar;
 			Map(x,h-1).Motion = (Vector2D(Map.HalfWidth(),Map.HalfHeight()) - Vector2D(x,h-1)).Normal() * Scalar;
-			Map(x,0).Water++;
-			Map(x,h-1).Water++;
+//			Map(x,0).Water++;
+//			Map(x,h-1).Water++;
 		}		
 	}
 	
@@ -176,6 +184,7 @@ public:
 				Map(x,y).Accumulator = Map(x,y).Motion;
 			}
 		}
+
 		// Move Water //
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
@@ -189,7 +198,7 @@ public:
 				Skip |= ( _y >= Map.Height() );
 
 				if ( !Skip ) {
-					int WaterToMove = Map(x,y).Water - Map(_x,_y).Water;
+					int WaterToMove = Map(x,y).Water - Map(_x,_y).Mass();
 					WaterToMove += (int)Map(x,y).Motion.Magnitude().ToFloat();
 					
 					if ( (Map(_x,_y).Water + WaterToMove) < 0 )
@@ -212,12 +221,13 @@ public:
 				Map(x,y).Accumulator -= Map(x,y).Motion;
 			}
 		}
+		
 		// Settle Water //
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
 				Vector2D Drain;
-				int MyWater = Map(x,y).Water;
-				int WaterSum = MyWater;
+
+				cTile* Me = &Map(x,y);
 				
 				cTile* T1 = &WaterTile;
 				if ( x > 0 ) T1 = &Map(x-1,y);
@@ -228,11 +238,17 @@ public:
 				cTile* T4 = &WaterTile;
 				if ( y < Map.Height()-1 ) T4 = &Map(x,y+1);
 				
-				Drain += Vector2D( (T1->Water - MyWater)>>1, 0 );
-				Drain += Vector2D( (T2->Water - MyWater)>>1, 0 );
-				Drain += Vector2D( 0, (T3->Water - MyWater)>>1 );
-				Drain += Vector2D( 0, (T4->Water - MyWater)>>1 );
+//				Drain += Vector2D( (T1->Water - Me->Water)>>1, 0 );
+//				Drain += Vector2D( -(T2->Water - Me->Water)>>1, 0 );
+//				Drain += Vector2D( 0, (T3->Water - Me->Water)>>1 );
+//				Drain += Vector2D( 0, -(T4->Water - Me->Water)>>1 );
+
+				Drain += Vector2D( (T1->Mass() - Me->Mass())>>1, 0 );
+				Drain += Vector2D( -(T2->Mass() - Me->Mass())>>1, 0 );
+				Drain += Vector2D( 0, (T3->Mass() - Me->Mass())>>1 );
+				Drain += Vector2D( 0, -(T4->Mass() - Me->Mass())>>1 );
 				
+				int WaterSum = Me->Water;
 				WaterSum += T1->Water;
 				WaterSum += T2->Water;
 				WaterSum += T3->Water;
@@ -242,15 +258,31 @@ public:
 				
 				int WaterPart = WaterSum / 5;
 				
-				if (T1 != &WaterTile) T1->Water = WaterPart;
-				if (T2 != &WaterTile) T2->Water = WaterPart;
-				if (T3 != &WaterTile) T3->Water = WaterPart;
-				if (T4 != &WaterTile) T4->Water = WaterPart;
-				Map(x,y).Water = WaterPart + (WaterSum-(WaterPart*5));
+				int DryMassSum = Me->DryMass();
+				DryMassSum += T1->DryMass();
+				DryMassSum += T2->DryMass();
+				DryMassSum += T3->DryMass();
+				DryMassSum += T4->DryMass();
 				
-				Map(x,y).Accumulator += Drain;
+				int DryMassPart = DryMassSum / 5;
+				
+				int TotalMass = DryMassSum+WaterSum;
+				int TotalPart = TotalMass / 5;
+				
+				int WaterMoved = 0;
+				
+				if (T1 != &WaterTile) { int Wt = WaterPart - T1->DryMass() > 0 ? WaterPart : 0; T1->Water = Wt; WaterMoved += Wt; }
+				if (T2 != &WaterTile) { int Wt = WaterPart - T2->DryMass() > 0 ? WaterPart : 0; T2->Water = Wt; WaterMoved += Wt; }
+				if (T3 != &WaterTile) { int Wt = WaterPart - T3->DryMass() > 0 ? WaterPart : 0; T3->Water = Wt; WaterMoved += Wt; }
+				if (T4 != &WaterTile) { int Wt = WaterPart - T4->DryMass() > 0 ? WaterPart : 0; T4->Water = Wt; WaterMoved += Wt; }
+				Me->Water = WaterSum-WaterMoved;
+				if ( Me->Water < 0 )
+					Me->Water = 0;
+				
+				Me->Accumulator += Drain;
 			}
-		}		
+		}
+		
 		// Write the accumulator to Motion //
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
