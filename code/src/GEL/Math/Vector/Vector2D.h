@@ -181,7 +181,7 @@ public:
 		Result /= Mag;
 		
 		return Result;
-	}	
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The length of a vector //
 	inline const Real Magnitude() const {
@@ -199,10 +199,131 @@ public:
 		return (x * x) + (y * y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Manhattan Functions //
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector2D& ManhattanNormalize() {
+		Real Mag( Manhattan() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+	
+		return *this /= Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
+	inline const Real ManhattanNormalizeRet() {
+		Real Mag( Manhattan() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Real::Zero;
+	
+		*this /= Mag;
+		return Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that only returns the normal //
+	inline const Vector2D ManhattanNormal() const {
+		Real Mag( Manhattan() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+		
+		Vector2D Result( *this );
+		Result /= Mag;
+		
+		return Result;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	// The sum of all absolute value parts //
 	inline const Real Manhattan() const {
 		return x.Abs() + y.Abs();
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	// Maxitude Functions -- http://en.wikipedia.org/wiki/Chebyshev_distance //
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector2D& MaxitudeNormalize() {
+		Real Mag( Maxitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+	
+		return *this /= Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
+	inline const Real MaxitudeNormalizeRet() {
+		Real Mag( Maxitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Real::Zero;
+	
+		*this /= Mag;
+		return Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that only returns the normal //
+	inline const Vector2D MaxitudeNormal() const {
+		Real Mag( Maxitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+		
+		Vector2D Result( *this );
+		Result /= Mag;
+		
+		return Result;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// The greatest absolute value part //
+	inline const Real Maxitude() const {
+		return x.Abs() > y.Abs() ? x.Abs() : y.Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Minitude Functions //
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector2D& MinitudeNormalize() {
+		Real Mag( Minitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+	
+		return *this /= Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
+	inline const Real MinitudeNormalizeRet() {
+		Real Mag( Minitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Real::Zero;
+	
+		*this /= Mag;
+		return Mag;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation of Normalize that only returns the normal //
+	inline const Vector2D MinitudeNormal() const {
+		Real Mag( Minitude() );
+	
+		if ( Mag.IsZeroOrLess() )
+			return Vector2D::Zero;
+		
+		Vector2D Result( *this );
+		Result /= Mag;
+		
+		return Result;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// The smallest absolute value part //
+	inline const Real Minitude() const {
+		return x.Abs() < y.Abs() ? x.Abs() : y.Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 	// - -------------------------------------------------------------------------------------- - //
 	// No Cross product, as we instead have tangents //
 	// - -------------------------------------------------------------------------------------- - //

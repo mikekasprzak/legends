@@ -773,7 +773,7 @@ void ProcessObjectLayer( const int Layer ) {
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //
-int Iteration = 0;
+int GenerationSeed = 0;
 // - ------------------------------------------------------------------------------------------ - //
 void GenerateMap( const int Seed = 0 ) {
 	if ( MapLayer ) {
@@ -902,7 +902,7 @@ void GameInit() {
 	
 	// ---------------------- //
 	
-	GenerateMap( Iteration++ );
+	GenerateMap( GenerationSeed++ );
 /*
 	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
 
@@ -970,6 +970,13 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void EngineStep() {
+	static int SlowMotion = 0;
+	SlowMotion++;
+	if ( SlowMotion > 16 ) {
+		SlowMotion = 0;
+		World->Step();
+	}
+	
 //	if ( Player->Alive ) {
 //		GameMoveCountdown--;
 //		if ( GameMoveCountdown == 0 ) {
@@ -1025,11 +1032,11 @@ void GameStep() {
 			if ( Input_KeyPressed( KEY_MENU ) ) {
 //				GameState = STATE_TITLE;
 //				LoadMap();
-				GenerateMap( Iteration++ );
+				GenerateMap( GenerationSeed++ );
 			}
 			
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
-				GenerateMap( Iteration++ );
+				GenerateMap( GenerationSeed++ );
 			}
 
 			break;	
@@ -1038,7 +1045,7 @@ void GameStep() {
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				// TODO: Reset Game //
 //				LoadMap();
-				GenerateMap( Iteration++ );
+				GenerateMap( GenerationSeed++ );
 				
 				GameState = STATE_TITLE;
 			}
@@ -1142,6 +1149,8 @@ void EngineDraw() {
 //	for ( size_t Layer = 0; Layer < (MapLayer->Size-1); Layer++ ) {
 //		DrawLayer( Layer );
 //	}
+
+	World->Draw();
 
 	int TileSize = 16;
 
@@ -1263,12 +1272,13 @@ void EngineDraw() {
 	{
 		char Text[128];
 		gelSetColor( 0x23, 0xc5, 0xfd, 255 );
-		sprintf( Text, "Iteration:%i (%i, %i)", World->Iteration, CursorX, CursorY );
+		sprintf( Text, "Seed:%i Iteration:%i (%i, %i)", GenerationSeed, World->Iteration, CursorX, CursorY );
 		gelDrawTextRight( Text, ScreenWidth, ScreenHeight-4, 8, "Commodore" );
 
-		sprintf( Text, "W:%i S:%i", 
+		sprintf( Text, "W:%i S:%i C:%i", 
 			World->Map(CursorX,CursorY).Water,  
-			World->Map(CursorX,CursorY).Soil
+			World->Map(CursorX,CursorY).Soil,
+			World->Map(CursorX,CursorY).Clay			
 			);
 		gelDrawTextRight( Text, ScreenWidth, ScreenHeight-4-8, 8, "Commodore" );
 
