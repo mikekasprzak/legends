@@ -511,7 +511,7 @@ public:
 									// I AM DEAD //
 									SetAnimation( Player_Dead );
 									SetIntermediateAnimation( Player_Kill );
-									sndPlay( "Death" );
+//									sndPlay( "Death" );
 									
 									MapEnemy->Data[idx]->SetIntermediateAnimation( Enemy_Shoot );
 									MapEnemy->Data[idx]->Killer = true;
@@ -537,20 +537,20 @@ public:
 				if ( Tile == TILE_FISH ) {
 					FishEaten++;
 					EatCountdown = 32;
-					sndPlay( "Eat1" );
+//					sndPlay( "Eat1" );
 					
 					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
 				}
 				else if ( Tile == TILE_FRUIT ) {
 					FruitEaten++;
 					EatCountdown = 64;
-					sndPlay( "Eat2" );
+//					sndPlay( "Eat2" );
 					
 					(*MapLayer->Data[Layer])(Pos.x, Pos.y) = 0;
 				}
 				else if ( Tile == TILE_EXIT ) {
 					// Do Something //
-					sndPlay( "Win" );
+//					sndPlay( "Win" );
 
 					GameState = STATE_WIN;
 				}
@@ -590,10 +590,10 @@ public:
 					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;	
 
-					if ( GameMoves & 1 )
-						sndPlay( "Move1" );
-					else
-						sndPlay( "Move2" );
+//					if ( GameMoves & 1 )
+//						sndPlay( "Move1" );
+//					else
+//						sndPlay( "Move2" );
 				}
 				
 				if ( (SX|SY) != 0 ) {
@@ -601,10 +601,10 @@ public:
 					OldGameMoveCountdown = GameMoveCountdown;
 					GameMoveCountdown = 60*2;
 
-					if ( GameMoves & 1 )
-						sndPlay( "Move1" );
-					else
-						sndPlay( "Move2" );
+//					if ( GameMoves & 1 )
+//						sndPlay( "Move1" );
+//					else
+//						sndPlay( "Move2" );
 
 					Pos.x += SX;
 					Pos.y += SY;
@@ -631,7 +631,7 @@ public:
 						ForceIntermediateAnimation( Player_Maul );
 						Attacking = true;
 						
-						sndPlay( "Maul" );
+//						sndPlay( "Maul" );
 						
 						EnemiesEaten++;
 						
@@ -784,9 +784,9 @@ void GenerateMap() {
 		
 	// Start New Level //
 	MapLayer = new_GelArray<LayerType*>( 1 );
-	MapLayer->Data[0] = new LayerType( 32, 32, 1 );
+	MapLayer->Data[0] = new LayerType( 16, 16, 1 );
 	
-	
+	(*MapLayer->Data[0])(2,2) = 2;
 
 	Player = new cPlayer( 1, 1 );
 }
@@ -935,38 +935,38 @@ void GameExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void EngineStep() {
-	if ( Player->Alive ) {
-		GameMoveCountdown--;
-		if ( GameMoveCountdown == 0 ) {
-			GameMoves++;
-			//OldGameMoveCountdown = GameMoveCountdown;
-			GameMoveCountdown = 60*2;
-
-			if ( GameMoves & 1 )
-				sndPlay( "Move1" );
-			else
-				sndPlay( "Move2" );
-
-		}
-		if ( OldGameMoveCountdown > 0 )
-			OldGameMoveCountdown--;
-	}
-
-	if ( KillCountdown > 0 )
-		KillCountdown--;
-	if ( KillDelay > 0 )
-		KillDelay--;
-	if ( KillFlickerCountdown > 0 )
-		KillFlickerCountdown--;
-
-	if ( EatCountdown > 0 )
-		EatCountdown--;
-	
-	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
-		MapEnemy->Data[idx]->Step( );
-	}
-
-	Player->Step();
+//	if ( Player->Alive ) {
+//		GameMoveCountdown--;
+//		if ( GameMoveCountdown == 0 ) {
+//			GameMoves++;
+//			//OldGameMoveCountdown = GameMoveCountdown;
+//			GameMoveCountdown = 60*2;
+//
+////			if ( GameMoves & 1 )
+////				sndPlay( "Move1" );
+////			else
+////				sndPlay( "Move2" );
+//
+//		}
+//		if ( OldGameMoveCountdown > 0 )
+//			OldGameMoveCountdown--;
+//	}
+//
+//	if ( KillCountdown > 0 )
+//		KillCountdown--;
+//	if ( KillDelay > 0 )
+//		KillDelay--;
+//	if ( KillFlickerCountdown > 0 )
+//		KillFlickerCountdown--;
+//
+//	if ( EatCountdown > 0 )
+//		EatCountdown--;
+//	
+//	for ( int idx = 0; idx < MapEnemy->Size; idx++ ) {
+//		MapEnemy->Data[idx]->Step( );
+//	}
+//
+//	Player->Step();
 	
 	//CameraPos += (Player->Pos - Vector2D(0,32) - CameraPos) * Real(0.05);
 //	CameraPos = Player->Pos;
@@ -980,7 +980,7 @@ void GameStep() {
 		case STATE_TITLE: {
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				GameState = STATE_PLAY;
-				sndPlay( "Start" );
+//				sndPlay( "Start" );
 			}
 			break;
 		}
@@ -1223,7 +1223,22 @@ void EngineDraw() {
 //		gelDrawTextCenter( DeathText, 128, ScreenHeight+0-24, 16, "Commodore" );
 //	}
 
-	gelDrawCircle( Mouse.Pos.x, Mouse.Pos.y, Mouse.Current > 0 ? 4 : 2 );
+	int CursorX = floor( Mouse.Pos.x.ToFloat() / 16.0f );
+	int CursorY = floor( Mouse.Pos.y.ToFloat() / 16.0f );
+
+	{
+		char Text[128];
+		gelSetColor( 0x23, 0xc5, 0xfd, 255 );
+		sprintf( Text, "(%i, %i)", CursorX, CursorY );
+		gelDrawTextRight( Text, ScreenWidth, ScreenHeight-4, 8, "Commodore" );
+
+
+	}
+	
+	// Cursor //
+	gelSetColor( 255, 255, 255, 255 );	
+	gelDrawRect( CursorX * 16, CursorY * 16, 16, 16 );
+	gelDrawCircleFill( Mouse.Pos.x, Mouse.Pos.y, Mouse.Current > 0 ? 4 : 2 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
