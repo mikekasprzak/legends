@@ -15,6 +15,7 @@
 #include <cJSON.h>
 
 #include "Gel2D/GelGraphics2D.h"
+#include "World.h"
 // - ------------------------------------------------------------------------------------------ - //
 // Game Res             -- 240x160 (GBA 3:2)
 // 3DS      - 400x240
@@ -78,6 +79,8 @@ Vector2D CameraPos;
 
 typedef cGrid2D<short> LayerType;
 GelArray< LayerType* >* MapLayer;
+
+cWorld* World = 0;
 
 //int GlobalTotalKeys;
 
@@ -779,6 +782,10 @@ void GenerateMap() {
 	if ( Player ) {
 		delete Player;
 	}
+	
+	if ( World ) {
+		delete World;
+	}
 
 	// ---------------------- //
 		
@@ -786,9 +793,28 @@ void GenerateMap() {
 	MapLayer = new_GelArray<LayerType*>( 1 );
 	MapLayer->Data[0] = new LayerType( 16, 16, 1 );
 	
-	(*MapLayer->Data[0])(2,2) = 2;
+	World = new cWorld( 16, 16 );
+	
+	extern void ProcessWorld();
+	ProcessWorld();
 
 	Player = new cPlayer( 1, 1 );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ProcessWorld() {
+	int Tile = 0;
+	int Layer = 0;
+	
+	for ( size_t y = 0; y < World->Map.Height(); y++ ) {
+		for ( size_t x = 0; x < World->Map.Width(); x++ ) {
+			if ( World->Map(x,y).Water > World->Map(x,y).Soil )
+				Tile = 1;
+			else
+				Tile = 3;
+				
+			(*MapLayer->Data[Layer])(x,y) = Tile;
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 //void LoadMap() {
@@ -1229,9 +1255,14 @@ void EngineDraw() {
 	{
 		char Text[128];
 		gelSetColor( 0x23, 0xc5, 0xfd, 255 );
-		sprintf( Text, "(%i, %i)", CursorX, CursorY );
+		sprintf( Text, "Iteration:%i (%i, %i)", World->Iteration, CursorX, CursorY );
 		gelDrawTextRight( Text, ScreenWidth, ScreenHeight-4, 8, "Commodore" );
 
+		sprintf( Text, "W:%i S:%i", 
+			World->Map(CursorX,CursorY).Water,  
+			World->Map(CursorX,CursorY).Soil
+			);
+		gelDrawTextRight( Text, ScreenWidth, ScreenHeight-4-8, 8, "Commodore" );
 
 	}
 	

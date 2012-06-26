@@ -91,6 +91,14 @@ public:
 		return h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline const int HalfWidth() const {
+		return w >> 1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const int HalfHeight() const {
+		return h >> 1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
 		return w * h;
 	}
@@ -1652,7 +1660,7 @@ public:
 	//DrawRect
 	//DrawFilledRect
 	//DrawLine
-	
+		
 	//DrawRadiusRect
 	//DrawRadiusFilledRect
 	
@@ -1667,6 +1675,98 @@ public:
 	// Add a function for shifting the contents of a grid //
 	
 	// Add equivalent functions for Adjacency searching (GenerateAdjacentDistanceGrid, ...) //
+
+
+	inline void _DrawHLine( const int x, const int y, const int w, const tType& Value = tType() ) {
+		for ( size_t idx = x; idx < x+w; idx++ ) {
+			operator()(idx,y) = Value;
+		}
+	}
+	inline void DrawHLine( int x, const int y, int w, const tType& Value = tType() ) {
+		if ( y < 0 )
+			return;
+		else if ( y >= Height() )
+			return;
+			
+		if ( x < 0 ) {
+			w += x;
+			x = 0;
+		}		
+		else if ( x >= Width() )
+			return;
+		
+		if ( w < 1 )
+			return;
+		else if ( x+w >= Width() )
+			w = Width()-x;
+		
+		_DrawHLine( x, y, w, Value );
+	}
+
+
+	inline void _DrawVLine( const int x, const int y, const int h, const tType& Value = tType() ) {
+		for ( size_t idx = y; idx < y+h; idx++ ) {
+			operator()(x,idx) = Value;
+		}
+	}
+	inline void DrawVLine( const int x, int y, int h, const tType& Value = tType() ) {
+		if ( x < 0 )
+			return;
+		else if ( x >= Width() )
+			return;
+			
+		if ( y < 0 ) {
+			h += y;
+			y = 0;
+		}		
+		else if ( y >= Height() )
+			return;
+
+		if ( h < 1 )
+			return;
+		else if ( y+h >= Height() )
+			h = Height()-y;
+		
+		_DrawVLine( x, y, h, Value );
+	}
+
+	inline void DrawRect( const int x, const int y, const int w, const int h, const tType& Value = tType() ) {
+		DrawHLine( x, y, w, Value );
+		DrawHLine( x, y-1+h, w, Value );
+
+		DrawVLine( x, y+1, h-2, Value );
+		DrawVLine( x-1+w, y+1, h-2, Value );
+	}
+
+	inline void DrawRectFill( int x, int y, int w, int h, const tType& Value = tType() ) {
+		if ( x < 0 ) {
+			w += x;
+			x = 0;
+		}
+		else if ( x >= Width() )
+			return;
+			
+		if ( y < 0 ) {
+			h += y;
+			y = 0;
+		}		
+		else if ( y >= Height() )
+			return;
+
+		if ( w < 1 )
+			return;
+		else if ( x+w >= Width() )
+			w = Width()-x;
+		
+		if ( h < 1 )
+			return;
+		else if ( y+h >= Height() )
+			h = Height()-y;
+
+		for ( size_t idx = y; idx < y+h; idx++ ) {
+			_DrawHLine( x, idx, w, Value );
+		}
+	}
 
 public:
 	//CanDrop( x, y, offx, offy, TestValue )
