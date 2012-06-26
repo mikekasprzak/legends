@@ -28,32 +28,95 @@ public:
 	int Iteration;
 	
 public:
-	cWorld( const int Width, const int Height ) :
+	cWorld( const int Width, const int Height, const int Seed ) :
 		Map( Width, Height, WaterTile ),
-		Iteration( 0 )
+		Iteration( Seed )
 	{
-		Generate();
+		Generate( Seed );
 	}
 	
-	void Generate() {
-		//Map.DrawRect( 0,0, Map.Width(),Map.Height(), SoilTile );
-		
+	void Generate( const int Seed ) {
+		srand( Seed );
+	
 		//Map.DrawRectFill( 4,4, 5,3, SoilTile );
 		
-		Map.DrawLine( 2+6,2, 4+6,9, SoilTile );
+		//Map.DrawLine( 2,2, 7,7, SoilTile );
+		//RadialGenerateBaseMap();
+		NoiseGenerateBaseMap();
+
+		// Fix outsides with water edge //
+		Map.DrawRect( 0,0, Map.Width(),Map.Height(), WaterTile );
+
+		// Fill in generated holes //
+		ErodeGeneratedHoles(1);
+		for ( int idx = 0; idx < 3; idx++ ) {
+			FillGeneratedHoles();
+			ErodeGeneratedHoles();
+		}
 	}
 
 	void RadialGenerateBaseMap() {
-		for ( size_t x = 0; x < Map.Width(); x++ ) {
-			
-		}
-		for ( size_t y = 0; y < Map.Height(); y++ ) {
+		int Steps = 24;
+		
+		int CenterX = 8;
+		int CenterY = 4;
+		
+		for ( int Angle = 0; Angle < Steps; Angle++ ) {
+			Vector2D Vec = Vector2D::Angle( Real((float)Angle / (float)Steps) );
+			Vec *= Real(6);//Real::Random() * Real( 8 );
+				
+			Map.DrawLine( 
+				CenterX,
+				CenterY, 
+				CenterX + (int)((Vec.x.ToFloat())), 
+				CenterY + (int)((Vec.y.ToFloat())), 
+				SoilTile
+				);
 		}
 	}
 
 	void NoiseGenerateBaseMap() {
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
+				Map(x,y) = (Real::Random() > Real(0.6)) ? SoilTile : WaterTile;
+			}
+		}
+	}
+	
+	void FillGeneratedHoles( const int ChecksConstant = 5 ) {
+		for ( size_t y = 1; y < Map.Height()-1; y++ ) {
+			for ( size_t x = 1; x < Map.Width()-1; x++ ) {
+				int Check = 0;
+				if ( Map(x-1,y+0).Soil > 0 ) Check++;
+				if ( Map(x+1,y+0).Soil > 0 ) Check++;
+				if ( Map(x+0,y-1).Soil > 0 ) Check++;
+				if ( Map(x+0,y+1).Soil > 0 ) Check++;
+				if ( Map(x-1,y-1).Soil > 0 ) Check++;
+				if ( Map(x+1,y-1).Soil > 0 ) Check++;
+				if ( Map(x+1,y+1).Soil > 0 ) Check++;
+				if ( Map(x-1,y+1).Soil > 0 ) Check++;
+				
+				if ( Check >= ChecksConstant )
+					Map(x,y) = SoilTile;
+			}
+		}
+	}
+	
+	void ErodeGeneratedHoles( const int ChecksConstant = 2 ) {
+		for ( size_t y = 1; y < Map.Height()-1; y++ ) {
+			for ( size_t x = 1; x < Map.Width()-1; x++ ) {
+				int Check = 0;
+				if ( Map(x-1,y+0).Soil > 0 ) Check++;
+				if ( Map(x+1,y+0).Soil > 0 ) Check++;
+				if ( Map(x+0,y-1).Soil > 0 ) Check++;
+				if ( Map(x+0,y+1).Soil > 0 ) Check++;
+				if ( Map(x-1,y-1).Soil > 0 ) Check++;
+				if ( Map(x+1,y-1).Soil > 0 ) Check++;
+				if ( Map(x+1,y+1).Soil > 0 ) Check++;
+				if ( Map(x-1,y+1).Soil > 0 ) Check++;
+				
+				if ( Check <= ChecksConstant )
+					Map(x,y) = WaterTile;
 			}
 		}		
 	}

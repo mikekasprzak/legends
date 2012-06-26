@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <stdlib.h>
+
 
 #include <Debug/GelDebug.h>
 #include <Core/DataBlock.h>
@@ -771,9 +773,11 @@ void ProcessObjectLayer( const int Layer ) {
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GenerateMap() {
+int Iteration = 0;
+// - ------------------------------------------------------------------------------------------ - //
+void GenerateMap( const int Seed = 0 ) {
 	if ( MapLayer ) {
-		for ( int idx = 0; idx < mrGetLayerCount(); idx++ ) {
+		for ( int idx = 0; idx < 1/*mrGetLayerCount()*/; idx++ ) {
 			delete MapLayer->Data[idx];
 		}
 		delete_GelArray<LayerType*>( MapLayer );
@@ -789,11 +793,15 @@ void GenerateMap() {
 
 	// ---------------------- //
 		
+	int Width = 32;
+	int Height = 32;
+		
 	// Start New Level //
 	MapLayer = new_GelArray<LayerType*>( 1 );
-	MapLayer->Data[0] = new LayerType( 16, 16, 1 );
+	MapLayer->Data[0] = new LayerType( Width, Height, 1 );
 	
-	World = new cWorld( 16, 16 );
+	World = new cWorld( Width, Height, Seed );
+	World->Iteration = Seed;
 	
 	extern void ProcessWorld();
 	ProcessWorld();
@@ -870,8 +878,8 @@ void ProcessWorld() {
 //}
 // - ------------------------------------------------------------------------------------------ - //
 void GameInit() {	
-	ScreenWidth = 256;//160;//320;
-	ScreenHeight = 160;//120;//240;
+	ScreenWidth = 512;//160;//320;
+	ScreenHeight = 512;//160;//120;//240;
 	HalfScreenWidth = ScreenWidth >> 1;
 	HalfScreenHeight = ScreenHeight >> 1;
 	
@@ -892,8 +900,7 @@ void GameInit() {
 	
 	// ---------------------- //
 	
-//	LoadMap();
-	GenerateMap();
+	GenerateMap( Iteration++ );
 /*
 	MapLayer = new_GelArray<LayerType*>( mrGetLayerCount() );
 
@@ -1014,15 +1021,14 @@ void GameStep() {
 			EngineStep();
 			
 			if ( Input_KeyPressed( KEY_MENU ) ) {
-				GameState = STATE_TITLE;
+//				GameState = STATE_TITLE;
 //				LoadMap();
-				GenerateMap();
+				GenerateMap( Iteration++ );
 			}
 			
-//			if ( (!Player->Alive) && Input_KeyPressed( KEY_ACTION ) ) {
-//				LoadMap();
-//				sndPlay( "Start" );
-//			}
+			if ( Input_KeyPressed( KEY_ACTION ) ) {
+				GenerateMap( Iteration++ );
+			}
 
 			break;	
 		}
@@ -1030,7 +1036,7 @@ void GameStep() {
 			if ( Input_KeyPressed( KEY_ACTION ) ) {
 				// TODO: Reset Game //
 //				LoadMap();
-				GenerateMap();
+				GenerateMap( Iteration++ );
 				
 				GameState = STATE_TITLE;
 			}
