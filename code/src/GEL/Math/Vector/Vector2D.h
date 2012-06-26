@@ -241,7 +241,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	// Maxitude Functions -- http://en.wikipedia.org/wiki/Chebyshev_distance //
+	// Maxitude Functions -- Chebyshev Distance, Uniform Normal -- http://en.wikipedia.org/wiki/Chebyshev_distance //
+	// http://en.wikipedia.org/wiki/Norm_%28mathematics%29#Maximum_norm_.28special_case_of:_infinity_norm.2C_uniform_norm.2C_or_supremum_norm.29 //
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Vector2D& MaxitudeNormalize() {
 		Real Mag( Maxitude() );

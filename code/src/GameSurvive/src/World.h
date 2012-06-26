@@ -40,19 +40,22 @@ public:
 		Iteration( 0 )
 	{
 		Generate( Seed );
-		
-		Vector2D Start(0,0);
-		Vector2D Vs1(4,0);
-		Vector2D Vs2(4,4);
-		Vector2D Vs3(4,3);
-		Vector2D Vs4(4,2);
-		Vector2D Vs5(4,1);
-		
-		printf( "Hey1: %f,%f  %f\n", (Vs1-Start).MinitudeNormal().x.ToFloat(), (Vs1-Start).MinitudeNormal().y.ToFloat(), (Vs1-Start).Minitude().ToFloat() );
-		printf( "Hey2: %f,%f  %f\n", (Vs2-Start).MinitudeNormal().x.ToFloat(), (Vs2-Start).MinitudeNormal().y.ToFloat(), (Vs2-Start).Minitude().ToFloat() );
-		printf( "HeyA: %f,%f  %f\n", (Vs3-Start).MinitudeNormal().x.ToFloat(), (Vs3-Start).MinitudeNormal().y.ToFloat(), (Vs3-Start).Minitude().ToFloat() );
-		printf( "HeyB: %f,%f  %f\n", (Vs4-Start).MinitudeNormal().x.ToFloat(), (Vs4-Start).MinitudeNormal().y.ToFloat(), (Vs4-Start).Minitude().ToFloat() );
-		printf( "HeyC: %f,%f  %f\n", (Vs5-Start).MinitudeNormal().x.ToFloat(), (Vs5-Start).MinitudeNormal().y.ToFloat(), (Vs5-Start).Minitude().ToFloat() );
+
+
+		SetOutsideMotion();
+	
+//		Vector2D Start(0,0);
+//		Vector2D Vs1(4,0);
+//		Vector2D Vs2(4,4);
+//		Vector2D Vs3(4,3);
+//		Vector2D Vs4(4,2);
+//		Vector2D Vs5(4,1);
+//		
+//		printf( "Hey1: %f,%f  %f\n", (Vs1-Start).MinitudeNormal().x.ToFloat(), (Vs1-Start).MinitudeNormal().y.ToFloat(), (Vs1-Start).Minitude().ToFloat() );
+//		printf( "Hey2: %f,%f  %f\n", (Vs2-Start).MinitudeNormal().x.ToFloat(), (Vs2-Start).MinitudeNormal().y.ToFloat(), (Vs2-Start).Minitude().ToFloat() );
+//		printf( "HeyA: %f,%f  %f\n", (Vs3-Start).MinitudeNormal().x.ToFloat(), (Vs3-Start).MinitudeNormal().y.ToFloat(), (Vs3-Start).Minitude().ToFloat() );
+//		printf( "HeyB: %f,%f  %f\n", (Vs4-Start).MinitudeNormal().x.ToFloat(), (Vs4-Start).MinitudeNormal().y.ToFloat(), (Vs4-Start).Minitude().ToFloat() );
+//		printf( "HeyC: %f,%f  %f\n", (Vs5-Start).MinitudeNormal().x.ToFloat(), (Vs5-Start).MinitudeNormal().y.ToFloat(), (Vs5-Start).Minitude().ToFloat() );
 	}
 	
 	void Generate( const int Seed ) {
@@ -171,9 +174,19 @@ public:
 		}
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
-				int _x = x;
-				int _y = y;
-				//Map(x,y).Accumulator = Map(x,y).Motion;
+				int _x = x + (int)(round(Map(x,y).Motion.MaxitudeNormal().x.ToFloat()));
+				int _y = y + (int)(round(Map(x,y).Motion.MaxitudeNormal().y.ToFloat()));
+
+				bool Skip = false;
+				Skip |= ( _x < 0 );
+				Skip |= ( _x >= Map.Width() );
+				Skip |= ( _y < 0 );
+				Skip |= ( _y >= Map.Height() );
+
+				if ( !Skip )				
+					Map(_x,_y).Accumulator += Map(x,y).Motion;
+
+				Map(x,y).Accumulator -= Map(x,y).Motion;
 			}
 		}
 		// Write the accumulator to Motion //
@@ -186,7 +199,8 @@ public:
 
 public:
 	void Step() {
-		SetOutsideMotion();
+//		SetOutsideMotion();
+		StepMotion();
 		
 		Iteration++;
 	}
