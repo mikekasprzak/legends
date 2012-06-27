@@ -223,8 +223,13 @@ public:
 		}
 		
 		// Settle Water //
+//		static int Jitter = 0;
+//		Jitter++;
 		for ( size_t y = 0; y < Map.Height(); y++ ) {
 			for ( size_t x = 0; x < Map.Width(); x++ ) {
+//				if ( ((x+y) & 1) == (Jitter & 1) )
+//					continue;
+					
 				Vector2D Drain;
 
 				cTile* Me = &Map(x,y);
