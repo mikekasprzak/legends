@@ -295,8 +295,6 @@ public:
 
 public:
 	void Step() {
-		extern const int KEY_MENU;
-		extern const int Input_Key( const int Mask  = 0xFFFFFFFF );
 		if ( Input_Key( KEY_MENU ) ) {
 			SetOutsideMotion();
 		}

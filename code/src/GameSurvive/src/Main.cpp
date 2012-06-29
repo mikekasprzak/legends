@@ -16,6 +16,8 @@
 
 #include <cJSON.h>
 
+#include "Gel2D/GelInput.h"
+
 #include "Gel2D/GelGraphics2D.h"
 #include "World.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -48,9 +50,6 @@ void GameExit() __attribute__((used));
 void GameStep() __attribute__((used));
 void GameDraw() __attribute__((used));
 void GameDrawPaused() __attribute__((used));
-
-void GameInput( float x, float y, int Current, int Last ) __attribute__((used));
-void GameMouse( float x, float y, int Current, int Last ) __attribute__((used));
 // - ------------------------------------------------------------------------------------------ - //
 extern "C" {
 int sndPlay( const char* SoundName );
@@ -115,77 +114,6 @@ const int TILE_FRUIT =	 	(8*7)+2;
 const int TILE_ENEMY =		(8*7)+7;
 const int TILE_START =		(8*7)+8;
 // - ------------------------------------------------------------------------------------------ - //
-
-float gx;
-float gy;
-
-int _Input_KeyCurrent;
-int _Input_KeyLast;
-
-const int KEY_UP = 			0x1;
-const int KEY_DOWN = 		0x2;
-const int KEY_LEFT = 		0x4;
-const int KEY_RIGHT = 		0x8;
-const int KEY_ACTION = 		0x10;
-const int KEY_ACTION2 = 	0x20;
-const int KEY_ACTION3 = 	0x40;
-const int KEY_ACTION4 = 	0x80;
-const int KEY_MENU =		0x800;
-
-// - -------------------------------------------------------------------------------------------------------------- - //
-// Key pressed this frame //
-inline const int Input_Key( const int Mask = 0xFFFFFFFF ) {
-	return _Input_KeyCurrent & Mask;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
-// Key pressed last frame //
-inline const int Input_KeyLast( const int Mask = 0xFFFFFFFF ) {
-	return _Input_KeyLast & Mask;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
-// Key was just pressed this frame //
-inline const int Input_KeyPressed( const int Mask  = 0xFFFFFFFF ) {
-	return (_Input_KeyCurrent ^ _Input_KeyLast) & _Input_KeyCurrent & Mask;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
-// Key was just released this frame //
-inline const int Input_KeyReleased( const int Mask  = 0xFFFFFFFF ) {
-	return (_Input_KeyCurrent ^ _Input_KeyLast) & _Input_KeyLast & Mask;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
-
-// - -------------------------------------------------------------------------------------------------------------- - //
-class cMouse {
-public:
-	Vector2D Pos;
-	
-	int Current;
-	int Last;
-	
-public:
-	cMouse() :
-		Current( 0 ),
-		Last( 0 )
-	{	
-	}
-};
-cMouse Mouse;
-// - -------------------------------------------------------------------------------------------------------------- - //
-void GameInput( float x, float y, int Current, int Last ) {
-	gx = x;
-	gy = y;
-	_Input_KeyCurrent = Current;
-	_Input_KeyLast = Last;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
-void GameMouse( float x, float y, int Current, int Last ) {
-	Mouse.Pos.x = x;
-	Mouse.Pos.y = y;
-	Mouse.Last = Mouse.Current; // Hack... well not really //
-	Mouse.Current = Current;
-//	Mouse.Last = Last;
-}
-// - -------------------------------------------------------------------------------------------------------------- - //
 
 int CountEnemies( const int Layer ) {
 	int MapWidth = MapLayer->Data[Layer]->Width();

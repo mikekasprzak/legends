@@ -7,7 +7,7 @@ export CC='/d/Build/em2/emcc'
 export CFLAGS='-O2 --closure 0'
 export DEFINES='-D NOT_GCC -D EMSCRIPTEN -D USES_UNIX_DIR'
 export INCLUDES='-I ../GEL -I ../External/cJSON'
-export FILES='src/Main.cpp ../GEL/Math/Real.cpp ../GEL/Debug/LogEmscripten.cpp ../GEL/Math/Vector/Vector3D.cpp ../External/cJSON/cJSON.c'
+export FILES='src/Main.cpp src/Gel2D/GelInput.cpp ../GEL/Math/Real.cpp ../GEL/Debug/LogEmscripten.cpp ../GEL/Math/Vector/Vector3D.cpp ../External/cJSON/cJSON.c'
 
 export TARGET='game'
 
