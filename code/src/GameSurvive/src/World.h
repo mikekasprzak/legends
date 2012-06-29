@@ -69,11 +69,8 @@ public:
 	void Generate( const int Seed ) {
 		srand( Seed );
 	
-		//Map.DrawRectFill( 4,4, 5,3, SoilTile );
-		
-		//Map.DrawLine( 2,2, 7,7, SoilTile );
-		RadialGenerateBaseMap();
-		//NoiseGenerateBaseMap();
+		//RadialGenerateBaseMap();
+		NoiseGenerateBaseMap();
 
 		// Fix outsides with water edge //
 		Map.DrawRect( 0,0, Map.Width(),Map.Height(), WaterTile );
