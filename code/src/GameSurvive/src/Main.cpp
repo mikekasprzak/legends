@@ -83,8 +83,6 @@ GelArray< LayerType* >* MapLayer;
 
 cWorld* World = 0;
 
-//int GlobalTotalKeys;
-
 // - ------------------------------------------------------------------------------------------ - //
 // Number of Frames, followed by frame numbers //
 // - ------------------------------------------------------------------------------------------ - //
@@ -798,8 +796,6 @@ void ProcessWorld() {
 //
 //	CameraPos = Vector2D( Player->Pos.x * 16, Player->Pos.y * 16) + Vector2D(Player->Anchor.x,Player->Anchor.y);
 //	
-////	GlobalTotalKeys = 0;
-//
 //	KillCountdown = 0;
 //	KillDelay = 0;
 //	KillFlickerCountdown = 0;
