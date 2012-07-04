@@ -1093,8 +1093,8 @@ void cGame::Draw() {
 		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
 		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0 * 0.1f,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
 
-		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
-		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
+//		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
+//		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
 
 		gelDrawModeColors();
 		gelLoadMatrix( VisibleMatrix );
@@ -1142,12 +1142,12 @@ void cGame::Draw() {
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f, %f, %f)", MouseRayEnd.x.ToFloat(), MouseRayEnd.y.ToFloat(), MouseRayEnd.z.ToFloat() );
 
-		gelSetColor( GEL_RGB_ORANGE );
-		Font->printf( 
-			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
-			1, 
-			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"(%f, %f, %f)", HitPoint.x.ToFloat(), HitPoint.y.ToFloat(), HitPoint.z.ToFloat() );
+//		gelSetColor( GEL_RGB_ORANGE );
+//		Font->printf( 
+//			Vector3D( FullRefScreen::Width>>1, -64, 0 ), 
+//			1, 
+//			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
+//			"(%f, %f, %f)", HitPoint.x.ToFloat(), HitPoint.y.ToFloat(), HitPoint.z.ToFloat() );
 
 		gelSetColor( GEL_RGB_YELLOW );
 
