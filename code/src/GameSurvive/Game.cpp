@@ -1160,6 +1160,18 @@ void cGame::Draw() {
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
 
+
+		if ( ScriptErrors() ) {
+			gelSetColor( GEL_RGB_RED );
+	
+			Matrix4x4 Check = ObserverCamera.View;
+			Font->printf( 
+				Vector3D( -FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ),
+				1, 
+				GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP,
+				"* SCRIPT ERRORS *" );
+		}
+
 		// *** //
 		
 		gelDrawModeFlat();

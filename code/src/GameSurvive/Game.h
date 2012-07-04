@@ -46,18 +46,19 @@ public:
 	struct vmScript {
 		const char* FileName;
 		GelAssetHandle Handle;
+		SQRESULT Error;
 		
 		vmScript() :
 			FileName( 0 ),
-			Handle( 0 )
+			Handle( 0 ),
+			Error( SQ_ERROR )
 		{
 		}
 
 		vmScript( const char* _FileName ) :
 			FileName( _FileName ),
 			Handle( AssetPool::Load( _FileName ) )
-		{
-		
+		{	
 		}
 	};
 
@@ -65,6 +66,8 @@ public:
 	void InitScripts();
 	void LoadScripts();
 	void ReloadScripts();
+	
+	bool ScriptErrors();
 
 	std::vector< vmScript > Script;
 

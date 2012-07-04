@@ -67,6 +67,7 @@ void cGame::vm_Init() {
 	sqstd_register_stringlib( vm );
 
 	//aux library
+	
 	//sets error handlers
 	sqstd_seterrorhandlers( vm );
 	Log( "- Squirrel VM setup complete." );
@@ -87,7 +88,7 @@ SQRESULT cGame::vm_CompileAndRun( DataBlock* InFile, const char* FileName ) {
 	SQRESULT Error = sq_compilebuffer( vm, InFile->Data, InFile->Size, FileName, true );
 
 	if ( Error ) {
-		ELog( "- Squirrel Compile Error! %i", Error );
+		Log( "- Squirrel Compile Error! %i", Error );
 	}
 	else {
 		Log( "- Compiled Successfully!" );
