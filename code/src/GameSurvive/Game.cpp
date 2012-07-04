@@ -828,23 +828,23 @@ void cGame::DrawSceneGlow() {
 		// NOTE: Glows will always overlay, since we are not referencing the original Z buffer, and testing vs. //
 		
 		// Alpha Testing will not work here. I need to disable writing, and sort them relative camera //
-		gelDrawModeFlat();	
-		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
-			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
-				gelLoadMatrix( ObserverCamera.ProjectionView );
-				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
-			}
-		}
-		
-		gelEnablePremultipliedAlphaBlending();
-		gelDrawModeTextured();		
-		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
-			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
-				gelLoadMatrix( ObserverCamera.ProjectionView );
-				Obj[ Obj_Sort[idx] ]->DrawGlow();
-			}
-		}
-		gelSetColor( GEL_RGB_DEFAULT );	
+//		gelDrawModeFlat();	
+//		for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
+//			if ( Obj3[ Obj3_Sort[idx] ]->IsGlowing ) {
+//				gelLoadMatrix( ObserverCamera.ProjectionView );
+//				Obj3[ Obj3_Sort[idx] ]->DrawGlow();
+//			}
+//		}
+//		
+//		gelEnablePremultipliedAlphaBlending();
+//		gelDrawModeTextured();		
+//		for ( size_t idx = 0; idx < Obj.size(); idx++ ) {
+//			if ( Obj[ Obj_Sort[idx] ]->IsGlowing ) {
+//				gelLoadMatrix( ObserverCamera.ProjectionView );
+//				Obj[ Obj_Sort[idx] ]->DrawGlow();
+//			}
+//		}
+//		gelSetColor( GEL_RGB_DEFAULT );	
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
