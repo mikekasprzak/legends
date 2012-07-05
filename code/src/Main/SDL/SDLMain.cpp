@@ -737,6 +737,12 @@ const char* ProductName = "Unknown";
 // - ------------------------------------------------------------------------------------------ - //
 bool GraphicsModeSet = false;
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef TINY_WINDOW
+bool TinyWindow = true;
+#else // TINY_WINDOW
+bool TinyWindow = false;
+#endif // TINY_WINDOW //
+// - ------------------------------------------------------------------------------------------ - //
 void System_SetGraphicsMode( const bool FullScreen = true ) {
 	if ( GraphicsModeSet ) {
 		musPause();
@@ -764,10 +770,13 @@ void System_SetGraphicsMode( const bool FullScreen = true ) {
 
 	if ( FullScreen ) {
 		gelSetupNativeScalar( 1.0f, 1.0f );
-		gelSetupFullScreen( true );		
+		gelSetupFullScreen( true );
 	}
 	else {
-		gelSetupNativeScalar( 0.85f, 0.85f );
+		if ( TinyWindow )
+			gelSetupNativeScalar( 0.35f, 0.35f );
+		else
+			gelSetupNativeScalar( 0.85f, 0.85f );
 		gelSetupFullScreen( false );		
 	}
 
