@@ -1119,7 +1119,8 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
-			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
+			"FPS: %i - %i, %i", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height );
+//			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
@@ -1167,7 +1168,7 @@ void cGame::Draw() {
 			Matrix4x4 Check = ObserverCamera.View;
 			Font->printf( 
 				Vector3D( -FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ),
-				1, 
+				2, 
 				GelFont::ALIGN_LEFT | GelFont::ALIGN_TOP,
 				"* SCRIPT ERRORS *" );
 		}

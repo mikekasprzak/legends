@@ -17,11 +17,7 @@
 #include "RenderTarget/RenderTarget.h"
 #include "Camera/Camera.h"
 // - ------------------------------------------------------------------------------------------ - //
-//#include "Physics.h"
-//#include "Engine/Room.h"
-//#include "Engine/RoomMesh.h"
-//#include "Engine/Object.h"
-//#include "Engine/Object3D.h"
+#include "Engine/WorldMap.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GelFont.h>
 // - ------------------------------------------------------------------------------------------ - //
