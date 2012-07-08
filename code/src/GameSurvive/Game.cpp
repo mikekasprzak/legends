@@ -625,13 +625,22 @@ void cGame::UpdateCameraMatrix() {
 	ObserverCamera.SetFrustum( 
 //		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 //		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		FullRefScreen::Width * Real( _TV(0.1f) ),
-		FullRefScreen::Height * Real( _TV(0.1f) ),
-		_TV(10),
-		_TV(110)
+		FullRefScreen::Width * Real( _TV(0.2f) ),
+		FullRefScreen::Height * Real( _TV(0.2f) ),
+		_TV(100),
+		_TV(900)
 		);
-	ObserverCamera.Pos = CameraWorldPos + Vector3D( _TV(0), _TV(0), _TV(110) );
-	ObserverCamera.Look = CameraWorldPos;
+
+#ifdef USES_HIDAPI
+	ObserverCamera.Pos = CameraWorldPos + Vector3D( 
+		_TV(0) + (SpaceNavigator[_TV(4)] * 512),
+		_TV(0) + (SpaceNavigator[_TV(3)] * 512),
+		_TV(500) 
+		);
+#endif // USES_HIDAPI //
+
+//	ObserverCamera.Pos = CameraWorldPos + Vector3D( _TV(0), _TV(0), _TV(120) );
+	ObserverCamera.Look = CameraWorldPos;// + Vector3D( _TV(0), _TV(100), _TV(0) );
 	ObserverCamera.Up = Vector3D(0,1,0);
 	
 	ObserverCamera.UpdateMatrix();
@@ -945,6 +954,9 @@ void cGame::Draw() {
 				Vector3D( ScalarX, ScalarY, 0 )
 				);
 		}
+
+		gelDrawModeFlat();
+		gelLoadMatrix( UICamera.ProjectionView );
 
 #ifdef USES_HIDAPI
 		SpaceNavigator_DrawValues();

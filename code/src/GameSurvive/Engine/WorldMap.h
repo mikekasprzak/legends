@@ -42,7 +42,7 @@ public:
 					Vector3D( 
 						((Real(x) - RoomHalfSize) * TileSize) + TileHalfSize, 
 						((Real(y) - RoomHalfSize) * TileSize) + TileHalfSize, 
-						0
+						(Real(x) / Real(1)) * Real(y)
 						), 
 					TileHalfSize 
 					);

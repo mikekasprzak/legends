@@ -157,7 +157,8 @@ inline Matrix4x4 Calc_LookAt( const Vector3D& Pos, const Vector3D& Look, const V
 		Right.x, Up.x, Forward.x, 0.0f,
 		Right.y, Up.y, Forward.y, 0.0f,
 		Right.z, Up.z, Forward.z, 0.0f,
-		-Pos.x, Pos.y, Pos.z, 1.0f
+		-Look.x, Look.y, Pos.z, 1.0f		// NOTE: I had to tweak this to get expected behavior. No idea why. //
+//		-Pos.x, Pos.y, Pos.z, 1.0f			//       Was this. //
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //

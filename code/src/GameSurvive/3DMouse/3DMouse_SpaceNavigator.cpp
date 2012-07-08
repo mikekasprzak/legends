@@ -131,10 +131,9 @@ void SpaceNavigator_Update() {
 // - ------------------------------------------------------------------------------------------ - //
 void SpaceNavigator_DrawValues() {
 	if ( SpaceNavigator_HID_Handle ) {
-		gelDrawModeFlat();
 		for ( size_t idx = 0; idx < 6; idx++ ) {
 			gelSetColor( GEL_RGB_YELLOW );
-			gelDrawCircle( Vector3D( -150 + (idx * 32), -140, 0), Real(16) );
+			gelDrawCircle( Vector3D( -96 + ((int)idx * 32), 140, 0), Real(16) );
 
 			if ( SpaceNavigator[idx] > 0.0f ) {
 				gelSetColor( GEL_RGB_WHITE );
@@ -142,7 +141,7 @@ void SpaceNavigator_DrawValues() {
 			else {
 				gelSetColor( GEL_RGB_RED );				
 			}
-			gelDrawCircleFill( Vector3D( -150 + (idx * 32), -140, 0), Real(SpaceNavigator[idx] * 16.0f) );
+			gelDrawCircleFill( Vector3D( -96 + ((int)idx * 32), 140, 0), Real(SpaceNavigator[idx] * 16.0f) );
 		}
 	}	
 }
