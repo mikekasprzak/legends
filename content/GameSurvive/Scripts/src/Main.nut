@@ -2,53 +2,53 @@
 // -- Smallest Wood Parts -- //
 
 local OB_WoodChips = {
-	Name	= "Wood Chips"
+	Name = "Wood Chips"
 };
 
 local OB_Stick = {
-	Name	= "Stick"
+	Name = "Stick"
 };
 
 local OB_LongStick = {
-	Name	= "Long Stick"
+	Name = "Long Stick"
 };
 
 // -- Larger Wood Parts -- //
 
 local OB_Wood = { // Wood, Lumber, Timber, Log, Stump //
-	Name	= "Wood"
+	Name = "Wood"
 };
 
 local OB_LongWood = {
-	Name	= "Long Wood"
+	Name = "Long Wood"
 };
 
 // -- Rocks -- //
 
 local OB_Rock = {
-	Name	= "Rock"
+	Name = "Rock"
 };
 
 local OB_BowedRock = {
-	Name	= "Bowed Rock"
+	Name = "Bowed Rock"
 };
 
 local OB_LongRock = {
-	Name	= "Long Rock"
+	Name = "Long Rock"
 };
 
 local OB_SharpRock = {
-	Name	= "Sharp Rock"
+	Name = "Sharp Rock"
 };
 
 // -- -------------------------- -- //
 
 local OB_Spear = {
-	Name	= "Spear"
+	Name = "Spear"
 };
 
 local OB_Hammer = {
-	Name	= "Hammer"
+	Name = "Hammer"
 };
 
 // -- -------------------------- -- //
