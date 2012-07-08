@@ -4,8 +4,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawCube( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
-//	gelSetColor( Color );
-
 	Vector3D Diff = P2-P1;
 	Vector3D XDiff(Diff.x,0,0);
 	Vector3D YDiff(0,Diff.y,0);
@@ -30,12 +28,7 @@ inline void gelDrawCube( const Vector3D& P1, const Vector3D& P2, const GelColor 
 		P1+YDiff, P1+ZDiff+YDiff,
 	};
 
-	gelDrawLines( Verts, 24, Color );    
-    
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_LINES, 0, 24 );
-//
-//	gelRestoreColor( Color );
+	gelDrawLines( (Vector3D*)Verts, 24, Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawCube( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
@@ -45,8 +38,6 @@ inline void gelDrawCube( const Real P1x, const Real P1y, const Real P1z, const R
 
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRect( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
-//	gelSetColor( Color );
-
 	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
 
 	float Verts[] = {
@@ -56,37 +47,14 @@ inline void gelDrawRect( const Vector3D& P1, const Vector3D& P2, const GelColor 
 		(float)P2.x, (float)P1.y, Diff,
 	};
 
-	gelDrawLineLoop( Verts, 4, Color );    
-    
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_LINE_LOOP, 0, 4 );
-//
-//	gelRestoreColor( Color );
+	gelDrawLineLoop( (Vector3D*)Verts, 4, Color );    
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRect( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawRect( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
-
-//	gelSetColor( Color );
-//	
-//	float Diff = P1z + ((P2z - P1z) * Real::Half);
-//
-//	float Verts[] = {
-//		(float)P1x, (float)P1y, (float)P1z,
-//		(float)P1x, (float)P2y, Diff,
-//		(float)P2x, (float)P2y, (float)P2z,
-//		(float)P2x, (float)P1y, Diff,
-//	};
-//    
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_LINE_LOOP, 0, 4 );
-//
-//	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
-//	gelSetColor( Color );
-
 	float Diff = P1.z + ((P2.z - P1.z) * Real::Half);
 
     float Verts[] = {
@@ -96,32 +64,11 @@ inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const GelCo
 		(float)P2.x, (float)P2.y, (float)P2.z,
     };
 
-	gelDrawTriangleStrip( Verts, 4, Color );    
-    
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-//
-//	gelRestoreColor( Color );
+	gelDrawTriangleStrip( (Vector3D*)Verts, 4, Color );    
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawRectFill( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
-
-//	gelSetColor( Color );
-//
-//	float Diff = P1z + ((P2z - P1z) * Real::Half);
-//
-//    float Verts[] = {
-//		(float)P1x, (float)P1y, (float)P1z,
-//		(float)P1x, (float)P2y, Diff,
-//		(float)P2x, (float)P1y, Diff,
-//		(float)P2x, (float)P2y, (float)P2z,
-//	};
-//        
-//    glVertexPointer( 3, GL_FLOAT, 0, Verts );
-//    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-//
-//	gelRestoreColor( Color );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRectNormals( const Vector3D& P1, const Vector3D& P2, const Real NormalLength = Current::NormalLength, const GelColor NormalColor = Current::NormalColor ) {

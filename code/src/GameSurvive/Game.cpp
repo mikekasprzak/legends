@@ -708,11 +708,11 @@ extern float smoothaccel_z;
 		FullRefScreen::Width * Real(0.1f),
 		FullRefScreen::Height * Real(0.1f),
 		_TV(10),
-		_TV(110)
+		_TV(30)
 		);
 	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
 	ObserverCamera.Look = CameraWorldPos;
-	ObserverCamera.Up = Vector3D(0,1,0);
+	ObserverCamera.Up = Vector3D(0,0,1);
 	ObserverCamera.UpdateMatrix();
 	
 
@@ -875,11 +875,15 @@ void cGame::Draw() {
 #endif // NDEBUG //
 
 		gelClear( true, true );
+		gelLoadMatrix( ObserverCamera.ProjectionView );	
+
+		gelDrawModeFlat();
+		World.DrawRoom();
 
 //		DrawScene();
-		gelDrawModeColors();
-		gelLoadMatrix( ObserverCamera.ProjectionView );	
-		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
+//		gelDrawModeColors();
+//		gelLoadMatrix( ObserverCamera.ProjectionView );	
+//		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
 	}
 
 	CurrentRT = RT_MINI1;

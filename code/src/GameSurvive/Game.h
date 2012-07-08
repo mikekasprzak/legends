@@ -119,6 +119,7 @@ public:
 	
 	GelFont* Font;
 	
+	cWorldMap World;
 	
 //	cPhysics Physics;
 //	
@@ -147,7 +148,8 @@ public:
 	cGame() :
 		FirstRun( true ),
 		Capture( false ),
-		vm_ScriptsLoaded( false )
+		vm_ScriptsLoaded( false ),
+		World( 32, 32 )
 	{
 		Init();
 	}

@@ -23,7 +23,7 @@ IGNORE_LIST			+=
 # Defines specific to this file #
 DEFINES				+=	PRODUCT_SURVIVE \
 						USES_GEL USES_FOUNDATION \
-						TINY_WINDOW
+#						TINY_WINDOW
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	
