@@ -187,6 +187,28 @@ public:
 		Array[15] = _e16;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
+//	inline Matrix4x4( const Matrix4x4& Copy ) {
+//		Array[0] = Copy.Array[0];
+//		Array[1] = Copy.Array[1];
+//		Array[2] = Copy.Array[2];
+//		Array[3] = Copy.Array[3];
+//		
+//		Array[4] = Copy.Array[4];
+//		Array[5] = Copy.Array[5];
+//		Array[6] = Copy.Array[6];
+//		Array[7] = Copy.Array[7];		
+//
+//		Array[8] = Copy.Array[8];
+//		Array[9] = Copy.Array[9];
+//		Array[10] = Copy.Array[10];
+//		Array[11] = Copy.Array[11];	
+//
+//		Array[12] = Copy.Array[12];
+//		Array[13] = Copy.Array[13];
+//		Array[14] = Copy.Array[14];
+//		Array[15] = Copy.Array[15];
+//	}
+	// - -------------------------------------------------------------------------------------- - //	
 #else // NOT_GCC //
 	// - -------------------------------------------------------------------------------------- - //
 	inline Matrix4x4():
@@ -243,6 +265,16 @@ public:
 			} )
 	{
 	}
+	// - -------------------------------------------------------------------------------------- - //	
+//	inline Matrix4x4( const Matrix4x4& Copy ) :
+//		Array( (Real[]) {
+//			Copy.Array[0], Copy.Array[1], Copy.Array[2], Copy.Array[3],
+//			Copy.Array[4], Copy.Array[5], Copy.Array[6], Copy.Array[7],
+//			Copy.Array[8], Copy.Array[9], Copy.Array[10], Copy.Array[11],
+//			Copy.Array[12], Copy.Array[13], Copy.Array[14], Copy.Array[15]
+//			} )
+//	{
+//	}
 	// - -------------------------------------------------------------------------------------- - //	
 #endif // NOT_GCC //
 	// - -------------------------------------------------------------------------------------- - //	

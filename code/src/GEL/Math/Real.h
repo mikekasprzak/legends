@@ -168,7 +168,7 @@ public:
 	OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( ++ );
 	OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( -- );
 	// - -------------------------------------------------------------------------------------- - //
-	// Dot Product //
+	// Negative //
 	inline const Real operator - ( ) const {
 		return -Data;
 	}

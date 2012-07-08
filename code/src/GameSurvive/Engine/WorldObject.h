@@ -2,13 +2,14 @@
 #ifndef __WORLDOBJECT_H__
 #define __WORLDOBJECT_H__
 // - ------------------------------------------------------------------------------------------ - //
-//#include <Math/Vector.h>
+#include <Math/IVector.h>
 // - ------------------------------------------------------------------------------------------ - //
 class cWorldObject {
 public:
-	//
+	IVector2D Pos;
 public:
-	cWorldObject() 
+	cWorldObject() :
+		Pos( 0, 0 )
 	{
 	}
 };

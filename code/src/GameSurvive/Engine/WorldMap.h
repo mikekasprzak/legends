@@ -16,22 +16,38 @@ public:
 	
 	// Camera //
 	int RoomX, RoomY;
-	int RoomWidth, RoomHeight;
+	int RoomSize; // Not seperate RoomWidth and RoomHeight, as all rooms will be square //
 
 public:
 	cWorldMap( const int Width, const int Height ) :
 		Map( Width, Height, cWorldTile() ),
 		RoomX( 0 ), RoomY( 0 ),
-		RoomWidth( 7 ), RoomHeight( 7 )
+		RoomSize( 7 )
 	{	
 	}
 	
 public:
 	// Draw what the camera sees //
 	void DrawRoom( /* const Vector3D Pos */ ) {
-		gelDrawRect( Vector3D(-100,-100,0), Vector3D(+100,+100,0) );
+		Real TileSize(8); // Should equal RegionSize / RoomSize
+		Real TileHalfSize = TileSize * Real::Half;
+			
+		Real RoomHalfSize = Real(RoomSize) * Real::Half;
+		
 		gelSetColor( GEL_RGB_YELLOW );
-		gelDrawSquare( Vector3D(0,0,0), Real(40) );
+		
+		for ( size_t y = 0; y < RoomSize; y++ ) {
+			for ( size_t x = 0; x < RoomSize; x++ ) {
+				gelDrawSquare( 
+					Vector3D( 
+						((Real(x) - RoomHalfSize) * TileSize) + TileHalfSize, 
+						((Real(y) - RoomHalfSize) * TileSize) + TileHalfSize, 
+						0
+						), 
+					TileHalfSize 
+					);
+			}
+		}
 	}
 	
 	// - ------ - //

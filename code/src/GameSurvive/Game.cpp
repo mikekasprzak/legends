@@ -4,7 +4,6 @@
 //   My theroy, implement a member function you use for access, and check the "this" variable if it's
 //   zero.  If it's zero, then assume a failed lookup occured and do nothing.
 // - ------------------------------------------------------------------------------------------ - //
-// VPN Test! //
 
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game.h"
@@ -24,7 +23,6 @@
 #include <Geometry/Vs/2D.h>
 #include <Geometry/Vs/3D.h>
 
-//#include "TreeForge/TFTree.h"
 #include <time.h>
 
 #include <cJSON.h>
@@ -32,14 +30,6 @@
 #ifdef USES_HIDAPI
 #include "3DMouse/3DMouse_SpaceNavigator.h"
 #endif // USES_HIDAPI //
-// - ------------------------------------------------------------------------------------------ - //
-
-GelAssetHandle txCursorMove;
-GelAssetHandle txCursorStop;
-GelAssetHandle txCursorAttack;
-
-//cTFTree* MyTree;
-
 // - ------------------------------------------------------------------------------------------ - //
 
 typedef int v4si __attribute__ ((vector_size (16)));
@@ -384,8 +374,6 @@ void cGame::Init() {
 		srand ( time(NULL) );
 		int Blah = rand(); // Burn a random number //
 	}
-//	cTFGenerator TreeGen;
-//	MyTree = TreeGen.Generate();
 
 	// *** //
 	
@@ -400,16 +388,11 @@ void cGame::Init() {
 	// Store the current clock, so the content scanner can know to disregard extra scans //
 	LastContentScan = GetTimeNow();
 
-	// Some Art Assets //
-	txCursorMove = AssetPool::Load( "/Cursor_Move" );
-	txCursorStop = AssetPool::Load( "/Cursor_Stop" );
-	txCursorAttack = AssetPool::Load( "/Cursor_Attack" );
-
 	// Reset Camera //
 	CameraWorldPos = Vector3D(0,0,0);
-	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(0) ); // TODO: Should be positive //
+//	CameraEyePos = Vector3D( _TV(0), _TV(-2), _TV(0) ); // TODO: Should be positive //
 //	CameraFollow = 0;
-	CameraTilt = Vector3D(0,0,1024);
+//	CameraTilt = Vector3D(0,0,1024);
 
 	//LoadMap();
 
@@ -635,88 +618,26 @@ void cGame::Step() {
 //	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-//void cGame::DrawRoom( cRoom* ThisRoom, const Vector3D& Offset ) {
-//	gelLoadMatrix( ObserverCamera.ProjectionView );
-//	gelMultMatrix( Matrix4x4::TranslationMatrix( Offset ) );
-//	
-//	gelDrawIndexedTriangles( ThisRoom->Vert->Data, ThisRoom->Index->Data, ThisRoom->Index->Size, GEL_RGBA(255,255,255,64) );
-//	gelDrawIndexedLines( ThisRoom->Vert->Data, ThisRoom->OutlineIndex->Data, ThisRoom->OutlineIndex->Size, GEL_RGBA(0,255,0,64) );
-//	gelDrawPoints( ThisRoom->Vert->Data, ThisRoom->Vert->Size, GEL_RGB_YELLOW );
-//}
-// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::UpdateCameraMatrix() {
-/*
-	Vector3D ViewerPos( 0, 256, 1024 );
-	
-#ifdef USES_HIDAPI
-	ViewerPos.x = 0 + (SpaceNavigator[4] * 512);
-	ViewerPos.y = 256 + (SpaceNavigator[3] * 512);
-#endif // USES_HIDAPI //
-
-#ifdef PRODUCT_MOBILE
-extern float smoothaccel_x;
-extern float smoothaccel_y;
-extern float smoothaccel_z;
-
-	float TiltScalar = 256+128;
-
-	ViewerPos.x = 0.0f - (smoothaccel_y * TiltScalar);
-	ViewerPos.y = 0.0f - (smoothaccel_x * TiltScalar);	
-#endif // PRODUCT_MOBILE //
-
-	ViewerPos.Normalize();
-	ViewerPos *= 1024.0f;
-
-	Vector3D CameraDiff = CameraTilt - ViewerPos;
-	CameraTilt -= CameraDiff * Real(0.25);
-	
-	// NOTE: Camera Up should not be hardcoded! //
-	Matrix4x4 Look = Calc_LookAtOnly( CameraTilt, CameraFollow->Pos, Vector3D(0,1,0) );
-
-#ifdef USES_HIDAPI
-	Look = Look * Matrix4x4::RotationMatrixXY( SpaceNavigator[5] * 32.0f );
-#endif // USES_HIDAPI //
-
-	// Camera //
-	Real Near = _TV(10);
-	Real Length = _TV(100);
-	
-	Real Far = Near + Length;
-	Real CenterPlanePos = _TV(0.50f);
-
-	Real CameraPos = Near + ((Far - Near) * CenterPlanePos);
-
-	CameraMatrix = Look * Matrix4x4::TranslationMatrix( Vector3D( 0, 0, CameraPos ) );
-		
-	ViewMatrix = Calc_Frustum_PerspectiveProjection( 
-		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
-		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		Real( Near ),
-		Real( Far ),
-		Real( CenterPlanePos )
-		);
-
-	ModelViewMatrix = ViewMatrix;
-	ModelViewMatrix.Multiply( CameraMatrix );
-	ModelViewMatrix.Multiply( Matrix4x4::TranslationMatrix( -CameraWorldPos - CameraEyePos ) );
-*/
+	// -- Game Viewing Camera -- //
 	ObserverCamera.SetFrustum( 
 //		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 //		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		FullRefScreen::Width * Real(0.1f),
-		FullRefScreen::Height * Real(0.1f),
+		FullRefScreen::Width * Real( _TV(0.1f) ),
+		FullRefScreen::Height * Real( _TV(0.1f) ),
 		_TV(10),
-		_TV(30)
+		_TV(110)
 		);
-	ObserverCamera.Pos = CameraWorldPos + Vector3D(0,0,64);
+	ObserverCamera.Pos = CameraWorldPos + Vector3D( _TV(0), _TV(0), _TV(110) );
 	ObserverCamera.Look = CameraWorldPos;
-	ObserverCamera.Up = Vector3D(0,0,1);
+	ObserverCamera.Up = Vector3D(0,1,0);
+	
 	ObserverCamera.UpdateMatrix();
 	
 
-	// UI Aligned Camera //
+	// -- UI Aligned Camera -- //
 	Real Near = _TV(100);
 	Real Length = _TV(800);
 	
@@ -737,6 +658,7 @@ extern float smoothaccel_z;
 	UICamera.Pos = Vector3D(0,0,CameraPos);
 	UICamera.Look = Vector3D(0,0,0);
 	UICamera.Up = Vector3D(0,1,0);
+	
 	UICamera.UpdateMatrix();
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -851,39 +773,42 @@ void cGame::DrawSceneGlow() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cGame::Draw() {
+	// -- TOP OF THE FRAME -- //
 	glDisable( GL_CULL_FACE );
 	gelDisableStencilWriting();
 	gelDisableStencilTest();
 	glDisable( GL_SCISSOR_TEST );
 
+	// -- Update Camera -- //
 	UpdateCameraMatrix();
 
+	// First Render Target //
 	int CurrentRT = 0;
 	int ScalarX = FullRefScreen::Width>>1;
 	int ScalarY = FullRefScreen::Height>>1;
 
+	// Draw the primary scene //
 	CurrentRT = RT_PRIMARY;
 	RenderTarget[CurrentRT]->Bind();
+	
 	{
 		gelEnableDepthWriting();
 
 #ifdef NDEBUG	// Only in Debug build, Clear to red, so we can see undrawn pixels //
 		gelSetClearColor( GEL_RGB_RED );
 #else // NDEBUG //
-//		gelSetClearColor( GEL_RGB_WHITE );
 		gelSetClearColor( GEL_RGB_BLACK );
 #endif // NDEBUG //
 
 		gelClear( true, true );
-		gelLoadMatrix( ObserverCamera.ProjectionView );	
+	}
 
-		gelDrawModeFlat();
+	// Draw the Scene //
+	{
+		gelDrawModeFlat(); // Set Shader First! Matrix Ops Fail if applied before! //
+		gelLoadMatrix( ObserverCamera.ProjectionView );
+
 		World.DrawRoom();
-
-//		DrawScene();
-//		gelDrawModeColors();
-//		gelLoadMatrix( ObserverCamera.ProjectionView );	
-//		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
 	}
 
 	CurrentRT = RT_MINI1;
@@ -891,37 +816,11 @@ void cGame::Draw() {
 	{
 //		DrawSceneGlow();
 	}
-/*
-	// Reset Camera for UI //
-	Matrix4x4 CameraViewMatrix;
-	{
-		Real Near = 100;
-		Real Length = 800;
-		
-		Real Far = Near + Length;
-		Real PlanePos = 0.5;
-		
-		Real CameraPos = Near + ((Far - Near) * PlanePos);
-
-		//Matrix4x4 Look2 = Calc_LookAtOnly( Vector3D(0,0,0), Vector3D(0,150,800), Vector3D(0,1,0) );
-		Matrix4x4 Look2 = Calc_LookAtOnly( Vector3D(0,0,0), Vector3D(0,0,800), Vector3D(0,1,0) );
-		CameraMatrix = Look2 * Matrix4x4::TranslationMatrix( -Vector3D( 0, 0, -CameraPos ) );
-		ViewMatrix = Calc_Frustum_PerspectiveProjection( 
-			ActualScreen::Width / RefScreen::Scalar,
-			ActualScreen::Height / RefScreen::Scalar,
-			Real( Near ),
-			Real( Far ),
-			Real( PlanePos )
-			);
-		
-		CameraViewMatrix = ViewMatrix;
-		CameraViewMatrix = CameraMatrix * CameraViewMatrix;
-	}
-*/
-		static float Bork = 0;
-		Bork+=0.01f;
 
 	gelDisableBlending();
+	
+	
+	// *NOTE*: UICamera is being bound as the matrix by the shader //
 
 	CurrentRT = RT_MINI2;
 	RenderTarget[CurrentRT]->Bind();
@@ -936,8 +835,6 @@ void cGame::Draw() {
 		gelDrawRectFillTextured_( 
 			Vector3D( -ScalarX, -ScalarY, 0 ),
 			Vector3D( ScalarX, ScalarY, 0 )
-//			Vector3D( -ScalarX, -ScalarY * Real::Sin(Bork), 0 ),
-//			Vector3D( ScalarX, ScalarY * Real::Sin(Bork), 0 )
 			);
 	}
 
@@ -1089,22 +986,22 @@ void cGame::Draw() {
 		// Draw //
 		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
 		
-		gelDrawModeFlat();
-		gelLoadMatrix( VisibleMatrix );
-		gelDrawCircleFill( MouseRayStart - Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(128,0,0,128) );
-		gelDrawCircleFill( MouseRayEnd + Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(0,128,0,128) );
-
-		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
-		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0 * 0.1f,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
-
-//		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
-//		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
-
-		gelDrawModeColors();
-		gelLoadMatrix( VisibleMatrix );
-		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
-	
-//		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
+//		gelDrawModeFlat();
+//		gelLoadMatrix( VisibleMatrix );
+//		gelDrawCircleFill( MouseRayStart - Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(128,0,0,128) );
+//		gelDrawCircleFill( MouseRayEnd + Vector3D(0,0,0.01), Real(0.3), GEL_RGBA(0,128,0,128) );
+//
+//		// Coords are in full space. If near plane is 10, then visible coords start at 10. If far is 110, they end at 110 //
+//		gelDrawCircleFill( ObserverCamera.Pos - Vector3D(0 * 0.1f,0 * 0.1f,60), Real(0.5f), GEL_RGBA(128,128,128,128) );
+//
+////		Vector3D HitPoint = *((Vector3D*)&RayInfo.m_hitPointWorld);
+////		gelDrawCircleFill( HitPoint, Real(1), GEL_RGBA(128,0,128,128) );
+//
+//		gelDrawModeColors();
+//		gelLoadMatrix( VisibleMatrix );
+//		gelDrawLine( MouseRayStart, MouseRayEnd, GEL_RGBA(255,0,0,255), GEL_RGBA(0,255,0,255) );
+//	
+////		gelDrawLine( Vector3D(-12,-12,0), Vector3D(12,12,0), GEL_RGB_GREEN, GEL_RGB_RED );
 
 
 		gelDrawModeColors();
@@ -1184,12 +1081,9 @@ void cGame::Draw() {
 		gelSetColor( GEL_RGB_DEFAULT );
 		gelEnableAlphaBlending();
 		
-		static Real DummyAngle = Real(0);
-		DummyAngle += Real(0.003f);
-		gelMultMatrix( Matrix3x3::RotateY( DummyAngle ).ToMatrix4x4() );
-		
-//		MyTree->Draw();
-
+//		static Real DummyAngle = Real(0);
+//		DummyAngle += Real(0.003f);
+//		gelMultMatrix( Matrix3x3::RotateY( DummyAngle ).ToMatrix4x4() );
 
 		// *** //
 

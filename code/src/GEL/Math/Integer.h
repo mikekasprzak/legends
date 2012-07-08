@@ -65,6 +65,17 @@ public:
 	}
 
 public:
+	enum {
+		// Regular constants //
+		Identity = 1,
+		Zero = 0,
+		
+		// Other constants special to this type //
+		One = 1,
+		SmallestUnit = 1	
+	};
+
+public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Convert all Integers to int automatically //
 	inline operator IntType () {
@@ -97,6 +108,10 @@ public:
 //
 //	OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( ++ );
 //	OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( -- );
+
+	inline const IntType operator - ( ) const {
+		return -Value;
+	}
 
 public:		
 	// - -------------------------------------------------------------------------------------- - //
@@ -250,8 +265,18 @@ public:
 			return 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Square Root //
+	inline const Integer Sqrt_() const {
+		return (int)sqrt( (float)Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline const bool IsZero() const {
 		return Value == 0;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
+	inline const bool IsZeroOrLess() const {
+		return Value < Integer::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	

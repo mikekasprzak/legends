@@ -71,11 +71,6 @@ public:
 	void ContentScan();
 
 public:
-	Matrix4x4 SpinMatrix;
-	Matrix4x4 CameraMatrix;
-	
-	Matrix4x4 ModelViewMatrix;
-	
 	Vector3D CameraWorldPos;
 	Vector3D CameraEyePos;
 //	cObject* CameraFollow;
