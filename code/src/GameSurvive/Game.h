@@ -17,7 +17,7 @@
 #include "RenderTarget/RenderTarget.h"
 #include "Camera/Camera.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include "Engine/WorldMap.h"
+#include "Engine/World.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GelFont.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -114,7 +114,7 @@ public:
 	
 	GelFont* Font;
 	
-	cWorldMap World;
+	cWorld World;
 	
 //	cPhysics Physics;
 //	

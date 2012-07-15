@@ -1,17 +1,31 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __WORLDMAP_H__
-#define __WORLDMAP_H__
+#ifndef __WORLD_H__
+#define __WORLD_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "WorldTile.h"
 #include "WorldObject.h"
 #include "WorldPlayer.h"
+#include "WorldAnimal.h"
 
 #include <Grid/Grid2D_Class.h>
 
 #include <Graphics/GraphicsDraw.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cWorldMap {
+class cWorld {
 public:
+	// -- The World -- //
+	
+	// Chronotype //
+	// - Diurnal      (Awake Day, Sleep Night)
+	// - Nocturnal    (Awake Night, Sleep Day)
+	// - Crepuscular  (Awake Twilight (dawn/dusk))
+	//   - Matutinal  (Awake Dawn)
+	//   - Vespertine (Awake Dusk)
+	//   - Bimodal    (Awake both Twilights)
+	// - Cathemeral   (Awake semi-randomly/adapting to others)
+
+public:
+	// -- The Map -- //
 	cGrid2D<cWorldTile> Map;
 	
 	// Camera //
@@ -19,7 +33,7 @@ public:
 	int RoomSize; // Not seperate RoomWidth and RoomHeight, as all rooms will be square //
 
 public:
-	cWorldMap( const int Width, const int Height ) :
+	cWorld( const int Width, const int Height ) :
 		Map( Width, Height, cWorldTile() ),
 		RoomX( 0 ), RoomY( 0 ),
 		RoomSize( 7 )
@@ -63,5 +77,5 @@ public:
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __WORLDMAP_H__ //
+#endif // __WORLD_H__ //
 // - ------------------------------------------------------------------------------------------ - //
