@@ -14,15 +14,22 @@
 class cWorld {
 public:
 	// -- The World -- //
+	enum {
+		ChronoPhases 	= 8,		// Size of the ChronoType Tables //
+		// TODO: This should probably be less. Simulation at 10 to 15 FPS. //
+		DayLength 		= 60*60*4,	// Frames*Seconds*Minutes //
+	};
+
+	// -- Time/Day/Night Cycle -- //
+	int Time;
 	
-	// Chronotype //
-	// - Diurnal      (Awake Day, Sleep Night)
-	// - Nocturnal    (Awake Night, Sleep Day)
-	// - Crepuscular  (Awake Twilight (dawn/dusk))
-	//   - Matutinal  (Awake Dawn)
-	//   - Vespertine (Awake Dusk)
-	//   - Bimodal    (Awake both Twilights)
-	// - Cathemeral   (Awake semi-randomly/adapting to others)
+	inline int GetTimeOfDay() {
+		return Time % DayLength;
+	}
+	
+	inline int GetDay() {
+		return Time / DayLength;
+	}
 
 public:
 	// -- The Map -- //

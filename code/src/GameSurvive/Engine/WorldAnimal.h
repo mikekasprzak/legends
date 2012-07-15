@@ -18,8 +18,16 @@ public:
 		CT_VESPERTINE	= 5, // Dusk Awake //
 		CT_BIMODAL		= 6, // Both Dawn and Dusk Awake //
 		
-		CT_CATHEMERAL	= 7, // Randomly Awake //
+		CT_CATHEMERAL	= 7, // Randomly Awake (like a pet cat) //
 	};
+	
+	static int CtDead[];// 		= { 0,0,0,0,0,0,0,0 };
+	static int CtInsomniac[];//	= { 1,1,1,1,1,1,1,1 };
+	static int CtDiurnal[];//	= { 1,1,1,1,0,0,0,0 };
+	static int CtNocturnal[];//	= { 0,0,0,0,1,1,1,1 };
+	static int CtMatutinal[];//	= { 1,1,0,0,0,0,1,1 };
+	static int CtVespertine[];//= { 0,0,1,1,1,1,0,0 };
+	static int CtBimodal[];//	= { 1,0,0,1,1,0,0,1 };
 public:
 	cWorldAnimal() 
 	{
