@@ -30,6 +30,12 @@ public:
 	inline int GetDay() {
 		return Time / DayLength;
 	}
+	
+	// Daylight //
+	// http://astro.unl.edu/classaction/animations/coordsmotion/daylighthoursexplorer.html
+	
+	// Geology //
+	// http://visual.merriam-webster.com/earth/geology.php
 
 public:
 	// -- The Map -- //
