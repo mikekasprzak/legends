@@ -25,6 +25,10 @@ const Real Real::Pi( 3.1415926535897932384626433832795 );
 const Real Real::TwoPi( Pi+Pi );
 const Real Real::HalfPi( Pi * Real::Half );
 const Real Real::QuarterPi( Pi * Real::Quarter );
+const Real Real::InvPi( One / Pi );
+const Real Real::InvTwoPi( One / TwoPi );
+const Real Real::InvHalfPi( One / HalfPi );
+const Real Real::InvQuarterPi( One / QuarterPi );
 	
 const Real Real::Sin45( 0.70710678118654752440084436210485 );
 // - ------------------------------------------------------------------------------------------ - //

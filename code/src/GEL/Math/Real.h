@@ -109,11 +109,15 @@ public:
 	static const Real SmallestUnit;
 	
 	static const Real Pi;
-	static const Real TwoPi;
-	static const Real HalfPi;
-	static const Real QuarterPi;
+	static const Real TwoPi;		// (Pi + Pi)
+	static const Real HalfPi;		// (Pi / 2)
+	static const Real QuarterPi;	// (Pi / 4)
+	static const Real InvPi; 		// (1 / Pi)
+	static const Real InvTwoPi;		// (1 / TwoPi)
+	static const Real InvHalfPi;	// (1 / HalfPi)
+	static const Real InvQuarterPi;	// (1 / QuarterPi)
 	
-	static const Real Sin45;
+	static const Real Sin45;		// Precomputed value of a 45 degree angle //
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
@@ -351,12 +355,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// ArcSine - Input [-1,+1] -- Output [-.5,+.5]
 	inline const Real ArcSin() const {
-		return std::asin( *this ) / Real::Pi;
+		return std::asin( *this ) * Real::InvPi;// / Real::Pi;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// ArcCosine - Input [-1,+1] -- Output [0,1]
 	inline const Real ArcCos() const {
-		return std::acos( *this ) / Real::Pi;
+		return std::acos( *this ) * Real::InvPi;// / Real::Pi;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
