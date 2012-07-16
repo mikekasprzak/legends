@@ -340,6 +340,18 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Expands a value from [0,1] to [-1,+1] //
+	inline const Real Expand() const {
+		return (*this * Real(2)) - Real::One;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Compacts a value from [-1,+1] to [0,1] //
+	inline const Real Compact() const {
+		return (*this * Real::Half) + Real::Half;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// Repeating Patterns //
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine - Input *[0,1] -- Output *[-1,+1] //
@@ -431,8 +443,6 @@ public:
 	// NOTE: Sine and Cosine family functions lack Inverse functions, but can flip the waveform 
 	//       by simply negating the value! //
 	// - -------------------------------------------------------------------------------------- - //
-
-	// - -------------------------------------------------------------------------------------- - //
 	// Sine Triangle Wave /\  /\      Starts at 0 following a rigid wave similar to Sine.
 	//                      \/  \/ -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
 	inline const Real SinTriangle() const {
@@ -487,48 +497,66 @@ public:
 			return Period.InvSquare();
 	}
 	// - -------------------------------------------------------------------------------------- - //
-
+	// Sine Saw Tooth Wave /| /|     Different from SinTriangle(). Ups take 2x as long, then drop.
+	//                      |/ |/ -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real SinSawTooth() const {
+		Real Period = SawTooth() * Real(2); // Get a 0-2 range //
+		
+		if ( Period >= Real(1) )
+			return Period.SawTooth() - Real::One;
+		else
+			return Period.SawTooth();
+	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Pulse Waves -- Waveforms with a controllable Period, which is the midpoint of the waveform //
+	// Cosine Saw Tooth Wave '| /| ,    *NOTE* WEIRD! A slightly forward offset SinSawTooth()
+	//                        |/ |/  -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real CosSawTooth() const {
+		return Real( *this + Real::Quarter ).SinSawTooth();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Sine Tooth Wave  /| /|    Since true CosSawTooth is strange, this is what you expect.
+	//                 / |/ | -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real SinTooth() const {
+		return SawTooth().Expand();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Cosine Tooth Wave  /| /|     *NOTE* WEIRD! A slightly forward offset SinTooth()
+	//                   ' |/ |, -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real CosTooth() const {
+		return Real( *this + Real::Quarter ).SinTooth();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	// Pulse Waves -- Waveforms with a controllable HalfPeriod, which is the midpoint of the waveform //
 	// - -------------------------------------------------------------------------------------- - //
 	// Saw Wave  /\  /\  
 	//          /  \/  \ (2 periods shown, 0-1)
 	// A period of 0 and 1 return a Sawtooth like curve //
-	inline const Real SawPulse( const Real& Period = Real::Half ) const {
+	inline const Real SawPulse( const Real& HalfPeriod = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
-		if (Wave >= Period)
-			// A period of 1 should be caught by the floor, wrapping it back to zero) //
-			return Real::One - ((Wave - Period) / (Real::One - Period));
+		if (Wave >= HalfPeriod)
+			// A Halfperiod of 1 should be caught by the floor, wrapping it back to zero) //
+			return Real::One - ((Wave - HalfPeriod) / (Real::One - HalfPeriod));
 		else
-			// If period is zero, the above should catch it, avoiding our division by zero //
-			return Wave / Period;
+			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
+			return Wave / HalfPeriod;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Pulse Wave  |-| |-| 
 	//                   _| |_| | (2 periods shown, 0-1)
 	// A period of 0 and 1 return constantly high //
-	inline const Real SquarePulse( const Real& Period = Real::Half ) const {
+	inline const Real SquarePulse( const Real& HalfPeriod = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
-		if (Wave >= Period)
+		if (Wave >= HalfPeriod)
 			return Real::One;
 		else
 			return Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
-	// - -------------------------------------------------------------------------------------- - //
-	// Expands a value from [0,1] to [-1,+1] //
-	inline const Real Expand() const {
-		return (*this * Real(2)) - Real::One;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Compacts a value from [-1,+1] to [0,1] //
-	inline const Real Compact() const {
-		return (*this * Real::Half) + Real::Half;
-	}
-	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 //	// Clamps a value from 0-1 //
