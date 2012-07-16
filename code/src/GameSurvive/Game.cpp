@@ -817,6 +817,34 @@ void cGame::Draw() {
 		gelDrawModeFlat(); // Set Shader First! Matrix Ops Fail if applied before! //
 		gelLoadMatrix( ObserverCamera.ProjectionView );
 
+		static float Pulser = 0.0f;
+		Pulser += 0.005f;
+		
+		Real Amplitude(5);
+		
+		gelDrawLine( Vector2D(-40,0), Vector2D(+40,0) );
+		
+		gelDrawCircleFill( Vector2D(-28, Real(Pulser).SawTooth().Expand().ArcCos() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-24, Real(Pulser).SawTooth().Expand().ArcSin() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-20, Real(Pulser).Sin() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-16, Real(Pulser).Cos() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-12, Real(Pulser).SinSaw() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-8, Real(Pulser).CosSaw() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-4, Real(Pulser).InvSinSaw() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(0, Real(Pulser).InvCosSaw() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(4, Real(Pulser).SawTooth() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(8, Real(Pulser).InvSawTooth() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(12, Real(Pulser).Pulse() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(16, Real(Pulser).SawTooth().SmoothStep() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(20, Real(Pulser).SawTooth().EaseIn() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(24, Real(Pulser).SawTooth().EaseMoreIn() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(28, Real(Pulser).SawTooth().EaseOut() * Amplitude ), Real(1) );
+		
+		if ( Pulser == 0.005f ) {
+			Log( "ZOOK: -1:%f 0:%f +1:%f", Real(-1).ArcSin().ToFloat(), Real(0).ArcSin().ToFloat(), Real(+1).ArcSin().ToFloat() );
+			Log( "TOOK: -1:%f 0:%f +1:%f", Real(-1).ArcCos().ToFloat(), Real(0).ArcCos().ToFloat(), Real(+1).ArcCos().ToFloat() );
+		}
+		
 		World.DrawRoom();
 	}
 

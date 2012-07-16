@@ -110,6 +110,8 @@ public:
 	
 	static const Real Pi;
 	static const Real TwoPi;
+	static const Real HalfPi;
+	static const Real QuarterPi;
 	
 	static const Real Sin45;
 	// - -------------------------------------------------------------------------------------- - //
@@ -333,22 +335,38 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Repeating Patterns //
 	// - -------------------------------------------------------------------------------------- - //
-	// Sine //
+	// Sine - Input *[0,1] -- Output *[-1,+1] //
 	inline const Real Sin() const {
 		return std::sin( *this * Real::TwoPi );
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-	// Cosine //
+	// Cosine - Input *[0,1] -- Output *[-1,+1] //
 	inline const Real Cos() const {
 		return std::cos( *this * Real::TwoPi );
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-	// Tangent //
+	// ArcSine and ArcCosine are only partial inverses of Sine and Cosine. They are non-repeating.
+	// They are used to partially get the curve of Sine and Cosine but about the opposite axis.
+	// They are NOT full waves, despite the input of two iterations [-1,+1], you get two halfs. //
+	// - -------------------------------------------------------------------------------------- - //
+	// ArcSine - Input [-1,+1] -- Output [-.5,+.5]
+	inline const Real ArcSin() const {
+		return std::asin( *this ) / Real::Pi;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// ArcCosine - Input [-1,+1] -- Output [0,1]
+	inline const Real ArcCos() const {
+		return std::acos( *this ) / Real::Pi;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	// Tangent - Input *[0,1] -- Output *[-?,+?] //
 	inline const Real Tan() const {
 		return std::tan( *this * Real::TwoPi );
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-	// Arc Tangent //
+	// Arc Tangent - Input *[0,1] -- Output *[-?,+?] //
 	inline const Real ArcTan() const {
 		return std::atan( *this * Real::TwoPi );
 	}	
@@ -357,20 +375,21 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// SawTooth Wave   /| /|
-	//                / |/ | (2 periods shown, 0-1)
+	//                / |/ | -- 2 periods shown - Input *[0,1] -- Output *[0,1]
 	inline const Real SawTooth() const {
 		return *this - Floor(*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// InvSawTooth Wave  |\ |\  
-	//                   | \| \ (2 periods shown, 0-1)
+	//                   | \| \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	inline const Real InvSawTooth() const {
-		return (Real::One - *this).SawTooth();
+//		return (Real::One - *this).SawTooth();
+		return Real::One - SawTooth();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	// Like Sine, but a rigid saw waveform //
+	// Like Sine, but a rigid saw waveform -- Input *[0,1] -- Output *[-1,+1] //
 	inline const Real SinSaw() const {
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
@@ -382,7 +401,7 @@ public:
 			return Period; // Period 0-1 is the same as a SawTooth //
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Like Cosine, but a rigid saw waveform //
+	// Like Cosine, but a rigid saw waveform -- Input *[0,1] -- Output *[-1,+1] //
 	inline const Real CosSaw() const {
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
@@ -393,6 +412,16 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real InvSinSaw() const {
+		return -SinSaw();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real InvCosSaw() const {
+		return -CosSaw();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
 	// Not sure this works... //
 	// - -------------------------------------------------------------------------------------- - //
 	// Saw Wave  /\  /\  
