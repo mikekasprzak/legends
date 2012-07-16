@@ -2,6 +2,8 @@
 #ifndef __WORLD_H__
 #define __WORLD_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include "DaylightClock.h"
+
 #include "WorldTile.h"
 #include "WorldObject.h"
 #include "WorldPlayer.h"
@@ -13,9 +15,50 @@
 // - ------------------------------------------------------------------------------------------ - //
 class cWorld {
 public:
+	
+	
+	// Global Information About The World (which is actually just a place in the world) //
+	// - State of Sunlight (More in summer, less in winter)
+	// - State of Moon (full/near full moon provides extra twilight)
+	// - Forecast
+	//   - Cloudy
+	//   - Rainy
+	//   - Snowy
+	//   - Clear
+	// - Temperature
+	// - Humidity
+	// - Elevation in regards to vegetation 
+	
+	// True Noon Fluxuates between 12:00 PM and 1:00 PM, though closer to 12:30 PM //
+	// The hours of the day are equally spread +/- noon //
+	// Around here (Latitude 42) Summer days are ~15 hours, Winter days ~9 hours (+/- 3) //
+	
+	// Day - Sunrise to Sunset //
+	// Twilight - Dawn to Sunrise, Sunset to Dusk. Atmospheric light scatterings //
+	// Nautical Twilight - At sea level //
+	// Civil Twilight - At typical elevation level //
+	
+	
+	// September (~12 hour days) //
+	// Nautical Twilight ~64 minutes //
+	// Civil Twilight ~29 minutes //
+
+	// July (~15 hour days) //
+	// Nautical Twilight ~80 minutes //
+	// Civil Twilight ~35 minutes //
+	
+	// December (~9 hour days) //
+	// Nautical Twilight ~67 minutes //
+	// Civil Twilight ~32 minutes //
+	
+	// Yes, the above data suggests that Summer is longer, but other data is weird //
+	
 	// -- The World -- //
 	enum {
-		ChronoPhases 	= 8,		// Size of the ChronoType Tables //
+		// A day has equal parts Daylight and Night (summer/winter hours handled elsewhere) //
+		DayPeriod 		= 8,		// Size of the ChronoType Tables //
+		HalfDayPeriod	= 4,		// Half of the table //
+		
 		// TODO: This should probably be less. Simulation at 10 to 15 FPS. //
 		DayLength 		= 60*60*4,	// Frames*Seconds*Minutes //
 	};

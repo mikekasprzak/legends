@@ -354,6 +354,7 @@ public:
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 
+
 	// - -------------------------------------------------------------------------------------- - //
 	// SawTooth Wave   /| /|
 	//                / |/ | (2 periods shown, 0-1)
@@ -366,6 +367,33 @@ public:
 	inline const Real InvSawTooth() const {
 		return (Real::One - *this).SawTooth();
 	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Like Sine, but a rigid saw waveform //
+	inline const Real SinSaw() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return Period - Real(3+1); // Period 3-4 starts at -1 and goes up //
+		else if ( Period >= Real(1) )
+			return Real::One - (Period - Real(1)); // Periods 1-2 and 2-3 go the same way //
+		else
+			return Period; // Period 0-1 is the same as a SawTooth //
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Like Cosine, but a rigid saw waveform //
+	inline const Real CosSaw() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(2) )
+			return Period - Real(2+1); // Periods 2-3 and 3-4 start at -1 and go the same way //
+		else
+			return Real::One - Period; // Periods 0-1 and 1-2 start at +1 and go the same way //
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// Not sure this works... //
 	// - -------------------------------------------------------------------------------------- - //
 	// Saw Wave  /\  /\  
 	//          /  \/  \ (2 periods shown, 0-1)
