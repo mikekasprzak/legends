@@ -441,7 +441,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine and Cosine family waveform functions //
 	// NOTE: Sine and Cosine family functions lack Inverse functions, but can flip the waveform 
-	//       by simply negating the value! //
+	//       by simply negating the returned value!
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine Triangle Wave /\  /\      Starts at 0 following a rigid wave similar to Sine.
 	//                      \/  \/ -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
@@ -583,6 +583,85 @@ public:
 			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
 			return Wave / HalfPeriod;
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Parabolic Curve Sine and Cosine family waveform functions //
+	// NOTE: Sine and Cosine family functions lack Inverse functions, but can flip the waveform 
+	//       by simply negating the returned value!
+	// - -------------------------------------------------------------------------------------- - //
+	// Sin Parabolic Curve "Smooth Step" -- Slowly leaves and reaches extreme, with brief stops.
+	inline const Real SinSmoothStep() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.SawTooth().InvSmoothStep();
+		else if ( Period >= Real(2) )
+			return -Period.SawTooth().SmoothStep();
+		else if ( Period >= Real(1) )
+			return Period.SawTooth().InvSmoothStep();
+		else
+			return Period.SawTooth().SmoothStep();
+	}		
+	// - -------------------------------------------------------------------------------------- - //
+	// Sin Parabolic Curve "Ease In" -- Slowly reaches extreme, with a brief stop.
+	inline const Real SinEaseIn() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.SawTooth().InvEaseOut();
+		else if ( Period >= Real(2) )
+			return -Period.SawTooth().EaseIn();
+		else if ( Period >= Real(1) )
+			return Period.SawTooth().InvEaseOut();
+		else
+			return Period.SawTooth().EaseIn();
+	}	
+	// - -------------------------------------------------------------------------------------- - //
+	// Sin Parabolic Curve "Ease In" Tooth -- Hits the tooth and turns around.
+	inline const Real SinEaseInTooth() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.SawTooth().InvEaseIn();
+		else if ( Period >= Real(2) )
+			return -Period.SawTooth().EaseIn();
+		else if ( Period >= Real(1) )
+			return Period.SawTooth().InvEaseIn();
+		else
+			return Period.SawTooth().EaseIn();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Sin Parabolic Curve "Ease Out" -- Quickly reaches extreme, with a brief stop.
+	inline const Real SinEaseOut() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.SawTooth().InvEaseIn();
+		else if ( Period >= Real(2) )
+			return -Period.SawTooth().EaseOut();
+		else if ( Period >= Real(1) )
+			return Period.SawTooth().InvEaseIn();
+		else
+			return Period.SawTooth().EaseOut();
+	}	
+	// - -------------------------------------------------------------------------------------- - //
+	// Sin Parabolic Curve "Ease Out" Tooth -- NOTE: A decent approximation for SIN!
+	inline const Real SinEaseOutTooth() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.SawTooth().InvEaseOut();
+		else if ( Period >= Real(2) )
+			return -Period.SawTooth().EaseOut();
+		else if ( Period >= Real(1) )
+			return Period.SawTooth().InvEaseOut();
+		else
+			return Period.SawTooth().EaseOut();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// TODO: Cosine Versions //
 	// - -------------------------------------------------------------------------------------- - //
 	
 	
