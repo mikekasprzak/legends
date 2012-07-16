@@ -107,6 +107,9 @@ public:
 	static const Real Half;
 	static const Real Quarter;
 	static const Real SmallestUnit;
+
+	static const Real Two;
+	static const Real Four;
 	
 	static const Real Pi;
 	static const Real TwoPi;		// (Pi + Pi)
@@ -355,15 +358,17 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// ArcSine - Input [-1,+1] -- Output [-.5,+.5]
 	inline const Real ArcSin() const {
-		return std::asin( *this ) * Real::InvPi;// / Real::Pi;
+		return std::asin( *this ) * Real::InvPi;// / Real::Pi; // Optimization //
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// ArcCosine - Input [-1,+1] -- Output [0,1]
 	inline const Real ArcCos() const {
-		return std::acos( *this ) * Real::InvPi;// / Real::Pi;
+		return std::acos( *this ) * Real::InvPi;// / Real::Pi; // Optimization //
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
+	// TODO: Update these //
+	// TODO: Add Cotangent, Secant, Cosecant... all are weird-ass waveforms like Tangent //
 	// - -------------------------------------------------------------------------------------- - //
 	// Tangent - Input *[0,1] -- Output *[-?,+?] //
 	inline const Real Tan() const {
@@ -378,23 +383,59 @@ public:
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	// SawTooth Wave   /| /|
-	//                / |/ | -- 2 periods shown - Input *[0,1] -- Output *[0,1]
+	// SawTooth Wave  /| /|
+	//               / |/ | -- 2 periods shown - Input *[0,1] -- Output *[0,1]
 	inline const Real SawTooth() const {
 		return *this - Floor(*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// InvSawTooth Wave  |\ |\  
-	//                   | \| \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	// Inverse SawTooth Wave |\ |\  
+	//                       | \| \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	inline const Real InvSawTooth() const {
-//		return (Real::One - *this).SawTooth();
 		return Real::One - SawTooth();
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Triangle Wave  /\  /\  
+	//               /  \/  \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real Triangle() const {
+		Real Period = SawTooth() * Real::Two; // Get a 0-2 range //
+		
+		if ( Period >= Real::One )
+			return Period.InvSawTooth(); // Period 1-2 goes down //
+		else
+			return Period.SawTooth();    // Period 0-1 goes up //
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Triangle Wave \  /\  /
+	//                        \/  \/  -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvTriangle() const {
+		return Real::One - Triangle();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Square Wave  |-| |-    This is different than clamping. You may want that instead.
+	//             _| |_|  -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real Square() const {
+		return SawTooth().Round();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Square Wave -| |-| 
+	//                      |_| |_ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvSquare() const {
+		return Real::One - Square();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 
 	// - -------------------------------------------------------------------------------------- - //
-	// Like Sine, but a rigid saw waveform -- Input *[0,1] -- Output *[-1,+1] //
-	inline const Real SinSaw() const {
+	// Sine and Cosine family waveform functions //
+	// NOTE: Sine and Cosine family functions lack Inverse functions, but can flip the waveform 
+	//       by simply negating the value! //
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Sine Triangle Wave /\  /\      Starts at 0 following a rigid wave similar to Sine.
+	//                      \/  \/ -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real SinTriangle() const {
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
@@ -405,8 +446,9 @@ public:
 			return Period; // Period 0-1 is the same as a SawTooth //
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Like Cosine, but a rigid saw waveform -- Input *[0,1] -- Output *[-1,+1] //
-	inline const Real CosSaw() const {
+	// Cosine Triangle Wave \  /\  /    Similar to InvTriangle(), except with negative ranges.
+	//                       \/  \/  -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real CosTriangle() const {
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(2) )
@@ -415,23 +457,44 @@ public:
 			return Real::One - Period; // Periods 0-1 and 1-2 start at +1 and go the same way //
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Sine Square Wave _|-|_   _|-|_ 
+	//                       |_|     |_| -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real SinSquare() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return -Period.InvSquare();
+		else if ( Period >= Real(2) )
+			return -Period.Square();
+		else if ( Period >= Real(1) )
+			return Period.InvSquare();
+		else
+			return Period.Square();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Cosine Square Wave -|_   _|-|_   _|
+	//                       |_|     |_|   -- 2 periods shown -- Input *[0,1] -- Output *[-1,+1]
+	inline const Real CosSquare() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(3) )
+			return Period.Square();
+		else if ( Period >= Real(2) )
+			return -Period.InvSquare();
+		else if ( Period >= Real(1) )
+			return -Period.Square();
+		else
+			return Period.InvSquare();
+	}
+	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Real InvSinSaw() const {
-		return -SinSaw();
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Real InvCosSaw() const {
-		return -CosSaw();
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	
-	// Not sure this works... //
+	// Pulse Waves -- Waveforms with a controllable Period, which is the midpoint of the waveform //
 	// - -------------------------------------------------------------------------------------- - //
 	// Saw Wave  /\  /\  
 	//          /  \/  \ (2 periods shown, 0-1)
 	// A period of 0 and 1 return a Sawtooth like curve //
-	inline const Real Saw( const Real& Period = Real::Half ) const {
+	inline const Real SawPulse( const Real& Period = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
 		if (Wave >= Period)
@@ -442,10 +505,10 @@ public:
 			return Wave / Period;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Pulse (Square) Wave  |-| |-| 
-	//                     _| |_| | (2 periods shown, 0-1)
+	// Square Pulse Wave  |-| |-| 
+	//                   _| |_| | (2 periods shown, 0-1)
 	// A period of 0 and 1 return constantly high //
-	inline const Real Pulse( const Real& Period = Real::Half ) const {
+	inline const Real SquarePulse( const Real& Period = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
 		if (Wave >= Period)
@@ -456,12 +519,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	// Expands a value from 0-1 to -1 to +1 //
+	// Expands a value from [0,1] to [-1,+1] //
 	inline const Real Expand() const {
 		return (*this * Real(2)) - Real::One;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Compacts a value from -1 to +1 to 0-1 //
+	// Compacts a value from [-1,+1] to [0,1] //
 	inline const Real Compact() const {
 		return (*this * Real::Half) + Real::Half;
 	}

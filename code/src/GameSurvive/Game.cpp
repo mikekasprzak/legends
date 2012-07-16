@@ -828,13 +828,13 @@ void cGame::Draw() {
 		gelDrawCircleFill( Vector2D(-24, Real(Pulser).SawTooth().Expand().ArcSin() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(-20, Real(Pulser).Sin() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(-16, Real(Pulser).Cos() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(-12, Real(Pulser).SinSaw() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(-8, Real(Pulser).CosSaw() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(-4, Real(Pulser).InvSinSaw() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(0, Real(Pulser).InvCosSaw() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-12, Real(Pulser).SinTriangle() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-8, Real(Pulser).CosTriangle() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(-4, Real(Pulser).SinSquare() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(0, Real(Pulser).CosSquare() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(4, Real(Pulser).SawTooth() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(8, Real(Pulser).InvSawTooth() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(12, Real(Pulser).Pulse() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(12, Real(Pulser).SquarePulse() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(16, Real(Pulser).SawTooth().SmoothStep() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(20, Real(Pulser).SawTooth().EaseIn() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(24, Real(Pulser).SawTooth().EaseMoreIn() * Amplitude ), Real(1) );

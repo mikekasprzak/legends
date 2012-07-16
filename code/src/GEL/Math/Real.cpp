@@ -21,6 +21,9 @@ const Real Real::Half( 0.5 );
 const Real Real::Quarter( 0.25 );
 const Real Real::SmallestUnit( 0.005 );
 	
+const Real Real::Two( 2.0 );
+const Real Real::Four( 4.0 );
+	
 const Real Real::Pi( 3.1415926535897932384626433832795 );
 const Real Real::TwoPi( Pi+Pi );
 const Real Real::HalfPi( Pi * Real::Half );
