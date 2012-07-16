@@ -530,14 +530,14 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Pulse Waves -- Waveforms with a controllable HalfPeriod, which is the midpoint of the waveform //
 	// - -------------------------------------------------------------------------------------- - //
-	// Saw Wave  /\  /\  
-	//          /  \/  \ (2 periods shown, 0-1)
+	// Triangle Pulse Wave  /\  /\  
+	//                     /  \/  \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	// A period of 0 and 1 return a Sawtooth like curve //
-	inline const Real SawPulse( const Real& HalfPeriod = Real::Half ) const {
+	inline const Real TrianglePulse( const Real& HalfPeriod = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
 		if (Wave >= HalfPeriod)
-			// A Halfperiod of 1 should be caught by the floor, wrapping it back to zero) //
+			// A HalfPeriod of 1 should be caught by the floor, wrapping it back to zero) //
 			return Real::One - ((Wave - HalfPeriod) / (Real::One - HalfPeriod));
 		else
 			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
@@ -545,19 +545,47 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Pulse Wave  |-| |-| 
-	//                   _| |_| | (2 periods shown, 0-1)
+	//                   _| |_| | -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	// A period of 0 and 1 return constantly high //
 	inline const Real SquarePulse( const Real& HalfPeriod = Real::Half ) const {
 		const Real Wave = SawTooth();
 		
 		if (Wave >= HalfPeriod)
+			// A HalfPeriod of 1 should be caught by the floor, wrapping it back to zero) //
 			return Real::One;
 		else
+			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
 			return Real::Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-
-
+	// Linear Interpolation Pulse  /| /|    A SawTooth() where you control the midpoint (0.5) interpolation rate.
+	//                            / |/ | -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real LerpPulse( const Real& HalfPeriod = Real::Half ) const {
+		const Real Wave = SawTooth();
+		
+		if (Wave >= HalfPeriod)
+			// A HalfPeriod of 1 should be caught by the floor, wrapping it back to zero) //
+			return Real::Half + (((Wave - HalfPeriod) / (Real::One - HalfPeriod)) * Real::Half);
+		else
+			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
+			return (Wave / HalfPeriod) * Real::Half;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Double Saw Tooth Pulse  /| /| /| /|    A single SawTooth Pulse is useless, so here's two.
+	//                        / |/ |/ |/ | -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
+	inline const Real DoubleSawToothPulse( const Real& HalfPeriod = Real::Half ) const {
+		const Real Wave = SawTooth();
+		
+		if (Wave >= HalfPeriod)
+			// A HalfPeriod of 1 should be caught by the floor, wrapping it back to zero) //
+			return ((Wave - HalfPeriod) / (Real::One - HalfPeriod));
+		else
+			// If HalfPeriod is zero, the above should catch it, avoiding our division by zero //
+			return Wave / HalfPeriod;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	
 	// - -------------------------------------------------------------------------------------- - //
 //	// Clamps a value from 0-1 //
 //	inline const Real Clamp() const {
