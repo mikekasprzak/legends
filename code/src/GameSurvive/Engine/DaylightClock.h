@@ -41,6 +41,9 @@ public:
 	Real GetDaylight() {
 		Real Light = Real(12);// + ( 12 * ( Season.Sin() ) );
 		
+		// Midnight Sun Angle //
+		//Real ArcticCircle( 66.3339f / 90.0f );
+		
 		if ( Light > Real(24) )
 			return Real(24);
 		else if ( Light < Real::Zero )
