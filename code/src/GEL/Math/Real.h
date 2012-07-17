@@ -104,12 +104,14 @@ public:
 	// Other constants special to this type //
 	// - -------------------------------------------------------------------------------------- - //
 	static const Real One;
+	static const Real Two;
+	static const Real Four;
 	static const Real Half;
 	static const Real Quarter;
 	static const Real SmallestUnit;
 
-	static const Real Two;
-	static const Real Four;
+	static const Real Three;
+	static const Real Third;
 	
 	static const Real Pi;
 	static const Real TwoPi;		// (Pi + Pi)
@@ -119,6 +121,8 @@ public:
 	static const Real InvTwoPi;		// (1 / TwoPi)
 	static const Real InvHalfPi;	// (1 / HalfPi)
 	static const Real InvQuarterPi;	// (1 / QuarterPi)
+	
+	static const Real e;			// Euler's Number/Napier's Constant. Used in Natural Logarithms (log)
 	
 	static const Real Sin45;		// Precomputed value of a 45 degree angle //
 	// - -------------------------------------------------------------------------------------- - //
@@ -340,6 +344,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Signal Conversion to/from [0,1] and [-1,+1] //
+	// - -------------------------------------------------------------------------------------- - //
 	// Expands a value from [0,1] to [-1,+1] //
 	inline const Real Expand() const {
 		return (*this * Real(2)) - Real::One;
@@ -350,6 +356,121 @@ public:
 		return (*this * Real::Half) + Real::Half;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Simple Math //
+	// - -------------------------------------------------------------------------------------- - //
+	// Double the value //
+	inline const Real CalcDouble() const {
+		return *this + *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Triple the value //
+	inline const Real CalcTriple() const {
+		return *this + *this + *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Quadruple the value //
+	inline const Real CalcQuadruple() const {
+		return *this * Real::Four;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Half the value //
+	inline const Real CalcHalf() const {
+		return *this * Real::Half;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Third the value //
+	inline const Real CalcThird() const {
+		return *this * Real::Third;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Quarter the value //
+	inline const Real CalcQuarter() const {
+		return *this * Real::Quarter;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Power of Two - Square (sqr) //
+	inline const Real Pow2() const {
+		return *this * *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Power of Three - Cube (cube) //
+	inline const Real Pow3() const {
+		return *this * *this * *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// TODO: Power, Summation (Sigma), Product (uppercase Pi)
+	// - -------------------------------------------------------------------------------------- - //
+
+
+	// - -------------------------------------------------------------------------------------- - //
+	// LOGARITHM NOTES //
+	//   10^x (TenPowX) is a significant quantity when dealing with logarithms. //
+	//   10^2 = 100, Log(100) = 2. 10^3 = 1000, Log(1000) = 3. //
+	//   The "10" represents the base of the number system.
+	//   C standard library has a log10() function for doing this (Common Base-10).
+	//   C standard also has log() function (Neutral Base-E). "Inverse of the Natural Exponent Func"
+	//   It is related to the exp() function (Base-E Exponent)... which is not the same thing as pow()
+	//   The "ln" is the natural logarithm function on the calculator!!
+	//   To calculate Log2(n) (Binary Logarithm), do either ln(n)/ln(2) or log10(n)/log10(2) //
+	//   e is a mathematical constant. It's where, after smartness, the logarithm base intersects 1.
+	//   e is Napier's Constant or Euler's Number, not to be confused with Euler's Constant.
+	//   http://en.wikipedia.org/wiki/E_%28mathematical_constant%29
+	//
+	//   [Base 2] Binary Logarithm  -- No Function, but can be calculated with func(n)/func(2)
+	//   [Base e] Natural Logarithm -- log(n) in C, ln(n) on Calculator. e is Euler's Number.
+	//   [Base 10] Common Logarithm -- log10(n) in C, log(n) on Calculator. Paired with 10^x.
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Power functions to contrast the various logarithm bases //
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real TwoPow() const {
+		return std::pow( 2, *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real NaturalPow() const { 
+		return std::exp( *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real OctPow() const {
+		return std::pow( 8, *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real TenPow() const {
+		return std::pow( 10, *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real HexPow() const {
+		return std::pow( 16, *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// I'm assuming "log10" is the faster logarithm function. If wrong, make it log. 
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real TwoLog() const {
+		return std::log10( *this ) * std::log10( 2 );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real NaturalLog() const {
+		return std::log( *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real OctLog() const {
+		return std::log10( *this ) * std::log10( 8 );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real TenLog() const {
+		return std::log10( *this );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real HexLog() const {
+		return std::log10( *this ) * std::log10( 16 );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Repeating Patterns //
@@ -596,13 +717,13 @@ public:
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
-			return -Period.SawTooth().InvSmoothStep();
+			return -Period.SawTooth()._InvSmoothStep();
 		else if ( Period >= Real(2) )
-			return -Period.SawTooth().SmoothStep();
+			return -Period.SawTooth()._SmoothStep();
 		else if ( Period >= Real(1) )
-			return Period.SawTooth().InvSmoothStep();
+			return Period.SawTooth()._InvSmoothStep();
 		else
-			return Period.SawTooth().SmoothStep();
+			return Period.SawTooth()._SmoothStep();
 	}		
 	// - -------------------------------------------------------------------------------------- - //
 	// Sin Parabolic Curve "Ease In" -- Slowly reaches extreme, with a brief stop.
@@ -610,13 +731,13 @@ public:
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
-			return -Period.SawTooth().InvEaseOut();
+			return -Period.SawTooth()._InvEaseOut();
 		else if ( Period >= Real(2) )
-			return -Period.SawTooth().EaseIn();
+			return -Period.SawTooth()._EaseIn();
 		else if ( Period >= Real(1) )
-			return Period.SawTooth().InvEaseOut();
+			return Period.SawTooth()._InvEaseOut();
 		else
-			return Period.SawTooth().EaseIn();
+			return Period.SawTooth()._EaseIn();
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 	// Sin Parabolic Curve "Ease In" Tooth -- Hits the tooth and turns around.
@@ -624,13 +745,13 @@ public:
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
-			return -Period.SawTooth().InvEaseIn();
+			return -Period.SawTooth()._InvEaseIn();
 		else if ( Period >= Real(2) )
-			return -Period.SawTooth().EaseIn();
+			return -Period.SawTooth()._EaseIn();
 		else if ( Period >= Real(1) )
-			return Period.SawTooth().InvEaseIn();
+			return Period.SawTooth()._InvEaseIn();
 		else
-			return Period.SawTooth().EaseIn();
+			return Period.SawTooth()._EaseIn();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Sin Parabolic Curve "Ease Out" -- Quickly reaches extreme, with a brief stop.
@@ -638,13 +759,13 @@ public:
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
-			return -Period.SawTooth().InvEaseIn();
+			return -Period.SawTooth()._InvEaseIn();
 		else if ( Period >= Real(2) )
-			return -Period.SawTooth().EaseOut();
+			return -Period.SawTooth()._EaseOut();
 		else if ( Period >= Real(1) )
-			return Period.SawTooth().InvEaseIn();
+			return Period.SawTooth()._InvEaseIn();
 		else
-			return Period.SawTooth().EaseOut();
+			return Period.SawTooth()._EaseOut();
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 	// Sin Parabolic Curve "Ease Out" Tooth -- NOTE: A decent approximation for SIN!
@@ -652,18 +773,33 @@ public:
 		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
 		
 		if ( Period >= Real(3) )
-			return -Period.SawTooth().InvEaseOut();
+			return -Period.SawTooth()._InvEaseOut();
 		else if ( Period >= Real(2) )
-			return -Period.SawTooth().EaseOut();
+			return -Period.SawTooth()._EaseOut();
 		else if ( Period >= Real(1) )
-			return Period.SawTooth().InvEaseOut();
+			return Period.SawTooth()._InvEaseOut();
 		else
-			return Period.SawTooth().EaseOut();
+			return Period.SawTooth()._EaseOut();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// TODO: Cosine Versions //
 	// - -------------------------------------------------------------------------------------- - //
-	
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Experiments //
+	// - -------------------------------------------------------------------------------------- - //
+	// NOTES: The Ease In makes it accelerate fast, but the trasition to Triangle abruptly slows it.
+	//        This is probably not useful. An ideal alternative would be to Mix or feed values in
+	//        to Triangle itself.
+	inline const Real SinEaseInToTriangle() const {
+		Real Period = SawTooth() * Real(4); // Get a 0-4 range //
+		
+		if ( Period >= Real(1) )
+			return SinTriangle();
+		else
+			return Period.SawTooth().CalcQuarter().Sin();//_EaseIn();
+	}	
+	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
 //	// Clamps a value from 0-1 //
