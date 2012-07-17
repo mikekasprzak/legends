@@ -342,6 +342,9 @@ public:
 		return std::sqrt( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// TODO: Pow, Cubert (Cube Root)
+	// TODO: ldexp (load exponent, build a floating point number), frexp (read), modf (extract fmod)
+	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Signal Conversion to/from [0,1] and [-1,+1] //
@@ -502,6 +505,7 @@ public:
 	
 	// TODO: Update these //
 	// TODO: Add Cotangent, Secant, Cosecant... all are weird-ass waveforms like Tangent //
+	// TODO: Add Hyperbolic functions (sinh, cosh)... though they're also weird-ass like Tangent //
 	// - -------------------------------------------------------------------------------------- - //
 	// Tangent - Input *[0,1] -- Output *[-?,+?] //
 	inline const Real Tan() const {
@@ -513,7 +517,8 @@ public:
 		return std::atan( *this * Real::TwoPi );
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-
+	// TODO: ArcTan2 (atan2)
+	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 	// SawTooth Wave  /| /|
