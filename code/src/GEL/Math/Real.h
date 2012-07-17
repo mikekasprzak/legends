@@ -563,6 +563,51 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	// Circle Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real Circle() const {
+		return CalcHalf().Sin().Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Circle Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvCircle() const {
+		return Real::One - Circle();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Cosine Circle Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real CoCircle() const {
+		return CalcHalf().Cos().Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Cosine Circle Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvCoCircle() const {
+		return Real::One - CoCircle();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// TODO: Figure out which of these are Ease In's and Ease Out's //
+	// - -------------------------------------------------------------------------------------- - //
+	// Circle Tooth Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real CircleTooth() const {
+		return SawTooth().CalcQuarter().Sin().Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Circle Tooth Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvCircleTooth() const {
+		return Real::One - CircleTooth();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Cosine Circle Tooth Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real CoCircleTooth() const {
+		return SawTooth().CalcQuarter().Cos().Abs();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Inverse Cosine Circle Tooth Wave -- Input *[0,1] -- Output *[0,1]
+	inline const Real InvCoCircleTooth() const {
+		return Real::One - CoCircleTooth();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Sine and Cosine family waveform functions //

@@ -843,10 +843,18 @@ void cGame::Draw() {
 		gelDrawCircleFill( Vector2D(12, Real(Pulser).TrianglePulse( Pulse ) * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(16, Real(Pulser).DoubleSawToothPulse( Pulse ) * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(20, Real(Pulser).LerpPulse( Pulse ) * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(24, Real(Pulser).SawTooth().SmoothStep() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(28, Real(Pulser).SawTooth().EaseIn() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(32, Real(Pulser).SawTooth().EaseMoreIn() * Amplitude ), Real(1) );
-		gelDrawCircleFill( Vector2D(36, Real(Pulser).SawTooth().EaseOut() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(24, Real(Pulser).CircleTooth() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(28, Real(Pulser).InvCircleTooth() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(32, Real(Pulser).CoCircleTooth() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(36, Real(Pulser).InvCoCircleTooth() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(24, Real(Pulser).Circle() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(28, Real(Pulser).InvCircle() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(32, Real(Pulser).CoCircle() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(36, Real(Pulser).InvCoCircle() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(24, Real(Pulser).SawTooth().SmoothStep() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(28, Real(Pulser).SawTooth().EaseIn() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(32, Real(Pulser).SawTooth().EaseMoreIn() * Amplitude ), Real(1) );
+//		gelDrawCircleFill( Vector2D(36, Real(Pulser).SawTooth().EaseOut() * Amplitude ), Real(1) );
 		
 		if ( Pulser == 0.005f ) {
 			Log( "ZOOK: -1:%f 0:%f +1:%f", Real(-1).ArcSin().ToFloat(), Real(0).ArcSin().ToFloat(), Real(+1).ArcSin().ToFloat() );
