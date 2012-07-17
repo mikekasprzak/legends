@@ -835,6 +835,7 @@ void cGame::Draw() {
 		gelDrawCircleFill( Vector2D(-4, Real(Pulser).SinEaseOutTooth() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(0, Real(Pulser).SinEaseOut() * Amplitude ), Real(1) );
 		gelDrawCircleFill( Vector2D(4, Real(Pulser).SinTriangle() * Amplitude ), Real(1) );
+		gelDrawCircleFill( Vector2D(8, Real(Pulser).SinEaseInToTriangle() * Amplitude ), Real(1) );
 //		gelDrawCircleFill( Vector2D(0, Real(Pulser).Cos() * Amplitude ), Real(1) );
 //		gelDrawCircleFill( Vector2D(4, Real(Pulser).CosSawTooth() * Amplitude ), Real(1) );
 //		gelDrawCircleFill( Vector2D(8, Real(Pulser).CosTooth() * Amplitude ), Real(1) );
