@@ -4,7 +4,13 @@
 #ifndef __Geometry_Real_H__
 #define __Geometry_Real_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Todo: 
+// TODO: Decide what to do about Function(Value) functions. There are many Value.Function()
+//       versions, and that may not be the ideal approach (shitty syntax for A * B pairs).
+// TODO: If all functions become isolated Function(Value) types, make the Value.Function()
+//       version of these functions call Function(Value), so not to repeat code.
+// TODO: Consider making lower case 'function(value)' versions that deal with floats and doubles.
+//       Design these to be Ansi C Math library compatible. Call them here.
+// TODO: Remove the sine templates. I have no qualms with realtime calculation of this.
 // - ------------------------------------------------------------------------------------------ - //
 #include <cmath>
 // - ------------------------------------------------------------------------------------------ - //
