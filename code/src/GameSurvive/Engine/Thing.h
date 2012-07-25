@@ -1,24 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __WORLDTILE_H__
-#define __WORLDTILE_H__
+#ifndef __ENGINE_THING_H__
+#define __ENGINE_THING_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Math/Vector.h>
+// Things just are. They do not grow or rot. State does not change over time, but they can
+//   be changed in to other things via crafting.
 // - ------------------------------------------------------------------------------------------ - //
-#define DEFAULT_WORLDTILE_HEIGHT	1024
-#define MAX_SOLIDS					4
+#include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cWorldTile {
+class cThing {
 public:
-	int Height;
-	
-	
 	
 public:
-	cWorldTile() :
-		Height( DEFAULT_WORLDTILE_HEIGHT )
+	cThing()
 	{
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __WORLDTILE_H__ //
+#endif // __ENGINE_THING_H__ //
 // - ------------------------------------------------------------------------------------------ - //

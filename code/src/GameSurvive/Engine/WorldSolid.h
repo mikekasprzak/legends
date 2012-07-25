@@ -1,24 +1,22 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __WORLDTILE_H__
-#define __WORLDTILE_H__
+#ifndef __WORLDSOLID_H__
+#define __WORLDSOLID_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Math/Vector.h>
+// Solid's are large things like trees and rocks. //
+// - They cannot be carried.
+// - They don't have a position. Position is handled by the tiles themselves.
+// - They can be interacted with. Harvested from, or destroyed.
 // - ------------------------------------------------------------------------------------------ - //
-#define DEFAULT_WORLDTILE_HEIGHT	1024
-#define MAX_SOLIDS					4
+#include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cWorldTile {
+class cWorldSolid {
 public:
-	int Height;
-	
-	
-	
+	Real Volume;
 public:
-	cWorldTile() :
-		Height( DEFAULT_WORLDTILE_HEIGHT )
+	cWorldSolid()
 	{
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __WORLDTILE_H__ //
+#endif // __WORLDSOLID_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -1,24 +1,28 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __WORLDTILE_H__
-#define __WORLDTILE_H__
+#ifndef __LIFESYSTEM_TILE_H__
+#define __LIFESYSTEM_TILE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
-#define DEFAULT_WORLDTILE_HEIGHT	1024
-#define MAX_SOLIDS					4
+namespace LifeSystem {
 // - ------------------------------------------------------------------------------------------ - //
-class cWorldTile {
+class cTile {
 public:
 	int Height;
 	
-	
-	
+	enum {
+		DEFAULT_TILE_HEIGHT = 1024,
+		MAX_ACTIVE = 4,
+		MAX_PASSIVE = 8
+	};
 public:
-	cWorldTile() :
-		Height( DEFAULT_WORLDTILE_HEIGHT )
+	cTile() :
+		Height( DEFAULT_TILE_HEIGHT )
 	{
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __WORLDTILE_H__ //
+}; // namespace LifeSystem //
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __LIFESYSTEM_TILE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
