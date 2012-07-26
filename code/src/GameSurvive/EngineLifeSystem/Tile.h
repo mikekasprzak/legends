@@ -23,12 +23,11 @@ public:
 	};
 
 public:
-	int Height;								// Elevation //
+	int Height;										// Elevation //
 
-	CArrayPtr<cActive*,MAX_ACTIVE>	Active;
-//	cActive*	Active[MAX_ACTIVE];
-	cPassive*	Passive[MAX_PASSIVE];	
-	cSoil		Soil;					// Soil Content //
+	CArrayPtr<cActive*,MAX_ACTIVE>		Active;
+	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;
+	cSoil								Soil;		// Soil Content //
 
 public:
 	cTile() :

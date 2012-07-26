@@ -1,35 +1,22 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFESYSTEM_PASSIVE_H__
-#define __LIFESYSTEM_PASSIVE_H__
+#ifndef __LIFESYSTEM_PASSIVETEMPLATE_H__
+#define __LIFESYSTEM_PASSIVETEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Passive Object -- An Instance of a Passive Object //
-// - ------------------------------------------------------------------------------------------ - //
-#include "PassiveTemplate.h"
+// Passive Template Object -- Common properties between all instances this Object //
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeSystem {
 // - ------------------------------------------------------------------------------------------ - //
-class cPassive {
+class cPassiveTemplate {
 public:
-	const cPassiveTemplate* Template;	// What we're based on //
-	size_t 					Count;		// How many in this pile // 
+	size_t	MaxCount;		// The Maximum number allowed in one pile //
 public:
-	cPassive() :
-		Template(0),
-		Count(1)
+	cPassiveTemplate() :
+		MaxCount(1)
 	{
 	}
-	
-	cPassive( const cPassiveTemplate* _Template, const size_t _Count = 1 ) :
-		Template( _Template ),
-		Count( _Count )
-	{
-	}
-	
-public:
-	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeSystem //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFESYSTEM_PASSIVE_H__ //
+#endif // __LIFESYSTEM_PASSIVETEMPLATE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
