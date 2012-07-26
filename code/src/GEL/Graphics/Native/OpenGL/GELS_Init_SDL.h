@@ -231,8 +231,10 @@ inline void gels_SetVideoMode() {
 	
 	//	SDL_GL_SetAttribute( SDL_GL_SUGGEST, SDL_GL_DOUBLEBUFFER | SDL_GL_Z_DEPTH | SDL_GL_RENDERMETHOD | SDL_GL_SAMPLE_BUFFERS | SDL_GL_SAMPLES );
 	
-		extern const char ProductName[];
-		SDL_WM_SetCaption( ProductName, NULL );
+//		extern const char ProductName[];
+//		SDL_WM_SetCaption( ProductName, NULL );
+		extern const char FullProductName[];
+		SDL_WM_SetCaption( FullProductName, NULL );
 	
 		
 		//	float largest_supported_anisotropy;

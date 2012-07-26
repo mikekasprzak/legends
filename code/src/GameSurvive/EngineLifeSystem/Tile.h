@@ -32,6 +32,7 @@ public:
 	cTile() :
 		Height( DEFAULT_TILE_HEIGHT )
 	{
+		
 /*
 		Log( "HEEP! %i %i -- %x %x", Active.SizeOf(), Active.Size(), Active.ErrorPtr, &Active.ErrorPtr );
 		

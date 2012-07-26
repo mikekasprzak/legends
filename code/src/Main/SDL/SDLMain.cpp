@@ -728,9 +728,9 @@ void ShowWaitCursor() {
 #ifndef PRODUCT_SKU
 #define PRODUCT_SKU		"UNKNOWN"
 #define wPRODUCT_SKU	L"UNKNOWN"
-#define FullProductName	"Unknown"
 
 const char* ProductName = "Unknown";
+const char* FullProductName = "Unknown (?) 0.0";
 #endif // PRODUCT_SKU //
 // - ------------------------------------------------------------------------------------------ - //
 

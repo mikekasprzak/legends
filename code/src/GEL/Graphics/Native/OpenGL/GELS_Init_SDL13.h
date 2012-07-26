@@ -285,6 +285,7 @@ inline void gels_SetVideoMode() {
 	//	SDL_GL_SetAttribute( SDL_GL_SUGGEST, SDL_GL_DOUBLEBUFFER | SDL_GL_Z_DEPTH | SDL_GL_RENDERMETHOD | SDL_GL_SAMPLE_BUFFERS | SDL_GL_SAMPLES );
 	
 		extern const char ProductName[];
+		extern const char FullProductName[];
 //		SDL_WM_SetCaption( ProductName, NULL );
 	
 		
@@ -296,7 +297,7 @@ inline void gels_SetVideoMode() {
 		// Create our Screen //
 //		Buffer = SDL_SetVideoMode( ActualScreen::Width, ActualScreen::Height, ColorDepth, VideoFlags );	
 
-		MyWindow = SDL_CreateWindow( ProductName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ActualScreen::Width, ActualScreen::Height, VideoFlags );
+		MyWindow = SDL_CreateWindow( FullProductName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ActualScreen::Width, ActualScreen::Height, VideoFlags );
 		
 //		const SDL_VideoInfo* VideoInfo2 = SDL_GetVideoInfo();
 //		Log( "Set Resolution: %ix%i %ibbp", VideoInfo2->current_w, VideoInfo2->current_h, VideoInfo2->vfmt->BitsPerPixel );
