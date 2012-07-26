@@ -8,6 +8,7 @@
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
 
+#include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
 #include <vector>
 #include "Tile.h"
@@ -21,8 +22,10 @@ public:
 	
 	// World //
 	cGrid2D<cTile> 					Map;
-	std::vector<cActiveTemplate>	ActiveTemplate;
-	std::vector<cPassiveTemplate>	PassiveTemplate;
+	cGelArray<cActiveTemplate>		ActiveTemplate;
+	cGelArray<cPassiveTemplate>		PassiveTemplate;
+//	std::vector<cActiveTemplate>	ActiveTemplate;
+//	std::vector<cPassiveTemplate>	PassiveTemplate;
 
 	// Camera //
 	int ViewX, ViewY;

@@ -17,10 +17,10 @@
 #ifndef NDEBUG
 // - ------------------------------------------------------------------------------------------ - //
 // Assertion //
-#define Assert( ___TEST, ___STR, ... ) \
+#define Assert( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- ======================================================== -" ); \
-		Log( "Assert Error: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Assert Error: " ## __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s", __func__ ); \
 		Log( "- ======================================================== -" ); \
@@ -28,29 +28,29 @@
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings //
-#define Warning( ___TEST, ___STR, ... ) \
+#define Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
-		Log( "Warning: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Warning: " ## __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __func__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return) //
-#define return_Warning( ___TEST, ___STR, ... ) \
+#define return_Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
-		Log( "Warning: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Warning: " ## __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __func__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return value) //
-#define return_value_Warning( ___VAL, ___TEST, ___STR, ... ) \
+#define return_value_Warning( ___VAL, ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
-		Log( "Warning: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Warning: " ## __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __func__ ); \
 		return ___VAL; \
@@ -74,26 +74,26 @@
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging //
-#define ELog( ___STR, ... ) \
+#define ELog( ... ) \
 	{ \
-		Log( "Error: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Error: " ## __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __func__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging (return) //
-#define return_ELog( ___STR, ... ) \
+#define return_ELog( ... ) \
 	{ \
-		Log( "Error: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Error: " ## __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __func__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging (return value) //
-#define return_value_ELog( ___VAL, ___STR, ... ) \
+#define return_value_ELog( ___VAL, ... ) \
 	{ \
-		Log( "Error: " ___STR, ## __VA_ARGS__ ); \
+		Log( "Error: " ## __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __func__ ); \
 		return ___VAL; \
@@ -104,10 +104,10 @@
 #ifndef NDEBUG
 // - ------------------------------------------------------------------------------------------ - //
 // Assertion //
-#define Assert( ___TEST, ___STR, ___ARGS... ) \
+#define Assert( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- ======================================================== -" ); \
-		Log( "Assert Error: " ___STR, ## __ARGS ); \
+		Log( "Assert Error: " __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s", __PRETTY_FUNCTION__ ); \
 		Log( "- ======================================================== -" ); \
@@ -115,26 +115,26 @@
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings //
-#define Warning( ___TEST, ___STR, ___ARGS... ) \
+#define Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " ___STR, ## ___ARGS ); \
+		Log( "Warning: " __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return) //
-#define return_Warning( ___TEST, ___STR, ___ARGS... ) \
+#define return_Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " ___STR, ## ___ARGS ); \
+		Log( "Warning: " __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return value) //
-#define return_value_Warning( ___VAL, ___TEST, ___STR, ___ARGS... ) \
+#define return_value_Warning( ___VAL, ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " ___STR, ## ___ARGS ); \
+		Log( "Warning: " __VA_ARGS__ ); \
 		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \
@@ -158,26 +158,26 @@
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging //
-#define ELog( ___STR, ___ARGS... ) \
+#define ELog( ... ) \
 	{ \
-		Log( "Error: " ___STR, ## ___ARGS ); \
+		Log( "Error: " __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging //
-#define return_ELog( ___STR, ___ARGS... ) \
+#define return_ELog( ... ) \
 	{ \
-		Log( "Error: " ___STR, ## ___ARGS ); \
+		Log( "Error: " __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging //
-#define return_value_ELog( ___VAL, ___STR, ___ARGS... ) \
+#define return_value_ELog( ___VAL, ... ) \
 	{ \
-		Log( "Error: " ___STR, ## ___ARGS ); \
+		Log( "Error: " __VA_ARGS__ ); \
 		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \

@@ -9,7 +9,7 @@
 #include "GelArray_Hash32.h"
 #include "GelArray_File.h"
 
-//#include "GelArray_Class.h"
+#include "GelArray_Class.h"
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Library_GELCore_GelArray_H__ //

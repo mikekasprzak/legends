@@ -4,9 +4,10 @@
 #ifndef __Library_Data_GelArray_Class_H__
 #define __Library_Data_GelArray_Class_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Debug/Assert.h>
+
 #include "DataBlock_Core.h"
 #include "DataBlock_File.h"
-#include "DataBlock_Class.h"
 
 #include "GelArray_Core.h"
 #include "GelArray_File.h"
@@ -16,7 +17,6 @@ template< class Type >
 class cGelArray {
 protected:
 	GelArray<Type>* _Data;
-	
 public:
 	// Constructor //
 	inline cGelArray() :
@@ -56,27 +56,31 @@ public:
 	
 	// Destructor //
 	inline ~cGelArray() {
-		// TODO: Make this Data Check an Assert //
-		if (_Data)
+		if ( _Data )
 			delete_GelArray<Type>( _Data );
 	}
 public:
-	inline size_t Size() const {
-		// TODO: Make this Data Check an Assert //
-		if (_Data)
-			return _Data->Size;
-		return 0;
+	inline const size_t Size() const {
+		if ( _Data == 0 )
+			return 0;
+		return _Data->Size;
+	}
+	
+	inline const size_t SizeOf() const {
+		if ( _Data == 0 )
+			return 0;
+		return _Data->MaxSize;
 	}
 	
 	inline const char* Data() const {
-		// TODO: Make this Data Check an Assert //
-		if (_Data)
-			return _Data->Data;
-		return 0;
+		return_value_Warning( 0, _Data == 0, "cGelArray w/o Data" );
+		return _Data->Data;
 	}
 	
 	inline Type& operator [] ( const size_t Index ) {
-		// TODO: Assert indexing in to valid memory, and within size? //
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
+		Warning( Index > Size(), "Index out of bounds (%i >= %i)", Index, Size() );
 		return _Data->Data[ Index ];
 	}
 	
@@ -85,43 +89,39 @@ public:
 	}
 public:
 	inline void Load( const char* _FileName ) {
-		// TODO: Make this Data Check an Assert //
 		// Delete the file if there is one loaded //
-		if (_Data)
+		if ( _Data )
 			delete_GelArray<Type>( _Data );
-		// load the file //
+		// Load the file //
 		_Data = new_GelArray<Type>( _FileName );
 	}
 	
 	inline void Save( const char* _FileName ) {
-		// TODO: Make this Data Check an Assert //
-		if (_Data)
-			write_GelArray<Type>( _Data, _FileName );
+		return_Warning( _Data == 0, "cGelArray w/o Data" );
+		write_GelArray<Type>( _Data, _FileName );
 	}
 
 public:
 	inline void Resize( const size_t _Size ) {
-		// TODO: Make this Data Check an Assert //
-		if (_Data)
-			resize_GelArray<Type>( &_Data, _Size );
+		resize_GelArray<Type>( &_Data, _Size );
 	}
 	
-	inline void Set( const Type& _InitValue ) {
-		// TODO: Make this Data Check an Assert //				
-		if (_Data)
-			set_GelArray<Type>( _Data, _InitValue );
+	inline void Set( const Type& _Value ) {
+		return_Warning( _Data == 0, "cGelArray w/o Data" );
+		set_GelArray<Type>( _Data, _Value );
 	}
 	
 	inline void Clear( ) {
-		Set( 0 );
+		Set( Type() );
 	}
 	
 	inline void Reset( ) {
 		Resize( 0 );
 	}
 	
-	inline void PushBack( const Type& _InitValue ) {
-		pushback_GelArray<Type>( &_Data, _InitValue );
+	inline void PushBack( const Type& _Value ) {
+		return_Warning( _Data == 0, "cGelArray w/o Data" );
+		pushback_GelArray<Type>( &_Data, _Value );
 	}
 	
 	inline const Type PopBack() {
@@ -129,39 +129,36 @@ public:
 	}
 	
 public:
-	// STL Compatability //
-	inline void push_back( const Type& _InitValue ) {
-		PushBack( _InitValue );
-	}
-	inline const Type pop_back() {
-		return PopBack();
-	}
-	inline void clear() {
-		Reset();
-	}
-	inline void resize( const size_t _Size ) {
-		Resize( _Size );
-	}
-	
+//	// STL Compatability //
+//	inline void push_back( const Type& _InitValue ) {
+//		PushBack( _InitValue );
+//	}
+//	inline const Type pop_back() {
+//		return PopBack();
+//	}
+//	inline void clear() {
+//		Reset();
+//	}
+//	inline void resize( const size_t _Size ) {
+//		Resize( _Size );
+//	}
+
 public:
 	// Compression //
-	inline void UnpackLZMA( const cDataBlock& _Src );
 	inline void UnpackLZMA( const DataBlock* _Src );
 	
-	inline void UnpackBZIP( cDataBlock& _Src );
 	inline void UnpackBZIP( DataBlock* _Src );
 	inline DataBlock* PackBZIP();
 	
-	inline void UnpackZLIB( cDataBlock& _Src );
 	inline void UnpackZLIB( DataBlock* _Src );
 	inline DataBlock* PackZLIB();
 	
-	inline void UnpackLZO( cDataBlock& _Src );
 	inline void UnpackLZO( DataBlock* _Src );
 	inline DataBlock* PackLZO();
 	
 	// Hash //
 	inline const unsigned int Hash32() const {
+		return_value_Warning( 0, _Data == 0, "cGelArray w/o Data" );
 		return hash32_GelArray( _Data );
 	}
 	//inline static const MD5Hash HashMD5( const cGelArray<Type>& _Src  );
