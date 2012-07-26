@@ -10,6 +10,8 @@
 #include "Soil.h"
 
 #include "CArrayPtr.h"
+#include "CArray.h"
+//#include "Array.h"	// NO! Update GelArray_Class.h instead.
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeSystem {
 // - ------------------------------------------------------------------------------------------ - //

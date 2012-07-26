@@ -1,33 +1,26 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __CARRAYPTR_H__
-#define __CARRAYPTR_H__
+#ifndef __CARRAY_H__
+#define __CARRAY_H__
 // - ------------------------------------------------------------------------------------------ - //
-// C Array of Pointers -- Enhanced version of a C Array, with pointer specific features //
-//   T is assumed to be a pointer //
+// C Array -- Enhanced version of a C Array //
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
 // - ------------------------------------------------------------------------------------------ - //
 template<class T, size_t _Size>
-class CArrayPtr {
+class CArray {
 	T Data[_Size];
 public:
-	static T ErrorPtr;
-	
+	static T ErrorData;
+
 	enum {
 		Error = -1,
-		Empty = 0,
 		
 		FirstIndex = 0,
-		LastIndex = _Size-1,
-		
-		// Feed these values in to NextIterator and PrevIterator //
-		FrontIterator = FirstIndex-1,
-		BackIterator = LastIndex+1,
+		LastIndex = _Size-1,		
 	};
 
 public:
-	inline CArrayPtr() {
-		Zero();
+	inline CArray() {
 	}
 
 	inline T& operator [] ( const size_t Index ) {
@@ -57,78 +50,31 @@ public:
 		return Value == Error;
 	}
 
-	// SizeOf() returns the array size, because Size() should change.
+	// SizeOf() returns the array size, for compatibility. //
 	inline static const size_t SizeOf() {
 		return _Size;
 	}
 	
-	// Size() returns elements used, for compatibility with other arrays.
+	// Size() returns the array size //
 	inline const size_t Size() const {
-		size_t Count = 0;
+		return _Size;
+	}
 		
-		for ( size_t idx = _Size; idx--; ) {
-			if ( Data[idx] != (T)Empty )
-				Count++;
-		}
-		
-		return Count;
-	}
-	
-	
-	inline void Remove( const size_t Index ) {
-		Data[Index] = (T)Empty;
-	}
-	inline void Zero( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size; Start < 0 handled by size_t
-		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
-		size_t idx;
-		if ( Start+Count > _Size )
-			idx = _Size;
-		else
-			idx = Start+Count;
-
-		// Index in Reverse Order //
-		for ( ; idx-- > Start; ) {
-			Remove(idx);
-		}
-	}
-	
-	inline void Delete( const size_t Index ) {
-		if ( Data[Index] ) {
-			delete Data[Index];
-			Remove(Index);
-		}
-	}
-	inline void Clear( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size; Start < 0 handled by size_t
-		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
-		size_t idx;
-		if ( Start+Count > _Size )
-			idx = _Size;
-		else
-			idx = Start+Count;
-
-		// Index in Reverse Order //
-		for ( ; idx-- > Start; ) {
-			Delete(idx);
-		}
-	}
-	
 	// - ------------------------------------------------------------------ - //
 	
 	// Smart Indexing Function //
 	inline T& Index( const int idx ) {
 		if ( idx < 0 )
-			return ErrorPtr;
+			return ErrorData;
 		else if ( idx >= _Size )
-			return ErrorPtr;
+			return ErrorData;
 		return Data[idx];
 	}
 	inline const T& Index( const int idx ) const {
 		if ( idx < 0 )
-			return ErrorPtr;
+			return ErrorData;
 		else if ( idx >= _Size )
-			return ErrorPtr;
+			return ErrorData;
 		return Data[idx];
 	}
 		
@@ -143,16 +89,16 @@ public:
 	// Saturation Indexing Function //
 	inline T& Saturate( const int idx ) {
 		if ( idx < 0 )
-			return Data[0];
+			return Data[FirstIndex];
 		else if ( idx >= _Size )
-			return Data[_Size-1];
+			return Data[LastIndex];
 		return Data[idx];
 	}
 	inline const T& Saturate( const int idx ) const {
 		if ( idx < 0 )
-			return Data[0];
+			return Data[FirstIndex];
 		else if ( idx >= _Size )
-			return Data[_Size-1];
+			return Data[LastIndex];
 		return Data[idx];
 	}
 	
@@ -178,96 +124,6 @@ public:
 
 	// NOTE: No "Find()" function because you should always verify that an //
 	//       index was actually found. //
-	
-	// - ------------------------------------------------------------------ - //
-
-	// Iterator Functions -- Iterator results are Indexing compatable, but -- //
-	//                       you'll want to confirm the iterator is legal. -- //
-	
-	// HOW TO USE:
-	//	int Index = Active.FrontIterator;
-	//	while( !Active.IsError( Index = Active.NextIterator(Index) ) ) {
-	//	}
-	inline const int NextIterator( const int Index = FrontIterator ) const {
-		for ( size_t idx = Index+1; idx < _Size; idx++ ) {
-			if ( Data[idx] != (T)Empty )
-				return idx;
-		}
-		return Error;
-	}
-	inline const int FirstIterator() const {
-		return NextIterator();
-	}
-
-	// HOW TO USE:
-	//	int Index = Active.BackIterator;
-	//	while( !Active.IsError( Index = Active.PrevIterator(Index) ) ) {
-	//	}
-	inline const int PrevIterator( const int Index = BackIterator ) const {
-		for ( size_t idx = Index-1; idx--; ) {
-			if ( Data[idx] != (T)Empty )
-				return idx;
-		}
-		return Error;
-	}
-	inline const int LastIterator() const {
-		return PrevIterator();
-	}
-
-	// - ------------------------------------------------------------------ - //
-	
-	// Get an unused Index ------------------------------------------------ - //
-	inline const int GetIndex() {
-		for ( size_t idx = 0; idx < _Size; idx++ ) {
-			if ( Data[idx] == (T)Empty )
-				return idx;
-		}
-		return Error;
-	}
-	
-	inline const int GetIndexBack() {
-		// Index in Reverse Order //
-		for ( size_t idx = _Size; idx--; ) {
-			if ( Data[idx] == (T)Empty )
-				return idx;
-		}
-		return Error;
-	}
-
-	// - ------------------------------------------------------------------ - //
-	
-	// Get a reference to an unused array element ------------------------- - //
-	inline T& Get() {
-		for ( size_t idx = 0; idx < _Size; idx++ ) {
-			if ( Data[idx] == (T)Empty )
-				return Data[idx];
-		}
-		return ErrorPtr;
-	}
-	inline const T& Get() const {
-		for ( size_t idx = 0; idx < _Size; idx++ ) {
-			if ( Data[idx] == (T)Empty )
-				return Data[idx];
-		}
-		return ErrorPtr;
-	}
-	
-	inline T& GetBack() {
-		// Index in Reverse Order //
-		for ( size_t idx = _Size; idx--; ) {
-			if ( Data[idx] == (T)Empty )
-				return Data[idx];
-		}
-		return ErrorPtr;
-	}
-	inline const T& GetBack() const {
-		// Index in Reverse Order //
-		for ( size_t idx = _Size; idx--; ) {
-			if ( Data[idx] == (T)Empty )
-				return Data[idx];
-		}
-		return ErrorPtr;
-	}
 
 	// - ------------------------------------------------------------------ - //
 
@@ -293,7 +149,7 @@ public:
 	}
 	inline void MoveForward( const size_t Start = 0, const size_t Count = _Size ) {
 		_MoveForward( Start, Count );
-		Data[Start] = (T)Empty;
+		Data[Start] = T();
 	}
 	inline void PushFront( const T& Value ) {
 		_MoveForward();
@@ -320,7 +176,7 @@ public:
 	}
 	inline void MoveBackward( const size_t Start = 0, const size_t Count = _Size ) {
 		_MoveBackward( Start, Count );
-		Data[Start+Count-1] = (T)Empty;
+		Data[Start+Count-1] = T();
 	}
 	inline void PushBack( const T& Value ) {
 		_MoveBackward();
@@ -340,7 +196,7 @@ public:
 };
 // - ------------------------------------------------------------------------------------------ - //
 template <class T, size_t _Size> 
-T CArrayPtr<T,_Size>::ErrorPtr = (T)CArrayPtr<T,_Size>::Empty;
+T CArray<T,_Size>::ErrorData = T();
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __CARRAYPTR_H__ //
+#endif // __CARRAY_H__ //
 // - ------------------------------------------------------------------------------------------ - //
