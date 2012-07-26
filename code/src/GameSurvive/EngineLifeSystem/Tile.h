@@ -43,9 +43,14 @@ public:
 
 //		Active.Front() = Active.PopBack();
 //		Active.PushFront((cActive*)15);
-//		Active.MoveBackward(1,2);//PushFront((cActive*)15);
-		Active.Back() = Active.PopFront();
-		Active.PushBack((cActive*)15);
+		Active.MoveBackward(1,2);//PushFront((cActive*)15);
+//		Active.Back() = Active.PopFront();
+//		Active.PushBack((cActive*)15);
+		
+		int Index = Active.FrontIterator;
+		while( !Active.IsError( Index = Active.NextIterator(Index) ) ) {
+			Log( "%i -- %x", Index, Active[Index] );			
+		}
 		
 		Log( "MEEP! %i %i", Active.SizeOf(), Active.Size() );
 		for ( size_t idx = 0; idx < Active.SizeOf(); idx++ ) {

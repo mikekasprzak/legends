@@ -20,6 +20,10 @@ public:
 		
 		FirstIndex = 0,
 		LastIndex = _Size-1,
+		
+		// Feed these values in to NextIterator and PrevIterator //
+		FrontIterator = FirstIndex-1,
+		BackIterator = LastIndex+1,
 	};
 
 public:
@@ -49,13 +53,18 @@ public:
 	}
 
 public:
+	// Check for Error with this handy syntax //
+	inline static const bool IsError( const int Value ) {
+		return Value == Error;
+	}
+
 	// SizeOf() returns the array size, because Size() should change.
-	inline size_t SizeOf() const {
+	inline static const size_t SizeOf() {
 		return _Size;
 	}
 	
 	// Size() returns elements used, for compatibility with other arrays.
-	inline size_t Size() const {
+	inline const size_t Size() const {
 		size_t Count = 0;
 		
 		for ( size_t idx = _Size; idx--; ) {
@@ -66,13 +75,22 @@ public:
 		return Count;
 	}
 	
+	
 	inline void Remove( const size_t Index ) {
 		Data[Index] = (T)Empty;
 	}
 	
-	inline void Clear() {
-		// Reverse Order //
-		for ( size_t idx = _Size; idx--; ) {
+	inline void Clear( const size_t Start = 0, const size_t Count = _Size ) {
+		// TODO: Assert Start > _Size; Start < 0 handled by size_t
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t idx;
+		if ( Start+Count > _Size )
+			idx = _Size;
+		else
+			idx = Start+Count;
+
+		// Index in Reverse Order //
+		for ( ; idx-- > Start; ) {
 			Remove(idx);
 		}
 	}
@@ -131,7 +149,7 @@ public:
 	}
 
 	inline const int FindIndexBack( const T Vs ) const {
-		// Reverse Order //
+		// Index in Reverse Order //
 		for ( size_t idx = _Size; idx--; ) {
 			if ( Data[idx] == Vs )
 				return idx;
@@ -142,6 +160,41 @@ public:
 	// NOTE: No "Find()" function because you should always verify that an //
 	//       index was actually found. //
 	
+	// - ------------------------------------------------------------------ - //
+
+	// Iterator Functions -- Iterator results are Indexing compatable, but -- //
+	//                       you'll want to confirm the iterator is legal. -- //
+	
+	// HOW TO USE:
+	//	int Index = Active.FrontIterator;
+	//	while( !Active.IsError( Index = Active.NextIterator(Index) ) ) {
+	//	}
+	inline const int NextIterator( const int Index = FrontIterator ) const {
+		for ( size_t idx = Index+1; idx < _Size; idx++ ) {
+			if ( Data[idx] != (T)Empty )
+				return idx;
+		}
+		return Error;
+	}
+	inline const int FirstIterator() const {
+		return NextIterator();
+	}
+
+	// HOW TO USE:
+	//	int Index = Active.BackIterator;
+	//	while( !Active.IsError( Index = Active.PrevIterator(Index) ) ) {
+	//	}
+	inline const int PrevIterator( const int Index = BackIterator ) const {
+		for ( size_t idx = Index-1; idx--; ) {
+			if ( Data[idx] != (T)Empty )
+				return idx;
+		}
+		return Error;
+	}
+	inline const int LastIterator() const {
+		return PrevIterator();
+	}
+
 	// - ------------------------------------------------------------------ - //
 	
 	// Get an unused Index ------------------------------------------------ - //
@@ -154,7 +207,7 @@ public:
 	}
 	
 	inline const int GetIndexBack() {
-		// Reverse Order //
+		// Index in Reverse Order //
 		for ( size_t idx = _Size; idx--; ) {
 			if ( Data[idx] == (T)Empty )
 				return idx;
@@ -181,7 +234,7 @@ public:
 	}
 	
 	inline T& GetBack() {
-		// Reverse Order //
+		// Index in Reverse Order //
 		for ( size_t idx = _Size; idx--; ) {
 			if ( Data[idx] == (T)Empty )
 				return Data[idx];
@@ -189,7 +242,7 @@ public:
 		return ErrorPtr;
 	}
 	inline const T& GetBack() const {
-		// Reverse Order //
+		// Index in Reverse Order //
 		for ( size_t idx = _Size; idx--; ) {
 			if ( Data[idx] == (T)Empty )
 				return Data[idx];
@@ -206,7 +259,7 @@ public:
 	}
 	
 	inline void _MoveForward( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size
+		// TODO: Assert Start > _Size; Start < 0 handled by size_t
 		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
 		size_t idx;
 		if ( Start+Count-1 > _Size-1 )
@@ -214,6 +267,7 @@ public:
 		else
 			idx = Start+Count-1;   
 			
+		// Index in Reverse Order //
 		for ( ; idx-- > Start; ) {
 			Data[idx+1] = Data[idx];
 		}
@@ -233,7 +287,7 @@ public:
 	}
 
 	inline void _MoveBackward( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size
+		// TODO: Assert Start > _Size; Start < 0 handled by size_t
 		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
 		size_t MaxIndex;
 		if ( Start+Count-1 > _Size-1 )
