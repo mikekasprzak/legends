@@ -32,6 +32,13 @@ public:
 		ViewSize( 7 )
 	{
 		Map(2,1).Active.Get() = new cActive();
+		
+		cPassiveTemplate* Dummy = new cPassiveTemplate();
+		Dummy->Load( "Content/Misc/TestPassive.json" );
+		
+		Log( "HEEEEB! %i", Dummy->MaxCount );
+
+		Map(3,1).Passive.Get() = new cPassive( Dummy );
 	}
 	
 public:

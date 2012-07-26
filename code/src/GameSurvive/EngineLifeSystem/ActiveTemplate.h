@@ -13,6 +13,10 @@ public:
 	cActiveTemplate()
 	{
 	}
+	
+public:
+	void Load( const char* InFile );
+	void Save( const char* OutFile );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeSystem //
