@@ -13,13 +13,13 @@ public:
 	const cPassiveTemplate* Template;	// What we're based on //
 	size_t 					Count;		// How many in this pile // 
 public:
-	cPassive() :
+	inline cPassive() :
 		Template(0),
 		Count(1)
 	{
 	}
 	
-	cPassive( const cPassiveTemplate* _Template, const size_t _Count = 1 ) :
+	inline cPassive( const cPassiveTemplate* _Template, const size_t _Count = 1 ) :
 		Template( _Template ),
 		Count( _Count )
 	{

@@ -1,32 +1,21 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFESYSTEM_ACTIVE_H__
-#define __LIFESYSTEM_ACTIVE_H__
+#ifndef __LIFESYSTEM_ACTIVETEMPLATE_H__
+#define __LIFESYSTEM_ACTIVETEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Active Object -- An Instance of an Active Object //
-// - ------------------------------------------------------------------------------------------ - //
-#include "ActiveTemplate.h"
+// Active Template Object -- Common properties between all instances this Object //
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeSystem {
 // - ------------------------------------------------------------------------------------------ - //
-class cActive {
+class cActiveTemplate {
 public:
-	const cActiveTemplate* Template;	// What we're based on //
-public:
-	inline cActive() :
-		Template(0)
-	{
-	}
 
-	inline cActive( const cActiveTemplate* _Template ) :
-		Template( _Template )
+public:
+	cActiveTemplate()
 	{
 	}
-	
-public:
-	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeSystem //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFESYSTEM_ACTIVE_H__ //
+#endif // __LIFESYSTEM_ACTIVETEMPLATE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
