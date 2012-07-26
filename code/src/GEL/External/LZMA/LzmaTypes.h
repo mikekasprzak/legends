@@ -1,5 +1,5 @@
 /* Types.h -- Basic types
-2009-08-14 : Igor Pavlov : Public domain */
+2010-10-09 : Igor Pavlov : Public domain */
 
 #ifndef __7Z_TYPES_H
 #define __7Z_TYPES_H
@@ -81,9 +81,11 @@ typedef unsigned long UInt64;
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 typedef __int64 Int64;
 typedef unsigned __int64 UInt64;
+#define UINT64_CONST(n) n
 #else
 typedef long long int Int64;
 typedef unsigned long long int UInt64;
+#define UINT64_CONST(n) n ## ULL
 #endif
 
 #endif
@@ -99,6 +101,12 @@ typedef int Bool;
 #define False 0
 
 
+#ifdef _WIN32
+#define MY_STD_CALL __stdcall
+#else
+#define MY_STD_CALL
+#endif
+
 #ifdef _MSC_VER
 
 #if _MSC_VER >= 1300
@@ -108,13 +116,11 @@ typedef int Bool;
 #endif
 
 #define MY_CDECL __cdecl
-#define MY_STD_CALL __stdcall
-#define MY_FAST_CALL MY_NO_INLINE __fastcall
+#define MY_FAST_CALL __fastcall
 
 #else
 
 #define MY_CDECL
-#define MY_STD_CALL
 #define MY_FAST_CALL
 
 #endif
@@ -124,19 +130,29 @@ typedef int Bool;
 
 typedef struct
 {
-  SRes (*Read)(void *p, void *buf, SizeT *size);
+  Byte (*Read)(void *p); /* reads one byte, returns 0 in case of EOF or error */
+} IByteIn;
+
+typedef struct
+{
+  void (*Write)(void *p, Byte b);
+} IByteOut;
+
+typedef struct
+{
+  SRes (*Read)(void *p, void *buf, size_t *size);
     /* if (input(*size) != 0 && output(*size) == 0) means end_of_stream.
        (output(*size) < input(*size)) is allowed */
 } ISeqInStream;
 
 /* it can return SZ_ERROR_INPUT_EOF */
-SRes SeqInStream_Read(ISeqInStream *stream, void *buf, SizeT size);
-SRes SeqInStream_Read2(ISeqInStream *stream, void *buf, SizeT size, SRes errorType);
+SRes SeqInStream_Read(ISeqInStream *stream, void *buf, size_t size);
+SRes SeqInStream_Read2(ISeqInStream *stream, void *buf, size_t size, SRes errorType);
 SRes SeqInStream_ReadByte(ISeqInStream *stream, Byte *buf);
 
 typedef struct
 {
-  SizeT (*Write)(void *p, const void *buf, SizeT size);
+  size_t (*Write)(void *p, const void *buf, size_t size);
     /* Returns: result - the number of actually written bytes.
        (result < size) means error */
 } ISeqOutStream;
@@ -150,30 +166,30 @@ typedef enum
 
 typedef struct
 {
-  SRes (*Read)(void *p, void *buf, SizeT *size);  /* same as ISeqInStream::Read */
+  SRes (*Read)(void *p, void *buf, size_t *size);  /* same as ISeqInStream::Read */
   SRes (*Seek)(void *p, Int64 *pos, ESzSeek origin);
 } ISeekInStream;
 
 typedef struct
 {
-  SRes (*Look)(void *p, void **buf, SizeT *size);
+  SRes (*Look)(void *p, const void **buf, size_t *size);
     /* if (input(*size) != 0 && output(*size) == 0) means end_of_stream.
        (output(*size) > input(*size)) is not allowed
        (output(*size) < input(*size)) is allowed */
-  SRes (*Skip)(void *p, SizeT offset);
+  SRes (*Skip)(void *p, size_t offset);
     /* offset must be <= output(*size) of Look */
 
-  SRes (*Read)(void *p, void *buf, SizeT *size);
+  SRes (*Read)(void *p, void *buf, size_t *size);
     /* reads directly (without buffer). It's same as ISeqInStream::Read */
   SRes (*Seek)(void *p, Int64 *pos, ESzSeek origin);
 } ILookInStream;
 
-SRes LookInStream_LookRead(ILookInStream *stream, void *buf, SizeT *size);
+SRes LookInStream_LookRead(ILookInStream *stream, void *buf, size_t *size);
 SRes LookInStream_SeekTo(ILookInStream *stream, UInt64 offset);
 
 /* reads via ILookInStream::Read */
-SRes LookInStream_Read2(ILookInStream *stream, void *buf, SizeT size, SRes errorType);
-SRes LookInStream_Read(ILookInStream *stream, void *buf, SizeT size);
+SRes LookInStream_Read2(ILookInStream *stream, void *buf, size_t size, SRes errorType);
+SRes LookInStream_Read(ILookInStream *stream, void *buf, size_t size);
 
 #define LookToRead_BUF_SIZE (1 << 14)
 
@@ -181,8 +197,8 @@ typedef struct
 {
   ILookInStream s;
   ISeekInStream *realStream;
-  SizeT pos;
-  SizeT size;
+  size_t pos;
+  size_t size;
   Byte buf[LookToRead_BUF_SIZE];
 } CLookToRead;
 
@@ -214,12 +230,28 @@ typedef struct
 
 typedef struct
 {
-  void *(*Alloc)(void *p, SizeT size);
+  void *(*Alloc)(void *p, size_t size);
   void (*Free)(void *p, void *address); /* address can be 0 */
 } ISzAlloc;
 
 #define IAlloc_Alloc(p, size) (p)->Alloc((p), size)
 #define IAlloc_Free(p, a) (p)->Free((p), a)
+
+#ifdef _WIN32
+
+#define CHAR_PATH_SEPARATOR '\\'
+#define WCHAR_PATH_SEPARATOR L'\\'
+#define STRING_PATH_SEPARATOR "\\"
+#define WSTRING_PATH_SEPARATOR L"\\"
+
+#else
+
+#define CHAR_PATH_SEPARATOR '/'
+#define WCHAR_PATH_SEPARATOR L'/'
+#define STRING_PATH_SEPARATOR "/"
+#define WSTRING_PATH_SEPARATOR L"/"
+
+#endif
 
 EXTERN_C_END
 
