@@ -15,24 +15,24 @@ namespace LifeSystem {
 // - ------------------------------------------------------------------------------------------ - //
 class cTile {
 public:
-	// Constants //
-	enum {
+	enum { 
+		// Constants //
 		DEFAULT_TILE_HEIGHT = 1024,
 		MAX_ACTIVE = 4,
-		MAX_PASSIVE = 8
+		MAX_PASSIVE = 8,
 	};
 
-public:
-	int Height;										// Elevation //
-
-	CArrayPtr<cActive*,MAX_ACTIVE>		Active;
-	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;
-	cSoil								Soil;		// Soil Content //
+public:												// --Words (32bit)-- //
+	cSoil								Soil;		// 4 - Soil Content //
+	CArrayPtr<cActive*,MAX_ACTIVE>		Active;		// 4 //
+	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;	// 8 //
+	int Height;										// 1 - Elevation //
 
 public:
 	cTile() :
 		Height( DEFAULT_TILE_HEIGHT )
 	{
+/*
 		Log( "HEEP! %i %i -- %x %x", Active.SizeOf(), Active.Size(), Active.ErrorPtr, &Active.ErrorPtr );
 		
 //		Active.Get() = new cActive();
@@ -56,6 +56,12 @@ public:
 		for ( size_t idx = 0; idx < Active.SizeOf(); idx++ ) {
 			Log( "%i -- %x", idx, Active[idx] );
 		}
+*/
+	}
+	
+	~cTile() {
+		Active.Clear();
+		Passive.Clear();
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

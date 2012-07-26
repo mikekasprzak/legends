@@ -861,7 +861,7 @@ void cGame::Draw() {
 			Log( "TOOK: -1:%f 0:%f +1:%f", Real(-1).ArcCos().ToFloat(), Real(0).ArcCos().ToFloat(), Real(+1).ArcCos().ToFloat() );
 		}
 		
-		World.DrawRoom();
+		World.DrawView();
 	}
 
 	CurrentRT = RT_MINI1;

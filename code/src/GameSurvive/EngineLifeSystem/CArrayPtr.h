@@ -28,7 +28,7 @@ public:
 
 public:
 	inline CArrayPtr() {
-		Clear();
+		Zero();
 	}
 
 	inline T& operator [] ( const size_t Index ) {
@@ -79,8 +79,7 @@ public:
 	inline void Remove( const size_t Index ) {
 		Data[Index] = (T)Empty;
 	}
-	
-	inline void Clear( const size_t Start = 0, const size_t Count = _Size ) {
+	inline void Zero( const size_t Start = 0, const size_t Count = _Size ) {
 		// TODO: Assert Start > _Size; Start < 0 handled by size_t
 		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
 		size_t idx;
@@ -92,6 +91,27 @@ public:
 		// Index in Reverse Order //
 		for ( ; idx-- > Start; ) {
 			Remove(idx);
+		}
+	}
+	
+	inline void Delete( const size_t Index ) {
+		if ( Data[Index] ) {
+			delete Data[Index];
+			Remove(Index);
+		}
+	}
+	inline void Clear( const size_t Start = 0, const size_t Count = _Size ) {
+		// TODO: Assert Start > _Size; Start < 0 handled by size_t
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t idx;
+		if ( Start+Count > _Size )
+			idx = _Size;
+		else
+			idx = Start+Count;
+
+		// Index in Reverse Order //
+		for ( ; idx-- > Start; ) {
+			Delete(idx);
 		}
 	}
 	
