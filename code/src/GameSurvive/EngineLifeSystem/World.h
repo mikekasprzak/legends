@@ -9,6 +9,7 @@
 #include <Graphics/GraphicsDraw.h>
 
 #include <Grid/Grid2D_Class.h>
+#include <vector>
 #include "Tile.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeSystem {
@@ -19,7 +20,9 @@ public:
 	int Iteration;
 	
 	// World //
-	cGrid2D<cTile> Map;
+	cGrid2D<cTile> 					Map;
+	std::vector<cActiveTemplate>	ActiveTemplate;
+	std::vector<cPassiveTemplate>	PassiveTemplate;
 
 	// Camera //
 	int ViewX, ViewY;
@@ -33,12 +36,12 @@ public:
 	{
 		Map(2,1).Active.Get() = new cActive();
 		
-		cPassiveTemplate* Dummy = new cPassiveTemplate();
-		Dummy->Load( "Content/Misc/TestPassive.json" );
+		PassiveTemplate.push_back( cPassiveTemplate() );
+		PassiveTemplate.back().Load( "Content/Misc/TestPassive.json" );
 		
-		Log( "HEEEEB! %i", Dummy->MaxCount );
+		Log( "HEEEEB! %i", PassiveTemplate.back().MaxCount );
 
-		Map(3,1).Passive.Get() = new cPassive( Dummy );
+		Map(3,1).Passive.Get() = new cPassive( &(PassiveTemplate.back()) );
 	}
 	
 public:
