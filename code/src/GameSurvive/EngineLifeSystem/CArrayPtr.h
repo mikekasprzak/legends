@@ -1,0 +1,273 @@
+// - ------------------------------------------------------------------------------------------ - //
+#ifndef __CARRAYPTR_H__
+#define __CARRAYPTR_H__
+// - ------------------------------------------------------------------------------------------ - //
+// C Array of Pointers -- Enhanced version of a C Array, with pointer specific features //
+//   T is assumed to be a pointer //
+// - ------------------------------------------------------------------------------------------ - //
+#include <string.h>
+// - ------------------------------------------------------------------------------------------ - //
+template<class T, size_t _Size>
+class CArrayPtr {
+	T Data[_Size];
+
+public:
+	static T ErrorPtr;
+	
+	enum {
+		Error = -1,
+		Empty = 0,
+		
+		FirstIndex = 0,
+		LastIndex = _Size-1,
+	};
+
+public:
+	inline CArrayPtr() {
+		Clear();
+	}
+
+	inline T& operator [] ( const size_t Index ) {
+		return Data[Index];
+	}
+	inline const T& operator [] ( const size_t Index ) const {
+		return Data[Index];
+	}
+	
+	inline T& Front() {
+		return Data[FirstIndex];
+	}
+	inline const T& Front() const {
+		return Data[FirstIndex];
+	}
+
+	inline T& Back() {
+		return Data[LastIndex];
+	}
+	inline const T& Back() const {
+		return Data[LastIndex];
+	}
+
+public:
+	// SizeOf() returns the array size, because Size() should change.
+	inline size_t SizeOf() const {
+		return _Size;
+	}
+	
+	// Size() returns elements used, for compatibility with other arrays.
+	inline size_t Size() const {
+		size_t Count = 0;
+		
+		for ( size_t idx = _Size; idx--; ) {
+			if ( Data[idx] != (T)Empty )
+				Count++;
+		}
+		
+		return Count;
+	}
+	
+	inline void Remove( const size_t Index ) {
+		Data[Index] = (T)Empty;
+	}
+	
+	inline void Clear() {
+		// Reverse Order //
+		for ( size_t idx = _Size; idx--; ) {
+			Remove(idx);
+		}
+	}
+	
+	// - ------------------------------------------------------------------ - //
+	
+	// Smart Indexing Function //
+	inline T& Index( const int idx ) {
+		if ( idx < 0 )
+			return ErrorPtr;
+		else if ( idx >= _Size )
+			return ErrorPtr;
+		return Data[idx];
+	}
+	inline const T& Index( const int idx ) const {
+		if ( idx < 0 )
+			return ErrorPtr;
+		else if ( idx >= _Size )
+			return ErrorPtr;
+		return Data[idx];
+	}
+		
+	// Wrapping Index Function //
+	inline T& Wrap( const int idx ) {
+		return Data[idx % _Size];
+	}
+	inline const T& Wrap( const int idx ) const {
+		return Data[idx % _Size];
+	}
+		
+	// Saturation Indexing Function //
+	inline T& Saturate( const int idx ) {
+		if ( idx < 0 )
+			return Data[0];
+		else if ( idx >= _Size )
+			return Data[_Size-1];
+		return Data[idx];
+	}
+	inline const T& Saturate( const int idx ) const {
+		if ( idx < 0 )
+			return Data[0];
+		else if ( idx >= _Size )
+			return Data[_Size-1];
+		return Data[idx];
+	}
+	
+	// - ------------------------------------------------------------------ - //
+	
+	// Given a Pointer value, Find the Index that points to it ------------ - //
+	inline const int FindIndex( const T Vs ) const {
+		for ( size_t idx = 0; idx < _Size; idx++ ) {
+			if ( Data[idx] == Vs )
+				return idx;
+		}
+		return Error;
+	}
+
+	inline const int FindIndexBack( const T Vs ) const {
+		// Reverse Order //
+		for ( size_t idx = _Size; idx--; ) {
+			if ( Data[idx] == Vs )
+				return idx;
+		}
+		return Error;
+	}
+
+	// NOTE: No "Find()" function because you should always verify that an //
+	//       index was actually found. //
+	
+	// - ------------------------------------------------------------------ - //
+	
+	// Get an unused Index ------------------------------------------------ - //
+	inline const int GetIndex() {
+		for ( size_t idx = 0; idx < _Size; idx++ ) {
+			if ( Data[idx] == (T)Empty )
+				return idx;
+		}
+		return Error;
+	}
+	
+	inline const int GetIndexBack() {
+		// Reverse Order //
+		for ( size_t idx = _Size; idx--; ) {
+			if ( Data[idx] == (T)Empty )
+				return idx;
+		}
+		return Error;
+	}
+
+	// - ------------------------------------------------------------------ - //
+	
+	// Get a reference to an unused array element ------------------------- - //
+	inline T& Get() {
+		for ( size_t idx = 0; idx < _Size; idx++ ) {
+			if ( Data[idx] == (T)Empty )
+				return Data[idx];
+		}
+		return ErrorPtr;
+	}
+	inline const T& Get() const {
+		for ( size_t idx = 0; idx < _Size; idx++ ) {
+			if ( Data[idx] == (T)Empty )
+				return Data[idx];
+		}
+		return ErrorPtr;
+	}
+	
+	inline T& GetBack() {
+		// Reverse Order //
+		for ( size_t idx = _Size; idx--; ) {
+			if ( Data[idx] == (T)Empty )
+				return Data[idx];
+		}
+		return ErrorPtr;
+	}
+	inline const T& GetBack() const {
+		// Reverse Order //
+		for ( size_t idx = _Size; idx--; ) {
+			if ( Data[idx] == (T)Empty )
+				return Data[idx];
+		}
+		return ErrorPtr;
+	}
+
+	// - ------------------------------------------------------------------ - //
+
+	inline void Swap( const size_t A, const size_t B ) {
+		T Temp = B;
+		B = A;
+		A = Temp;
+	}
+	
+	inline void _MoveForward( const size_t Start = 0, const size_t Count = _Size ) {
+		// TODO: Assert Start > _Size
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t idx;
+		if ( Start+Count-1 > _Size-1 )
+			idx = _Size-1;
+		else
+			idx = Start+Count-1;   
+			
+		for ( ; idx-- > Start; ) {
+			Data[idx+1] = Data[idx];
+		}
+	}
+	inline void MoveForward( const size_t Start = 0, const size_t Count = _Size ) {
+		_MoveForward( Start, Count );
+		Data[Start] = (T)Empty;
+	}
+	inline void PushFront( const T& Value ) {
+		_MoveForward();
+		Data[FirstIndex] = Value;
+	}
+	inline const T PopBack() {
+		T Value = Data[LastIndex];
+		MoveForward();
+		return Value;
+	}
+
+	inline void _MoveBackward( const size_t Start = 0, const size_t Count = _Size ) {
+		// TODO: Assert Start > _Size
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t MaxIndex;
+		if ( Start+Count-1 > _Size-1 )
+			MaxIndex = _Size-1;
+		else
+			MaxIndex = Start+Count-1;   
+			
+		for ( size_t idx = Start; idx < MaxIndex; idx++ ) {
+			Data[idx] = Data[idx+1];
+		}
+	}
+	inline void MoveBackward( const size_t Start = 0, const size_t Count = _Size ) {
+		_MoveBackward( Start, Count );
+		Data[Start+Count-1] = (T)Empty;
+	}
+	inline void PushBack( const T& Value ) {
+		_MoveBackward();
+		Data[LastIndex] = Value;
+	}
+	inline const T PopFront() {
+		T Value = Data[FirstIndex];
+		MoveBackward();
+		return Value;
+	}
+			
+//	inline void Defragment() {
+//	inline void FrontAlign() {
+//	inline void BackAlign() {	
+		
+	// - ------------------------------------------------------------------ - //
+};
+// - ------------------------------------------------------------------------------------------ - //
+template <class T, size_t _Size> 
+T CArrayPtr<T,_Size>::ErrorPtr = (T)CArrayPtr<T,_Size>::Empty;
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __CARRAYPTR_H__ //
+// - ------------------------------------------------------------------------------------------ - //

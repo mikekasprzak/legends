@@ -116,6 +116,7 @@ public:
 	GelFont* Font;
 	
 	cWorld World;
+	LifeSystem::cWorld World2;
 	
 //	cPhysics Physics;
 //	
