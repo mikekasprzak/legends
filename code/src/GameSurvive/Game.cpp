@@ -816,7 +816,7 @@ void cGame::Draw() {
 	{
 		gelDrawModeFlat(); // Set Shader First! Matrix Ops Fail if applied before! //
 		gelLoadMatrix( ObserverCamera.ProjectionView );
-
+/*
 		static float Pulser = 0.0f;
 		Pulser += 0.005f;
 		
@@ -860,7 +860,7 @@ void cGame::Draw() {
 			Log( "ZOOK: -1:%f 0:%f +1:%f", Real(-1).ArcSin().ToFloat(), Real(0).ArcSin().ToFloat(), Real(+1).ArcSin().ToFloat() );
 			Log( "TOOK: -1:%f 0:%f +1:%f", Real(-1).ArcCos().ToFloat(), Real(0).ArcCos().ToFloat(), Real(+1).ArcCos().ToFloat() );
 		}
-		
+*/		
 		World.DrawView();
 	}
 
@@ -1076,9 +1076,17 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, FullRefScreen::Height>>1, 0 ), 
 			2, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_TOP, 
-			"FPS: %i - %i, %i", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height );
+			"FPS: %i", FPS_Counter );
+//			"FPS: %i - %i, %i", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height );
 //			"FPS: %i - %i, %i (%f, %f)", FPS_Counter, FullRefScreen::Width, FullRefScreen::Height, Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
 
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -FullRefScreen::Height>>1, 0 ), 
+			1.5, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_BOTTOM, 
+			"(%.2f, %.2f)", Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
+
+/*
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
@@ -1117,7 +1125,7 @@ void cGame::Draw() {
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"(%f | %f | %f | %f)", Check.Row0().SumOf().ToFloat(), Check.Row1().SumOf().ToFloat(), Check.Row2().SumOf().ToFloat(), Check.Row3().SumOf().ToFloat() );
-
+*/
 
 		if ( ScriptErrors() ) {
 			gelSetColor( GEL_RGB_RED );
