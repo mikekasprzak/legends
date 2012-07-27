@@ -38,12 +38,17 @@ public:
 		View()
 	{
 		// Dummy Create //
-		Map(2,1).Active.Get() = new cActive();
+		ActiveTemplate.PushBack( cActiveTemplate() );
+		ActiveTemplate.Back().Load( "Content/Misc/TestActive.json" );
+		
+		Log( "Active Inventory: %i", ActiveTemplate.Back().InventorySize );
+
+		Map(2,1).Active.Get() = new cActive( &(ActiveTemplate.Back()) );
 		
 		PassiveTemplate.PushBack( cPassiveTemplate() );
 		PassiveTemplate.Back().Load( "Content/Misc/TestPassive.json" );
 		
-		Log( "HEEEEB! %i", PassiveTemplate.Back().MaxCount );
+		Log( "Passive Stack Max: %i", PassiveTemplate.Back().MaxCount );
 
 		Map(3,1).Passive.Get() = new cPassive( &(PassiveTemplate.Back()) );
 	}

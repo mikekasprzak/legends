@@ -18,7 +18,7 @@ void cActiveTemplate::Load( const char* InFile ) {
 		Log( "! ActiveTemplate: Error parsing JSON data! Check for bad formatting, extra commas, etc" );
 	}
 	else {
-//		MaxCount = cJSON_GetObjectItem( root, "MaxCount" )->valueint;
+		InventorySize = cJSON_GetObjectItem( root, "InventorySize" )->valueint;
 
 		// Reference //
 //		int Count = cJSON_GetArraySize( root );
