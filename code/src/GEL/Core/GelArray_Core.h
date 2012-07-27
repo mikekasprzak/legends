@@ -260,11 +260,13 @@ inline void reallocate_GelArray( GelArray<Type>** p, const st32 _NewSize ) {
 	// Allocate our new block //
 	GelArray<Type>* NewGelArray = new_GelArray<Type>( _NewSize );
 	
-	// Copy the data to our new block //
-	copy_GelArray<Type>( *p, NewGelArray );
-	
-	// Delete the old block ponted to //
-	delete_GelArray<Type>( *p );
+	if ( *p ) {
+		// Copy the data to our new block //
+		copy_GelArray<Type>( *p, NewGelArray );
+		
+		// Delete the old block ponted to //
+		delete_GelArray<Type>( *p );
+	}
 	
 	// Make the pointer point to the new block //
 	(*p) = NewGelArray;
@@ -275,11 +277,17 @@ inline void reallocate_GelArray( GelArray<Type>** p, const st32 _NewSize, const 
 	// Allocate our new block //
 	GelArray<Type>* NewGelArray = new_GelArray<Type>( _NewSize );
 	
-	// Copy the data to our new block //
-	copy_GelArray<Type>( *p, NewGelArray, _InitValue );
-	
-	// Delete the old block ponted to //
-	delete_GelArray<Type>( *p );
+	if ( *p ) {
+		// Copy the data to our new block //
+		copy_GelArray<Type>( *p, NewGelArray, _InitValue );
+		
+		// Delete the old block ponted to //
+		delete_GelArray<Type>( *p );
+	}
+	else {
+		// No copy made, so fill in with the data //
+		set_GelArray<Type>( NewGelArray, _InitValue );
+	}
 	
 	// Make the pointer point to the new block //
 	(*p) = NewGelArray;
@@ -300,12 +308,14 @@ inline void reallocatemax_GelArray( GelArray<Type>** p, const st32 _NewMaxSize )
 	// Allocate our new block //
 	GelArray<Type>* NewGelArray = newmax_GelArray<Type>( _NewMaxSize, (*p)->Size );
 	
-	// Copy the data to our new block //
-	copy_GelArray<Type>( *p, NewGelArray );
-	
-	// Delete the old block ponted to //
-	delete_GelArray<Type>( *p );
-	
+	if ( *p ) {
+		// Copy the data to our new block //
+		copy_GelArray<Type>( *p, NewGelArray );
+		
+		// Delete the old block ponted to //
+		delete_GelArray<Type>( *p );
+	}
+		
 	// Make the pointer point to the new block //
 	(*p) = NewGelArray;
 }
@@ -315,11 +325,13 @@ inline void reallocatemax_GelArray( GelArray<Type>** p, const st32 _NewMaxSize, 
 	// Allocate our new block //
 	GelArray<Type>* NewGelArray = newmax_GelArray<Type>( _NewMaxSize, _NewSize );
 	
-	// Copy the data to our new block //
-	copy_GelArray<Type>( *p, NewGelArray );
-	
-	// Delete the old block ponted to //
-	delete_GelArray<Type>( *p );
+	if ( *p ) {
+		// Copy the data to our new block //
+		copy_GelArray<Type>( *p, NewGelArray );
+		
+		// Delete the old block ponted to //
+		delete_GelArray<Type>( *p );
+	}
 	
 	// Make the pointer point to the new block //
 	(*p) = NewGelArray;
@@ -330,11 +342,17 @@ inline void reallocatemax_GelArray( GelArray<Type>** p, const st32 _NewMaxSize, 
 	// Allocate our new block //
 	GelArray<Type>* NewGelArray = newmax_GelArray<Type>( _NewMaxSize, _NewSize );
 	
-	// Copy the data to our new block //
-	copy_GelArray<Type>( *p, NewGelArray, _InitValue );
-	
-	// Delete the old block ponted to //
-	delete_GelArray<Type>( *p );
+	if ( *p ) {
+		// Copy the data to our new block //
+		copy_GelArray<Type>( *p, NewGelArray, _InitValue );
+		
+		// Delete the old block ponted to //
+		delete_GelArray<Type>( *p );
+	}
+	else {
+		// No copy made, so fill in with the data //
+		set_GelArray<Type>( NewGelArray, _InitValue );		
+	}
 	
 	// Make the pointer point to the new block //
 	(*p) = NewGelArray;
@@ -345,8 +363,11 @@ inline void reallocatemax_GelArray( GelArray<Type>** p, const st32 _NewMaxSize, 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void resize_GelArray( GelArray<Type>** p, const st32 _NewSize ) {
+	if ( *p == 0 ) {
+		*p = new_GelArray<Type>( _NewSize );
+	}
 	// A cheat.  We can resize the block without reallocating
-	if ( _NewSize <= (*p)->MaxSize ) {
+	else if ( _NewSize <= (*p)->MaxSize ) {
 		// Set the size to the new size, and we're done //
 		(*p)->Size = _NewSize;
 	}
@@ -358,8 +379,11 @@ inline void resize_GelArray( GelArray<Type>** p, const st32 _NewSize ) {
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void resize_GelArray( GelArray<Type>** p, const st32 _NewSize, const Type& _InitValue ) {
+	if ( *p == 0 ) {
+		*p = new_GelArray<Type>( _NewSize, _InitValue );
+	}
 	// A cheat.  We can resize the block without reallocating
-	if ( _NewSize <= (*p)->MaxSize ) {
+	else if ( _NewSize <= (*p)->MaxSize ) {
 		st32 OldSize = (*p)->Size;
 		
 		// Set the size to the new size, and we're done //
@@ -383,8 +407,11 @@ inline void resize_GelArray( GelArray<Type>** p, const st32 _NewSize, const Type
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize ) {
+	if ( *p == 0 ) {
+		*p = new_GelArray<Type>( _NewSize );		
+	}
 	// A cheat.  We can resize the block without reallocating
-	if ( _NewSize <= (*p)->MaxSize ) {
+	else if ( _NewSize <= (*p)->MaxSize ) {
 		// Set the size to the new size, and we're done //
 		(*p)->Size = _NewSize;
 	}
@@ -399,8 +426,11 @@ inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize ) {
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize, const Type& _InitValue ) {
+	if ( *p == 0 ) {
+		*p = new_GelArray<Type>( _NewSize, _InitValue );
+	}
 	// A cheat.  We can resize the block without reallocating
-	if ( _NewSize <= (*p)->MaxSize ) {
+	else if ( _NewSize <= (*p)->MaxSize ) {
 		st32 OldSize = (*p)->Size;
 		
 		// Set the size to the new size, and we're done //
@@ -428,13 +458,21 @@ inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize, const Typ
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline void pushback_GelArray( GelArray<Type>** p, const Type& _InitValue ) {
-//	Log( "> 0x%x %x\n", p, *p );
-//	Log( "> 0x%x %i\n", p, (*p)->Size );
-//	Log( "> 0x%x %i 0x%x\n", p, (*p)->Size, &_InitValue );
-//	Log( "> 0x%x %i 0x%x 0x%x\n", p, (*p)->Size, _InitValue, &_InitValue );
-
-	resize2_GelArray( p, (*p)->Size + 1, _InitValue );
+inline void pushback_GelArray( GelArray<Type>** p, const Type& _Value ) {
+//	Log( "> 0x%x %x", p, *p );
+//	if ( *p != 0 ) {
+//		Log( "> 0x%x %i (%i)", p, (*p)->Size, (*p)->MaxSize );
+//		Log( "> 0x%x %i 0x%x", p, (*p)->Size, &_Value );
+//		Log( "> 0x%x %i 0x%x 0x%x", p, (*p)->Size, _Value, &_Value );
+//	}
+//	else {
+//		Log( "* 0x%x %x KOOK", p, *p );
+//	}
+	
+	if ( *p == 0 )
+		resize2_GelArray<Type>( p, 1, _Value );
+	else
+		resize2_GelArray<Type>( p, (*p)->Size + 1, _Value );
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >

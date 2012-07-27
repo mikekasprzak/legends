@@ -21,8 +21,8 @@
 	if ( ___TEST ) { \
 		Log( "- ======================================================== -" ); \
 		Log( "Assert Error: " ## __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s", __func__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s", __func__ ); \
 		Log( "- ======================================================== -" ); \
 		exit(1); \
 	}
@@ -32,8 +32,8 @@
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
 		Log( "Warning: " ## __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __func__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __func__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return) //
@@ -41,8 +41,8 @@
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
 		Log( "Warning: " ## __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __func__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __func__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -51,8 +51,8 @@
 	if ( ___TEST ) { \
 		Log( "- -------------------------------------------------------- -" ); \
 		Log( "Warning: " ## __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __func__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __func__ ); \
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -77,16 +77,16 @@
 #define ELog( ... ) \
 	{ \
 		Log( "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __func__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __func__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging (return) //
 #define return_ELog( ... ) \
 	{ \
 		Log( "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __func__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __func__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -94,8 +94,8 @@
 #define return_value_ELog( ___VAL, ... ) \
 	{ \
 		Log( "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __func__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __func__ ); \
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -108,8 +108,8 @@
 	if ( ___TEST ) { \
 		Log( "- ======================================================== -" ); \
 		Log( "Assert Error: " __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s", __PRETTY_FUNCTION__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s", __PRETTY_FUNCTION__ ); \
 		Log( "- ======================================================== -" ); \
 		exit(1); \
 	}
@@ -118,16 +118,16 @@
 #define Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "Warning: " __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Warnings (return) //
 #define return_Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "Warning: " __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -135,8 +135,8 @@
 #define return_value_Warning( ___VAL, ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "Warning: " __VA_ARGS__ ); \
-		Log( "   Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( "   Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -161,16 +161,16 @@
 #define ELog( ... ) \
 	{ \
 		Log( "Error: " __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging //
 #define return_ELog( ... ) \
 	{ \
 		Log( "Error: " __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
@@ -178,8 +178,8 @@
 #define return_value_ELog( ___VAL, ... ) \
 	{ \
 		Log( "Error: " __VA_ARGS__ ); \
-		Log( " Line: %s  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: $s\n", __PRETTY_FUNCTION__ ); \
+		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //

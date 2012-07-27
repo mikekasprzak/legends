@@ -60,22 +60,29 @@ public:
 			delete_GelArray<Type>( _Data );
 	}
 public:
+	inline const size_t FirstIndex() const {
+		return 0;
+	}
+	inline const size_t LastIndex() const {
+		if ( _Data == 0 )
+			return 0;
+		return _Data->Size - 1;
+	}
+	
+	// Size() returns the number of elements used. //
 	inline const size_t Size() const {
 		if ( _Data == 0 )
 			return 0;
 		return _Data->Size;
 	}
 	
+	// SizeOf() returns the maxiumum size, or rather, how much memory is used //
 	inline const size_t SizeOf() const {
 		if ( _Data == 0 )
 			return 0;
 		return _Data->MaxSize;
 	}
-	
-	inline const char* Data() const {
-		return_value_Warning( 0, _Data == 0, "cGelArray w/o Data" );
-		return _Data->Data;
-	}
+
 	
 	inline Type& operator [] ( const size_t Index ) {
 		Warning( _Data == 0, "cGelArray w/o Data" );
@@ -83,6 +90,31 @@ public:
 		Warning( Index > Size(), "Index out of bounds (%i >= %i)", Index, Size() );
 		return _Data->Data[ Index ];
 	}
+	inline const Type& operator [] ( const size_t Index ) const {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
+		Warning( Index > Size(), "Index out of bounds (%i >= %i)", Index, Size() );
+		return _Data->Data[ Index ];
+	}
+	
+	inline Type& Front() {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return _Data->Data[ FirstIndex() ];
+	}
+	inline const Type& Front() const {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return _Data->Data[ FirstIndex() ];
+	}
+
+	inline Type& Back() {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return _Data->Data[ LastIndex() ];
+	}
+	inline const Type& Back() const {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return _Data->Data[ LastIndex() ];
+	}
+
 	
 	inline GelArray<Type>* operator * () {
 		return _Data;	
@@ -120,28 +152,12 @@ public:
 	}
 	
 	inline void PushBack( const Type& _Value ) {
-		return_Warning( _Data == 0, "cGelArray w/o Data" );
 		pushback_GelArray<Type>( &_Data, _Value );
 	}
 	
 	inline const Type PopBack() {
 		return popback_GelArray<Type>( &_Data );
 	}
-	
-public:
-//	// STL Compatability //
-//	inline void push_back( const Type& _InitValue ) {
-//		PushBack( _InitValue );
-//	}
-//	inline const Type pop_back() {
-//		return PopBack();
-//	}
-//	inline void clear() {
-//		Reset();
-//	}
-//	inline void resize( const size_t _Size ) {
-//		Resize( _Size );
-//	}
 
 public:
 	// Compression //

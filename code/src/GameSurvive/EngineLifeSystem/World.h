@@ -39,12 +39,12 @@ public:
 	{
 		Map(2,1).Active.Get() = new cActive();
 		
-		PassiveTemplate.push_back( cPassiveTemplate() );
-		PassiveTemplate.back().Load( "Content/Misc/TestPassive.json" );
+		PassiveTemplate.PushBack( cPassiveTemplate() );
+		PassiveTemplate.Back().Load( "Content/Misc/TestPassive.json" );
 		
-		Log( "HEEEEB! %i", PassiveTemplate.back().MaxCount );
+		Log( "HEEEEB! %i", PassiveTemplate.Back().MaxCount );
 
-		Map(3,1).Passive.Get() = new cPassive( &(PassiveTemplate.back()) );
+		Map(3,1).Passive.Get() = new cPassive( &(PassiveTemplate.Back()) );
 	}
 	
 public:
