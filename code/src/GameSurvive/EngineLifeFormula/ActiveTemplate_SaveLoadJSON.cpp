@@ -5,7 +5,7 @@
 #include <Debug/Log.h>
 #include <Core/DataBlock.h>
 // - ------------------------------------------------------------------------------------------ - //
-namespace LifeSystem {
+namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 void cActiveTemplate::Load( const char* InFile ) {
 	DataBlock* File = new_read_nullterminate_DataBlock( InFile );
@@ -51,5 +51,5 @@ void cActiveTemplate::Load( const char* InFile ) {
 void cActiveTemplate::Save( const char* OutFile ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace LifeSystem //
+}; // namespace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //

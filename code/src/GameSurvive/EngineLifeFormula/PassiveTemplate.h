@@ -1,12 +1,12 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFESYSTEM_PASSIVETEMPLATE_H__
-#define __LIFESYSTEM_PASSIVETEMPLATE_H__
+#ifndef __LIFEFORMULA_PASSIVETEMPLATE_H__
+#define __LIFEFORMULA_PASSIVETEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Passive Template Object -- Common properties between all instances this Object //
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
 // - ------------------------------------------------------------------------------------------ - //
-namespace LifeSystem {
+namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 class cPassiveTemplate {
 public:
@@ -22,7 +22,7 @@ public:
 	void Save( const char* OutFile );
 };
 // - ------------------------------------------------------------------------------------------ - //
-}; // namepsace LifeSystem //
+}; // namepsace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFESYSTEM_PASSIVETEMPLATE_H__ //
+#endif // __LIFEFORMULA_PASSIVETEMPLATE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

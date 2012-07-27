@@ -1,10 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFESYSTEM_ENGINE_H__
-#define __LIFESYSTEM_ENGINE_H__
+#ifndef __LIFEFORMULA_ENGINE_H__
+#define __LIFEFORMULA_ENGINE_H__
 // - ------------------------------------------------------------------------------------------ - //
-// LifeSystem Engine -- A rigid grid based world simulation //
+// LifeFormula Engine -- A rigid grid based world simulation //
 // - ------------------------------------------------------------------------------------------ - //
-//namepsace LifeSystem { // Implemented in indivudual files //
+//namepsace LifeFormula { // Implemented in indivudual files //
 // - ------------------------------------------------------------------------------------------ - //
 #include "Active.h"
 #include "Passive.h"
@@ -12,7 +12,7 @@
 
 #include "World.h"
 // - ------------------------------------------------------------------------------------------ - //
-//}; // namespace LifeSystem //
+//}; // namespace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFESYSTEM_ENGINE_H__ //
+#endif // __LIFEFORMULA_ENGINE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

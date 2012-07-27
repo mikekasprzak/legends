@@ -1,10 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFESYSTEM_ACTIVETEMPLATE_H__
-#define __LIFESYSTEM_ACTIVETEMPLATE_H__
+#ifndef __LIFEFORMULA_ACTIVETEMPLATE_H__
+#define __LIFEFORMULA_ACTIVETEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Active Template Object -- Common properties between all instances this Object //
 // - ------------------------------------------------------------------------------------------ - //
-namespace LifeSystem {
+namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 class cActiveTemplate {
 public:
@@ -19,7 +19,7 @@ public:
 	void Save( const char* OutFile );
 };
 // - ------------------------------------------------------------------------------------------ - //
-}; // namepsace LifeSystem //
+}; // namepsace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFESYSTEM_ACTIVETEMPLATE_H__ //
+#endif // __LIFEFORMULA_ACTIVETEMPLATE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
