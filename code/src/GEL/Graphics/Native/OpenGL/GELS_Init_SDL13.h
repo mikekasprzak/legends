@@ -287,7 +287,17 @@ inline void gels_SetVideoMode() {
 		extern const char ProductName[];
 		extern const char FullProductName[];
 //		SDL_WM_SetCaption( ProductName, NULL );
-	
+
+		extern const int BuildVersion;
+
+		char WindowTitle[1024];
+		#ifdef NO_BUILD_VERSION
+		sprintf( WindowTitle, "%s", FullProductName );
+		#elif defined( SHORT_PRODUCT_NAME )
+		sprintf( WindowTitle, "%s", ProductName );
+		#else // Full Window Title //
+		sprintf( WindowTitle, "%s (%i)", FullProductName, BuildVersion );
+		#endif // Window Title //
 		
 		//	float largest_supported_anisotropy;
 		//	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy);
@@ -297,7 +307,7 @@ inline void gels_SetVideoMode() {
 		// Create our Screen //
 //		Buffer = SDL_SetVideoMode( ActualScreen::Width, ActualScreen::Height, ColorDepth, VideoFlags );	
 
-		MyWindow = SDL_CreateWindow( FullProductName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ActualScreen::Width, ActualScreen::Height, VideoFlags );
+		MyWindow = SDL_CreateWindow( WindowTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ActualScreen::Width, ActualScreen::Height, VideoFlags );
 		
 //		const SDL_VideoInfo* VideoInfo2 = SDL_GetVideoInfo();
 //		Log( "Set Resolution: %ix%i %ibbp", VideoInfo2->current_w, VideoInfo2->current_h, VideoInfo2->vfmt->BitsPerPixel );
