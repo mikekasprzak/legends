@@ -117,7 +117,29 @@ public:
 			Delete(idx);
 		}
 	}
-	
+
+	// Variation of delete that does not null. Exists only really to save a cycle. //
+	inline void _Delete( const size_t Index ) {
+		if ( Data[Index] ) {
+			delete Data[Index];
+		}
+	}
+	inline void _DeleteAll( const size_t Start = 0, const size_t Count = _Size ) {
+		// NOTE: size_t handles < 0
+		Assert( Start >= _Size, "Start (%i) is out of range (>= %i)", Start, _Size );
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t idx;
+		if ( Start+Count > _Size )
+			idx = _Size;
+		else
+			idx = Start+Count;
+
+		// Index in Reverse Order //
+		for ( ; idx-- > Start; ) {
+			_Delete(idx);
+		}
+	}
+		
 	// - ------------------------------------------------------------------ - //
 	
 	// Smart Indexing Function //

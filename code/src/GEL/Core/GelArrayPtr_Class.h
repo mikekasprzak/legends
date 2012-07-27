@@ -19,9 +19,9 @@ public:
 	{
 	}
 	
-	// Since this is a "power use" class, I'm making initializing optional //
+	// Contrast to cGelArray, this will always initialize to null, due to uses //
 	inline cGelArrayPtr( const size_t _Size ) :
-		cGelArray<Type>( _Size )
+		cGelArray<Type>( _Size, (Type)null )
 	{
 	}
 	
@@ -51,6 +51,7 @@ public:
 	
 	// Destructor //
 	inline virtual ~cGelArrayPtr() {
+		// Will not automatically delete! You must explicitly call delete! //
 	}
 public:	
 	// Removing is nulling the pointer //
@@ -85,7 +86,7 @@ public:
 			delete cGelArray<Type>::_Data->Data[ Index ];
 			Remove( Index ); // Null the Pointer //
 		}
-	}	
+	}
 	inline void DeleteAll() {
 		for ( size_t idx = cGelArray<Type>::Size(); idx--; ) {
 			Delete( idx );
@@ -107,6 +108,33 @@ public:
 		}
 	}
 	
+	// Variation of delete that does not null. Exists only really to save a cycle. //
+	inline void _Delete( const size_t Index ) {
+		if ( cGelArray<Type>::_Data->Data[ Index ] != (Type)null ) {
+			delete cGelArray<Type>::_Data->Data[ Index ];
+		}
+	}
+	inline void _DeleteAll() {
+		for ( size_t idx = cGelArray<Type>::Size(); idx--; ) {
+			_Delete( idx );
+		}
+	}
+	inline void _DeleteAll( const size_t Start, const size_t Count ) {
+		// NOTE: size_t handles < 0
+		Assert( Start >= cGelArray<Type>::Size(), "Start (%i) is out of range (>= %i)", Start, cGelArray<Type>::Size() );
+		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
+		size_t idx;
+		if ( Start+Count > cGelArray<Type>::Size() )
+			idx = cGelArray<Type>::Size();
+		else
+			idx = Start+Count;
+
+		// Index in Reverse Order //
+		for ( ; idx-- > Start; ) {
+			_Delete(idx);
+		}
+	}
+		
 	// Erasing is physically removing the data while resizing //
 	// TODO: Do this inside cGelArray. //
 

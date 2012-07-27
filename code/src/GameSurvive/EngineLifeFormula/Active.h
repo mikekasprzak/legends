@@ -17,18 +17,22 @@ public:
 public:
 	cGelArrayPtr<cPassive*> Inventory;
 public:
+	// Default Constructor -- Should probably not be called //
 	inline cActive() :
 		Template(0)
 	{
 	}
-	
-	inline ~cActive() {
-		Inventory.DeleteAll();
+
+	// All Objects should be constructed based on a template //
+	inline cActive( const cActiveTemplate* _Template ) :
+		Template( _Template ),
+		Inventory( _Template->InventorySize )
+	{
 	}
 
-	inline cActive( const cActiveTemplate* _Template ) :
-		Template( _Template )
-	{
+	// Destructor //	
+	inline ~cActive() {
+		Inventory._DeleteAll(); // Underscore version, because I know nulling isn't needed //
 	}
 	
 public:
