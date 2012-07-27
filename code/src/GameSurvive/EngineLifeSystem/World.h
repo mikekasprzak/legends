@@ -10,7 +10,6 @@
 
 #include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
-#include <vector>
 #include "Tile.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeSystem {
@@ -24,8 +23,6 @@ public:
 	cGrid2D<cTile> 					Map;
 	cGelArray<cActiveTemplate>		ActiveTemplate;
 	cGelArray<cPassiveTemplate>		PassiveTemplate;
-//	std::vector<cActiveTemplate>	ActiveTemplate;
-//	std::vector<cPassiveTemplate>	PassiveTemplate;
 
 	// Camera //
 	int ViewX, ViewY;
