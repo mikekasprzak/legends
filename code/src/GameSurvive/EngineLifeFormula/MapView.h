@@ -54,8 +54,6 @@ public:
 		else {
 			SelectedTile = -1;
 		}
-		
-//		Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat()
 	}
 	
 	// Draw what the camera sees //
