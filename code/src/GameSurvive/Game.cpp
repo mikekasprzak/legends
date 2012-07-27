@@ -616,6 +616,34 @@ void cGame::Step() {
 //	for ( size_t idx = 0; idx < Obj3.size(); idx++ ) {
 //		Obj3[idx]->Step();
 //	}
+
+		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
+//		MouseRayStart.z = Real(-1);
+		MouseRayStart.z = Real(1);
+//		MouseRayStart.z = ObserverCamera.NearPlane;//+Real(1);
+
+		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
+		MouseRayEnd.z = Real(1);
+//		MouseRayEnd.z = ObserverCamera.FarPlane;//-Real(1);
+
+		Calc_UnProject( 
+			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0.9),//Real(0),
+			ObserverCamera.View,
+			ObserverCamera.Projection,
+			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+			(float*)&MouseRayStart.x,(float*)&MouseRayStart.y,(float*)&MouseRayStart.z
+			);
+
+		Calc_UnProject( 
+			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(1),
+			ObserverCamera.View,
+			ObserverCamera.Projection,
+			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+			(float*)&MouseRayEnd.x,(float*)&MouseRayEnd.y,(float*)&MouseRayEnd.z
+			);
+		
+
+	World.Step( MouseRayStart );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -1008,30 +1036,30 @@ void cGame::Draw() {
 				
 		gelEnablePremultipliedAlphaBlending();
 
-		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
-//		MouseRayStart.z = Real(-1);
-		MouseRayStart.z = ObserverCamera.NearPlane;//+Real(1);
-
-		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
-//		MouseRayEnd.z = Real(1);
-		MouseRayEnd.z = ObserverCamera.FarPlane;//-Real(1);
-
-		Calc_UnProject( 
-			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0),
-			ObserverCamera.View,
-			ObserverCamera.Projection,
-			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
-			(float*)&MouseRayStart.x,(float*)&MouseRayStart.y,(float*)&MouseRayStart.z
-			);
-
-		Calc_UnProject( 
-			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(1),
-			ObserverCamera.View,
-			ObserverCamera.Projection,
-			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
-			(float*)&MouseRayEnd.x,(float*)&MouseRayEnd.y,(float*)&MouseRayEnd.z
-			);
-		
+//		Vector3D MouseRayStart = Mouse.Pos.ToVector3D();
+////		MouseRayStart.z = Real(-1);
+//		MouseRayStart.z = ObserverCamera.NearPlane;//+Real(1);
+//
+//		Vector3D MouseRayEnd = Mouse.Pos.ToVector3D();
+////		MouseRayEnd.z = Real(1);
+//		MouseRayEnd.z = ObserverCamera.FarPlane;//-Real(1);
+//
+//		Calc_UnProject( 
+//			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(0),
+//			ObserverCamera.View,
+//			ObserverCamera.Projection,
+//			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+//			(float*)&MouseRayStart.x,(float*)&MouseRayStart.y,(float*)&MouseRayStart.z
+//			);
+//
+//		Calc_UnProject( 
+//			Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat(), Real(1),
+//			ObserverCamera.View,
+//			ObserverCamera.Projection,
+//			(const int[]){-FullRefScreen::Width>>1,-FullRefScreen::Height>>1,FullRefScreen::Width,FullRefScreen::Height},
+//			(float*)&MouseRayEnd.x,(float*)&MouseRayEnd.y,(float*)&MouseRayEnd.z
+//			);
+//		
 
 //		btVector3 BTRayStart = btVector3( MouseRayStart.x, MouseRayStart.y, MouseRayStart.z );		
 //		btVector3 BTRayEnd = btVector3( MouseRayEnd.x, MouseRayEnd.y, MouseRayEnd.z );		
@@ -1085,6 +1113,12 @@ void cGame::Draw() {
 			1.5, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_BOTTOM, 
 			"(%.2f, %.2f)", Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat() );
+
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
+			1, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
+			"SelectedTile: %i", World.SelectedTile );
 
 /*
 		Font->printf( 

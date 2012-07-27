@@ -117,6 +117,7 @@ public:
 	static const Real SmallestUnit;
 
 	static const Real Three;
+	static const Real ThreeQuarter;
 	static const Real Third;
 	
 	static const Real Pi;

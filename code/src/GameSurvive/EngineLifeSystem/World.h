@@ -8,6 +8,9 @@
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
 
+#include <Geometry/Rect.h>
+#include <Input/Input_Mouse.h>
+
 #include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
 #include "Tile.h"
@@ -28,12 +31,23 @@ public:
 	int ViewX, ViewY;
 	int ViewSize; // Not seperate ViewWidth and ViewHeight, as all views will be square //
 	
+	Real TileSize;
+	Real TileHalfSize;
+	Real ViewHalfSize;
+	
+	int SelectedTile;
+	
 public:
 	cWorld( const int Width, const int Height ) :
 		Map( Width, Height, cTile() ),
 		ViewX( 0 ), ViewY( 0 ),
-		ViewSize( 7 )
+		ViewSize( 7 ),
+		TileSize( 8 ) // Should equal RegionSize / ViewSize
 	{
+		TileHalfSize = TileSize * Real::Half;
+		ViewHalfSize = Real(ViewSize) * Real::Half;		
+
+		// Dummy Create //
 		Map(2,1).Active.Get() = new cActive();
 		
 		PassiveTemplate.PushBack( cPassiveTemplate() );
@@ -45,36 +59,79 @@ public:
 	}
 	
 public:
-	// Draw what the camera sees //
-	void DrawView( /* const Vector3D Pos */ ) {
-		Real TileSize(8); // Should equal RegionSize / ViewSize
-		Real TileHalfSize = TileSize * Real::Half;
+	void Step( const Vector3D& MouseRay ) {
+		SelectedTile = -1;
+
+		Rect2D Playfield( 
+			-(TileSize * ViewHalfSize), 
+			-(TileSize * ViewHalfSize),
+			+(TileSize * Real(ViewSize)), 
+			+(TileSize * Real(ViewSize))
+			);
+
+//		if ( Playfield == Mouse.Pos ) {
+		if ( Playfield == MouseRay.ToVector2D() ) {
+			int x = (Playfield.MapX( MouseRay.x ) * Real(ViewSize));//(MouseRay.x + (TileSize * ViewHalfSize)) / (TileSize * Real(ViewSize));
+			int y = (Playfield.MapY( -MouseRay.y ) * Real(ViewSize));//(MouseRay.y + (TileSize * ViewHalfSize)) / (TileSize * Real(ViewSize));
 			
-		Real ViewHalfSize = Real(ViewSize) * Real::Half;
+//			if ( x < 0 )
+//				x = 0;
+//			else if ( x >= ViewSize )
+//				x = ViewSize-1;
+//
+//			if ( y < 0 )
+//				y = 0;
+//			else if ( y >= ViewSize )
+//				y = ViewSize-1;
+			
+			SelectedTile = (y * ViewSize) + x;
+		}
+		else {
+			SelectedTile = -1;
+		}
 		
-		gelSetColor( GEL_RGB_GREEN );
-		
+//		Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat()
+	}
+	
+	// Draw what the camera sees //
+	void DrawView( /* const Vector3D Pos */ ) {				
 		for ( size_t y = 0; y < ViewSize; y++ ) {
 			for ( size_t x = 0; x < ViewSize; x++ ) {
 				int Index = Map.Index( x, y );
 
 				// HACK: Negative Y
-				// HACK: Funny Z				
+				// HACK: Funny Z to test depth			
 				Vector3D DrawPos( 
 						+(((Real(x) - ViewHalfSize) * TileSize) + TileHalfSize), 
 						-(((Real(y) - ViewHalfSize) * TileSize) + TileHalfSize), 
-						(Real(x) / Real(1)) * Real(y)
+						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)//(Real(x) / Real(1)) * Real(y)
 						);
+
+				gelSetColor( GEL_RGBA(0,255,0,128) );
+				if ( x == (SelectedTile % ViewSize) )
+					if ( y == (SelectedTile / ViewSize) )
+						gelSetColor( GEL_RGBA(255,255,0,128) );					
 				
+				gelDrawSquareFill( 
+					DrawPos,
+					TileHalfSize 
+					);
+
+				gelSetColor( GEL_RGB_GREEN );
+				if ( x == (SelectedTile % ViewSize) )
+					if ( y == (SelectedTile / ViewSize) )
+						gelSetColor( GEL_RGB_RED );
+
 				gelDrawSquare( 
 					DrawPos,
 					TileHalfSize 
 					);
 				
 				if ( Map[Index].Active.Size() > 0 ) {
-					gelDrawCircle( 
+					gelSetColor( GEL_RGB_YELLOW );
+					gelDrawCircleFill( 
 						DrawPos, 
-						TileHalfSize
+						TileHalfSize * Real::ThreeQuarter
 						);
 				}					
 			}

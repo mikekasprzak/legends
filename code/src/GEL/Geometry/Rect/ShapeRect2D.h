@@ -185,6 +185,34 @@ public:
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline const Real ClosestX( const Real& x ) const {
+		if ( x < P1().x )
+			return P1().x;
+		else if ( x > P2().x )
+			return P2().x;
+		else
+			return x;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Real ClosestY( const Real& y ) const {
+		if ( y < P1().y )
+			return P1().y;
+		else if ( y > P2().y )
+			return P2().y;
+		else
+			return y;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return a 0-1 co-ordinate mapped on to the rectangle //
+	inline const Real MapX( const Real& x ) const {
+		return (-P1().x + ClosestX( x )) / Width();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return a 0-1 co-ordinate mapped on to the rectangle //
+	inline const Real MapY( const Real& y ) const {
+		return (-P1().y + ClosestY( y )) / Height();
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	// Given a point, find the closest point on the Rectangle //
 	inline const VectorType ClosestPoint( const VectorType& v ) const {
 		VectorType Point;
