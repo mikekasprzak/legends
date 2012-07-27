@@ -1118,7 +1118,7 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"SelectedTile: %i", World.SelectedTile );
+			"SelectedTile: %i", World.View.SelectedTile );
 
 /*
 		Font->printf( 

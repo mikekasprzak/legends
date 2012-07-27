@@ -14,6 +14,8 @@
 #include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
 #include "Tile.h"
+
+#include "MapView.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -28,24 +30,26 @@ public:
 	cGelArray<cPassiveTemplate>		PassiveTemplate;
 
 	// Camera //
-	int ViewX, ViewY;
-	int ViewSize; // Not seperate ViewWidth and ViewHeight, as all views will be square //
-	
-	Real TileSize;
-	Real TileHalfSize;
-	Real ViewHalfSize;
-	
-	int SelectedTile;
+	cMapView View;
+//	int ViewX, ViewY;
+//	int ViewSize; // Not seperate ViewWidth and ViewHeight, as all views will be square //
+//	
+//	Real TileSize;
+//	Real TileHalfSize;
+//	Real ViewHalfSize;
+//	
+//	int SelectedTile;
 	
 public:
 	cWorld( const int Width, const int Height ) :
 		Map( Width, Height, cTile() ),
-		ViewX( 0 ), ViewY( 0 ),
-		ViewSize( 7 ),
-		TileSize( 8 ) // Should equal RegionSize / ViewSize
+		View()
+//		ViewX( 0 ), ViewY( 0 ),
+//		ViewSize( 7 ),
+//		TileSize( 8 ) // Should equal RegionSize / ViewSize
 	{
-		TileHalfSize = TileSize * Real::Half;
-		ViewHalfSize = Real(ViewSize) * Real::Half;		
+//		TileHalfSize = TileSize * Real::Half;
+//		ViewHalfSize = Real(ViewSize) * Real::Half;		
 
 		// Dummy Create //
 		Map(2,1).Active.Get() = new cActive();
@@ -60,72 +64,75 @@ public:
 	
 public:
 	void Step( const Vector3D& MouseRay ) {
-		SelectedTile = -1;
-
-		Rect2D Playfield( 
-			-(TileSize * ViewHalfSize), 
-			-(TileSize * ViewHalfSize),
-			+(TileSize * Real(ViewSize)), 
-			+(TileSize * Real(ViewSize))
-			);
-
-//		if ( Playfield == Mouse.Pos ) {
-		if ( Playfield == MouseRay.ToVector2D() ) {
-			int x = (Playfield.MapX( MouseRay.x ) * Real(ViewSize));
-			int y = (Playfield.MapY( -MouseRay.y ) * Real(ViewSize));
-			
-			SelectedTile = (y * ViewSize) + x;
-		}
-		else {
-			SelectedTile = -1;
-		}
+		View.Step( MouseRay );
 		
-//		Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat()
+//		SelectedTile = -1;
+//
+//		Rect2D Playfield( 
+//			-(TileSize * ViewHalfSize), 
+//			-(TileSize * ViewHalfSize),
+//			+(TileSize * Real(ViewSize)), 
+//			+(TileSize * Real(ViewSize))
+//			);
+//
+////		if ( Playfield == Mouse.Pos ) {
+//		if ( Playfield == MouseRay.ToVector2D() ) {
+//			int x = (Playfield.MapX( MouseRay.x ) * Real(ViewSize));
+//			int y = (Playfield.MapY( -MouseRay.y ) * Real(ViewSize));
+//			
+//			SelectedTile = (y * ViewSize) + x;
+//		}
+//		else {
+//			SelectedTile = -1;
+//		}
+//		
+////		Mouse.Pos.x.ToFloat(), Mouse.Pos.y.ToFloat()
 	}
 	
 	// Draw what the camera sees //
-	void DrawView( /* const Vector3D Pos */ ) {				
-		for ( size_t y = 0; y < ViewSize; y++ ) {
-			for ( size_t x = 0; x < ViewSize; x++ ) {
-				int Index = Map.Index( x, y );
-
-				// HACK: Negative Y
-				// HACK: Funny Z to test depth			
-				Vector3D DrawPos( 
-						+(((Real(x) - ViewHalfSize) * TileSize) + TileHalfSize), 
-						-(((Real(y) - ViewHalfSize) * TileSize) + TileHalfSize), 
-						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)//(Real(x) / Real(1)) * Real(y)
-						);
-
-				gelSetColor( GEL_RGBA(0,255,0,128) );
-				if ( x == (SelectedTile % ViewSize) )
-					if ( y == (SelectedTile / ViewSize) )
-						gelSetColor( GEL_RGBA(255,255,0,128) );					
-				
-				gelDrawSquareFill( 
-					DrawPos,
-					TileHalfSize 
-					);
-
-				gelSetColor( GEL_RGB_GREEN );
-				if ( x == (SelectedTile % ViewSize) )
-					if ( y == (SelectedTile / ViewSize) )
-						gelSetColor( GEL_RGB_RED );
-
-				gelDrawSquare( 
-					DrawPos,
-					TileHalfSize 
-					);
-				
-				if ( Map[Index].Active.Size() > 0 ) {
-					gelSetColor( GEL_RGB_YELLOW );
-					gelDrawCircleFill( 
-						DrawPos, 
-						TileHalfSize * Real::ThreeQuarter
-						);
-				}					
-			}
-		}
+	void DrawView( /* const Vector3D Pos */ ) {		
+		View.Draw( Map );		
+//		for ( size_t y = 0; y < ViewSize; y++ ) {
+//			for ( size_t x = 0; x < ViewSize; x++ ) {
+//				int Index = Map.Index( x, y );
+//
+//				// HACK: Negative Y
+//				// HACK: Funny Z to test depth			
+//				Vector3D DrawPos( 
+//						+(((Real(x) - ViewHalfSize) * TileSize) + TileHalfSize), 
+//						-(((Real(y) - ViewHalfSize) * TileSize) + TileHalfSize), 
+//						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)//(Real(x) / Real(1)) * Real(y)
+//						);
+//
+//				gelSetColor( GEL_RGBA(0,255,0,128) );
+//				if ( x == (SelectedTile % ViewSize) )
+//					if ( y == (SelectedTile / ViewSize) )
+//						gelSetColor( GEL_RGBA(255,255,0,128) );					
+//				
+//				gelDrawSquareFill( 
+//					DrawPos,
+//					TileHalfSize 
+//					);
+//
+//				gelSetColor( GEL_RGB_GREEN );
+//				if ( x == (SelectedTile % ViewSize) )
+//					if ( y == (SelectedTile / ViewSize) )
+//						gelSetColor( GEL_RGB_RED );
+//
+//				gelDrawSquare( 
+//					DrawPos,
+//					TileHalfSize 
+//					);
+//				
+//				if ( Map[Index].Active.Size() > 0 ) {
+//					gelSetColor( GEL_RGB_YELLOW );
+//					gelDrawCircleFill( 
+//						DrawPos, 
+//						TileHalfSize * Real::ThreeQuarter
+//						);
+//				}					
+//			}
+//		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
