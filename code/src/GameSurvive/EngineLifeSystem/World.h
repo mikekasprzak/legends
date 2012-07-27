@@ -71,18 +71,8 @@ public:
 
 //		if ( Playfield == Mouse.Pos ) {
 		if ( Playfield == MouseRay.ToVector2D() ) {
-			int x = (Playfield.MapX( MouseRay.x ) * Real(ViewSize));//(MouseRay.x + (TileSize * ViewHalfSize)) / (TileSize * Real(ViewSize));
-			int y = (Playfield.MapY( -MouseRay.y ) * Real(ViewSize));//(MouseRay.y + (TileSize * ViewHalfSize)) / (TileSize * Real(ViewSize));
-			
-//			if ( x < 0 )
-//				x = 0;
-//			else if ( x >= ViewSize )
-//				x = ViewSize-1;
-//
-//			if ( y < 0 )
-//				y = 0;
-//			else if ( y >= ViewSize )
-//				y = ViewSize-1;
+			int x = (Playfield.MapX( MouseRay.x ) * Real(ViewSize));
+			int y = (Playfield.MapY( -MouseRay.y ) * Real(ViewSize));
 			
 			SelectedTile = (y * ViewSize) + x;
 		}
