@@ -21,15 +21,17 @@ public:
 	Real TileHalfSize;
 	
 	int SelectedTile;
+	
+	
 
 public:
 	cMapView() :
 		Pos( 0, 0 ),
-		Size( 7 )
+		Size( 9 )
 	{
 		HalfSize = Real(Size) * Real::Half;
 
-		TileSize = Real(8); // Should equal RegionSize / Size
+		TileSize = Real(6); // Should equal RegionSize / Size
 		TileHalfSize = TileSize * Real::Half;
 		
 	}

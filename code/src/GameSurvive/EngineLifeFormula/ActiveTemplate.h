@@ -8,9 +8,10 @@ namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 class cActiveTemplate {
 public:
-
+	int InventorySize;
 public:
-	cActiveTemplate()
+	cActiveTemplate() :
+		InventorySize( 0 )
 	{
 	}
 	

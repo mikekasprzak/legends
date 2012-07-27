@@ -63,8 +63,8 @@ public:
 	}
 	
 	~cTile() {
-		Active.Clear();
-		Passive.Clear();
+		Active.DeleteAll();
+		Passive.DeleteAll();
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -55,7 +55,7 @@ public:
 	}
 	
 	// Destructor //
-	inline ~cGelArray() {
+	inline virtual ~cGelArray() {
 		if ( _Data )
 			delete_GelArray<Type>( _Data );
 	}

@@ -6,6 +6,7 @@
 //   T is assumed to be a pointer //
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
+#include <Debug/Assert.h>
 // - ------------------------------------------------------------------------------------------ - //
 template<class T, size_t _Size>
 class CArrayPtr {
@@ -27,7 +28,7 @@ public:
 
 public:
 	inline CArrayPtr() {
-		Zero();
+		RemoveAll();
 	}
 
 	inline T& operator [] ( const size_t Index ) {
@@ -78,8 +79,9 @@ public:
 	inline void Remove( const size_t Index ) {
 		Data[Index] = (T)Empty;
 	}
-	inline void Zero( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size; Start < 0 handled by size_t
+	inline void RemoveAll( const size_t Start = 0, const size_t Count = _Size ) {
+		// NOTE: size_t handles < 0
+		Assert( Start >= _Size, "Start (%i) is out of range (>= %i)", Start, _Size );
 		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
 		size_t idx;
 		if ( Start+Count > _Size )
@@ -93,14 +95,16 @@ public:
 		}
 	}
 	
+	// Deleting is explicitly C++ style delete, followed by nulling //
 	inline void Delete( const size_t Index ) {
 		if ( Data[Index] ) {
 			delete Data[Index];
 			Remove(Index);
 		}
 	}
-	inline void Clear( const size_t Start = 0, const size_t Count = _Size ) {
-		// TODO: Assert Start > _Size; Start < 0 handled by size_t
+	inline void DeleteAll( const size_t Start = 0, const size_t Count = _Size ) {
+		// NOTE: size_t handles < 0
+		Assert( Start >= _Size, "Start (%i) is out of range (>= %i)", Start, _Size );
 		// NOTE: This is written funny to encourage the optimizer to eliminate this check //
 		size_t idx;
 		if ( Start+Count > _Size )
