@@ -77,12 +77,10 @@ public:
 					int MapIndex = ToMapIndex(Map,SelectedTile);
 					
 					Map[MapIndex].Active.Get() = Focus;
-					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FirstIterator() );
+//					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FirstIterator() );
+					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FindNextIndex(Focus) );
 					
 					FocusIndex = MapIndex;
-					
-	//				View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
-	//				View.FocusIndex = Map.Index(2,1);
 				}
 			}
 		}
