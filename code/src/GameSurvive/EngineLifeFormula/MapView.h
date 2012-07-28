@@ -47,6 +47,17 @@ public:
 			return -1;
 		return (Map.Width() * (Pos.y + (Index / Size))) + Pos.x + (Index % Size);
 	}
+	
+	// Best way to move an object is to remove it from the old position FIRST, then add it to an empty position. //
+	//   Doing this will be sure that by entering and leaving the same tile, it has enough room to hold you. //
+	inline void MapMoveActive( cGrid2D<cTile>& Map, cActive* Object, const int FromIndex, const int ToIndex ) {
+		Map[FromIndex].Active.Remove( Map[FromIndex].Active.FindNextIndex( Object ) );
+		Map[ToIndex].Active.Get() = Object;
+	}
+	inline void MapMovePassive( cGrid2D<cTile>& Map, cPassive* Object, const int FromIndex, const int ToIndex ) {
+		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
+		Map[ToIndex].Passive.Get() = Object;
+	}
 
 public:
 	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
@@ -76,9 +87,7 @@ public:
 				if ( Mouse.Pressed() ) {
 					int MapIndex = ToMapIndex(Map,SelectedTile);
 					
-					Map[MapIndex].Active.Get() = Focus;
-//					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FirstIterator() );
-					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FindNextIndex(Focus) );
+					MapMoveActive( Map, Focus, FocusIndex, MapIndex );
 					
 					FocusIndex = MapIndex;
 				}
