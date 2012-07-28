@@ -28,8 +28,8 @@ public:
 	
 	// World //
 	cGrid2D<cTile> 					Map;
-	cGelArray<cActiveTemplate>		ActiveTemplate;
-	cGelArray<cPassiveTemplate>		PassiveTemplate;
+	cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
+	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
 
 	// Camera //
 	cMapView View;
@@ -40,21 +40,26 @@ public:
 		View()
 	{
 		// Dummy Create //
-		ActiveTemplate.PushBack( cActiveTemplate() );
-		ActiveTemplate.Back().Load( "Content/Misc/TestActive.json" );
+		ActiveTemplate.PushBack( new cActiveTemplate() );
+		ActiveTemplate.Back()->Load( "Content/Misc/TestActive.json" );
 		
-		Log( "Active Inventory: %i", ActiveTemplate.Back().InventorySize );
+		Log( "Active Inventory: %i", ActiveTemplate.Back()->InventorySize );
 
-		Map(2,1).Active.Get() = new cActive( &(ActiveTemplate.Back()) );
+		Map(2,1).Active.Get() = new cActive( ActiveTemplate.Back() );
 		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
 		View.FocusIndex = Map.Index(2,1);
 		
-		PassiveTemplate.PushBack( cPassiveTemplate() );
-		PassiveTemplate.Back().Load( "Content/Misc/TestPassive.json" );
+		PassiveTemplate.PushBack( new cPassiveTemplate() );
+		PassiveTemplate.Back()->Load( "Content/Misc/TestPassive.json" );
 		
-		Log( "Passive Stack Max: %i", PassiveTemplate.Back().MaxCount );
+		Log( "Passive Stack Max: %i", PassiveTemplate.Back()->MaxCount );
 
-		Map(3,1).Passive.Get() = new cPassive( &(PassiveTemplate.Back()) );
+		Map(3,1).Passive.Get() = new cPassive( PassiveTemplate.Back() );
+	}
+	
+	~cWorld() {
+		ActiveTemplate._DeleteAll();
+		PassiveTemplate._DeleteAll();
 	}
 	
 public:

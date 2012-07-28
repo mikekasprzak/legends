@@ -58,6 +58,24 @@ public:
 		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
 		Map[ToIndex].Passive.Get() = Object;
 	}
+	
+	// Best way to remove an object from the Map. Remember, all objects have a unique object pointer instance. //
+	//   It's only the Templates themselves that have the same pointers (cActiveTemplate), not the instances. //
+	inline void MapRemoveActive( cGrid2D<cTile>& Map, cActive* Object, const int FromIndex ) {
+		Map[FromIndex].Active.Remove( Map[FromIndex].Active.FindNextIndex( Object ) );
+	}
+	inline void MapRemovePassive( cGrid2D<cTile>& Map, cPassive* Object, const int FromIndex ) {
+		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
+	}
+
+	// Best way to add an object to the Map. //
+	inline void MapAddActive( cGrid2D<cTile>& Map, cActive* Object, const int ToIndex ) {
+		Map[ToIndex].Active.Get() = Object;
+	}
+	inline void MapAddPassive( cGrid2D<cTile>& Map, cPassive* Object, const int ToIndex ) {
+		Map[ToIndex].Passive.Get() = Object;
+	}
+
 
 public:
 	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
