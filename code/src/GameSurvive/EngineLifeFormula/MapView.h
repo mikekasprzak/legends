@@ -8,6 +8,8 @@
 #include <Math/IVector.h>
 #include <Math/Real.h>
 #include <Math/Vector.h>
+
+#include "Active.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -22,12 +24,13 @@ public:
 	
 	int SelectedTile;
 	
-	
+	cActive* Focus;
 
 public:
 	cMapView() :
 		Pos( 0, 0 ),
-		Size( 9 )
+		Size( 9 ),
+		Focus( 0 )
 	{
 		HalfSize = Real(Size) * Real::Half;
 
@@ -35,7 +38,15 @@ public:
 		TileHalfSize = TileSize * Real::Half;
 		
 	}
-	
+
+	// Convert a local (SelectedTile) coordinate in to a map coordinate //
+	inline const int ToMapIndex( const cGrid2D<cTile>& Map, const int Index ) const {
+		if ( Index == -1 )
+			return -1;
+		return (Map.Width() * (Pos.y + (Index / Size))) + Pos.x + (Index % Size);
+	}
+
+public:
 	void Step( const Vector3D& MouseRay ) {
 		SelectedTile = -1;
 
@@ -46,7 +57,7 @@ public:
 			+(TileSize * Real(Size))
 			);
 
-//		if ( Playfield == Mouse.Pos ) {
+		// Convert Mouse Cursor Position in to an Index //
 		if ( Playfield == MouseRay.ToVector2D() ) {
 			int x = (Playfield.MapX( MouseRay.x ) * Real(Size));
 			int y = (Playfield.MapY( -MouseRay.y ) * Real(Size));
@@ -55,6 +66,13 @@ public:
 		}
 		else {
 			SelectedTile = -1;
+		}
+		
+		// Do Input //
+		if ( SelectedTile != -1 ) {
+			if ( Focus ) {
+				//Mouse.Pos
+			}
 		}
 	}
 	

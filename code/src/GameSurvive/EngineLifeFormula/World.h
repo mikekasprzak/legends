@@ -23,6 +23,8 @@ class cWorld {
 public:
 	// Simulation //
 	int Iteration;
+	// NOTE: Certain aspects of the simulation do not need to be done every iteration frame, such //
+	//       as erosion of dirt. //
 	
 	// World //
 	cGrid2D<cTile> 					Map;

@@ -8,6 +8,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 template<class T, size_t _Size>
 class CArray {
+protected:
 	T Data[_Size];
 public:
 	static T ErrorData;

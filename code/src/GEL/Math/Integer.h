@@ -45,6 +45,16 @@
 		return Value _OP_ _Vs.Value; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
+#define OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( _TYPE_, _OP_ ) \
+	inline const _TYPE_ operator _OP_ ( const _TYPE_& A, const Integer& B ) { \
+		return A _OP_ B.Value; \
+	}
+// - ------------------------------------------------------------------------------------------ - //
+#define OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( _TYPE_, _OP_ ) \
+	inline const _TYPE_ operator _OP_ ( const Integer& A, const _TYPE_& B ) { \
+		return A.Value _OP_ B; \
+	}
+// - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -90,11 +100,19 @@ public:
 	OVERLOAD_SYMBOLEQUALS_OPERATOR( -= );
 	OVERLOAD_SYMBOLEQUALS_OPERATOR( *= );
 	OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( %= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( |= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( &= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( ^= );
 
 	OVERLOAD_SYMBOL_OPERATOR( + );
 	OVERLOAD_SYMBOL_OPERATOR( - );
 	OVERLOAD_SYMBOL_OPERATOR( * );
 	OVERLOAD_SYMBOL_OPERATOR( / );
+	OVERLOAD_SYMBOL_OPERATOR( % );
+	OVERLOAD_SYMBOL_OPERATOR( | );
+	OVERLOAD_SYMBOL_OPERATOR( & );
+	OVERLOAD_SYMBOL_OPERATOR( ^ );
 
 	OVERLOAD_TEST_OPERATOR( == );
 	OVERLOAD_TEST_OPERATOR( != );
@@ -312,6 +330,27 @@ public:
 };
 // - ------------------------------------------------------------------------------------------ - //
 
+
+// - ------------------------------------------------------------------------------------------ - //
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, + );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, - );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, * );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, / );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, % );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, | );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, & );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, ^ );
+
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, + );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, - );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, * );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, / );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, % );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, | );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, & );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, ^ );
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 #undef OVERLOAD_SYMBOLEQUALS_OPERATOR
@@ -319,6 +358,8 @@ public:
 #undef OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR
 #undef OVERLOAD_TEST_OPERATOR
 #undef OVERLOAD_SYMBOL_OPERATOR
+#undef OVERLOAD_TYPEA_SYMBOL_B_OPERATOR
+#undef OVERLOAD_A_SYMBOL_TYPEB_OPERATOR
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 

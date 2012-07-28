@@ -11,7 +11,6 @@
 
 #include "CArrayPtr.h"
 #include "CArray.h"
-//#include "Array.h"	// NO! Update GelArray_Class.h instead.
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,6 +29,9 @@ public:												// --Words (32bit)-- //
 	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;	// 8 //
 	int Height;										// 1 - Elevation //
 
+	// Note the time when we last changed the tile, so data can be cached //
+	// LastUpdate // When we last refreshed the geometry //
+	// LastChange // When we last had something changed (thusly need a geometry refresh) //
 public:
 	cTile() :
 		Height( DEFAULT_TILE_HEIGHT )

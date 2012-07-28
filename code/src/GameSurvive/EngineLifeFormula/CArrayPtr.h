@@ -10,6 +10,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 template<class T, size_t _Size>
 class CArrayPtr {
+protected:
 	T Data[_Size];
 public:
 	static T ErrorPtr;
