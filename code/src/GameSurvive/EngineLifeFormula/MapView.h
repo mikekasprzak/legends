@@ -25,12 +25,14 @@ public:
 	int SelectedTile;
 	
 	cActive* Focus;
+	int FocusIndex;
 
 public:
 	cMapView() :
 		Pos( 0, 0 ),
 		Size( 9 ),
-		Focus( 0 )
+		Focus( 0 ),
+		FocusIndex(-1)
 	{
 		HalfSize = Real(Size) * Real::Half;
 
@@ -47,7 +49,7 @@ public:
 	}
 
 public:
-	void Step( const Vector3D& MouseRay ) {
+	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
 		SelectedTile = -1;
 
 		Rect2D Playfield( 
@@ -71,7 +73,17 @@ public:
 		// Do Input //
 		if ( SelectedTile != -1 ) {
 			if ( Focus ) {
-				//Mouse.Pos
+				if ( Mouse.Pressed() ) {
+					int MapIndex = ToMapIndex(Map,SelectedTile);
+					
+					Map[MapIndex].Active.Get() = Focus;
+					Map[FocusIndex].Active.Remove( Map[FocusIndex].Active.FirstIterator() );
+					
+					FocusIndex = MapIndex;
+					
+	//				View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
+	//				View.FocusIndex = Map.Index(2,1);
+				}
 			}
 		}
 	}

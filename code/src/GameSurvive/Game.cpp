@@ -1119,6 +1119,11 @@ void cGame::Draw() {
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
 			"SelectedTile: %i (%i)", World.View.SelectedTile, World.View.ToMapIndex(World.Map,World.View.SelectedTile) );
+		Font->printf( 
+			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
+			1, 
+			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
+			"Focus: %i (0x%x)", World.View.FocusIndex, World.View.Focus );
 
 /*
 		Font->printf( 

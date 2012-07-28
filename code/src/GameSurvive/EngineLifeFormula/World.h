@@ -46,6 +46,8 @@ public:
 		Log( "Active Inventory: %i", ActiveTemplate.Back().InventorySize );
 
 		Map(2,1).Active.Get() = new cActive( &(ActiveTemplate.Back()) );
+		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
+		View.FocusIndex = Map.Index(2,1);
 		
 		PassiveTemplate.PushBack( cPassiveTemplate() );
 		PassiveTemplate.Back().Load( "Content/Misc/TestPassive.json" );
@@ -57,7 +59,7 @@ public:
 	
 public:
 	void Step( const Vector3D& MouseRay ) {
-		View.Step( MouseRay );
+		View.Step( Map, MouseRay );
 	}
 	
 	void DrawView( /* const Vector3D Pos */ ) {		
