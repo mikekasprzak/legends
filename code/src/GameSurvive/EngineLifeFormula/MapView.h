@@ -28,7 +28,7 @@ public:
 	int FocusIndex;
 
 public:
-	cMapView() :
+	inline cMapView() :
 		Pos( 0, 0 ),
 		Size( 9 ),
 		Focus( 0 ),
@@ -40,7 +40,12 @@ public:
 		TileHalfSize = TileSize * Real::Half;
 		
 	}
+	
+	inline ~cMapView() {
+		
+	}
 
+public:
 	// Convert a local (SelectedTile) coordinate in to a map coordinate //
 	inline const int ToMapIndex( const cGrid2D<cTile>& Map, const int Index ) const {
 		if ( Index == -1 )

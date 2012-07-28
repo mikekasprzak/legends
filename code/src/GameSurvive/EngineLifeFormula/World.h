@@ -4,6 +4,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 // World -- Life ƒormula
 // - ------------------------------------------------------------------------------------------ - //
+// https://twitter.com/statuses/user_timeline/lifeformulas.rss
+// https://twitter.com/statuses/user_timeline/lifeformulas.json
+// - ------------------------------------------------------------------------------------------ - //
+
 #include <Math/Real.h>
 #include <Math/Vector.h>
 #include <Graphics/GraphicsDraw.h>
