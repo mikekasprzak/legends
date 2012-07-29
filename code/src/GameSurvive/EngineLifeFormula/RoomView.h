@@ -1,8 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFEFORMULA_MAPVIEW_H__
-#define __LIFEFORMULA_MAPVIEW_H__
+#ifndef __LIFEFORMULA_ROOMVIEW_H__
+#define __LIFEFORMULA_ROOMVIEW_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Map View -- 
+// Room View -- 
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Integer.h>
 #include <Math/IVector.h>
@@ -11,11 +11,13 @@
 
 #include <Grid/Grid2D_Class.h>
 #include "Tile.h"
+
 #include "Active.h"
+#include "Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-class cMapView {
+class cRoomView {
 public:
 	IVector2D	Pos;
 	Integer		Size; 		// Not seperate Width and Height, as all views will be square //
@@ -26,12 +28,14 @@ public:
 	
 	int SelectedTile;
 	
-	cActive* Focus;			// Who we are watching (as the camera) //
+	cRoom*		Room;		// The Room we care about //
+	cActive*	Focus;		// Who we are watching in the room (as the camera) //
 
 public:
-	inline cMapView() :
+	inline cRoomView() :
 		Pos( 0, 0 ),
 		Size( 9 ),
+		Room( 0 ),
 		Focus( 0 )
 	{
 		HalfSize = Real(Size) * Real::Half;
@@ -40,7 +44,11 @@ public:
 		TileHalfSize = TileSize * Real::Half;
 	}
 	
-	inline ~cMapView() {
+	inline void Set( cRoom* _Room ) {
+		Room = _Room;
+	}
+	
+	inline ~cRoomView() {
 	}
 
 public:
@@ -52,11 +60,11 @@ public:
 	}
 
 public:
-	void Step( class cRoom* Room, const Vector3D& MouseRay );
-	void Draw( class cRoom* Room );
+	void Step( const Vector3D& MouseRay );
+	void Draw( );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFEFORMULA_MAPVIEW_H__ //
+#endif // __LIFEFORMULA_ROOMVIEW_H__ //
 // - ------------------------------------------------------------------------------------------ - //

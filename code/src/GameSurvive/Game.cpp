@@ -1118,12 +1118,12 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"SelectedTile: %i (%i)", Engine.Room->View.SelectedTile, Engine.Room->View.ToMapIndex(Engine.Room->Map,Engine.Room->View.SelectedTile) );
+			"SelectedTile: %i (%i)", Engine.View->SelectedTile, Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile ) );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"Focus: %i (0x%x)", Engine.Room->View.Focus->PosIndex, Engine.Room->View.Focus );
+			"Focus: %i (0x%x)", Engine.View->Focus->PosIndex, Engine.View->Focus );
 
 /*
 		Font->printf( 

@@ -2,12 +2,12 @@
 #include <Geometry/Rect.h>
 #include <Input/Input_Mouse.h>
 
-#include "MapView.h"
+#include "RoomView.h"
 #include "Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cMapView::Step( class cRoom* Room, /*const cGrid2D<cTile>& Map*/ const Vector3D& MouseRay ) {
+void cRoomView::Step( const Vector3D& MouseRay ) {
 	SelectedTile = -1;
 
 	Rect2D Playfield( 

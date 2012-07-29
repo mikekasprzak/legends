@@ -9,6 +9,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Real.h>
 #include <Math/Vector.h>
+#include <Math/IVector.h>
 
 //#include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
@@ -17,7 +18,7 @@
 #include "Passive.h"
 #include "Tile.h"
 
-#include "MapView.h"
+//#include "MapView.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -34,7 +35,7 @@ public:
 //	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
 
 	// Camera //
-	cMapView View;
+//	cMapView View;
 	
 public:
 	cRoom( const int Width, const int Height );

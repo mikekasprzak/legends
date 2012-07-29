@@ -6,16 +6,15 @@
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::cRoom( const int Width, const int Height ) :
-	Map( Width, Height, cTile() ),
-	View()
+	Map( Width, Height, cTile() )
 {
 	// Dummy Create //
 	cEngine::LoadActiveTemplate( "Content/Misc/TestActive.json" );
 	
 	Log( "Active Inventory: %i", cEngine::ActiveTemplate.Back()->InventorySize );
 
-	View.Focus = new cActive( cEngine::ActiveTemplate.Back() );	// Create //
-	AddActive( View.Focus, Map.Index(2,1) );					// Add to Map //
+	cEngine::View->Focus = new cActive( cEngine::ActiveTemplate.Back() );	// Create //
+	AddActive( cEngine::View->Focus, Map.Index(2,1) );						// Add to Map //
 
 	cEngine::LoadPassiveTemplate( "Content/Misc/TestPassive.json" );
 	
@@ -37,11 +36,11 @@ void cRoom::Step( const Vector3D& MouseRay ) {
 		}
 	}
 	
-	View.Step( this, MouseRay );
+	cEngine::View->Step( MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cRoom::DrawView( /* const Vector3D Pos */ ) {
-	View.Draw( this );
+	cEngine::View->Draw( );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

@@ -10,7 +10,8 @@
 #include "Passive.h"
 #include "Tile.h"
 
-#include "Room.h"
+#include "Room.h"    
+#include "RoomView.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -20,16 +21,21 @@ public:
 
 	static cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
 	static cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
+	
+	static cRoomView* View;
 public:
 	cRoom* Room;
 public:
 	cEngine() {
 		Instance = this; // *IMPORTANT* THIS MUST COME FIRST BEFORE ANY ROOMS ARE CREATED! //
-		// - ----- - //		
+		// - ----- - //
+		View = new cRoomView();
 		Room = new cRoom( 32, 32 );
+		View->Set( Room );
 	}
 
 	~cEngine() {
+		delete View;
 		delete Room;
 		
 		ActiveTemplate._DeleteAll();
