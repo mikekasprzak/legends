@@ -643,7 +643,7 @@ void cGame::Step() {
 			);
 		
 
-	Engine.Room->Step( MouseRayStart );
+	Engine.Step( MouseRayStart );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -889,7 +889,7 @@ void cGame::Draw() {
 			Log( "TOOK: -1:%f 0:%f +1:%f", Real(-1).ArcCos().ToFloat(), Real(0).ArcCos().ToFloat(), Real(+1).ArcCos().ToFloat() );
 		}
 */		
-		Engine.Room->DrawView();
+		Engine.Draw();
 	}
 
 	CurrentRT = RT_MINI1;

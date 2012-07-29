@@ -28,19 +28,16 @@ cRoom::~cRoom() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void cRoom::Step( const Vector3D& MouseRay ) {
+void cRoom::Step( ) {
 	for ( size_t idx = 0; idx < Map.Size(); idx++ ) {
 		int Dude = Map[idx].Active.FirstIterator();
 		if ( Dude != -1 ) {
 			Map[idx].Active[Dude]->Step( this );
 		}
 	}
-	
-	cEngine::View->Step( MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cRoom::DrawView( /* const Vector3D Pos */ ) {
-	cEngine::View->Draw( );
+void cRoom::Draw( /* const Vector3D Pos */ ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

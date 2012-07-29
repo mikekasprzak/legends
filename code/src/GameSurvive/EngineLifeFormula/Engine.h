@@ -54,7 +54,9 @@ public:
 		cEngine::PassiveTemplate.Back()->Load( FileName );
 		return cEngine::PassiveTemplate.Back();
 	}
-	
+public:
+	void Step( const Vector3D& MouseRay );
+	void Draw();	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

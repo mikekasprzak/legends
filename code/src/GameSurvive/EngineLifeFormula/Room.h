@@ -84,8 +84,8 @@ public:
 	}
 
 public:
-	void Step( const Vector3D& MouseRay );
-	void DrawView( /* const Vector3D Pos */ );
+	void Step( /*const Vector3D& MouseRay*/ );
+	void Draw( /* const Vector3D Pos */ );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
