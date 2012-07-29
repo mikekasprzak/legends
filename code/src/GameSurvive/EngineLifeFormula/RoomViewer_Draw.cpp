@@ -1,11 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/GraphicsDraw.h>
 
-#include "RoomView.h"
+#include "RoomViewer.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cRoomView::Draw( ) {
+void cRoomViewer::Draw( ) {
 	const cGrid2D<cTile>& Map = Room->Map;
 	
 	for ( size_t y = 0; y < Size; y++ ) {

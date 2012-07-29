@@ -8,7 +8,7 @@ cEngine* cEngine::Instance = 0;
 cGelArrayPtr<cActiveTemplate*>	cEngine::ActiveTemplate;
 cGelArrayPtr<cPassiveTemplate*>	cEngine::PassiveTemplate;
 	
-cRoomView* cEngine::View = 0;
+cRoomViewer* cEngine::View = 0;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

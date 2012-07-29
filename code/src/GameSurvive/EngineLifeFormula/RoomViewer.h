@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFEFORMULA_ROOMVIEW_H__
-#define __LIFEFORMULA_ROOMVIEW_H__
+#ifndef __LIFEFORMULA_ROOMVIEWER_H__
+#define __LIFEFORMULA_ROOMVIEWER_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Room View -- 
 // - ------------------------------------------------------------------------------------------ - //
@@ -17,7 +17,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-class cRoomView {
+class cRoomViewer {
 public:
 	IVector2D	Pos;
 	Integer		Size; 		// Not seperate Width and Height, as all views will be square //
@@ -32,7 +32,7 @@ public:
 	cActive*	Focus;		// Who we are watching in the room (as the camera) //
 
 public:
-	inline cRoomView() :
+	inline cRoomViewer() :
 		Pos( 0, 0 ),
 		Size( 9 ),
 		Room( 0 ),
@@ -48,7 +48,7 @@ public:
 		Room = _Room;
 	}
 	
-	inline ~cRoomView() {
+	inline ~cRoomViewer() {
 	}
 
 public:
@@ -66,5 +66,5 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFEFORMULA_ROOMVIEW_H__ //
+#endif // __LIFEFORMULA_ROOMVIEWER_H__ //
 // - ------------------------------------------------------------------------------------------ - //
