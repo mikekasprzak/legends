@@ -4,6 +4,13 @@
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 void cWorld::Step( const Vector3D& MouseRay ) {
+	for ( size_t idx = 0; idx < Map.Size(); idx++ ) {
+		int Dude = Map[idx].Active.FirstIterator();
+		if ( Dude != -1 ) {
+			Map[idx].Active[Dude]->Step( this );
+		}
+	}
+	
 	View.Step( Map, MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
