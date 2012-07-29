@@ -9,6 +9,8 @@
 #include <Math/Real.h>
 #include <Math/Vector.h>
 
+#include <Grid/Grid2D_Class.h>
+#include "Tile.h"
 #include "Active.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
@@ -91,85 +93,8 @@ public:
 
 
 public:
-	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
-		SelectedTile = -1;
-
-		Rect2D Playfield( 
-			-(TileSize * HalfSize), 
-			-(TileSize * HalfSize),
-			+(TileSize * Real(Size)), 
-			+(TileSize * Real(Size))
-			);
-
-		// Convert Mouse Cursor Position in to an Index //
-		if ( Playfield == MouseRay.ToVector2D() ) {
-			int x = (Playfield.MapX( MouseRay.x ) * Real(Size));
-			int y = (Playfield.MapY( -MouseRay.y ) * Real(Size));
-			
-			SelectedTile = (y * Size) + x;
-		}
-		else {
-			SelectedTile = -1;
-		}
-		
-		// Do Input //
-		if ( SelectedTile != -1 ) {
-			if ( Focus ) {
-				if ( Mouse.Pressed() ) {
-					int MapIndex = ToMapIndex(Map,SelectedTile);
-					
-					MapMoveActive( Map, Focus, Focus->PosIndex, MapIndex );
-					
-//					Focus->PosIndex = MapIndex;
-				}
-			}
-		}
-	}
-	
-	// Draw what the camera sees //
-	void Draw( const cGrid2D<cTile>& Map ) {
-		for ( size_t y = 0; y < Size; y++ ) {
-			for ( size_t x = 0; x < Size; x++ ) {
-				int Index = Map.Index( x, y );
-
-				// HACK: Negative Y
-				// HACK: Funny Z to test depth			
-				Vector3D DrawPos( 
-						+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
-						-(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)//(Real(x) / Real(1)) * Real(y)
-						);
-
-				gelSetColor( GEL_RGBA(0,255,0,128) );
-				if ( x == (SelectedTile % Size) )
-					if ( y == (SelectedTile / Size) )
-						gelSetColor( GEL_RGBA(255,255,0,128) );					
-				
-				gelDrawSquareFill( 
-					DrawPos,
-					TileHalfSize 
-					);
-
-				gelSetColor( GEL_RGB_GREEN );
-				if ( x == (SelectedTile % Size) )
-					if ( y == (SelectedTile / Size) )
-						gelSetColor( GEL_RGB_RED );
-
-				gelDrawSquare( 
-					DrawPos,
-					TileHalfSize 
-					);
-				
-				if ( Map[Index].Active.Size() > 0 ) {
-					gelSetColor( GEL_RGB_YELLOW );
-					gelDrawCircleFill( 
-						DrawPos, 
-						TileHalfSize * Real::ThreeQuarter
-						);
-				}					
-			}
-		}
-	}
+	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay );
+	void Draw( const cGrid2D<cTile>& Map );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //

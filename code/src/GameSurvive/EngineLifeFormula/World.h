@@ -7,16 +7,14 @@
 // https://twitter.com/statuses/user_timeline/lifeformulas.rss
 // https://twitter.com/statuses/user_timeline/lifeformulas.json
 // - ------------------------------------------------------------------------------------------ - //
-
 #include <Math/Real.h>
 #include <Math/Vector.h>
-#include <Graphics/GraphicsDraw.h>
-
-#include <Geometry/Rect.h>
-#include <Input/Input_Mouse.h>
 
 #include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
+
+#include "Active.h"
+#include "Passive.h"
 #include "Tile.h"
 
 #include "MapView.h"

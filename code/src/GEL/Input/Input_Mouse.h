@@ -3,6 +3,7 @@
 #define __GEL_Input_Mouse_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
+#include <Graphics/Graphics_Screen.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace RefScreen {
 	extern Vector2D Mouse;
