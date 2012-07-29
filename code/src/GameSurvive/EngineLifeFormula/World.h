@@ -49,9 +49,12 @@ public:
 		
 		Log( "Active Inventory: %i", ActiveTemplate.Back()->InventorySize );
 
-		Map(2,1).Active.Get() = new cActive( ActiveTemplate.Back() );
-		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
-		View.FocusIndex = Map.Index(2,1);
+		View.Focus = new cActive( ActiveTemplate.Back() );		// Create //
+		View.MapAddActive( Map, View.Focus, Map.Index(2,1) );	// Add to Map //
+
+//		Map(2,1).Active.Get() = new cActive( ActiveTemplate.Back() );
+//		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
+//		View.Focus->PosIndex = Map.Index(2,1);
 		
 		PassiveTemplate.PushBack( new cPassiveTemplate() );
 		PassiveTemplate.Back()->Load( "Content/Misc/TestPassive.json" );

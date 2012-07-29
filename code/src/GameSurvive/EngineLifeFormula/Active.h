@@ -15,17 +15,20 @@ class cActive {
 public:
 	const cActiveTemplate* Template;	// What we're based on //
 public:
+	int PosIndex;						// Position Index //
 	cGelArrayPtr<cPassive*> Inventory;
 public:
 	// Default Constructor -- Should probably not be called //
 	inline cActive() :
-		Template(0)
+		Template(0),
+		PosIndex(-1)
 	{
 	}
 
 	// All Objects should be constructed based on a template //
 	inline cActive( const cActiveTemplate* _Template ) :
 		Template( _Template ),
+		PosIndex( -1 ),
 		Inventory( _Template->InventorySize )
 	{
 	}
