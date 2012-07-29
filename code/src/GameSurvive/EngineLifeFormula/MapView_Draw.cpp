@@ -2,12 +2,12 @@
 #include <Graphics/GraphicsDraw.h>
 
 #include "MapView.h"
-#include "World.h"
+#include "Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cMapView::Draw( class cWorld* World /*const cGrid2D<cTile>& Map*/ ) {
-	const cGrid2D<cTile>& Map = World->Map;
+void cMapView::Draw( class cRoom* Room /*const cGrid2D<cTile>& Map*/ ) {
+	const cGrid2D<cTile>& Map = Room->Map;
 	
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {

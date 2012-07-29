@@ -643,7 +643,7 @@ void cGame::Step() {
 			);
 		
 
-	World.Step( MouseRayStart );
+	Room.Step( MouseRayStart );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -889,7 +889,7 @@ void cGame::Draw() {
 			Log( "TOOK: -1:%f 0:%f +1:%f", Real(-1).ArcCos().ToFloat(), Real(0).ArcCos().ToFloat(), Real(+1).ArcCos().ToFloat() );
 		}
 */		
-		World.DrawView();
+		Room.DrawView();
 	}
 
 	CurrentRT = RT_MINI1;
@@ -1118,12 +1118,12 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"SelectedTile: %i (%i)", World.View.SelectedTile, World.View.ToMapIndex(World.Map,World.View.SelectedTile) );
+			"SelectedTile: %i (%i)", Room.View.SelectedTile, Room.View.ToMapIndex(Room.Map,Room.View.SelectedTile) );
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"Focus: %i (0x%x)", World.View.Focus->PosIndex, World.View.Focus );
+			"Focus: %i (0x%x)", Room.View.Focus->PosIndex, Room.View.Focus );
 
 /*
 		Font->printf( 

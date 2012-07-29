@@ -1,9 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include "World.h"
+#include "Room.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cWorld::Step( const Vector3D& MouseRay ) {
+void cRoom::Step( const Vector3D& MouseRay ) {
 	for ( size_t idx = 0; idx < Map.Size(); idx++ ) {
 		int Dude = Map[idx].Active.FirstIterator();
 		if ( Dude != -1 ) {
@@ -14,7 +14,7 @@ void cWorld::Step( const Vector3D& MouseRay ) {
 	View.Step( this, MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cWorld::DrawView( /* const Vector3D Pos */ ) {
+void cRoom::DrawView( /* const Vector3D Pos */ ) {
 	View.Draw( this );
 }
 // - ------------------------------------------------------------------------------------------ - //

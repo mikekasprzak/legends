@@ -1,8 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __LIFEFORMULA_WORLD_H__
-#define __LIFEFORMULA_WORLD_H__
+#ifndef __LIFEFORMULA_ROOM_H__
+#define __LIFEFORMULA_ROOM_H__
 // - ------------------------------------------------------------------------------------------ - //
-// World -- Life ƒormula
+// Room -- Life ƒormula
 // - ------------------------------------------------------------------------------------------ - //
 // https://twitter.com/statuses/user_timeline/lifeformulas.rss
 // https://twitter.com/statuses/user_timeline/lifeformulas.json
@@ -21,14 +21,14 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-class cWorld {
+class cRoom {
 public:
 	// Simulation //
 	int Iteration;
 	// NOTE: Certain aspects of the simulation do not need to be done every iteration frame, such //
 	//       as erosion of dirt. //
 	
-	// World //
+	// Map Data //
 	cGrid2D<cTile> 					Map;
 	cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
 	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
@@ -37,7 +37,7 @@ public:
 	cMapView View;
 	
 public:
-	cWorld( const int Width, const int Height ) :
+	cRoom( const int Width, const int Height ) :
 		Map( Width, Height, cTile() ),
 		View()
 	{
@@ -62,7 +62,7 @@ public:
 		Map(3,1).Passive.Get() = new cPassive( PassiveTemplate.Back() );
 	}
 	
-	~cWorld() {
+	~cRoom() {
 		ActiveTemplate._DeleteAll();
 		PassiveTemplate._DeleteAll();
 	}
@@ -116,5 +116,5 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __LIFEFORMULA_WORLD_H__ //
+#endif // __LIFEFORMULA_ROOM_H__ //
 // - ------------------------------------------------------------------------------------------ - //

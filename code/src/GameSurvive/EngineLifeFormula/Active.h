@@ -39,7 +39,7 @@ public:
 	}
 	
 public:
-	void Step( class cWorld* World );
+	void Step( class cRoom* Room );
 	void Draw();
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -52,8 +52,8 @@ public:
 	}
 
 public:
-	void Step( class cWorld* World, const Vector3D& MouseRay );
-	void Draw( class cWorld* World );
+	void Step( class cRoom* Room, const Vector3D& MouseRay );
+	void Draw( class cRoom* Room );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
