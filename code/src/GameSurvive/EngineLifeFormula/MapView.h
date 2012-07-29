@@ -74,7 +74,7 @@ public:
 	//   It's only the Templates themselves that have the same pointers (cActiveTemplate), not the instances. //
 	inline void MapRemoveActive( cGrid2D<cTile>& Map, cActive* Object, const int FromIndex ) {
 		Map[FromIndex].Active.Remove( Map[FromIndex].Active.FindNextIndex( Object ) );
-		//Object->PosIndex = -1;	// Note that we now have no idea where we are //
+		Object->PosIndex = -1;	// Note that we now have no idea where we are //
 	}
 	inline void MapRemovePassive( cGrid2D<cTile>& Map, cPassive* Object, const int FromIndex ) {
 		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
