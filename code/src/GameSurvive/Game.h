@@ -114,7 +114,7 @@ public:
 	
 	GelFont* Font;
 	
-	LifeFormula::cRoom Room;
+	LifeFormula::cEngine Engine;
 	
 //	cPhysics Physics;
 //	
@@ -143,8 +143,7 @@ public:
 	cGame() :
 		FirstRun( true ),
 		Capture( false ),
-		vm_ScriptsLoaded( false ),
-		Room( 32, 32 )
+		vm_ScriptsLoaded( false )
 	{
 		Init();
 	}

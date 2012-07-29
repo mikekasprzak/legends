@@ -10,7 +10,7 @@
 #include <Math/Real.h>
 #include <Math/Vector.h>
 
-#include <Core/GelArray.h>
+//#include <Core/GelArray.h>
 #include <Grid/Grid2D_Class.h>
 
 #include "Active.h"
@@ -30,42 +30,15 @@ public:
 	
 	// Map Data //
 	cGrid2D<cTile> 					Map;
-	cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
-	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
+//	cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
+//	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
 
 	// Camera //
 	cMapView View;
 	
 public:
-	cRoom( const int Width, const int Height ) :
-		Map( Width, Height, cTile() ),
-		View()
-	{
-		// Dummy Create //
-		ActiveTemplate.PushBack( new cActiveTemplate() );
-		ActiveTemplate.Back()->Load( "Content/Misc/TestActive.json" );
-		
-		Log( "Active Inventory: %i", ActiveTemplate.Back()->InventorySize );
-
-		View.Focus = new cActive( ActiveTemplate.Back() );		// Create //
-		AddActive( View.Focus, Map.Index(2,1) );				// Add to Map //
-
-//		Map(2,1).Active.Get() = new cActive( ActiveTemplate.Back() );
-//		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];
-//		View.Focus->PosIndex = Map.Index(2,1);
-		
-		PassiveTemplate.PushBack( new cPassiveTemplate() );
-		PassiveTemplate.Back()->Load( "Content/Misc/TestPassive.json" );
-		
-		Log( "Passive Stack Max: %i", PassiveTemplate.Back()->MaxCount );
-
-		Map(3,1).Passive.Get() = new cPassive( PassiveTemplate.Back() );
-	}
-	
-	~cRoom() {
-		ActiveTemplate._DeleteAll();
-		PassiveTemplate._DeleteAll();
-	}
+	cRoom( const int Width, const int Height );
+	~cRoom();
 
 public:
 	// Add an IVector (Integer Vector) to a MapIndex encoded position //
