@@ -3,10 +3,11 @@
 #include <Input/Input_Mouse.h>
 
 #include "MapView.h"
+#include "World.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cMapView::Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
+void cMapView::Step( class cWorld* World, /*const cGrid2D<cTile>& Map*/ const Vector3D& MouseRay ) {
 	SelectedTile = -1;
 
 	Rect2D Playfield( 
@@ -31,11 +32,9 @@ void cMapView::Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay ) {
 	if ( SelectedTile != -1 ) {
 		if ( Focus ) {
 			if ( Mouse.Pressed() ) {
-				int MapIndex = ToMapIndex(Map,SelectedTile);
+				int MapIndex = ToMapIndex( World->Map, SelectedTile );
 				
-				MapMoveActive( Map, Focus, Focus->PosIndex, MapIndex );
-				
-//				Focus->PosIndex = MapIndex;
+				World->MoveActive( Focus, Focus->PosIndex, MapIndex );
 			}
 		}
 	}

@@ -26,7 +26,7 @@ public:
 	
 	int SelectedTile;
 	
-	cActive* Focus;
+	cActive* Focus;			// Who we are watching (as the camera) //
 
 public:
 	inline cMapView() :
@@ -38,11 +38,9 @@ public:
 
 		TileSize = Real(6); // Should equal RegionSize / Size
 		TileHalfSize = TileSize * Real::Half;
-		
 	}
 	
 	inline ~cMapView() {
-		
 	}
 
 public:
@@ -52,49 +50,10 @@ public:
 			return -1;
 		return (Map.Width() * (Pos.y + (Index / Size))) + Pos.x + (Index % Size);
 	}
-	
-	// Add an IVector (Integer Vector) to a MapIndex encoded position //
-	inline const int AddToMapIndex( const cGrid2D<cTile>& Map, const int MapIndex, const IVector2D& Offset ) const {
-		if ( MapIndex == -1 )
-			return -1;
-		return Map.Index( Map.IndexToX( MapIndex ) + Offset.x, Map.IndexToY( MapIndex ) + Offset.y );
-	}
-	
-	// Best way to move an object is to remove it from the old position FIRST, then add it to an empty position. //
-	//   Doing this will be sure that by entering and leaving the same tile, it has enough room to hold you. //
-	inline void MapMoveActive( cGrid2D<cTile>& Map, cActive* Object, const int FromIndex, const int ToIndex ) {
-		Map[FromIndex].Active.Remove( Map[FromIndex].Active.FindNextIndex( Object ) );
-		Map[ToIndex].Active.Get() = Object;
-		Object->PosIndex = ToIndex;	// Take note of where we are now //
-	}
-	inline void MapMovePassive( cGrid2D<cTile>& Map, cPassive* Object, const int FromIndex, const int ToIndex ) {
-		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
-		Map[ToIndex].Passive.Get() = Object;
-	}
-	
-	// Best way to remove an object from the Map. Remember, all objects have a unique object pointer instance. //
-	//   It's only the Templates themselves that have the same pointers (cActiveTemplate), not the instances. //
-	inline void MapRemoveActive( cGrid2D<cTile>& Map, cActive* Object, const int FromIndex ) {
-		Map[FromIndex].Active.Remove( Map[FromIndex].Active.FindNextIndex( Object ) );
-		Object->PosIndex = -1;	// Note that we now have no idea where we are //
-	}
-	inline void MapRemovePassive( cGrid2D<cTile>& Map, cPassive* Object, const int FromIndex ) {
-		Map[FromIndex].Passive.Remove( Map[FromIndex].Passive.FindNextIndex( Object ) );
-	}
-
-	// Best way to add an object to the Map. //
-	inline void MapAddActive( cGrid2D<cTile>& Map, cActive* Object, const int ToIndex ) {
-		Map[ToIndex].Active.Get() = Object;
-		Object->PosIndex = ToIndex;	// Take note of where we are now //
-	}
-	inline void MapAddPassive( cGrid2D<cTile>& Map, cPassive* Object, const int ToIndex ) {
-		Map[ToIndex].Passive.Get() = Object;
-	}
-
 
 public:
-	void Step( cGrid2D<cTile>& Map, const Vector3D& MouseRay );
-	void Draw( const cGrid2D<cTile>& Map );
+	void Step( class cWorld* World, const Vector3D& MouseRay );
+	void Draw( class cWorld* World );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //

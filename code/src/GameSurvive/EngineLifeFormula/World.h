@@ -48,7 +48,7 @@ public:
 		Log( "Active Inventory: %i", ActiveTemplate.Back()->InventorySize );
 
 		View.Focus = new cActive( ActiveTemplate.Back() );		// Create //
-		View.MapAddActive( Map, View.Focus, Map.Index(2,1) );	// Add to Map //
+		AddActive( View.Focus, Map.Index(2,1) );	// Add to Map //
 
 //		Map(2,1).Active.Get() = new cActive( ActiveTemplate.Back() );
 //		View.Focus = Map(2,1).Active[Map(2,1).Active.FirstIterator()];

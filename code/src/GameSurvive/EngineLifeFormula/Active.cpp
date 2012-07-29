@@ -1,6 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Graphics/GraphicsDraw.h>
-#include <Input/Input.h>
+#include <sdl/sdl.h>
 
 #include "Active.h"
 #include "World.h"

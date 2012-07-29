@@ -11,11 +11,11 @@ void cWorld::Step( const Vector3D& MouseRay ) {
 		}
 	}
 	
-	View.Step( Map, MouseRay );
+	View.Step( this, MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cWorld::DrawView( /* const Vector3D Pos */ ) {
-	View.Draw( Map );
+	View.Draw( this );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

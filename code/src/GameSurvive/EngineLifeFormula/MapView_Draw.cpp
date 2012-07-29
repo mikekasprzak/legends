@@ -2,10 +2,13 @@
 #include <Graphics/GraphicsDraw.h>
 
 #include "MapView.h"
+#include "World.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cMapView::Draw( const cGrid2D<cTile>& Map ) {
+void cMapView::Draw( class cWorld* World /*const cGrid2D<cTile>& Map*/ ) {
+	const cGrid2D<cTile>& Map = World->Map;
+	
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {
 			int Index = Map.Index( x, y );
