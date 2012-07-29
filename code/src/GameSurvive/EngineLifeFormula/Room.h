@@ -29,13 +29,8 @@ public:
 	// NOTE: Certain aspects of the simulation do not need to be done every iteration frame, such //
 	//       as erosion of dirt. //
 	
-	// Map Data //
-	cGrid2D<cTile> 					Map;
-//	cGelArrayPtr<cActiveTemplate*>	ActiveTemplate;		// Pointers because every time these 2 Arrays
-//	cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
+	cGrid2D<cTile>	Map; // Map Data //
 
-	// Camera //
-//	cMapView View;
 	
 public:
 	cRoom( const int Width, const int Height );

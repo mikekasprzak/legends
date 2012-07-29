@@ -23,8 +23,8 @@ public:
 	static cGelArrayPtr<cPassiveTemplate*>	PassiveTemplate;	//   resize, the addresses would break.
 	
 	static cRoomViewer* View;
-public:
-	cRoom* Room;
+
+	static cRoom* Room;
 public:
 	cEngine() {
 		Instance = this; // *IMPORTANT* THIS MUST COME FIRST BEFORE ANY ROOMS ARE CREATED! //
