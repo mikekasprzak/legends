@@ -1,0 +1,8 @@
+
+The ARM Mali Texture Tool Generates several image files when mipmaps are enabled.
+
+So, TODO: create a tool that takes several of the ETC1 files and converts them
+to a PVR file.
+
+Also, make it support a single image. Notably, the single image option generates
+a different filename (no _mip_0).

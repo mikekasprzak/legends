@@ -1,0 +1,4 @@
+
+Like the ARM Mali tool, write a reader for DXT files, and make a tool that
+writes the DXT data to the PVR file. PVR should totally support it (after all
+it does support converting it).
