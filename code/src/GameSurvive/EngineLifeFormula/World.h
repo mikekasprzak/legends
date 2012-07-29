@@ -112,13 +112,8 @@ public:
 	}
 
 public:
-	void Step( const Vector3D& MouseRay ) {
-		View.Step( Map, MouseRay );
-	}
-	
-	void DrawView( /* const Vector3D Pos */ ) {		
-		View.Draw( Map );
-	}
+	void Step( const Vector3D& MouseRay );
+	void DrawView( /* const Vector3D Pos */ );
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namepsace LifeFormula //
