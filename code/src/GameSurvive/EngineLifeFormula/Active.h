@@ -16,6 +16,8 @@ public:
 	// Essential Properties //
 	const cActiveTemplate* Template;	// What we're based on //
 	int PosIndex;						// Position Index //
+	int Born;							// When we were born (Simulation Epoch is 0). Negative OK. //
+	int Died;							// When we died. Alive if Died < Born. Zombies are a new life + NecroAge. //
 public:
 	// Instance Properties //
 	cGelArrayPtr<cPassive*> Inventory;
@@ -28,13 +30,14 @@ public:
 	// Hunger
 	//   Hydration? Dehydrated causes headaches and weakness.
 	//   Fruit = High Hydration Foods. Meat = Low Hydration, High Protein
-	// Mental State? a +/- stat. Caffeine and Drugs are -, but not sure what's +.
-	//   Addiction can be a dynamic property. Moves the Mental State center?
-	//   Mental State describes Sensitivity? - Mellow/Numbness vs + Twitchy/Act-Before-Thinking
+
 
 	// Other Stat Considerations? //
 	// Body Stats
 	//   All statistics that shape the statistics
+	// Mental State? a +/- stat. Caffeine and Drugs are -, but not sure what's +.
+	//   Addiction can be a dynamic property. Moves the Mental State center?
+	//   Mental State describes Sensitivity? - Mellow/Numbness vs + Twitchy/Act-Before-Thinking
 	// Body State?
 	//   Serious Injury - Losing a limb would permanently affect Health
 	//   Injury - Breaking a leg would affect Health, but would heal over time
@@ -52,6 +55,7 @@ public:
 	//   Fat - Animal (Lard, Fish Oil, Butter, Whale Blubber), Plant Oils (Peanut, Soya Bean, Sunflower, Sesame, Coconut, Olive)
 	//   Protein - Provider of Amino Acids (Fuel?). Microorganisms can produce all essential acids. Animals get them from food.
 	//   Vitamin Classes - A B C D E K -- Water Soluable B C -- Fat Soluable A D E K
+	//   Minerals - Quantities and Trace amounts. http://en.wikipedia.org/wiki/Dietary_mineral
 	//   (Wikipedia Says: Carbs not required. the body can obtain all its energy from protein and fats)
 	
 	// Other Stats generate the Baseline Stat values via a scripted function called during a //
@@ -60,7 +64,9 @@ public:
 	// Default Constructor -- Should probably not be called //
 	inline cActive() :
 		Template(0),
-		PosIndex(-1)
+		PosIndex(-1),
+		Born(0), 	// Unless otherwise specificed, born during the Epoch //
+		Died(-1)	// If Birth > Death, we haven't died yet. Necrosis and NecroAge are Other Stats. //
 	{
 	}
 
@@ -68,7 +74,9 @@ public:
 	inline cActive( const cActiveTemplate* _Template ) :
 		Template( _Template ),
 		PosIndex( -1 ),
-		Inventory( _Template->InventorySize )
+		Inventory( _Template->InventorySize ),
+		Born(0), 	// Unless otherwise specificed, born during the Epoch //
+		Died(-1)	// If Birth > Death, we haven't died yet. Necrosis and NecroAge are Other Stats. //
 	{
 	}
 
@@ -76,6 +84,12 @@ public:
 	inline ~cActive() {
 		Inventory._DeleteAll(); // Underscore version, because I know nulling isn't needed //
 	}
+public:
+	const int Age() const;		// Not inline, because we need access to the Engine //
+	inline const bool Alive() const {
+		return Born > Died;
+	}
+	// Death Notes: http://en.wikipedia.org/wiki/Decomposition //
 	
 public:
 	void Step( class cRoom* Room );

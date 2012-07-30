@@ -2,9 +2,13 @@
 #include <sdl/sdl.h>
 
 #include "Active.h"
-#include "Room.h"
+#include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
+// - ------------------------------------------------------------------------------------------ - //
+const int cActive::Age() const {
+	return -Born + cEngine::Room->Iteration;
+}
 // - ------------------------------------------------------------------------------------------ - //
 void cActive::Step( class cRoom* Room ) {
 	static int Tuff = 0;
