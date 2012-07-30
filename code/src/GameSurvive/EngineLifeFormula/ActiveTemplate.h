@@ -8,9 +8,11 @@ namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 class cActiveTemplate {
 public:
-	int InventorySize;
+	cActiveTemplate* Parent;		// If we are a mutation, what were we? //
+	int InventorySize;				// How many things you can hold //
 public:
 	cActiveTemplate() :
+		Parent(0),
 		InventorySize( 0 )
 	{
 	}
