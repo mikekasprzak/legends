@@ -27,10 +27,11 @@ public:
 	//   HP growth can be represented by immunities increasing with the stat raising to show precion
 	// Energy 
 	//   Replenish with sleep/caffeine
-	// Hunger
+	// Hunger (Apetite)
 	//   Hydration? Dehydrated causes headaches and weakness.
 	//   Fruit = High Hydration Foods. Meat = Low Hydration, High Protein
-
+	//   Humans get their amino acids from meat/protein (omnivore), herbivores produce some
+	//   and get others from the plants they eat, carnivores eat herbivores to get them
 
 	// Other Stat Considerations? //
 	// Body Stats
