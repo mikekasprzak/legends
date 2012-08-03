@@ -9,10 +9,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 class UVAllocator: public Allocator< UVSet<GelUV> > {
 public:
-//	inline UVAllocator()
-//	{
-//	}
-	
 	inline UVAllocator( const int MaxSize, const int Start = 0 ) :
 		Allocator< UVSet<GelUV> >( MaxSize, Start )
 	{
@@ -24,8 +20,8 @@ public:
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size + idx ].u = Src[(idx<<1)+0];
-			Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size + idx ].v = Src[(idx<<1)+1];
+			Allocator< UVSet<GelUV> >::Data->Data[ Allocator< UVSet<GelUV> >::_Size + idx ].u = Src[(idx<<1)+0];
+			Allocator< UVSet<GelUV> >::Data->Data[ Allocator< UVSet<GelUV> >::_Size + idx ].v = Src[(idx<<1)+1];
 		}
 
 		Allocator< UVSet<GelUV> >::_Size += Count;
@@ -35,7 +31,7 @@ public:
 
 
 	inline void AddRect6( GelUV U1, GelUV V1, GelUV U2, GelUV V2 ) {
-		UVSet<GelUV>* VP = &Allocator< UVSet<GelUV> >::Data[ Allocator< UVSet<GelUV> >::_Size ];
+		UVSet<GelUV>* VP = &Allocator< UVSet<GelUV> >::Data->Data[ Allocator< UVSet<GelUV> >::_Size ];
 		
 		VP[0] = UVSet<GelUV>( U1, V1 );
 		VP[1] = UVSet<GelUV>( U2, V1 );

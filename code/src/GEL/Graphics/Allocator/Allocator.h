@@ -2,34 +2,39 @@
 #ifndef __Allocator_H__
 #define __Allocator_H__
 // - ------------------------------------------------------------------------------------------ - //
-
+#include <Core/DataArray.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Promote this to a variant of StaticArray in the Data Library. //
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 class Allocator {
-public:
+protected:
 	int _Size;
-	Type* Data;
+	DataArray<Type>* Data;
 public:
-//	inline Allocator() :
-//		_Size( 0 )
-//	{
-//		Data = new Type[_MaxSize];
-//	}
 
 	inline Allocator( const int _MaxSize, const int Start = 0 ) :
 		_Size( Start )
 	{
-		Data = new Type[_MaxSize];
+		Data = new_DataArray<Type>( _MaxSize );
 	}
 	
 	inline ~Allocator() {
-		delete [] Data;
+		delete_DataArray<Type>( Data );
 	}
 	
 	inline Type& operator []( const int Index ) {
-		return Data[Index];
+		return Data->Data[Index];
+	}
+	inline const Type& operator []( const int Index ) const {
+		return Data->Data[Index];
+	}
+	
+	inline Type* Get() {
+		return Data->Data;
+	}
+	inline const Type* Get() const {
+		return Data->Data;
 	}
 	
 	inline const int Size() const {
@@ -38,12 +43,11 @@ public:
 
 public:
 	inline Type& Add() {
-		// TODO: Set this to zero? //
-		return Data[_Size++];
+		return Data->Data[_Size++];
 	}
 
 	inline Type& Add( const Type& Value ) {
-		return Data[_Size++] = Value;
+		return Data->Data[_Size++] = Value;
 	}
 
 	inline const int AddMany( const int Count ) {
@@ -57,9 +61,8 @@ public:
 		int OldSize = _Size;
 		
 		// TODO: Use a better copy function //
-		for ( int idx = Count; idx--; ) 
-		{
-			Data[ _Size + idx ] = Src[idx];
+		for ( int idx = Count; idx--; ) {
+			Data->Data[ _Size + idx ] = Src[idx];
 		}
 
 		_Size += Count;

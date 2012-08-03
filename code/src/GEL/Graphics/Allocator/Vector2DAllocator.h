@@ -31,8 +31,8 @@ public:
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].x = Src[(idx<<1)+0];
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].y = Src[(idx<<1)+1];
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].x = Src[(idx<<1)+0];
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].y = Src[(idx<<1)+1];
 		}
 
 		Allocator<Vector2D>::_Size += Count;
@@ -46,8 +46,8 @@ public:
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].x = Src[(idx<<1)+0] + Pos.x;
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].y = Src[(idx<<1)+1] + Pos.y;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].x = Src[(idx<<1)+0] + Pos.x;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].y = Src[(idx<<1)+1] + Pos.y;
 		}
 
 		Allocator<Vector2D>::_Size += Count;
@@ -61,8 +61,8 @@ public:
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].x = (Src[(idx<<1)+0]*Scale) + Pos.x;
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].y = (Src[(idx<<1)+1]*Scale) + Pos.y;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].x = (Src[(idx<<1)+0]*Scale) + Pos.x;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].y = (Src[(idx<<1)+1]*Scale) + Pos.y;
 		}
 
 		Allocator<Vector2D>::_Size += Count;
@@ -76,8 +76,8 @@ public:
 		// TODO: Use a better copy function //
 		for ( int idx = Count; idx--; ) 
 		{
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].x = (Src[(idx<<1)+0]*Scale.x) + Pos.x;
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ].y = (Src[(idx<<1)+1]*Scale.y) + Pos.y;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].x = (Src[(idx<<1)+0]*Scale.x) + Pos.x;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ].y = (Src[(idx<<1)+1]*Scale.y) + Pos.y;
 		}
 
 		Allocator<Vector2D>::_Size += Count;
@@ -97,7 +97,7 @@ public:
 			PosVector = PosVector.ApplyMatrix( Scale );
 			PosVector += Pos;
 			
-			Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size + idx ] = PosVector;
+			Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size + idx ] = PosVector;
 		}
 
 		Allocator<Vector2D>::_Size += Count;
@@ -106,7 +106,7 @@ public:
 	}
 
 	inline void AddRect6( Vector2D& P1, Vector2D P2 ) {
-		Vector2D* VP = &Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size ];
+		Vector2D* VP = &Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size ];
 		
 		VP[0] = Vector2D( P1.x, P1.y );
 		VP[1] = Vector2D( P2.x, P1.y );
@@ -119,7 +119,7 @@ public:
 	}
 
 	inline void AddRect6( Vector2D& P1, Vector2D P2, Vector2D Pos, Real Angle ) {
-		Vector2D* VP = &Allocator<Vector2D>::Data[ Allocator<Vector2D>::_Size ];
+		Vector2D* VP = &Allocator<Vector2D>::Data->Data[ Allocator<Vector2D>::_Size ];
 		
 		VP[0] = Vector2D( P1.x, P1.y );
 		VP[1] = Vector2D( P2.x, P1.y );

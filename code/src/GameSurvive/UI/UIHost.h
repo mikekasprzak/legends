@@ -350,8 +350,8 @@ public:
 		AssetPool::Set( Texture[ Index ] );
 
 		gelDrawTrianglesTextured(
-			(Vector2D*)Vert.Data,
-			(GelUV*)UV.Data,
+			(Vector2D*)Vert.Get(),
+			(GelUV*)UV.Get(),
 			Vert.Size()
 			);
 	}
@@ -406,8 +406,8 @@ public:
 		AssetPool::Set( Texture[ Index ] );
 					
 		gelDrawTrianglesTextured(
-			(Vector2D*)Vert.Data,
-			(GelUV*)UV.Data,
+			(Vector2D*)Vert.Get(),
+			(GelUV*)UV.Get(),
 			Vert.Size()
 			);
 	}

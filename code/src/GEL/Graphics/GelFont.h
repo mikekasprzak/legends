@@ -136,8 +136,8 @@ public:
 
 			// Draw! //
 			gelDrawTrianglesTextured(
-				(const Vector3D*)Vert.Data,
-				(GelUV*)UV.Data,
+				(const Vector3D*)Vert.Get(),
+				(GelUV*)UV.Get(),
 				Vert.Size()
 				);
 			

@@ -290,10 +290,10 @@ inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Ms
 	// Draw the string //
 	//gelDrawTexturedIndexedPolygons(
 	gelDrawIndexedTrianglesTextured(
-		(Vector2D*)Vert.Data,
-		(GelUV*)UV.Data,
+		(Vector2D*)Vert.Get(),
+		(GelUV*)UV.Get(),
 		//Vert.Size(),
-		Indexes.Data,
+		Indexes.Get(),
 		Indexes.Size(),
 		Color
 		);
@@ -342,10 +342,10 @@ inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Ms
 	// Draw the string //
 //	gelDrawTexturedIndexedPolygons(
 	gelDrawIndexedTrianglesTextured(
-		(Vector2D*)Vert.Data,
-		(GelUV*)UV.Data,
+		(Vector2D*)Vert.Get(),
+		(GelUV*)UV.Get(),
 		//Vert.Size(),
-		Indexes.Data,
+		Indexes.Get(),
 		Indexes.Size(),
 		Color
 		);
@@ -394,10 +394,10 @@ inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Ms
 	// Draw the string //
 //	gelDrawTexturedIndexedPolygons(
 	gelDrawIndexedTrianglesTextured(
-		(Vector2D*)Vert.Data,
-		(GelUV*)UV.Data,
+		(Vector2D*)Vert.Get(),
+		(GelUV*)UV.Get(),
 		//Vert.Size(),
-		Indexes.Data,
+		Indexes.Get(),
 		Indexes.Size(),
 		Color
 		);
@@ -446,10 +446,10 @@ inline void gelPrint( const Vector2D& _Pos, const GelColor Color, const char* Ms
 	// Draw the string //
 //	gelDrawTexturedIndexedPolygons(
 	gelDrawIndexedTrianglesTextured(
-		(float*)Vert.Data,
-		(GelUV*)UV.Data,
+		(float*)Vert.Get(),
+		(GelUV*)UV.Get(),
 		//Vert.Size(),
-		Indexes.Data,
+		Indexes.Get(),
 		Indexes.Size(),
 		Color
 		);

@@ -25,6 +25,16 @@ public:
 	inline Type& operator []( const int Index ) {
 		return Data[Index];
 	}
+	inline const Type& operator []( const int Index ) const {
+		return Data[Index];
+	}
+	
+	inline Type* Get() {
+		return Data;
+	}
+	inline const Type* Get() const {
+		return Data;
+	}
 	
 	inline const int Size() const {
 		return _Size;
@@ -32,7 +42,6 @@ public:
 
 public:
 	inline Type& Add() {
-		// TODO: Set this to zero? //
 		return Data[_Size++];
 	}
 
@@ -51,8 +60,7 @@ public:
 		int OldSize = _Size;
 		
 		// TODO: Use a better copy function //
-		for ( int idx = Count; idx--; ) 
-		{
+		for ( int idx = Count; idx--; ) {
 			Data[ _Size + idx ] = Src[idx];
 		}
 
