@@ -39,6 +39,10 @@ public:
 	inline const int Size() const {
 		return _Size;
 	}
+	
+	inline const int SizeOf() const {
+		return _MaxSize;
+	}
 
 public:
 	inline Type& Add() {

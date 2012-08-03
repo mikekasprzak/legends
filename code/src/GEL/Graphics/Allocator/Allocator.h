@@ -41,6 +41,10 @@ public:
 		return _Size;
 	}
 
+	inline const int SizeOf() const {
+		return Data->Size;
+	}
+
 public:
 	inline Type& Add() {
 		return Data->Data[_Size++];
