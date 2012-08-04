@@ -56,9 +56,9 @@ public:
 	GelShaderHandle Handle;
 	
 	cTileMeshRenderer() :
-		UberShader( "Content/Scripts/glsl/TerrainTileShader.json" )
+		UberShader( "Content/Scripts/glsl/TileMesh.json" )
 	{	
-		Handle = UberShader.Find( "TileShader" );
+		Handle = UberShader.Find( "Normal" );
 	}
 
 public:

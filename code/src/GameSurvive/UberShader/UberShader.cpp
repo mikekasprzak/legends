@@ -261,13 +261,14 @@ void cUberShader::Bind( const GelShaderHandle Index ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 GelShaderHandle cUberShader::Find( const char* ShaderName ) {
-	// Search the map for the specific pattern //
-	std::map<std::string, GelShaderHandle>::iterator SearchIterator = ShaderLookup.find( FileName );
 	Log( "+ Searching for Shader \"%s\"", ShaderName );
+
+	// Search the map for the specific pattern //
+	std::map<std::string, GelShaderHandle>::iterator SearchIterator = ShaderLookup.find( ShaderName );
 	
 	// If it was found, return the Id //
 	if ( SearchIterator != ShaderLookup.end() ) {
-		Log( "- %s found!", ShaderName );
+		Log( "- \"%s\" found!", ShaderName );
 		return SearchIterator->second;
 	}
 	else {
