@@ -71,7 +71,7 @@ public:
 
 public:
 	void Step( const Vector3D& MouseRay );
-	void Draw( );
+	void Draw( const Matrix4x4& ViewMatrix );
 	// NOTES: Object Drawing happens here, not inside Tile. Object Drawing will require
 	//        some Y sorting, given that everything (at least early stuff) will be alpha
 	//        sprites.
