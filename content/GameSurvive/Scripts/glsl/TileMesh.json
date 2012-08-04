@@ -1,0 +1,28 @@
+{
+	"File"		: "Content/Scripts/glsl/TileMesh.glsl",
+	"Shaders"	: {
+		"Normal" : {
+			"Define" : [
+				"DUMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "Normal"
+				},
+				{
+					"Index" : 2,
+					"Name" : "Color1"
+				},
+				{
+					"Index" : 3,
+					"Name" : "Color2"
+				}
+			]
+		}
+	}
+}
