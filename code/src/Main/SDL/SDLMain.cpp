@@ -6,12 +6,7 @@
 #include <System/Path.h>
 
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(USES_WEBOS)
-// - ------------------------------------------------------------------------------------------ - //
-#include <PDL.h>
-#include <PDLPatch.h>
-// - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_MACOSX)
+#if defined(USES_MACOSX)
 // - ------------------------------------------------------------------------------------------ - //
 #include <mach-o/dyld.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -124,11 +119,11 @@ char AppSaveDir[2048] = "";
 
 cGameHost* GameHost = 0;
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef USES_SDL_1_3
+#ifndef USES_SDL_2
 // - ------------------------------------------------------------------------------------------ - //
 int SDLWindowStatus = SDL_APPACTIVE;
 // - ------------------------------------------------------------------------------------------ - //
-#else // USES_SDL_1_3 //
+#else // USES_SDL_2 //
 // - ------------------------------------------------------------------------------------------ - //
 const char* gels_SDLWindowEventName( Uint8 EventName ) {
 	switch( EventName ) {
@@ -255,11 +250,11 @@ void WindowEventFilter( const SDL_Event& event ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-#endif // USES_SDL_1_3
+#endif // USES_SDL_2
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef USES_SDL_1_3
+#ifndef USES_SDL_2
 // - ------------------------------------------------------------------------------------------ - //
 void ActiveEventFilter( const SDL_Event& event ) {
 	VVLog( "ACTIVE_EVENT: %i %i (%i %i %i)", event.active.state, event.active.gain, SDL_APPINPUTFOCUS, SDL_APPACTIVE, SDL_APPMOUSEFOCUS );
@@ -329,7 +324,7 @@ void ActiveEventFilter( const SDL_Event& event ) {
 		cGameSupport::Current()->LostFocusEvent( !IsActive );
 }
 // - ------------------------------------------------------------------------------------------ - //
-#endif // !USES_SDL_1_3 //
+#endif // !USES_SDL_2 //
 // - ------------------------------------------------------------------------------------------ - //
 
 #ifdef USES_ICADE
@@ -338,11 +333,11 @@ int iCadeStatus = 0;
 #endif // USES_ICADE //
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef USES_SDL_1_3
+#ifndef USES_SDL_2
 int EventFilter( const SDL_Event *event_ptr ) {
-#else // USES_SDL_1_3 //
+#else // USES_SDL_2 //
 int EventFilter( void*, SDL_Event *event_ptr ) {
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 	const SDL_Event& event = *event_ptr;
 
 	// Lock this thread //	
@@ -352,101 +347,98 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 	int RetVal = 1;
 	    
     switch( event.type ) {
-	    case SDL_VIDEOEXPOSE: {
-	    	RefreshScreen = true;
-	    	RetVal = 0;
-	    	break;	
-	    }
+//	    case SDL_VIDEOEXPOSE: {
+//	    	RefreshScreen = true;
+//	    	RetVal = 0;
+//	    	break;	
+//	    }
 		case SDL_KEYDOWN: {
-		    switch(event.key.keysym.sym){
-#if !defined(NDEBUG) || defined(USES_UNIX)
-		    	case SDLK_F10: {
+		    switch(event.key.keysym.scancode){
+#if !defined(NDEBUG)
+		    	case SDL_SCANCODE_F10: {
 		    		System::CloseButtonPressed = true;
 		    		break;
 				}
-				case SDLK_F12: {
+				case SDL_SCANCODE_F12: {
 					RefreshGame = true;
 					break;
 				}
 #endif // NDEBUG //
 
 #ifndef NDEBUG
-				case SDLK_1: {
+				case SDL_SCANCODE_1: {
 					phone_orientation = 0;
 					break;
 				}
-				case SDLK_2: {
+				case SDL_SCANCODE_2: {
 					phone_orientation = 1;
 					break;
 				}
-				case SDLK_3: {
+				case SDL_SCANCODE_3: {
 					phone_orientation = 2;
 					break;
 				}
-				case SDLK_4: {
+				case SDL_SCANCODE_4: {
 					phone_orientation = 3;
 					break;
 				}
 #endif // NDEBUG //
 
-#ifdef USES_WEBOS
-				case PDLK_GESTURE_FORWARD:
-#endif // USES_WEBOS //
-				case SDLK_ESCAPE: {
+				case SDL_SCANCODE_ESCAPE: {
 					EventValue = 1;
 					break;
 				}
 
-				case SDLK_BACKSPACE: {
+				case SDL_SCANCODE_BACKSPACE: {
 					break;
 				}
-				case SDLK_TAB: {
+				case SDL_SCANCODE_TAB: {
 					break;
 				}
-				case SDLK_SPACE: {
+				case SDL_SCANCODE_SPACE: {
 					break;
 				}
 				
-				case SDLK_F1: {
+				case SDL_SCANCODE_F1: {
 					EventValue = 9;
 					break;
 				}
 				
-				case SDLK_F2: {
+				case SDL_SCANCODE_F2: {
 					EventValue = 3;
 					break;
 				}
 				
-				case SDLK_LEFT: {
+				case SDL_SCANCODE_LEFT: {
 					EventValue = 16;
 					break;
 				}
 				
-				case SDLK_RIGHT: {
+				case SDL_SCANCODE_RIGHT: {
 					EventValue = 17;
 					break;
 				}
 				
-				case SDLK_UP: {
+				case SDL_SCANCODE_UP: {
 					EventValue = 18;
 					break;
 				}
 				
-				case SDLK_DOWN: {
+				case SDL_SCANCODE_DOWN: {
 					EventValue = 19;
 					break;
 				}
 
-				case SDLK_HOME: {
+				case SDL_SCANCODE_HOME: {
 					break;
 				}
-				case SDLK_END: {
+				case SDL_SCANCODE_END: {
 					break;
 				}
-				case SDLK_PAGEUP: {
+				case SDL_SCANCODE_PAGEUP: {
 					break;
 				}
-				case SDLK_PAGEDOWN: {
+				case SDL_SCANCODE_PAGEDOWN: {
 					break;
 				}
 
@@ -514,7 +506,7 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 #endif // USES_ICADE //
 
 #ifdef USES_MACOSX
-				case SDLK_q: {
+				case SDL_SCANCODE_q: {
 					//if ( event.key.keysym.mod & KMOD_CTRL ) 
 					if ( event.key.keysym.mod & KMOD_META ) 
 					{
@@ -522,7 +514,7 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 					}
 					break;
 				}
-				case SDLK_f: {
+				case SDL_SCANCODE_f: {
 					//if ( event.key.keysym.mod & KMOD_CTRL )
 					if ( event.key.keysym.mod & KMOD_META )
 					{
@@ -535,8 +527,8 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 #endif // USES_MACOSX //
 
 #ifdef USES_WINDOWS
-				case SDLK_RETURN:
-				case SDLK_KP_ENTER: {
+				case SDL_SCANCODE_RETURN:
+				case SDL_SCANCODE_KP_ENTER: {
 					if ( event.key.keysym.mod & KMOD_ALT ) {
 						// Fullscreen //
 						extern void ToggleGraphicsMode();
@@ -553,7 +545,7 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 		    break;
 		}
 		
-#ifdef USES_SDL_1_3
+#ifdef USES_SDL_2
 		// SDL Touch Code! Currently unsupported //
 //		case SDL_FINGERDOWN: {
 //			VLog( "* Finger Down!" );
@@ -567,17 +559,9 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
 //			VLog( "* Finger Motion!" );
 //			break;
 //		}
-#endif // USES_SDL_1_3
+#endif // USES_SDL_2
 
 		case SDL_MOUSEBUTTONDOWN: {
-#ifdef USES_WEBOS
-			if ( event.button.which != 0 ) {
-				//return 0;
-				RetVal = 0;
-				break;
-			}
-#endif // USES_WEBOS //
-
 			// Note bits in the button mask //
 			if ( event.button.button > 0 ) {    			
 				int Bit = 1<<(event.button.button-1);
@@ -608,14 +592,6 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
     	}
     	
     	case SDL_MOUSEMOTION: {
-#ifdef USES_WEBOS
-			if ( event.motion.which != 0 ) {
-				//return 0;
-				RetVal = 0;
-				break;
-			}
-#endif // USES_WEBOS //
-
     		if ( GameHost ) {
 	    		if ( GameHost->FirstRun() ) {
 	    			//return 0;
@@ -636,14 +612,6 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
     	}
 
     	case SDL_MOUSEBUTTONUP: {
-#ifdef USES_WEBOS
-			if ( event.button.which != 0 ) {
-				//return 0;
-				RetVal = 0;
-				break;
-			}
-#endif // USES_WEBOS //
-
 			mouse_b = mouse_b & (~(1<<(event.button.button-1)));
 
     		if ( cGameSupport::Current() )
@@ -654,21 +622,19 @@ int EventFilter( void*, SDL_Event *event_ptr ) {
     		break;
     	}
 
-#ifndef USES_SDL_1_3
-#ifndef USES_WEBOS
+#ifndef USES_SDL_2
 		case SDL_ACTIVEEVENT: {
 			ActiveEventFilter( event );
 	    	break;
 	    }
-#endif // USES_WEBOS //
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 
-#ifdef USES_SDL_1_3
+#ifdef USES_SDL_2
 		case SDL_WINDOWEVENT: {
 			WindowEventFilter( event );
 			break;
 		}
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 		
 		case SDL_QUIT: {
 			System::CloseButtonPressed = true;
@@ -688,26 +654,15 @@ void MessageLoop() {
 	SDL_Event event;
 	// Do Event Polling //
     while ( SDL_PollEvent( &event ) ) {
-#ifndef USES_SDL_1_3
+#ifndef USES_SDL_2
     	EventFilter( &event );
-#else // USES_SDL_1_3 //
+#else // USES_SDL_2 //
 		EventFilter( NULL, &event );
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 
-#ifndef USES_SDL_1_3
-#ifdef USES_WEBOS
-	    switch( event.type ) {
-			case SDL_ACTIVEEVENT: {
-				ActiveEventFilter( event );
-		    	break;
-		    }
-		};
-#endif // USES_WEBOS //
-#endif // !USES_SDL_1_3 //
-
-#ifdef USES_SDL_1_3
+#ifdef USES_SDL_2
 		WindowEventFilter( event );
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -831,12 +786,13 @@ int main( int argc, char* argv[] ) {
 		SDL_VERSION(&ver);
 		Log( "SDL (core) - v%u.%u.%u -- Compiled Version", ver.major, ver.minor, ver.patch );
 
-		const SDL_version* pver = SDL_Linked_Version();
-		Log( "SDL (core) - v%u.%u.%u -- Linked Version (DLL or Shared Library)", pver->major, pver->minor, pver->patch );
+		SDL_version pver;
+		SDL_GetVersion(&pver);
+		Log( "SDL (core) - v%u.%u.%u -- Linked Version (DLL or Shared Library)", pver.major, pver.minor, pver.patch );
 		Log( "" );
 
 		int LinkVer = (ver.major << 16) | (ver.minor << 8) | (ver.patch << 0);
-		int DLLVer = (pver->major << 16) | (pver->minor << 8) | (pver->patch << 0);
+		int DLLVer = (pver.major << 16) | (pver.minor << 8) | (pver.patch << 0);
 
 		if ( LinkVer > DLLVer ) {
 			Log( "* WARNING: Linked version is older than Compiled version!!" );
@@ -868,18 +824,6 @@ int main( int argc, char* argv[] ) {
 		attr = 0;
 		Log("* %c[%dm!!!", Constant, attr);
 	}
-	
-#ifdef USES_WEBOS
-	// Need to call this before making any PDL calls //
-	WebOS_PDL_Init(0);
-	
-	// If not a touchpad, assume it's a phone, and set default orientation //
-	//if ( WebOS_PDL_GetHardwareID() < HARDWARE_TOUCHPAD ) {
-	if ( ActualScreen::TallScreen ) {
-		phone_orientation = 3;
-	}
-#endif // USES_WEBOS //
-
 
 	Log( "+ Command Line Arguments: %i", argc );
 	for ( int idx = 0; idx < argc; idx++ ) {
@@ -943,11 +887,6 @@ int main( int argc, char* argv[] ) {
 		SetFramesPerSecond( 60 );
 #endif // SLOW_VERSION //
 
-#ifdef USES_WEBOS
-		extern void WebOS_AccelerometerInit();
-		WebOS_AccelerometerInit();
-#endif // USES_WEBOS //
-
 		sndInit();
 		musInit();
 		
@@ -983,10 +922,6 @@ int main( int argc, char* argv[] ) {
 			gelDisableBlending();
 			gelClearColor( cGameSupport::Current()->FadeColor );
 			gelSwapBuffer();
-#ifdef USES_WEBOS
-			// webOS layers OpenGL on top of Video, so make sure we don't write Alpha //
-			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-#endif // USES_WEBOS //
 			gelClearColor( cGameSupport::Current()->FadeColor );
 			
 			// Antialiasing... doesn't work ? //
@@ -1004,11 +939,11 @@ int main( int argc, char* argv[] ) {
 			FPS_Counter = 0;
 
 #ifdef USES_SDL_EVENTTHREAD
-#ifndef USES_SDL_1_3
+#ifndef USES_SDL_2
 			SDL_SetEventFilter( EventFilter );
-#else // USES_SDL_1_3 //
+#else // USES_SDL_2 //
 			SDL_SetEventFilter( EventFilter, NULL );
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 			SDL_InitSubSystem( SDL_INIT_EVENTTHREAD | SDL_INIT_NOPARACHUTE );
 			SDL_PumpEvents();
 			MessageLoop();
@@ -1034,14 +969,6 @@ int main( int argc, char* argv[] ) {
 								EventInjector.Set( EventValue );
 								EventValue = 0;
 							}
-	
-#if defined(USES_WEBOS)
-							extern void WebOS_Orientation();
-							WebOS_Orientation();
-#elif defined(USES_MAEMO)
-							extern void Maemo_Orientation();
-							Maemo_Orientation();
-#endif // USES_WEBOS //
 						
 							musUpdate();
 							
@@ -1107,11 +1034,7 @@ int main( int argc, char* argv[] ) {
 						FPS_Draw++;
 					}
 					else {
-#ifdef USES_WEBOS
-						Wait(5);
-#else // USES_WEBOS //
 						Wait(15);
-#endif // USES_WEBOS //
 					}
 				}
 				else {
@@ -1172,13 +1095,6 @@ int main( int argc, char* argv[] ) {
 #ifdef USES_STORE
 		gelStoreExit();
 #endif // USES_STORE //
-
-#ifdef USES_WEBOS
-		Log( "+ Shutting Down PDL..." );
-		PDL_Quit();
-		Log( "- PDL Shut down complete." );
-		Log( "" );
-#endif // USES_WEBOS //
 
 		Log( "+ Shutting Down GEL Graphics..." );
 		gelExit();

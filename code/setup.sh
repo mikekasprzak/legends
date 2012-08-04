@@ -6,6 +6,13 @@
 DEFAULTDIR=Tools/default
 CONFIGDIR=Config
 
+# Are we running Windows? #
+if [ "$WINDIR" != "" ]; then
+	SYSTEM_SUFFIX=
+else
+	SYSTEM_SUFFIX=_`uname -s`
+fi
+
 echo "usage: `basename $0` [GameProjectName] [target_sku] [target_makefile]"
 echo ""
 
@@ -127,10 +134,10 @@ fi
 
 # Target Makefile #
 if [ ! -n "$3" ]; then
-	if [ -e "$CONFIGDIR/.target" ]; then
-		TARGET=`cat $CONFIGDIR/.target | awk '{print $1}'`
-	elif [ -e "SKU/$PROJECT/.target" ]; then
-		TARGET=`cat SKU/$PROJECT/.target | awk '{print $1}'`
+	if [ -e "$CONFIGDIR/.target$SYSTEM_SUFFIX" ]; then
+		TARGET=`cat $CONFIGDIR/.target$SYSTEM_SUFFIX | awk '{print $1}'`
+	elif [ -e "SKU/$PROJECT/.target$SYSTEM_SUFFIX" ]; then
+		TARGET=`cat SKU/$PROJECT/.target$SYSTEM_SUFFIX | awk '{print $1}'`
 	else
 		if [ "$WINDIR" != "" ]; then
 			TARGET="`cat $DEFAULTDIR/windows.target`"
@@ -171,10 +178,10 @@ else
 fi
 
 echo "Target Makefile: $TARGET"
-rm -f $CONFIGDIR/.target
-echo "$TARGET">$CONFIGDIR/.target
+rm -f $CONFIGDIR/.target$SYSTEM_SUFFIX
+echo "$TARGET">$CONFIGDIR/.target$SYSTEM_SUFFIX
 if [ "$WINDIR" != "" ]; then
-	attrib +h $CONFIGDIR/.target
+	attrib +h $CONFIGDIR/.target$SYSTEM_SUFFIX
 fi
 
 

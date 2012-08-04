@@ -10,9 +10,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader/UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
-#ifdef USES_WINDOWS
+//#ifdef USES_WINDOWS
 #define USES_FBO
-#endif // USES_WINDOWS //
+//#endif // USES_WINDOWS //
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderTarget/RenderTarget.h"
 #include "Camera/Camera.h"

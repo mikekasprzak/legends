@@ -1068,7 +1068,7 @@ void cGame::Draw() {
 //		
 //		btCollisionWorld::ClosestRayResultCallback RayInfo( BTRayStart, BTRayEnd );
 //		Physics.dynamicsWorld->rayTest( BTRayStart, BTRayEnd, RayInfo );
-
+*/
 		// Draw //
 		Matrix4x4 VisibleMatrix = ObserverCamera.ProjectionView;
 		

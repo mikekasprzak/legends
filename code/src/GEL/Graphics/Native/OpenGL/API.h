@@ -43,13 +43,13 @@
 #ifdef NO_SDL_SUBDIR
 	#include <SDL.h>
 #else // NO_SDL_SUBDIR //
-	#include <SDL/SDL.h>
+	#include <SDL2/SDL.h>
 #endif // NO_SDL_SUBDIR //
 #ifndef USES_GLEE
 	#ifdef NO_SDL_SUBDIR
 		#include <SDL_opengl.h>
 	#else // NO_SDL_SUBDIR //
-		#include <SDL/SDL_opengl.h>
+		#include <SDL2/SDL_opengl.h>
 	#endif // NO_SDL_SUBDIR //
 #endif // USES_GLEE //
 // - ------------------------------------------------------------------------------------------ - //
@@ -109,13 +109,13 @@
 #ifdef NO_SDL_SUBDIR
 	#include <SDL.h>
 #else // NO_SDL_SUBDIR //
-	#include <SDL/SDL.h>
+	#include <SDL2/SDL.h>
 #endif // NO_SDL_SUBDIR //
 #ifndef USES_GLEE
 	#ifdef NO_SDL_SUBDIR
 		#include <SDL_opengl.h>
 	#else // NO_SDL_SUBDIR //
-		#include <SDL/SDL_opengl.h>
+		#include <SDL2/SDL_opengl.h>
 	#endif // NO_SDL_SUBDIR //
 #endif // USES_GLEE //
 // - ------------------------------------------------------------------------------------------ - //

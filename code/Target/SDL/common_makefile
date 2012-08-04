@@ -18,8 +18,11 @@ LDFLAGS				+=
 # - ------------------------------------------------------------------------ - #
 SRC_FILTER			:=	$(addsuffix /%,$(SRC_FOLDERS))
 # - ------------------------------------------------------------------------ - #
-#ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
+ifdef WINDIR
 ALL_CODE_FILES		:=	$(shell $(TreeCache) obj/$(TARGET_NAME)/.treecache src .cpp .c .hpp .h)
+else
+ALL_CODE_FILES		:=	$(shell $(TreeTool) src .cpp .c .hpp .h)
+endif # WINDIR #
 
 CODE_FILES			:=	$(filter %.cpp %.c,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
 H_FILES				:=	$(filter %.hpp %.h,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
@@ -107,7 +110,7 @@ obj/%/_stub:
 # - ------------------------------------------------------------------------ - #
 # Yes, this creates the output folder, but notes the creation under obj #
 obj/$(TARGET_NAME)/output_stub:
-	mkdir -p output/$(TARGET_NAME)
+	mkdir -p output/$(TARGET_NAME) obj/$(TARGET_NAME)
 	@touch $@	
 # - ------------------------------------------------------------------------ - #
 

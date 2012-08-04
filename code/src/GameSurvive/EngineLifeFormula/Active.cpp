@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <sdl/sdl.h>
+#include <SDL2/SDL.h>
 
 #include "Active.h"
 #include "Engine.h"

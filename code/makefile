@@ -1,7 +1,11 @@
 # - ------------------------------------------------------------------------ - #
+ifndef WINDIR
+SYSTEM_SUFFIX		=	_$(shell uname -s)
+endif # WINDIR #
+# - ------------------------------------------------------------------------ - #
 __PROJECT_FILE__	:=	Config/.project
 __SKU_FILE__		:=	Config/.sku
-__TARGET_FILE__		:=	Config/.target
+__TARGET_FILE__		:=	Config/.target$(SYSTEM_SUFFIX)
 __REPOS_FILE__		:=	Config/.repos
 # - ------------------------------------------------------------------------ - #
 # NOTE: No colon here means that it will only overwrite if it did not exist. #
@@ -22,7 +26,7 @@ __TARGET_CHECK__	:=	$(shell Tools/FileExists.sh $(__TARGET_FILE__))
 # - ------------------------------------------------------------------------ - #
 ifneq ($(__TARGET_CHECK__),$(__TARGET_FILE__))
 ___default:
-	@echo "*** ERROR: Makefile referenced in \".target\" not found! ***"
+	@echo "*** ERROR: Makefile referenced in \".target$(SYSTEM_SUFFIX)\" not found! ***"
 	@echo "Please run \"./setup.sh\" and specify a new target makefile"
 else ifneq ($(__SKU_CHECK__),$(__SKU_FILE__))
 ___default:
@@ -67,6 +71,7 @@ info:
 	@echo '* SKU_FILE * $(SKU_FILE)'
 	@echo '* TARGET_FILE * $(TARGET_FILE)'
 	@echo '* REPOS_FILE * $(REPOS_FILE)'
+	@echo '* SYSTEM_SUFFIX * $(SYSTEM_SUFFIX)'
 	
 # - ------------------------------------------------------------------------ - #
 help:

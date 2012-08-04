@@ -5,7 +5,7 @@
 #define __GEL_Graphics_Init_SDL13_H__
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_SDL
-#ifdef USES_SDL_1_3
+#ifdef USES_SDL_2
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/GelDebug.h>
 #include <Graphics/Graphics_System.h>
@@ -16,7 +16,7 @@
 //extern SDL_Surface* Buffer;
 
 extern SDL_Window* MyWindow;
-extern SDL_WindowID MyWindowID;
+//extern SDL_WindowID MyWindowID;
 extern SDL_GLContext MyGLContext;
 
 extern int ActualRefreshRate;
@@ -54,7 +54,8 @@ inline void gels_Exit() {
 #define GELS_MINIMIZE
 
 inline void gels_Minimize() {
-	SDL_WM_IconifyWindow();	
+	//SDL_WM_IconifyWindow();
+	SDL_MinimizeWindow( MyWindow );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_INIT_GRAPHICS_API
@@ -333,9 +334,7 @@ inline void gels_SetVideoMode() {
 		glGetIntegerv( GL_STENCIL_BITS, (GLint*)&StencilBits );
 		Log( "Stencil Bits: %i", StencilBits );
 		
-		char TextBuffer[256];
-		SDL_VideoDriverName(TextBuffer, sizeof(TextBuffer));
-		Log( "Driver: %s", TextBuffer);
+		Log( "Driver: %s", SDL_GetCurrentVideoDriver() );
 		Log( "" );
 		
 #ifdef GELS_SCAN_GL_EXTENSIONS
@@ -363,7 +362,7 @@ inline void gels_SetSwapInterval( const int Var = 1 ) {
 #endif // NIX_BUILD //
 }
 // - ------------------------------------------------------------------------------------------ - //
-#endif // USES_SDL_1_3 //
+#endif // USES_SDL_2 //
 #endif // USES_SDL //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_Graphics_Init_SDL13_H__ //

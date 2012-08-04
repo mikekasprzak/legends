@@ -57,7 +57,7 @@ inline void gels_SwapBuffer() {
 	eglSwapBuffers(egl_display, egl_surface);
 }
 // - ------------------------------------------------------------------------------------------ - //
-#elif USES_SDL_1_3
+#elif USES_SDL_2
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_SWAP_BUFFER
 
