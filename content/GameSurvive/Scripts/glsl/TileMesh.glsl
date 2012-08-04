@@ -38,7 +38,7 @@ void main() {
 //uniform lowp vec4 MinColor;
 //uniform lowp vec4 MaxColor;
 
-uniform sampler2D TexImage0;
+//uniform sampler2D TexImage0;
 
 varying vec2 var_TexCoord;
 varying vec4 var_Color1;
@@ -47,7 +47,7 @@ varying vec4 var_Color2;
 void main() {
 //	vec4 Sample = texture2D( TexImage0, var_TexCoord );
 //	gl_FragColor = mix( MinColor, MaxColor, Sample );
-	gl_FragColor = var_Color1 + var_Color2;
+	gl_FragColor = vec4(1.0,0,0,1.0);//var_Color1 + var_Color2;
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
