@@ -12,6 +12,7 @@
 
 #include "Room.h"    
 #include "RoomViewer.h"
+#include "TileMesh.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -25,6 +26,8 @@ public:
 	static cRoomViewer* View;
 
 	static cRoom* Room;
+	
+	static cTileMeshRenderer* TileMeshRenderer;
 public:
 	cEngine() {
 		Instance = this; // *IMPORTANT* THIS MUST COME FIRST BEFORE ANY ROOMS ARE CREATED! //
@@ -32,9 +35,13 @@ public:
 		View = new cRoomViewer();
 		Room = new cRoom( 32, 32 );
 		View->Set( Room );
+		
+		TileMeshRenderer = new cTileMeshRenderer();
 	}
 
 	~cEngine() {
+		delete TileMeshRenderer;
+		
 		delete View;
 		delete Room;
 		

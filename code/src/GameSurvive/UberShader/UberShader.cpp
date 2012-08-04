@@ -126,7 +126,7 @@ cUberShader::cUberShader( const char* InFile ) :
 //	ShaderLookup.clear();
 
 	Log( "+ Loading UberShader Permutations File..." );
-	VLog( "* File: %s", InFile );
+	Log( "* File: %s", InFile );
 	DataBlock* File = new_read_nullterminate_DataBlock( InFile );
 	
 	VLog( "* Parsing JSON Data (%i bytes)...", File->Size );

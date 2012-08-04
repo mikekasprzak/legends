@@ -320,9 +320,6 @@ void cGame::Init() {
 	// Initialize the Virtual Machine... //
 	vm_Init();
 	
-	extern int LogLevel;
-	LogLevel = 2;
-
 	InitScripts();
 	LoadScripts();
 	

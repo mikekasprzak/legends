@@ -11,8 +11,8 @@ class Allocator {
 protected:
 	int _Size;
 	DataArray<Type>* Data;
+	
 public:
-
 	inline Allocator( const int _MaxSize, const int Start = 0 ) :
 		_Size( Start )
 	{

@@ -8,6 +8,8 @@
 
 #include <Graphics/API.h>
 #include <Graphics/GelColor.h>
+#include <Graphics/GelUV.h>
+
 #include <Math/Matrix.h>
 // - ------------------------------------------------------------------------------------------ - //
 typedef size_t GelShaderHandle;
@@ -48,6 +50,54 @@ public:
 	GelShaderHandle Find( const char* ShaderName );
 	void Bind( const GelShaderHandle Index );
 
+	template<class VertType>
+	inline void VectorAttribPointer( GLuint Index, const VertType* Ptr ) {
+		if ( sizeof(VertType) / sizeof(Real) > 4 ) {
+			// Hardcoded to 3 (xyz) if greater than 4. This lets us autodetect packed types. //
+			AttribPointer( Index, 3, GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+		}
+		else {
+			AttribPointer( Index, sizeof(VertType) / sizeof(Real), GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+		}
+	}
+
+	template<class VertType>
+	inline void Vector1DAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 1, GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+	template<class VertType>
+	inline void Vector2DAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 2, GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+	template<class VertType>
+	inline void Vector3DAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 3, GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+	template<class VertType>
+	inline void Vector4DAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 4, GL_FLOAT, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+	template<class VertType>
+	inline void ColorAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+	template<class VertType>
+	inline void UVAttribPointer( GLuint Index, const VertType* Ptr ) {
+		AttribPointer( Index, 2, GL_UVType, GL_FALSE, sizeof(VertType), (const float*)Ptr );
+	}
+
+	inline void AttribPointer( const GLuint Index, const GLint Size, const GLenum Type, const GLboolean Normalized, const GLsizei Stride, const void* Ptr ) {
+		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
+	}
+
+	inline void DrawArrays( const int Mode, const size_t PolyCount ) {
+		glDrawArrays( Mode, 0, PolyCount );	
+	}
+
+	inline void DrawElements( const int Mode, const unsigned short* Index, const size_t IndexCount ) {
+		glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );
+	}
+
 public:
 	inline int BindUniform1i( const char* Name, const int v0 );
 	inline int BindUniform2i( const char* Name, const int v0, const int v1 );
@@ -77,8 +127,8 @@ public:
 	inline int BindUniformMatrix3fv( const char* Name, const float* Matrix, const size_t Count );
 	inline int BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
 
-	inline int BindUniformColor( const char* Name, const GelColor Color );
-	inline int BindUniformSColor( const char* Name, const GelSColor Color );
+	inline int BindUniformColor( const char* Name, const GelColor Color );		// 8 bit unsigned color (255=1.0) //
+	inline int BindUniformSColor( const char* Name, const GelSColor Color );	// 16 bit signed color  (255=1.0) //
 };
 // - ------------------------------------------------------------------------------------------ - //
 #include "UberShader_Uniform.h"

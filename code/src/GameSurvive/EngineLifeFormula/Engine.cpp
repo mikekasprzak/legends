@@ -11,6 +11,8 @@ cGelArrayPtr<cPassiveTemplate*>	cEngine::PassiveTemplate;
 cRoomViewer* cEngine::View = 0;
 	
 cRoom* cEngine::Room = 0;
+	
+cTileMeshRenderer* cEngine::TileMeshRenderer = 0;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

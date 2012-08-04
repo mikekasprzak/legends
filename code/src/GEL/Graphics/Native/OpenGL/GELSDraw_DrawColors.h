@@ -22,7 +22,7 @@ inline void gels_DrawColors( const int Mode, const VertType* Poly, const unsigne
 	    gels_VertexPointer( sizeof(VertType) / sizeof(Real), GL_FLOAT, sizeof(VertType), (const float*)Poly );
 		gels_ColorPointer( 4, GL_UNSIGNED_BYTE, 0, Colors );
 	}
-	glDrawArrays( Mode, 0, PolyCount );
+	glDrawArrays( Mode, 0, PolyCount );	// 0 is Starting Index //
 }
 // - ------------------------------------------------------------------------------------------ - //
 #define GELS_DRAW_INDEXED_COLORS
