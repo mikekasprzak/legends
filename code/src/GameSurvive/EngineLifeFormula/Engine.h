@@ -63,7 +63,7 @@ public:
 	}
 public:
 	void Step( const Vector3D& MouseRay );
-	void Draw();	
+	void Draw( const Matrix4x4& ViewMatrix );	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

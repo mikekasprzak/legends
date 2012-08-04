@@ -21,9 +21,10 @@ void cEngine::Step( const Vector3D& MouseRay ) {
 	View->Step( MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cEngine::Draw() {
+void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	// No Room->Draw() here, because the room is too large to draw //
 	View->Draw();
+//	TileMeshRenderer->DrawMesh( Room->Map(0,0).Mesh, ViewMatrix );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //
