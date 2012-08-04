@@ -2,7 +2,7 @@
 # NOTE: Only reference files here suitable for OPENGL scope (no game/platform) #
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_GLEE
+DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_GLEE USES_FBO
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	-lGL

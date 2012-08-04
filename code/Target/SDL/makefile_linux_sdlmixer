@@ -34,7 +34,12 @@ CPPFLAGS			+=	$(shell sdl2-config --cflags)
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
+ifdef REQUIRES_OPENGL2
+include Target/SDL/common_opengl2_linux
+else
 include Target/SDL/common_opengl_linux
+endif
+# - ------------------------------------------------------------------------ - #
 include Target/SDL/linux_common
 # - ------------------------------------------------------------------------ - #
 # Finally, include the standard makefile body #

@@ -351,6 +351,14 @@ namespace AssetPool {
 		}
 		//ReadDir += String::Slash;
 		
+		{
+			struct stat st;
+			if( stat( ReadDir.c_str(), &st ) != 0 ) {
+				Log( "* Asset Directory \"%s\" not found!", ReadDir.c_str() );
+				return;
+			}
+		}
+		
 		Log( "+ Adding Asset Directory \"%s\"", ReadDir.c_str() );
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
 		Log( "* %i Total Files in Directory", size_GelDirectory( Dir ) );

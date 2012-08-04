@@ -4,6 +4,15 @@
 CONFIGDIR=Config
 OUTPUTDIR=output
 
+# Are we running Windows? #
+if [ "$WINDIR" != "" ]; then
+	SYSTEM_SUFFIX=
+	EXT=exe
+else
+	SYSTEM_SUFFIX=_`uname -s`
+	EXT=`uname -m`
+fi
+
 
 if [ ! -e "$CONFIGDIR/.project" ]; then
 	echo "ERROR: File \".project\" does not exist!  Please run \"setup.sh\" to generate."
@@ -15,18 +24,17 @@ if [ ! -e "$CONFIGDIR/.sku" ]; then
 	exit 1
 fi
 
-if [ ! -e "$CONFIGDIR/.target" ]; then
-	echo "ERROR: File \".target\" does not exist!  Please run \"setup.sh\" to generate."
+if [ ! -e "$CONFIGDIR/.target$SYSTEM_SUFFIX" ]; then
+	echo "ERROR: File \".target$SYSTEM_SUFFIX\" does not exist!  Please run \"setup.sh\" to generate."
 	exit 1
 fi
 
 PROJECT=`cat $CONFIGDIR/.project`
-EXT=exe
 
 SKU=`cat $CONFIGDIR/.sku`
 SKU_NAME=`basename $SKU`
 
-TARGET=`cat $CONFIGDIR/.target`
+TARGET=`cat $CONFIGDIR/.target$SYSTEM_SUFFIX`
 TARGET_NAME=`basename $TARGET`
 
 TARGET_DIR=$OUTPUTDIR/$SKU_NAME-$TARGET_NAME
