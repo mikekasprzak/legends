@@ -822,8 +822,11 @@ void cGame::Draw() {
 	int ScalarY = FullRefScreen::Height>>1;
 
 	// Draw the primary scene //
-	CurrentRT = RT_PRIMARY;
-	RenderTarget[CurrentRT]->Bind();
+//	CurrentRT = RT_PRIMARY;
+//	RenderTarget[CurrentRT]->Bind();
+
+	cRenderTarget::UnBind();	// Back to Screen //
+	CurrentRT = 0;
 	
 	{
 		gelEnableDepthWriting();
@@ -839,9 +842,9 @@ void cGame::Draw() {
 
 	// Draw the Scene //
 	{
+/*
 		gelDrawModeFlat(); // Set Shader First! Matrix Ops Fail if applied before! //
 		gelLoadMatrix( ObserverCamera.ProjectionView );
-/*
 		static float Pulser = 0.0f;
 		Pulser += 0.005f;
 		
@@ -888,7 +891,7 @@ void cGame::Draw() {
 */		
 		Engine.Draw( ObserverCamera.ProjectionView );
 	}
-
+/*
 	CurrentRT = RT_MINI1;
 	RenderTarget[CurrentRT]->Bind();
 	{
@@ -966,7 +969,7 @@ void cGame::Draw() {
 
 	cRenderTarget::UnBind();	// Back to Screen //
 	CurrentRT = 0;
-
+*/
 	// - -------------------------------------------------------------------------------------- - //
 	// NOTE: After this point, we need to use different coordinate systems to map UVs correctly. //
 	// Hey remember the Cartesian vs UV corner disparity thing? This is that exact same thing. //
@@ -977,10 +980,12 @@ void cGame::Draw() {
 //	ObserverCamera.Projection.Matrix(1,1) = -ObserverCamera.Projection.Matrix(1,1);
 //	ObserverCamera.CalculateProjectionView();
 
+/*
 	gelEnableDepthWriting();
 	gelClearDepth();
-
+*/
 	{
+/*
 		{
 			gelDrawModeTextured();
 			gelLoadMatrix( UICamera.ProjectionView );

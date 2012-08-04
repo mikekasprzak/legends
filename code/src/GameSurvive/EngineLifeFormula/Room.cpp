@@ -14,13 +14,13 @@ cRoom::cRoom( const int Width, const int Height ) :
 	Log( "Active Inventory: %i", cEngine::ActiveTemplate.Back()->InventorySize );
 
 	cEngine::View->Focus = new cActive( cEngine::ActiveTemplate.Back() );	// Create //
-	AddActive( cEngine::View->Focus, Map.Index(2,1) );						// Add to Map //
+	AddActive( cEngine::View->Focus, Map.Index(1,1) );						// Add to Map //
 
 	cEngine::LoadPassiveTemplate( "Content/Misc/TestPassive.json" );
 	
 	Log( "Passive Stack Max: %i", cEngine::PassiveTemplate.Back()->MaxCount );
 
-	Map(3,1).Passive.Get() = new cPassive( cEngine::PassiveTemplate.Back() );
+	Map(1,1).Passive.Get() = new cPassive( cEngine::PassiveTemplate.Back() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::~cRoom() {

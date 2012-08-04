@@ -31,10 +31,10 @@ public:
 	}
 	
 	inline Type* Get() {
-		return Data->Data;
+		return &Data->Data[0];
 	}
 	inline const Type* Get() const {
-		return Data->Data;
+		return &Data->Data[0];
 	}
 	
 	inline const int Size() const {

@@ -5,7 +5,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cRoomViewer::Draw( ) {
+void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
+	gelDrawModeFlat();
+	gelLoadMatrix( ViewMatrix );
+	
 	const cGrid2D<cTile>& Map = Room->Map;
 	
 	for ( size_t y = 0; y < Size; y++ ) {

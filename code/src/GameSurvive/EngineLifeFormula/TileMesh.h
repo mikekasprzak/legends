@@ -73,9 +73,12 @@ public:
 
 		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 0, (cTileMeshVertex*)&Mesh.Vertex[0].Pos );
 		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 1, (cTileMeshVertex*)&Mesh.Vertex[0].Normal );
-		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 2, (cTileMeshVertex*)&Mesh.Vertex[0].Color1 );
-		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 3, (cTileMeshVertex*)&Mesh.Vertex[0].Color2 );
+		UberShader.ColorAttribPointer<cTileMeshVertex>( 2, (cTileMeshVertex*)&Mesh.Vertex[0].Color1 );
+		UberShader.ColorAttribPointer<cTileMeshVertex>( 3, (cTileMeshVertex*)&Mesh.Vertex[0].Color2 );
 		
+//		UberShader.DrawArrays( GL_TRIANGLES, 3 );
+//		UberShader.DrawArrays( GL_TRIANGLE_STRIP, 4 );
+//		UberShader.DrawArrays( GL_LINE_LOOP, 4 );
 		UberShader.DrawElements( GL_TRIANGLES, (const unsigned short*)Mesh.Index.Get(), Mesh.Index.Size() * 3 );		
 	}
 };

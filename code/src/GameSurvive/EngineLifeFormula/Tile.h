@@ -64,6 +64,10 @@ public:
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
+
+//		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
+//			Log( "! TTT %i (%f %f %f)", idx, Mesh.Vertex[idx].Pos.x.ToFloat(), Mesh.Vertex[idx].Pos.y.ToFloat(), Mesh.Vertex[idx].Pos.z.ToFloat() );
+//		}
 		
 		Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
 		Mesh.Index.Add( ABCSet<unsigned short>(2,3,0) );
