@@ -16,11 +16,17 @@ typedef size_t GelShaderHandle;
 // - ------------------------------------------------------------------------------------------ - //
 class cUberShader_Shader {
 public:
-	GLuint Vertex;
-	GLuint Fragment;
-	GLuint Geometry;
+	GLuint Vertex;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
+	GLuint Fragment;		// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 
-	GLuint Program;
+#ifdef USES_GEOMETRY_SHADERS
+	GLuint Geometry;		// GL 3.2+ and GLSL 1.5+ -- Code: #version 150 //
+#endif // USES_GEOMETRY_SHADERS //
+#ifdef USES_TESSELLATION_SHADERS
+	GLuint Tessellation;	// GL 4.0+ and GLSL 4.0+ -- Code: #version 400 //
+#endif // USES_TESSELLATION_SHADERS //
+
+	GLuint Program;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	
 	std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
 	// Remember, Attributes when disabled use a single value across all //
@@ -29,7 +35,12 @@ public:
 	cUberShader_Shader() :
 		Vertex( 0 ),
 		Fragment( 0 ),
+#ifdef USES_GEOMETRY_SHADERS
 		Geometry( 0 ),
+#endif // USES_GEOMETRY_SHADERS //
+#ifdef USES_TESSELLATION_SHADERS
+		Tessellation( 0 ),
+#endif // USES_TESSELLATION_SHADERS //
 		Program( 0 )
 	{
 	}

@@ -43,7 +43,7 @@ GLuint GLSLCompile( const char* ShaderSrc, GLenum type ) {
 	return GLShader;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSource, bool UseGeometryShader = false ) {
+inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSource, const bool UseGeometryShader = false, const bool UseTessellationShader = false ) {
 	cUberShader_Shader Program;
 	
 	std::string ProgramCode;
@@ -69,6 +69,14 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	Program.Geometry = GLSLCompile( ProgramCode.c_str(), GL_GEOMETRY_SHADER );
 	VLog( "* Geometry Shader Compiled (%i)", Program.Geometry );
 #endif // USES_GEOMETRY_SHADERS //
+
+#ifdef USES_TESSELLATION_SHADERS
+	ProgramCode = DefineSymbol( "TESSELLATION_SHADER" );
+	ProgramCode += Defines;
+	ProgramCode += ShaderSource;
+	Program.Tessellation = GLSLCompile( ProgramCode.c_str(), GL_TESSELLATION_SHADER );
+	VLog( "* Tessellation Shader Compiled (%i)", Program.Tessellation );
+#endif // USES_TESSELLATION_SHADERS //
 	
 	Program.Program = glCreateProgram();
 
@@ -78,6 +86,10 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	if ( UseGeometryShader )
 		glAttachShader( Program.Program, Program.Geometry );
 #endif // USES_GEOMETRY_SHADERS //
+#ifdef USES_TESSELLATION_SHADERS
+	if ( UseTessellationShader )
+		glAttachShader( Program.Program, Program.Tessellation );
+#endif // USES_TESSELLATION_SHADERS //
 	VLog( "* Shaders Bound to Program (%i)", Program.Program );
 	
 	return Program;
@@ -188,8 +200,19 @@ cUberShader::cUberShader( const char* InFile ) :
 				}
 #endif // USES_GEOMETRY_SHADER //
 
+				bool HasTessellationShader = false;
+#ifdef USES_TESSELLATION_SHADER
+				// Section "Tessellation": true, under the shader name //
+				cJSON* Tessellation = cJSON_GetObjectItem( ShaderObj, "Tessellation" );
+				if ( Tessellation ) {
+					if ( Tessellation->type == cJSON_True ) {
+						HasTessellationShader = true;
+					}
+				}
+#endif // USES_TESSELLATION_SHADER //
+
 				// Build the Shader //
-				cUberShader_Shader Program = BuildShader( DefineList.c_str(), ShaderSource->Data, HasGeometryShader );
+				cUberShader_Shader Program = BuildShader( DefineList.c_str(), ShaderSource->Data, HasGeometryShader, HasTessellationShader );
 				// Assign Attributes //
 				cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
 				if ( Attribute ) {
@@ -238,10 +261,15 @@ cUberShader::~cUberShader() {
 		if ( Shader[idx].Fragment )
 			glDeleteShader( Shader[idx].Fragment );
 			
-#ifdef USES_GEOMETRY_SHADER		
+#ifdef USES_GEOMETRY_SHADER
 		if ( Shader[idx].Geometry )
 			glDeleteShader( Shader[idx].Geometry );
 #endif // USES_GEOMETRY_SHADER //		
+
+#ifdef USES_TESSELLATION_SHADER
+		if ( Shader[idx].Tessellation )
+			glDeleteShader( Shader[idx].Tessellation );
+#endif // USES_TESSELLATION_SHADER //		
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
