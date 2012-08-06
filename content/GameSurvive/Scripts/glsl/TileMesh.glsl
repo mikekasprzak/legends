@@ -12,8 +12,8 @@ precision highp float;
 
 uniform mat4 ViewMatrix;
 
-attribute vec4 VertexPos;
-attribute vec4 Normal;
+attribute vec3 VertexPos;	// Was vec4, despite it being a vec3. GL knows to pad with 1's. //
+attribute vec3 Normal;
 attribute vec4 Color1;
 attribute vec4 Color2;
 
@@ -22,10 +22,12 @@ varying vec4 var_Color1;
 varying vec4 var_Color2;
 
 void main() {
-	gl_Position = ViewMatrix * VertexPos;
-	var_TexCoord = VertexPos.xy;
-	var_Color1 = Color1;
-	var_Color2 = Color2;
+	vec3 Pos = VertexPos * 18.0;
+	gl_Position = ViewMatrix * vec4( Pos, 1 );	// Manually making it a homogeneous vector //
+
+	var_TexCoord = VertexPos.xy * 0.5;
+	var_Color1 = Color1 * (1.0/255.0);
+	var_Color2 = Color2 * (1.0/255.0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // VERTEX_SHADER //
@@ -38,16 +40,20 @@ void main() {
 //uniform lowp vec4 MinColor;
 //uniform lowp vec4 MaxColor;
 
-//uniform sampler2D TexImage0;
+uniform sampler2D Texture0;
+uniform sampler2D Texture1;
 
 varying vec2 var_TexCoord;
 varying vec4 var_Color1;
 varying vec4 var_Color2;
 
 void main() {
-//	vec4 Sample = texture2D( TexImage0, var_TexCoord );
-//	gl_FragColor = mix( MinColor, MaxColor, Sample );
-	gl_FragColor = var_Color1 + var_Color2;
+//	gl_FragColor = mix( texture2D( TexImage0, var_TexCoord ), texture2D( TexImage1, var_TexCoord ), 1 );
+	gl_FragColor = 
+		mix((vec4( var_Color1.rgb,1 ) * texture2D( Texture0, var_TexCoord )),
+			(vec4( var_Color2.rgb,1 ) * texture2D( Texture1, var_TexCoord )),
+			var_Color1.a
+			);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
