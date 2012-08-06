@@ -47,15 +47,37 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	cUberShader_Shader Program;
 	
 	std::string ProgramCode;
+	// NOTE: The symbol "GL_ES" is already defined by the shader compilers. //
+	// OpenGL Shading Language first version is 110
+	// OpenGL ES Shading Language first version is 100
 	
-	ProgramCode = "";//"#version 200\n";	
+	const char* VersionString = "";
+//	const char* VersionString = "#version 110\n";
+	
+#ifdef USES_OPENGL_ES2
+//	VersionString = "#version 100\n";
+#endif // USES_OPENGL_ES2 //
+
+#ifdef USES_GEOMETRY_SHADERS
+#ifdef USES_ARB_GEOMETRY_SHADERS
+	VersionString = "#version 120\n#extension GL_EXT_geometry_shader4 : enable\n";
+#else // USES_ARB_GEOMETRY_SHADERS //
+	VersionString = "#version 150\n";
+#endif // USES_ARB_GEOMETRY_SHADERS //
+#endif // USES_GEOMETRY_SHADERS //
+
+#ifdef USES_TESSELLATION_SHADERS
+	VersionString = "#version 400\n";
+#endif // USES_TESSELLATION_SHADERS //
+	
+	ProgramCode = VersionString;
 	ProgramCode += DefineSymbol( "VERTEX_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Vertex = GLSLCompile( ProgramCode.c_str(), GL_VERTEX_SHADER );
 	VLog( "* Vertex Shader Compiled (%i)", Program.Vertex );
 	
-	ProgramCode = "";//"#version 200\n";
+	ProgramCode = VersionString;
 	ProgramCode += DefineSymbol( "FRAGMENT_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
@@ -63,7 +85,8 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	VLog( "* Fragment Shader Compiled (%i)", Program.Fragment );
 	
 #ifdef USES_GEOMETRY_SHADERS
-	ProgramCode = DefineSymbol( "GEOMETRY_SHADER" );
+	ProgramCode = VersionString;
+	ProgramCode += DefineSymbol( "GEOMETRY_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Geometry = GLSLCompile( ProgramCode.c_str(), GL_GEOMETRY_SHADER );
@@ -71,7 +94,8 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 #endif // USES_GEOMETRY_SHADERS //
 
 #ifdef USES_TESSELLATION_SHADERS
-	ProgramCode = DefineSymbol( "TESSELLATION_SHADER" );
+	ProgramCode = VersionString;
+	ProgramCode += DefineSymbol( "TESSELLATION_SHADER" );
 	ProgramCode += Defines;
 	ProgramCode += ShaderSource;
 	Program.Tessellation = GLSLCompile( ProgramCode.c_str(), GL_TESSELLATION_SHADER );
@@ -82,6 +106,7 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 
 	glAttachShader( Program.Program, Program.Vertex );
 	glAttachShader( Program.Program, Program.Fragment );
+	// Geometry and Tessellation shaders are optional, even if features are enabled //
 #ifdef USES_GEOMETRY_SHADERS
 	if ( UseGeometryShader )
 		glAttachShader( Program.Program, Program.Geometry );
