@@ -25,15 +25,32 @@ void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	// No Room->Draw() here, because the room is too large to draw //
 	View->Draw( ViewMatrix );
 	
-	cTileMesh Mesh(4,2);
+	cTileMesh Mesh(5,4);
 
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,255) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,255) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+                                             
+	// Standard Away Pointing (Acute/Creases) //
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(-1,-1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(+1,-1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(+1,+1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(-1,+1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+
+	// Inverse Pointing (Obtuse) //
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(+1,+1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(-1,+1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(-1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(+1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+
+	// Up Pointing //
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,1), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,1), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,1), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,1), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
 
 	Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
-	Mesh.Index.Add( ABCSet<unsigned short>(2,3,0) );
+	Mesh.Index.Add( ABCSet<unsigned short>(0,2,3) );
+	Mesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
+	Mesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
 	
 	TileMeshRenderer->Bind();
 	TileMeshRenderer->DrawMesh( Mesh, ViewMatrix );
