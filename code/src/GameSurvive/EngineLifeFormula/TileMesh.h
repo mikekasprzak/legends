@@ -9,6 +9,8 @@
 #include <Graphics/Allocator/Allocator.h>
 #include <Types/Set.h>
 
+#include <AssetPool/AssetPool.h>
+
 #include "../UberShader/UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
@@ -53,14 +55,18 @@ public:
 class cTileMeshRenderer {
 public:
 	cUberShader UberShader;
-	GelShaderHandle Handle;
+
+	GelShaderHandle	Handle;
+	GelAssetHandle	Texture[2];
 	
 	cTileMeshRenderer() :
 		UberShader( "Content/Scripts/glsl/TileMesh.json" )
 	{	
 		Handle = UberShader.Find( "Normal" );
+		Texture[0] = AssetPool::Load( "CGTextures/SoilSand0108" );
+		Texture[1] = AssetPool::Load( "CGTextures/Grass0003" );
 	}
-
+	
 public:
 	inline void Bind() {
 		UberShader.Bind( Handle );
@@ -70,6 +76,12 @@ public:
 		UberShader.BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 //		InShader->BindUniformColor( "MinColor", GEL_SRGB(0,-92,-64) );
 //		InShader->BindUniformColor( "MaxColor", Color ); //GEL_SRGB(148,250,84) );
+
+		UberShader.BindUniform1i( "Texture0", 0 );
+		UberShader.BindUniform1i( "Texture1", 1 );
+
+		AssetPool::BindTexture( Texture[ 0 ], 0 );
+		AssetPool::BindTexture( Texture[ 1 ], 1 );
 
 		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 0, (cTileMeshVertex*)&Mesh.Vertex[0].Pos );
 		UberShader.Vector3DAttribPointer<cTileMeshVertex>( 1, (cTileMeshVertex*)&Mesh.Vertex[0].Normal );

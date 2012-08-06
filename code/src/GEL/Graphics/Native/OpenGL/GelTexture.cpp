@@ -49,13 +49,13 @@ void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed )
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void GelTexture::Bind( const int /*Channel*/ ) {
+void GelTexture::Bind( const int Channel ) {
 	// TODO: Assert //
 	if ( this == 0 )
 		return;
+//	Assert( this == 0, "" );
 	
-	// TODO: Use Channel //
-	
+	glActiveTexture( GL_TEXTURE0 + Channel );	
 	glBindTexture( GL_TEXTURE_2D, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //

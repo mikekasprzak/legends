@@ -414,9 +414,9 @@ namespace AssetPool {
 		BindTexture( Asset );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	void BindTexture( const GelAssetHandle Asset ) {
+	void BindTexture( const GelAssetHandle Asset, const size_t TextureUnit ) {
 		if ( AssetInstance[ Asset ].HasData() ) {	
-			AssetInstance[ Asset ].Texture->Bind( 0 );
+			AssetInstance[ Asset ].Texture->Bind( TextureUnit );
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //

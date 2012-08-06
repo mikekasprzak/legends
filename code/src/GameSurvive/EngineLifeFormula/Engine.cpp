@@ -27,10 +27,10 @@ void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	
 	cTileMesh Mesh(4,2);
 
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,255) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,255) ) );
 
 	Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
 	Mesh.Index.Add( ABCSet<unsigned short>(2,3,0) );
