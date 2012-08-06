@@ -27,13 +27,18 @@ void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	
 	cTileMesh Mesh(5,4);
 
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,128), GEL_RGBA(255,255,255,0) ) );
+
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(-1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(+1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(+0,+0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(-0,+0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
                                              
 	// Standard Away Pointing (Acute/Creases) //
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(-1,-1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(+1,-1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(+1,+1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
-	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(-1,+1,3).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(-1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(+1,-1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(+1,+1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+//	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(-1,+1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
 
 	// Inverse Pointing (Obtuse) //
 //	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(+1,+1,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
