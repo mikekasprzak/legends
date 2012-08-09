@@ -2,13 +2,14 @@
 #ifndef __Allocator_H__
 #define __Allocator_H__
 // - ------------------------------------------------------------------------------------------ - //
+//#include <Debug/Log.h>
 #include <Core/DataArray.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Promote this to a variant of StaticArray in the Data Library. //
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 class Allocator {
-protected:
+public://protected:
 	int _Size;
 	DataArray<Type>* Data;
 	
@@ -17,10 +18,28 @@ public:
 		_Size( Start )
 	{
 		Data = new_DataArray<Type>( _MaxSize );
+		//VVVLog( "! Allocator Construct (%i -- 0x%x) (0x%x)", _MaxSize, Data, this );
 	}
 	
 	inline ~Allocator() {
+		//VVVLog( "! Allocator Destruct (%i -- 0x%x) (0x%x)", _Size, Data, this );
 		delete_DataArray<Type>( Data );
+	}
+	
+	inline Allocator<Type>( const Allocator& Copy ) :
+		_Size( Copy._Size )
+	{
+		//VVVLog( "! Allocator Copy (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
+		Data = copy_DataArray<Type>( Copy.Data );
+	}
+	
+	inline Allocator& operator = ( const Allocator& Copy ) {
+		//VVVLog( "! Allocator Assignment (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
+		if ( this != &Copy ) {
+			_Size = Copy._Size;
+			Data = copy_DataArray<Type>( Copy.Data );
+		}
+		return *this;
 	}
 	
 	inline Type& operator []( const int Index ) {

@@ -24,7 +24,7 @@ void cEngine::Step( const Vector3D& MouseRay ) {
 void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	// No Room->Draw() here, because the room is too large to draw //
 	View->Draw( ViewMatrix );
-	
+/*	
 	cTileMesh Mesh(5,4);
 
 	Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,128), GEL_RGBA(255,255,255,0) ) );
@@ -57,9 +57,12 @@ void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 	Mesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
 	Mesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
 	
+//	Log( "BWEEEO: %i 0x%x (Vert: 0x%x Index: 0x%x)", Room->Map(0,1).Height, &Room->Map(0,1).Mesh, &Room->Map(0,1).Mesh.Vertex.Data, &Room->Map(0,1).Mesh.Index.Data );
+	*/
+	
 	TileMeshRenderer->Bind();
-	TileMeshRenderer->DrawMesh( Mesh, ViewMatrix );
-//	TileMeshRenderer->DrawMesh( Room->Map(0,0).Mesh, ViewMatrix );
+//	TileMeshRenderer->DrawMesh( Mesh, ViewMatrix );
+	TileMeshRenderer->DrawMesh( Room->Map(0,0).Mesh, ViewMatrix );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

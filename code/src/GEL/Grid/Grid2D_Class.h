@@ -24,7 +24,14 @@ public:
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const size_t _w, const size_t _h, const tType& Type = tType() ) :
+	inline cGrid2D( const size_t _w, const size_t _h ) :
+		w( _w ),
+		h( _h ),
+		Data( new tType[w*h] )
+	{
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline cGrid2D( const size_t _w, const size_t _h, const tType& Type ) :
 		w( _w ),
 		h( _h ),
 		Data( new tType[w*h] )

@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Integer.h>
 #include <Debug/Log.h>
+#include <Debug/Woof.h>
 
 #include "TileMesh.h"
 
@@ -33,10 +34,10 @@ public:												// --Words (32bit)-- //
 	int Height;										// 1 - Elevation //
 	int Padding[3];									// 3 - Padding (until I have something to put here) //
 	
+//	Woof Burf;
+	
 	// TODO: Replace this with a custom/generative Mesh type //
 	cTileMesh							Mesh;		// 4 - Vertex and Index Pointers //
-//	Vector3DAllocator 					Vertex;		// 2 - Vertexes (Size, Ptr) //
-//	Allocator< ABCSet<short> >			Index;		// 2 - Vertex Indexes //
 //	Allocator< ABSet<short> >			OutlineIndex;
 	// NOTES: Above is all relative 0,0,0 (Z=Height).
 	//        Map Rendering, I go through all visible tiles and create new Mesh
@@ -55,25 +56,32 @@ public:												// --Words (32bit)-- //
 public:
 	cTile() :
 		Height( DEFAULT_TILE_HEIGHT ),
-		Mesh( 4, 2 )
-//		Vertex( 4 ),		// 4 corners (Center Ignored) //
-//		Index( 3*2 ),		// 6 indexes, two triangles, make a quad (Side faces don't matter yet) //
+		Mesh( 5, 4 )
 //		OutlineIndex( 5 )	// 5 indexes, line loop, make an outline for the tile //
 	{
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1), GEL_RGB_BLUE, GEL_RGB_RED ) );
+
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,128), GEL_RGBA(255,255,255,0) ) );
+	
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 
 //		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
 //			Log( "! TTT %i (%f %f %f)", idx, Mesh.Vertex[idx].Pos.x.ToFloat(), Mesh.Vertex[idx].Pos.y.ToFloat(), Mesh.Vertex[idx].Pos.z.ToFloat() );
 //		}
-		
+
 		Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
-		Mesh.Index.Add( ABCSet<unsigned short>(2,3,0) );
+		Mesh.Index.Add( ABCSet<unsigned short>(0,2,3) );
+		Mesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
+		
+//		VVLog( "* Me: 0x%x (Mesh: 0x%x Vert: 0x%x Index: 0x%x)", this, &Mesh, Mesh.Vertex.Data, Mesh.Index.Data );
 	}
 	
 	~cTile() {
+//		VVLog( "* Dead: 0x%x", this );
+		
 		Active.DeleteAll();
 		Passive.DeleteAll();
 	}
