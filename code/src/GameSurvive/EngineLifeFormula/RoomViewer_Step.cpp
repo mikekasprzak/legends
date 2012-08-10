@@ -20,7 +20,7 @@ void cRoomViewer::Step( const Vector3D& MouseRay ) {
 	// Convert Mouse Cursor Position in to an Index //
 	if ( Playfield == MouseRay.ToVector2D() ) {
 		int x = (Playfield.MapX( MouseRay.x ) * Real(Size));
-		int y = (Playfield.MapY( -MouseRay.y ) * Real(Size));
+		int y = (Playfield.MapY( MouseRay.y ) * Real(Size));
 		
 		SelectedTile = (y * Size) + x;
 	}

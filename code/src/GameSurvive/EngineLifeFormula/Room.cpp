@@ -21,9 +21,54 @@ cRoom::cRoom( const int Width, const int Height ) :
 	Log( "Passive Stack Max: %i", cEngine::PassiveTemplate.Back()->MaxCount );
 
 	Map(1,1).Passive.Get() = new cPassive( cEngine::PassiveTemplate.Back() );
+		
+	
+	Map(3,4).Height += 20;
+	Map(4,4).Height += 20;
+	Map(5,4).Height += 16;
+	Map(5,3).Height += 14;
+	Map(5,2).Height += 12;
+
+	Map(7,7).Height += 2;
+	Map(1,7).Height -= 2;
+
+	for ( int idx = 0; idx < Map.Size(); idx++ ) {
+		UpdateMesh( idx % Map.Width(), idx / Map.Width() );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::~cRoom() {
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void cRoom::UpdateMesh( const int x, const int y ) {
+	Map(x,y).UpdateMesh( Map.Index(x-1,y), Map.Index(x+1,y), Map.Index(x,y-1), Map.Index(x,y+1) );
+	
+	int Height = Map(x,y).Height;
+	Map(x,y).Mesh.Vertex[1].Normal = Map(x,y).Mesh.Vertex[0].Normal;
+	Map(x,y).Mesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-1,y+0).Height) * Vector3D(-1,+0,0);
+	Map(x,y).Mesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-1,y-1).Height) * Vector3D(-1,-1,0);
+	Map(x,y).Mesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x+0,y-1).Height) * Vector3D(+0,-1,0);
+	Map(x,y).Mesh.Vertex[1].Normal.Normalize();
+
+	Map(x,y).Mesh.Vertex[2].Normal = Map(x,y).Mesh.Vertex[0].Normal;
+	Map(x,y).Mesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+1,y+0).Height) * Vector3D(+1,+0,0);
+	Map(x,y).Mesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+1,y-1).Height) * Vector3D(+1,-1,0);
+	Map(x,y).Mesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+0,y-1).Height) * Vector3D(+0,-1,0);
+	Map(x,y).Mesh.Vertex[2].Normal.Normalize();
+                            
+	Map(x,y).Mesh.Vertex[3].Normal = Map(x,y).Mesh.Vertex[0].Normal;
+	Map(x,y).Mesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+1,y+0).Height) * Vector3D(+1,+0,0);
+	Map(x,y).Mesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+1,y+1).Height) * Vector3D(+1,+1,0);
+	Map(x,y).Mesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+0,y+1).Height) * Vector3D(+0,+1,0);
+	Map(x,y).Mesh.Vertex[3].Normal.Normalize();
+
+	Map(x,y).Mesh.Vertex[4].Normal = Map(x,y).Mesh.Vertex[0].Normal;
+	Map(x,y).Mesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-1,y+0).Height) * Vector3D(-1,+0,0);
+	Map(x,y).Mesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-1,y+1).Height) * Vector3D(-1,+1,0);
+	Map(x,y).Mesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x+0,y+1).Height) * Vector3D(+0,+1,0);
+	Map(x,y).Mesh.Vertex[4].Normal.Normalize();
 }
 // - ------------------------------------------------------------------------------------------ - //
 

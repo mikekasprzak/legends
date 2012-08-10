@@ -60,9 +60,9 @@ void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
 //	Log( "BWEEEO: %i 0x%x (Vert: 0x%x Index: 0x%x)", Room->Map(0,1).Height, &Room->Map(0,1).Mesh, &Room->Map(0,1).Mesh.Vertex.Data, &Room->Map(0,1).Mesh.Index.Data );
 	*/
 	
-	TileMeshRenderer->Bind();
-//	TileMeshRenderer->DrawMesh( Mesh, ViewMatrix );
-	TileMeshRenderer->DrawMesh( Room->Map(0,0).Mesh, ViewMatrix );
+//	TileMeshRenderer->Bind();
+////	TileMeshRenderer->DrawMesh( Mesh, ViewMatrix );
+//	TileMeshRenderer->DrawMesh( Room->Map(0,0).Mesh, ViewMatrix );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

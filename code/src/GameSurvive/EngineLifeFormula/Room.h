@@ -78,6 +78,8 @@ public:
 		Map[ToIndex].Passive.Get() = Object;
 	}
 
+	void UpdateMesh( const int x, const int y );
+	
 public:
 	void Step( /*const Vector3D& MouseRay*/ );
 	void Draw( /* const Vector3D Pos */ );

@@ -59,13 +59,12 @@ public:
 		Mesh( 5, 4 )
 //		OutlineIndex( 5 )	// 5 indexes, line loop, make an outline for the tile //
 	{
-
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,0), Vector3D(0,0,1), GEL_RGBA(255,255,255,128), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,Height), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 	
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,0), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,0), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 
 //		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
 //			Log( "! TTT %i (%f %f %f)", idx, Mesh.Vertex[idx].Pos.x.ToFloat(), Mesh.Vertex[idx].Pos.y.ToFloat(), Mesh.Vertex[idx].Pos.z.ToFloat() );
@@ -84,6 +83,17 @@ public:
 		
 		Active.DeleteAll();
 		Passive.DeleteAll();
+	}
+
+public:
+	void UpdateMesh( const int Index1, const int Index2, const int Index3, const int Index4 ) {
+		Mesh.Vertex[0].Pos.z = Height;
+		Mesh.Vertex[1].Pos.z = Height;
+		Mesh.Vertex[2].Pos.z = Height;
+		Mesh.Vertex[3].Pos.z = Height;
+		Mesh.Vertex[4].Pos.z = Height;
+		
+		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
