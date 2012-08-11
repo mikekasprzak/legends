@@ -7,6 +7,9 @@
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
+//	Matrix4x4 ViewMatrix = Matrix4x4::ScalarMatrix(2);
+//	ViewMatrix *= _ViewMatrix;
+	
 	const cGrid2D<cTile>& Map = Room->Map;
 
 	Matrix4x4 LocalView;
@@ -23,13 +26,13 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 				Vector3D(
 					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					-Real(cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
+					-Real(cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
 					) 
 				);
 //			LocalView *= Matrix4x4::ScalarMatrix( TileHalfSize );
 			LocalView *= ViewMatrix;
 			
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].Mesh, TileHalfSize, LocalView );
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].Mesh, LocalView );
 		}
 	}
 	
@@ -45,7 +48,7 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 			Vector3D DrawPos( 
 					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
 					);
 
 //			gelSetColor( GEL_RGBA(0,255,0,128) );
@@ -81,7 +84,7 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 			Vector3D DrawPos( 
 					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
 					);
 
 			if ( Map[Index].Active.Size() > 0 ) {

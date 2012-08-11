@@ -61,10 +61,10 @@ public:
 	{
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,Height), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 	
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,-1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,-1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+1,+1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-1,+1,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 
 //		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
 //			Log( "! TTT %i (%f %f %f)", idx, Mesh.Vertex[idx].Pos.x.ToFloat(), Mesh.Vertex[idx].Pos.y.ToFloat(), Mesh.Vertex[idx].Pos.z.ToFloat() );
@@ -92,8 +92,6 @@ public:
 		Mesh.Vertex[2].Pos.z = Height;
 		Mesh.Vertex[3].Pos.z = Height;
 		Mesh.Vertex[4].Pos.z = Height;
-		
-		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

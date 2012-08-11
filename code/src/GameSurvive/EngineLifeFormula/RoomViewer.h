@@ -50,7 +50,7 @@ public:
 	{
 		HalfSize = Real(Size) * Real::Half;
 
-		TileSize = Real(6); // Should equal RegionSize / Size
+		TileSize = Real(4); // Should equal RegionSize / Size
 		TileHalfSize = TileSize * Real::Half;
 	}
 	
