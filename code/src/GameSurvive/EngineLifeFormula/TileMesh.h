@@ -41,10 +41,14 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 class cTileMesh {
 public:
-	Allocator<cTileMeshVertex> Vertex;
+	Allocator< cTileMeshVertex > Vertex;
 	Allocator< ABCSet<unsigned short> > Index;
 
 public:
+	cTileMesh()
+	{
+	}
+	
 	cTileMesh( const size_t Vertexes, const size_t Indexes ) :
 		Vertex( Vertexes ),
 		Index( Indexes )
@@ -77,7 +81,9 @@ public:
 //		InShader->BindUniformColor( "MinColor", GEL_SRGB(0,-92,-64) );
 //		InShader->BindUniformColor( "MaxColor", Color ); //GEL_SRGB(148,250,84) );
 //		UberShader.BindUniform3f( "FaceNormal", Mesh.Vertex[0].Normal.x, Mesh.Vertex[0].Normal.y, Mesh.Vertex[0].Normal.z );
-		UberShader.BindUniform3f( "FaceCenter", Mesh.Vertex[0].Pos.x, Mesh.Vertex[0].Pos.y, Mesh.Vertex[0].Pos.z );
+
+		int Center = 4;//0;
+		UberShader.BindUniform3f( "FaceCenter", Mesh.Vertex[Center].Pos.x, Mesh.Vertex[Center].Pos.y, Mesh.Vertex[Center].Pos.z );
 //		UberShader.BindUniform1f( "Scalar", Scalar );
 
 		UberShader.BindUniform1i( "Texture0", 0 );

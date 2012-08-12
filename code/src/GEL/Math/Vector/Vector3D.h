@@ -185,13 +185,13 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Regular Functions //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector3D& Normalize() {
+	inline Vector3D& Normalize() {
 		Real Mag( Magnitude() );
 	
 		if ( Mag.IsZeroOrLess() )
-			return Vector3D::Zero;
+			return *this = Vector3D::Zero;
 	
-		return *this /= Mag;
+		return *this = *this / Mag;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
@@ -217,6 +217,17 @@ public:
 		
 		return Result;
 	}	
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation, make all axis of length 1, unless the axis is a zero //
+	inline Vector3D& AxisNormalize() {
+		*this = Vector3D( x.Normal(), y.Normal(), z.Normal() );
+		return *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Variation, returns all axis of length 1, unless the axis is a zero //
+	inline const Vector3D AxisNormal() const {
+		return Vector3D( x.Normal(), y.Normal(), z.Normal() );
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The length of a vector //
 	inline const Real Magnitude() const {

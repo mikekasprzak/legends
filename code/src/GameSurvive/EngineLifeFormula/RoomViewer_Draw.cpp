@@ -61,15 +61,15 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 //				TileHalfSize 
 //				);
 
-			gelSetColor( GEL_RGB_GREEN );
-			if ( x == (SelectedTile % Size) )
-				if ( y == (SelectedTile / Size) )
-					gelSetColor( GEL_RGB_RED );
-
-			gelDrawSquare( 
-				DrawPos,
-				TileHalfSize 
-				);
+//			gelSetColor( GEL_RGB_GREEN );
+//			if ( x == (SelectedTile % Size) )
+//				if ( y == (SelectedTile / Size) )
+//					gelSetColor( GEL_RGB_RED );
+//
+//			gelDrawSquare( 
+//				DrawPos,
+//				TileHalfSize 
+//				);
 		}
 	}
 

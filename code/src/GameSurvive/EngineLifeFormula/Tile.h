@@ -55,10 +55,22 @@ public:												// --Words (32bit)-- //
 	// LastChange // When we last had something changed (thusly need a geometry refresh) //
 public:
 	cTile() :
-		Height( DEFAULT_TILE_HEIGHT ),
-		Mesh( 5, 4 )
-//		OutlineIndex( 5 )	// 5 indexes, line loop, make an outline for the tile //
+		Height( DEFAULT_TILE_HEIGHT )
 	{
+		AddMesh_Plane1();
+	}
+	
+	~cTile() {
+		//VVVLog( "* ~cTile: 0x%x", this );
+		
+		Active.DeleteAll();
+		Passive.DeleteAll();
+	}
+
+public:
+	void AddMesh_Plane0() {
+		Mesh = cTileMesh( 5, 4 );
+		
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,Height), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 	
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
@@ -66,33 +78,65 @@ public:
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 
-//		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
-//			Log( "! TTT %i (%f %f %f)", idx, Mesh.Vertex[idx].Pos.x.ToFloat(), Mesh.Vertex[idx].Pos.y.ToFloat(), Mesh.Vertex[idx].Pos.z.ToFloat() );
-//		}
-
 		Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
 		Mesh.Index.Add( ABCSet<unsigned short>(0,2,3) );
 		Mesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
 		Mesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
-		
-//		VVLog( "* Me: 0x%x (Mesh: 0x%x Vert: 0x%x Index: 0x%x)", this, &Mesh, Mesh.Vertex.Data, Mesh.Index.Data );
-	}
-	
-	~cTile() {
-//		VVLog( "* Dead: 0x%x", this );
-		
-		Active.DeleteAll();
-		Passive.DeleteAll();
 	}
 
-public:
-	void UpdateMesh( const int Index1, const int Index2, const int Index3, const int Index4 ) {
-		Mesh.Vertex[0].Pos.z = Height;
-		Mesh.Vertex[1].Pos.z = Height;
-		Mesh.Vertex[2].Pos.z = Height;
-		Mesh.Vertex[3].Pos.z = Height;
-		Mesh.Vertex[4].Pos.z = Height;
+	void AddMesh_Plane1() {
+		Mesh = cTileMesh( 9, 2*4 );
+		
+		Vector3D DefaultNormal(0,0,1);
+		GelColor Color1 = GEL_RGBA(255,255,255,255);
+		GelColor Color2 = GEL_RGBA(255,255,255,0);
+		
+		// 0 - 1 - 2 // a -> b //      b //
+		// | A | B | // ^   /  //    / | //
+		// 3 - 4 - 5 // | /    //  /   v //
+		// | C | D | // c      // c <- d //
+		// 6 - 7 - 8 //        //        //
+		
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 0 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,-2,Height), DefaultNormal, Color1, Color2 ) );	// 1 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 2 //
+
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 3 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+0,Height), DefaultNormal, Color1, Color2 ) );	// 4 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 5 //
+
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 6 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+2,Height), DefaultNormal, Color1, Color2 ) );	// 7 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 8 //
+
+		// Quad A //
+		Mesh.Index.Add( ABCSet<unsigned short>(0,1,3) );
+		Mesh.Index.Add( ABCSet<unsigned short>(1,4,3) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(0,4,3) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(0,1,4) );
+		// Quad B //
+//		Mesh.Index.Add( ABCSet<unsigned short>(1,2,4) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(2,5,4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(1,5,4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(1,2,5) );
+		// Quad C //
+//		Mesh.Index.Add( ABCSet<unsigned short>(3,4,6) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(4,7,6) );
+		Mesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
+		Mesh.Index.Add( ABCSet<unsigned short>(3,4,7) );
+		// Quad D //
+		Mesh.Index.Add( ABCSet<unsigned short>(4,5,7) );
+		Mesh.Index.Add( ABCSet<unsigned short>(5,8,7) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(4,8,7) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(4,5,8) );
 	}
+	
+	void UpdateMesh() {
+		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
+			Mesh.Vertex[idx].Pos.z = Height;
+		}
+	}
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

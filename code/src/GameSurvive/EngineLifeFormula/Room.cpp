@@ -43,8 +43,8 @@ cRoom::~cRoom() {
 
 // - ------------------------------------------------------------------------------------------ - //
 void cRoom::UpdateMesh( const int x, const int y ) {
-	Map(x,y).UpdateMesh( Map.Index(x-1,y), Map.Index(x+1,y), Map.Index(x,y-1), Map.Index(x,y+1) );
-	
+	Map(x,y).UpdateMesh();// Map.Index(x-1,y), Map.Index(x+1,y), Map.Index(x,y-1), Map.Index(x,y+1) );
+/*	
 	int Height = Map(x,y).Height;
 	Map(x,y).Mesh.Vertex[1].Normal = Map(x,y).Mesh.Vertex[0].Normal;
 	Map(x,y).Mesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-1,y-0).Height).Min(0).Normal() * Vector3D(-1,-0,0);
@@ -69,6 +69,53 @@ void cRoom::UpdateMesh( const int x, const int y ) {
 	Map(x,y).Mesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-1,y+1).Height).Min(0).Normal() * Vector3D(-1,+1,0);
 	Map(x,y).Mesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-0,y+1).Height).Min(0).Normal() * Vector3D(-0,+1,0);
 	Map(x,y).Mesh.Vertex[4].Normal.Normalize();
+*/
+
+	int Center = 4;//0;
+	int Height = Map(x,y).Height;
+
+	Map(x,y).Mesh.Vertex[0].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[0].Normal += Real(Map(x-1,y-0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,-0,0);
+	Map(x,y).Mesh.Vertex[0].Normal += Real(Map(x-1,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,-1,0);
+	Map(x,y).Mesh.Vertex[0].Normal += Real(Map(x-0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,-1,0);
+	Map(x,y).Mesh.Vertex[0].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[1].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[1].Normal += Real(Map(x-0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,-1,0);
+	Map(x,y).Mesh.Vertex[1].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[2].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[2].Normal += Real(Map(x+1,y-0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,-0,0);
+	Map(x,y).Mesh.Vertex[2].Normal += Real(Map(x+1,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,-1,0);
+	Map(x,y).Mesh.Vertex[2].Normal += Real(Map(x+0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,-1,0);
+	Map(x,y).Mesh.Vertex[2].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[3].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[3].Normal += Real(Map(x-1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,+0,0);
+	Map(x,y).Mesh.Vertex[3].Normal.AxisNormalize().Normalize();
+	
+	// No Middle //
+
+	Map(x,y).Mesh.Vertex[5].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[5].Normal += Real(Map(x+1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,+0,0);
+	Map(x,y).Mesh.Vertex[5].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[6].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[6].Normal += Real(Map(x-1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,+0,0);
+	Map(x,y).Mesh.Vertex[6].Normal += Real(Map(x-1,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,+1,0);
+	Map(x,y).Mesh.Vertex[6].Normal += Real(Map(x-0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,+1,0);
+	Map(x,y).Mesh.Vertex[6].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[7].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[7].Normal += Real(Map(x+0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,+1,0);
+	Map(x,y).Mesh.Vertex[7].Normal.AxisNormalize().Normalize();
+
+	Map(x,y).Mesh.Vertex[8].Normal = Map(x,y).Mesh.Vertex[Center].Normal;
+	Map(x,y).Mesh.Vertex[8].Normal += Real(Map(x+1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,+0,0);
+	Map(x,y).Mesh.Vertex[8].Normal += Real(Map(x+1,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,+1,0);
+	Map(x,y).Mesh.Vertex[8].Normal += Real(Map(x+0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,+1,0);
+	Map(x,y).Mesh.Vertex[8].Normal.AxisNormalize().Normalize();
+
 }
 // - ------------------------------------------------------------------------------------------ - //
 

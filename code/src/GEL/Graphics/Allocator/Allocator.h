@@ -9,11 +9,17 @@
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 class Allocator {
-public://protected:
+protected:
 	int _Size;
 	DataArray<Type>* Data;
 	
 public:
+	inline Allocator() :
+		_Size( 0 ),
+		Data( 0 )
+	{	
+	}
+	
 	inline Allocator( const int _MaxSize, const int Start = 0 ) :
 		_Size( Start )
 	{
@@ -23,7 +29,8 @@ public:
 	
 	inline ~Allocator() {
 		//VVVLog( "! Allocator Destruct (%i -- 0x%x) (0x%x)", _Size, Data, this );
-		delete_DataArray<Type>( Data );
+		if ( Data )
+			delete_DataArray<Type>( Data );
 	}
 	
 	inline Allocator<Type>( const Allocator& Copy ) :
