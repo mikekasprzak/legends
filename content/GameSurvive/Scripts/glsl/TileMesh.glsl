@@ -38,7 +38,7 @@ void main() {
 //	var_Color2 = vec4( dot( Normal, FaceNormal ) ); // Darker as angle changes, no proximity //
 	
 	vec3 ToCenter = FaceCenter - VertexPos;
-	var_Color2 = vec4( min(1.0 + dot( Normal, ToCenter ), 1.0) );
+	var_Color2 = vec4( min(1.0 + dot( Normal, normalize(ToCenter) ), 1.0) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // VERTEX_SHADER //
