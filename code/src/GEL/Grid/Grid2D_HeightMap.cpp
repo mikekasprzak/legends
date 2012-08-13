@@ -92,7 +92,7 @@ cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t 
 	Map.Fill(0);
 	
 	// -- Setup -- //
-	Map( 0, 0 ) = 24;	// Start Value //
+	Map( 0, 0 ) = Map.Width() >> 2;	// Start Value //
 	int W = Map.Width();
 	int H = Map.Height();
 	

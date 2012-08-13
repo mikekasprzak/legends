@@ -102,6 +102,24 @@ void cRoom::UpdateMesh( const int Index ) {
 		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
 		Mesh.Vertex[8].Normal.Normalize();//AxisNormalize().Normalize();
 	}
+	
+	// Terrain change based on elevation //
+	{
+		int Value = Map[Index].Height * 64;
+
+		if ( Value > 255 )
+			Value = 255;
+		if ( Value < 0 )
+			Value = 0;
+
+		for ( size_t idx = 0; idx < Map[Index].TopMesh.Vertex.Size(); idx++ ) {
+			Map[Index].TopMesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
+		}
+
+		for ( size_t idx = 0; idx < Map[Index].ShaftMesh.Vertex.Size(); idx++ ) {
+			Map[Index].ShaftMesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
