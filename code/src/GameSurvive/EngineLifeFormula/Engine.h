@@ -13,6 +13,8 @@
 #include "Room.h"    
 #include "RoomViewer.h"
 #include "TileMesh.h"
+
+#include "../Camera/Camera.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
@@ -63,7 +65,7 @@ public:
 	}
 public:
 	void Step( const Vector3D& MouseRay );
-	void Draw( const Matrix4x4& ViewMatrix );	
+	void Draw( const GelCamera& Camera );	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

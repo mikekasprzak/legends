@@ -2,6 +2,8 @@
 #ifndef __GEL_CAMERA_H__
 #define __GEL_CAMERA_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Debug/TweakValue.h>
+
 #include <Math/Real.h>
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
@@ -22,13 +24,15 @@ public:
 	Real PlaneWidth;
 	Real PlaneHeight;
 	
-	Real PlanePos;				// Still undecided if I need this //
+	Real PlanePos;						// Still undecided if I need this //
 	
 public:	
-	Matrix4x4 Projection;		// Projection Component //
-	Matrix4x4 View;				// View Component (Camera Pos->Look) //
+	Matrix4x4 Projection;				// Projection Component //
+	Matrix4x4 CoplanarProjection;		// Coplanar Projection Component //
+	Matrix4x4 View;						// View Component (Camera Pos->Look) //
 	
-	Matrix4x4 ProjectionView;	// Combined Matrix //
+	Matrix4x4 ProjectionView;			// Combined Matrix //
+	Matrix4x4 CoplanarProjectionView;	// Combined Matrix //
 public:
 	
 	GelCamera() :
@@ -64,7 +68,13 @@ public:
 	}
 	
 	void UpdateMatrix() {
-		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos );		
+		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos );
+		CoplanarProjection = Calc_Frustum_CoplanarPerspectiveProjection( 
+			Real(_TV(-0.01f)), 
+			Real(_TV(100.0f)),
+			Projection, NearPlane, FarPlane
+//			PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos 
+			);
 		View = Calc_LookAt( Pos, Look, Up );
 	
 		CalculateProjectionView();
@@ -72,7 +82,10 @@ public:
 	
 	void CalculateProjectionView() {
 		ProjectionView = Projection;
-		ProjectionView.Multiply( View );		
+		ProjectionView.Multiply( View );
+		
+		CoplanarProjectionView = CoplanarProjection;
+		CoplanarProjectionView.Multiply( View );
 	}
 
 	inline Real CalcPlanePos( const Real a ) const {

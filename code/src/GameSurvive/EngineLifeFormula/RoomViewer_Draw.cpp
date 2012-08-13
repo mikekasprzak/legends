@@ -6,16 +6,14 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
-void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
-//	Matrix4x4 ViewMatrix = Matrix4x4::ScalarMatrix(2);
-//	ViewMatrix *= _ViewMatrix;
-	
+void cRoomViewer::Draw( const GelCamera& Camera ) {
 	const cGrid2D<cTile>& Map = Room->Map;
 
 	Matrix4x4 LocalView;
 
 	gelEnableDepthWriting();
 	gelEnableDepthTest();
+
 	cEngine::TileMeshRenderer->Bind();
 
 	for ( size_t y = 0; y < Size; y++ ) {
@@ -29,8 +27,7 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 					-Real(cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
 					) 
 				);
-//			LocalView *= Matrix4x4::ScalarMatrix( TileHalfSize );
-			LocalView *= ViewMatrix;
+			LocalView *= Camera.ProjectionView;
 			
 			Vector2D UVPos( Map.IndexToX(Index), Map.IndexToY(Index) );
 			UVPos *= Real(4);
@@ -39,10 +36,12 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, UVPos, LocalView );
 		}
 	}
-	
+
+	gelDisableDepthWriting();
+		
 	// Outline //
 	gelDrawModeFlat();
-	gelLoadMatrix( ViewMatrix );
+	gelLoadMatrix( Camera.CoplanarProjectionView );
 
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {
@@ -55,30 +54,24 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
 					);
 
-//			gelSetColor( GEL_RGBA(0,255,0,128) );
-//			if ( x == (SelectedTile % Size) )
-//				if ( y == (SelectedTile / Size) )
-//					gelSetColor( GEL_RGBA(255,255,0,128) );					
-//			
-//			gelDrawSquareFill( 
-//				DrawPos,
-//				TileHalfSize 
-//				);
+			gelSetColor( GEL_RGBA(0,255,0,255));//64) );
+			if ( x == (SelectedTile % Size) )
+				if ( y == (SelectedTile / Size) )
+					gelSetColor( GEL_RGB_RED );
 
-//			gelSetColor( GEL_RGBA(0,255,0,64) );
-//			if ( x == (SelectedTile % Size) )
-//				if ( y == (SelectedTile / Size) )
-//					gelSetColor( GEL_RGB_RED );
-//
-//			gelDrawSquare( 
-//				DrawPos,
-//				TileHalfSize 
-//				);
+			gelDrawSquare( 
+				DrawPos,
+				TileHalfSize 
+				);
+
+			// Surface Normal //
+			gelSetColor( GEL_RGB_YELLOW );
+			gelDrawLine( 
+				DrawPos,
+				DrawPos + Map[Index].Normal
+				);
 		}
 	}
-
-	gelDisableDepthTest();
-	gelDisableDepthWriting();
 			
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {
@@ -100,6 +93,8 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 			}
 		}
 	}
+	
+	gelDisableDepthTest();
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

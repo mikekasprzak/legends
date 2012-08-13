@@ -21,9 +21,9 @@ void cEngine::Step( const Vector3D& MouseRay ) {
 	View->Step( MouseRay );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cEngine::Draw( const Matrix4x4& ViewMatrix ) {
+void cEngine::Draw( const GelCamera& Camera ) {//Matrix4x4& ViewMatrix ) {
 	// No Room->Draw() here, because the room is too large to draw //
-	View->Draw( ViewMatrix );
+	View->Draw( Camera );
 /*	
 	cTileMesh Mesh(5,4);
 

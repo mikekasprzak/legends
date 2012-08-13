@@ -32,7 +32,7 @@ public:												// --Words (32bit)-- //
 	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;	// 8 //
 	
 	int Height;										// 1 - Elevation //
-	int Padding[3];									// 3 - Padding (until I have something to put here) //
+	Vector3D Normal;								// 3 - Surface Normal //
 	
 //	Woof Burf;
 	
@@ -56,7 +56,8 @@ public:												// --Words (32bit)-- //
 	// LastChange // When we last had something changed (thusly need a geometry refresh) //
 public:
 	cTile() :
-		Height( DEFAULT_TILE_HEIGHT )
+		Height( DEFAULT_TILE_HEIGHT ),
+		Normal( 0, 0, 1 )
 	{
 		AddMesh_TopPlane1();
 		AddMesh_Shaft0();

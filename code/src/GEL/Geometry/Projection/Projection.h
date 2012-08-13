@@ -47,19 +47,19 @@ inline Matrix4x4 Calc_Frustum_OrthoProjection( const Real& Width, const Real& He
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = -ActualHeight;					// NOTE: In GL this is normally positive //
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
 	Matrix[8] = 0.0f;
 	Matrix[9] = 0.0f;
-	Matrix[10] = 2.0 / (Far - Near);
+	Matrix[10] = 2.0 / (Far - Near);			// NOTE: In GL this is normally negative //
 	Matrix[11] = 0.0f;
 	
 	Matrix[12] = 0.0f;
 	Matrix[13] = 0.0f;
 	Matrix[14] = -((Far+Near)/(Far-Near));
-	Matrix[15] = 1.0f;
+	Matrix[15] = 1.0f;							// NOTE: In GL this is normally absent //
 
 	return Matrix;
 }
@@ -76,24 +76,24 @@ inline Matrix4x4 Calc_Simple_PerspectiveProjection( const Real& Width, const Rea
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = -ActualHeight;					// NOTE: In GL this is normally positive //
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
 	Matrix[8] = 0.0f;
 	Matrix[9] = 0.0f;
-	Matrix[10] = 1.0f;
+	Matrix[10] = 1.0f;							// NOTE: In GL this is normally negative //
 	Matrix[11] = 0.0f;
 	
 	Matrix[12] = 0.0f;
 	Matrix[13] = 0.0f;
 	Matrix[14] = -1.0f / Distance;
-	Matrix[15] = 1.0f;
+	Matrix[15] = 1.0f;							// NOTE: In GL this is normally absent //
 
 	return Matrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Real& Height, const Real& Near, const Real& Far, const Real& Center = Real::Half) {
+inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Real& Height, const Real& Near, const Real& Far, const Real& Center = Real::Half ) {
 	// Note: Center is a scalar that controls how deep to put the "even perspective" plane //
 	Real ActualWidth = (2.0f * (Near+((Far-Near)*Center))) / Width;
 	Real ActualHeight = (2.0f * (Near+((Far-Near)*Center))) / Height;
@@ -106,20 +106,42 @@ inline Matrix4x4 Calc_Frustum_PerspectiveProjection( const Real& Width, const Re
 	Matrix[3] = 0.0f;
 	
 	Matrix[4] = 0.0f;
-	Matrix[5] = -ActualHeight;
+	Matrix[5] = -ActualHeight;					// NOTE: In GL this is normally positive //
 	Matrix[6] = 0.0f;
 	Matrix[7] = 0.0f;
 	
 	Matrix[8] = 0.0f;
 	Matrix[9] = 0.0f;
-	Matrix[10] = (Far + Near) / (Far - Near);
-	Matrix[11] = 1.0f;
+	Matrix[10] = (Far + Near) / (Far - Near);	// NOTE: In GL this is normally negative //
+	Matrix[11] = 1.0f;							// NOTE: In GL this is normally negative //
 	
 	Matrix[12] = 0.0f;
 	Matrix[13] = 0.0f;
 	Matrix[14] = -((2.0f*Far*Near)/(Far-Near));
-	Matrix[15] = 1.0f;
+	Matrix[15] = 0.0f;							// NOTE: In GL this is normally absent //
 
+	return Matrix;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Game Programming Gems 1 -- 4.1 (Pg 361) -- Tweaking a Vertex's Projected Depth Value //
+inline Matrix4x4 Calc_Frustum_CoplanarPerspectiveProjection( const Real& Delta, const Real& Pz, Matrix4x4 Matrix, const Real& Near, const Real& Far ) {
+	// NOTE: In GL this is normally negative (-2.0f) //
+	Real Epsilon = Real(2.0f) * Far * Near * Delta / ((Far + Near) * Pz * (Pz + Delta));
+	
+	Matrix[10] *= Real::One + Epsilon;
+	
+	return Matrix;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Game Programming Gems 1 -- 4.1 (Pg 361) -- Tweaking a Vertex's Projected Depth Value //
+inline Matrix4x4 Calc_Frustum_CoplanarPerspectiveProjection( const Real& Delta, const Real& Pz, const Real& Width, const Real& Height, const Real& Near, const Real& Far, const Real& Center = Real::Half ) {
+	Matrix4x4 Matrix = Calc_Frustum_PerspectiveProjection( Width, Height, Near, Far, Center );
+	
+	// NOTE: In GL this is normally negative (-2.0f) //
+	Real Epsilon = Real(2.0f) * Far * Near * Delta / ((Far + Near) * Pz * (Pz + Delta));
+	
+	Matrix[10] *= Real::One + Epsilon;
+	
 	return Matrix;
 }
 // - ------------------------------------------------------------------------------------------ - //
