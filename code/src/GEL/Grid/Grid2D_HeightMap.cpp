@@ -28,10 +28,6 @@ void _diamond_PlasmaFractal_HeightMap( cGrid2D<int>& Map, const int x1, const in
 			Map.Wrap( x2, y2 )
 		) / 4) +
 		_displacement_PlasmaFractal_HeightMap( Displacement );
-		
-//	if ( Map( XMid, YMid ) > 32 ) {
-//		Log( "! SHIT [%i]: %i,%i -- %i (%i,%i - %i,%i)", Map(XMid,YMid), XMid, YMid, HalfD, x1, y1, x2, y2 );
-//	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _square_PlasmaFractal_HeightMap( cGrid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
@@ -84,59 +80,13 @@ void _square_PlasmaFractal_HeightMap( cGrid2D<int>& Map, const int x1, const int
 			Map.Wrap( x1 + HalfD, y2 + HalfD )
 		) / 4) +
 		_displacement_PlasmaFractal_HeightMap( Displacement );
-
-//	if ( Map[F] > 32 ) {
-//		Log( "! SHIT [%i]: F %i (%i,%i) -- %i (%i,%i - %i,%i)", Map[F], F, Map.IndexToX(F), Map.IndexToY(F), HalfD, x1, y1, x2, y2 );
-//	}
-//
-//	if ( Map[G] > 32 ) {
-//		Log( "! SHIT [%i]: G %i (%i,%i) -- %i (%i,%i - %i,%i)", Map[G], G, Map.IndexToX(G), Map.IndexToY(G), HalfD, x1, y1, x2, y2 );
-//	}
-//
-//	if ( Map[H] > 32 ) {
-//		Log( "! SHIT [%i]: H %i (%i,%i) -- %i (%i,%i - %i,%i)", Map[H], H, Map.IndexToX(H), Map.IndexToY(H), HalfD, x1, y1, x2, y2 );
-//	}
-//
-//	if ( Map[I] > 32 ) {
-//		Log( "! SHIT [%i]: I %i (%i,%i) -- %i (%i,%i - %i,%i)", Map[I], I, Map.IndexToX(I), Map.IndexToY(I), HalfD, x1, y1, x2, y2 );
-//	}
-}
-// - ------------------------------------------------------------------------------------------ - //
-void _generate_PlasmaFractal_HeightMap( cGrid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
-	int Step = x2-x1;	// Always a Power of Two, so this is safe //
-	
-	if ( Step <= 1 )
-		return;
-
-	int Displacement = Step;
-	int HalfD = Displacement >> 1;
-
-	// -- Diamond -- //
-	_diamond_PlasmaFractal_HeightMap( Map, x1, y1, 					x2, y2 );
-
-	_diamond_PlasmaFractal_HeightMap( Map, x1, y1, 					x1 + HalfD, y1 + HalfD );
-	_diamond_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1, 			x2, y1 + HalfD );
-	_diamond_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1 + HalfD,	x2, y2 );
-	_diamond_PlasmaFractal_HeightMap( Map, x1, y1 + HalfD, 			x1 + HalfD, y2 );
-	
-	// -- Square -- //
-	_square_PlasmaFractal_HeightMap( Map, x1, y1, 					x2, y2 );
-
-//	_square_PlasmaFractal_HeightMap( Map, x1, y1, 					x1 + HalfD, y1 + HalfD );
-//	_square_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1, 			x2, y1 + HalfD );
-//	_square_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1 + HalfD, 	x2, y2 );
-//	_square_PlasmaFractal_HeightMap( Map, x1, y1 + HalfD, 			x1 + HalfD, y2 );
-
-	// -- Do Children -- //
-	_generate_PlasmaFractal_HeightMap( Map, x1, y1, 				x1 + HalfD, y1 + HalfD );
-	_generate_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1, 		x2, y1 + HalfD );
-	_generate_PlasmaFractal_HeightMap( Map, x1 + HalfD, y1 + HalfD, x2, y2 );
-	_generate_PlasmaFractal_HeightMap( Map, x1, y1 + HalfD, 		x1 + HalfD, y2 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // The Diamond-Square algorithm (Midpoint Displacement, Cloud/Plasma Fractal) -- Powers of Two //
+// - http://en.wikipedia.org/wiki/Diamond-square_algorithm //
+// - Game Programming Gems #1 - 4.18 Fractal Terrain Generation - Pg 503 //
 cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t Height ) {
 	cGrid2D<int> Map(Width, Height);
 	Map.Fill(0);
@@ -149,9 +99,7 @@ cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t 
 	int XSteps = 1;
 	int YSteps = 1;
 	
-	while( W >= 2 )
-//	for ( int idx = 0; idx < 6; idx++ )
-	{
+	while( W >= 2 ) {
 		// -- Diamond -- //
 		for ( int y = 0; y < YSteps; y++ ) {
 			for ( int x = 0; x < XSteps; x++ ) {
@@ -179,18 +127,6 @@ cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t 
 		XSteps <<= 1;
 		YSteps <<= 1;
 	}
-	
-//	// -- Diamond -- //
-//	_diamond_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
-//	
-//	// -- Square -- //
-//	_square_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
-//
-//	// -- Do Children -- //
-//	_generate_PlasmaFractal_HeightMap( Map, 0, 0, 			W>>1, H>>1 );
-//	_generate_PlasmaFractal_HeightMap( Map, W>>1, 0, 		W, H>>1 );
-//	_generate_PlasmaFractal_HeightMap( Map, W>>1, H>>1, 	W, H );
-//	_generate_PlasmaFractal_HeightMap( Map, 0, H>>1, 		W>>1, H );
 
 	return Map;
 }
