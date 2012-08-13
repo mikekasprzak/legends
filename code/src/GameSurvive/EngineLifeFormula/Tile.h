@@ -37,7 +37,8 @@ public:												// --Words (32bit)-- //
 //	Woof Burf;
 	
 	// TODO: Replace this with a custom/generative Mesh type //
-	cTileMesh							Mesh;		// 4 - Vertex and Index Pointers //
+	cTileMesh							TopMesh;	// 4 - Vertex and Index Pointers //
+	cTileMesh							ShaftMesh;	// 4 - Vertex and Index Pointers //
 //	Allocator< ABSet<short> >			OutlineIndex;
 	// NOTES: Above is all relative 0,0,0 (Z=Height).
 	//        Map Rendering, I go through all visible tiles and create new Mesh
@@ -57,7 +58,8 @@ public:
 	cTile() :
 		Height( DEFAULT_TILE_HEIGHT )
 	{
-		AddMesh_Plane1();
+		AddMesh_TopPlane1();
+		AddMesh_Shaft0();
 	}
 	
 	~cTile() {
@@ -68,24 +70,24 @@ public:
 	}
 
 public:
-	void AddMesh_Plane0() {
-		Mesh = cTileMesh( 5, 4 );
+	void AddMesh_TopPlane0() {
+		TopMesh = cTileMesh( 5, 2*2 );
 		
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,Height), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(0,0,Height), Vector3D(0,0,1), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 	
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(0,0,1).Normal(), GEL_RGBA(255,255,255,255), GEL_RGBA(255,255,255,0) ) );
 
-		Mesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
-		Mesh.Index.Add( ABCSet<unsigned short>(0,2,3) );
-		Mesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
-		Mesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,1,2) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,2,3) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,3,4) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,4,1) );
 	}
 
-	void AddMesh_Plane1() {
-		Mesh = cTileMesh( 9, 2*4 );
+	void AddMesh_TopPlane1() {
+		TopMesh = cTileMesh( 9, 2*4 );
 		
 		Vector3D DefaultNormal(0,0,1);
 		GelColor Color1 = GEL_RGBA(255,255,255,255);
@@ -97,48 +99,94 @@ public:
 		// | C | D | // c      // c <- d //
 		// 6 - 7 - 8 //        //        //
 		
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 0 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,-2,Height), DefaultNormal, Color1, Color2 ) );	// 1 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 2 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 0 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,-2,Height), DefaultNormal, Color1, Color2 ) );	// 1 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), DefaultNormal, Color1, Color2 ) );	// 2 //
 
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 3 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+0,Height), DefaultNormal, Color1, Color2 ) );	// 4 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 5 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 3 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+0,Height), DefaultNormal, Color1, Color2 ) );	// 4 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+0,Height), DefaultNormal, Color1, Color2 ) );	// 5 //
 
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 6 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+2,Height), DefaultNormal, Color1, Color2 ) );	// 7 //
-		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 8 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 6 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+2,Height), DefaultNormal, Color1, Color2 ) );	// 7 //
+		TopMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 8 //
 
 //		// Quad A //
-//		Mesh.Index.Add( ABCSet<unsigned short>(0,1,3) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(1,4,3) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(0,1,3) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(1,4,3) );
 //		// Quad B //
-//		Mesh.Index.Add( ABCSet<unsigned short>(1,5,4) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(1,2,5) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(1,5,4) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(1,2,5) );
 //		// Quad C //
-//		Mesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(3,4,7) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(3,4,7) );
 //		// Quad D //
-//		Mesh.Index.Add( ABCSet<unsigned short>(4,5,7) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(5,8,7) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(4,5,7) );
+//		TopMesh.Index.Add( ABCSet<unsigned short>(5,8,7) );
 
 		// Quad A //
-		Mesh.Index.Add( ABCSet<unsigned short>(0,4,3) );
-		Mesh.Index.Add( ABCSet<unsigned short>(0,1,4) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,4,3) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(0,1,4) );
 		// Quad B //
-		Mesh.Index.Add( ABCSet<unsigned short>(1,2,4) );
-		Mesh.Index.Add( ABCSet<unsigned short>(2,5,4) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(1,2,4) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(2,5,4) );
 		// Quad C //
-		Mesh.Index.Add( ABCSet<unsigned short>(3,4,6) );
-		Mesh.Index.Add( ABCSet<unsigned short>(4,7,6) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(3,4,6) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(4,7,6) );
 		// Quad D //
-		Mesh.Index.Add( ABCSet<unsigned short>(4,8,7) );
-		Mesh.Index.Add( ABCSet<unsigned short>(4,5,8) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(4,8,7) );
+		TopMesh.Index.Add( ABCSet<unsigned short>(4,5,8) );
 	}
-	
+
+	void AddMesh_Shaft0() {
+		ShaftMesh = cTileMesh( 8, 2*4 );
+
+		GelColor Color1 = GEL_RGBA(255,255,255,0);
+		GelColor Color2 = GEL_RGBA(255,255,255,0);
+		
+		// 0 - 1 // a -> b //      b //
+		// |   | // ^   /  //    / | //
+		// 2 - 3 // | /    //  /   v //
+		//       // c      // c <- d //
+		// 4 - 5 //
+		// |   | //
+		// 6 - 7 //
+		
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(-1,-1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Vector3D(+1,-1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(-1,+1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(+1,+1,0).Normal(), Color1, Color2 ) );
+		
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,0), Vector3D(-1,-1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,0), Vector3D(+1,-1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,0), Vector3D(-1,+1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,0), Vector3D(+1,+1,0).Normal(), Color1, Color2 ) );
+
+		// ^  Up //
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(1,0,5) );
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(0,4,5) );
+		// <- Left //
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(0,2,4) );
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(2,6,4) );
+		// v  Down //
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(2,3,6) );
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
+		// -> Right //
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(3,1,7) );
+		ShaftMesh.Index.Add( ABCSet<unsigned short>(1,5,7) );		
+	}
+
+public:
 	void UpdateMesh() {
-		for ( int idx = 0; idx < Mesh.Vertex.Size(); idx++ ) {
-			Mesh.Vertex[idx].Pos.z = Height;
+		// Top Mesh //
+		for ( int idx = 0; idx < TopMesh.Vertex.Size(); idx++ ) {
+			TopMesh.Vertex[idx].Pos.z = Height;
+		}
+		
+		// Shaft Mesh //
+		for ( int idx = 0; idx < ShaftMesh.Vertex.Size(); idx++ ) {
+			if ( ShaftMesh.Vertex[idx].Pos.z != Real::Zero )
+				ShaftMesh.Vertex[idx].Pos.z = Height;
 		}
 	}
 

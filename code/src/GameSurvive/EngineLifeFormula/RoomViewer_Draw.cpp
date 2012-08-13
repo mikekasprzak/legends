@@ -32,7 +32,8 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 //			LocalView *= Matrix4x4::ScalarMatrix( TileHalfSize );
 			LocalView *= ViewMatrix;
 			
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].Mesh, LocalView );
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].ShaftMesh, LocalView );
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, LocalView );
 		}
 	}
 	

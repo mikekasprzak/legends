@@ -650,8 +650,8 @@ void cGame::UpdateCameraMatrix() {
 	ObserverCamera.SetFrustum( 
 //		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 //		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		FullRefScreen::Width * Real( _TV(0.2f) ),
-		FullRefScreen::Height * Real( _TV(0.2f) ),
+		FullRefScreen::Width * Real( _TV(0.12f) ),
+		FullRefScreen::Height * Real( _TV(0.12f) ),
 		_TV(100),
 		_TV(900)
 		);
