@@ -146,17 +146,51 @@ cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t 
 	int W = Map.Width();
 	int H = Map.Height();
 	
-	// -- Diamond -- //
-	_diamond_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
+	int XSteps = 1;
+	int YSteps = 1;
 	
-	// -- Square -- //
-	_square_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
+	while( W >= 2 )
+//	for ( int idx = 0; idx < 6; idx++ )
+	{
+		// -- Diamond -- //
+		for ( int y = 0; y < YSteps; y++ ) {
+			for ( int x = 0; x < XSteps; x++ ) {
+				int x1 = W * x;
+				int y1 = H * y;
+				int x2 = W * (x+1);
+				int y2 = H * (y+1);
+				_diamond_PlasmaFractal_HeightMap( Map, x1, y1, x2, y2 );
+			}
+		}
+		// -- Square -- //
+		for ( int y = 0; y < YSteps; y++ ) {
+			for ( int x = 0; x < XSteps; x++ ) {
+				int x1 = W * x;
+				int y1 = H * y;
+				int x2 = W * (x+1);
+				int y2 = H * (y+1);
+				_square_PlasmaFractal_HeightMap( Map, x1, y1, x2, y2 );
+			}
+		}
+		
+		W >>= 1;
+		H >>= 1;
 
-	// -- Do Children -- //
-	_generate_PlasmaFractal_HeightMap( Map, 0, 0, 			W>>1, H>>1 );
-	_generate_PlasmaFractal_HeightMap( Map, W>>1, 0, 		W, H>>1 );
-	_generate_PlasmaFractal_HeightMap( Map, W>>1, H>>1, 	W, H );
-	_generate_PlasmaFractal_HeightMap( Map, 0, H>>1, 		W>>1, H );
+		XSteps <<= 1;
+		YSteps <<= 1;
+	}
+	
+//	// -- Diamond -- //
+//	_diamond_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
+//	
+//	// -- Square -- //
+//	_square_PlasmaFractal_HeightMap( Map, 0, 0, W, H );
+//
+//	// -- Do Children -- //
+//	_generate_PlasmaFractal_HeightMap( Map, 0, 0, 			W>>1, H>>1 );
+//	_generate_PlasmaFractal_HeightMap( Map, W>>1, 0, 		W, H>>1 );
+//	_generate_PlasmaFractal_HeightMap( Map, W>>1, H>>1, 	W, H );
+//	_generate_PlasmaFractal_HeightMap( Map, 0, H>>1, 		W>>1, H );
 
 	return Map;
 }
