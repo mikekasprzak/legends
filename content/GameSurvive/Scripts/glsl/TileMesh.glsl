@@ -12,6 +12,7 @@ precision highp float;
 
 uniform mat4 ViewMatrix;
 uniform vec3 FaceCenter;
+uniform vec2 UVPos;
 //uniform float Scalar;
 
 //uniform vec3 FaceNormal;
@@ -30,7 +31,7 @@ void main() {
 	vec3 Pos = VertexPos;// * Scalar;
 	gl_Position = ViewMatrix * vec4( Pos, 1 );	// Manually making it a homogeneous vector //
 
-	var_TexCoord = VertexPos.xy * 0.5;
+	var_TexCoord = (VertexPos.xy + UVPos + VertexPos.zz) * (1.0 / 16.0);
 	var_Color1 = Color1 * (1.0/255.0);
 //	var_Color2 = Color2 * (1.0/255.0);
 //	var_Color2 = vec4(0.75);
