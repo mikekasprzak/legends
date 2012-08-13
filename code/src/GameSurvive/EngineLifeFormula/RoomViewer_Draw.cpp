@@ -4,6 +4,8 @@
 #include "RoomViewer.h"
 #include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
+extern bool ShowDebug;
+// - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 void cRoomViewer::Draw( const GelCamera& Camera ) {
@@ -43,34 +45,53 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 	gelDrawModeFlat();
 	gelLoadMatrix( Camera.CoplanarProjectionView );
 
-	for ( size_t y = 0; y < Size; y++ ) {
-		for ( size_t x = 0; x < Size; x++ ) {
-			int Index = Map.Index( x, y );
-
-			// HACK: Funny Z to test depth			
-			Vector3D DrawPos( 
-					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
-					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+	if ( ShowDebug ) {
+		for ( size_t y = 0; y < Size; y++ ) {
+			for ( size_t x = 0; x < Size; x++ ) {
+				int Index = Map.Index( x, y );
+	
+				// HACK: Funny Z to test depth			
+				Vector3D DrawPos( 
+						+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
+						+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
+						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+						);
+	
+				gelSetColor( GEL_RGBA(0,255,0,192) );
+	
+				gelDrawSquare( 
+					DrawPos,
+					TileHalfSize 
 					);
-
-			gelSetColor( GEL_RGBA(0,255,0,255));//64) );
-			if ( x == (SelectedTile % Size) )
-				if ( y == (SelectedTile / Size) )
-					gelSetColor( GEL_RGB_RED );
-
-			gelDrawSquare( 
-				DrawPos,
-				TileHalfSize 
-				);
-
-			// Surface Normal //
-			gelSetColor( GEL_RGB_YELLOW );
-			gelDrawLine( 
-				DrawPos,
-				DrawPos + Map[Index].Normal
-				);
+	
+				// Surface Normal //
+				gelSetColor( GEL_RGB_YELLOW );
+				gelDrawLine( 
+					DrawPos,
+					DrawPos + Map[Index].Normal
+					);
+			}
 		}
+	}
+	
+	// Cursor //
+	if ( SelectedTile != -1 ) {
+		int x = (SelectedTile % Size);
+		int y = (SelectedTile / Size);
+		int Index = Map.Index( x, y );
+		
+		// HACK: Funny Z to test depth
+		Vector3D DrawPos( 
+				+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
+				+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
+				Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
+				);
+				
+		gelSetColor( GEL_RGB_RED );	
+		gelDrawSquare( 
+			DrawPos,
+			TileHalfSize 
+			);
 	}
 			
 	for ( size_t y = 0; y < Size; y++ ) {

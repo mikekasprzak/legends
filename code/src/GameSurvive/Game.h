@@ -106,8 +106,6 @@ public:
 	};
 
 public:
-	bool ShowDebug;
-	
 	GelFont* Font;
 	
 	LifeFormula::cEngine Engine;
