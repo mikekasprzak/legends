@@ -76,7 +76,7 @@ public:
 		UberShader.Bind( Handle );
 	}
 	
-	inline void DrawMesh( const cTileMesh& Mesh, /*const Real& Scalar,*/ const Matrix4x4& ViewMatrix ) {
+	inline void DrawMesh( const cTileMesh& Mesh, const Vector2D& UVPos, const Matrix4x4& ViewMatrix ) {
 		UberShader.BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 //		InShader->BindUniformColor( "MinColor", GEL_SRGB(0,-92,-64) );
 //		InShader->BindUniformColor( "MaxColor", Color ); //GEL_SRGB(148,250,84) );
@@ -85,6 +85,7 @@ public:
 		int Center = 4;//0;
 		UberShader.BindUniform3f( "FaceCenter", Mesh.Vertex[Center].Pos.x, Mesh.Vertex[Center].Pos.y, Mesh.Vertex[Center].Pos.z );
 //		UberShader.BindUniform1f( "Scalar", Scalar );
+		UberShader.BindUniform2f( "UVPos", UVPos.x, UVPos.y );
 
 		UberShader.BindUniform1i( "Texture0", 0 );
 		UberShader.BindUniform1i( "Texture1", 1 );

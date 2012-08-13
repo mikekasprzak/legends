@@ -32,8 +32,11 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 //			LocalView *= Matrix4x4::ScalarMatrix( TileHalfSize );
 			LocalView *= ViewMatrix;
 			
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].ShaftMesh, LocalView );
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, LocalView );
+			Vector2D UVPos( Map.IndexToX(Index), Map.IndexToY(Index) );
+			UVPos *= Real(4);
+			
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].ShaftMesh, UVPos, LocalView );
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, UVPos, LocalView );
 		}
 	}
 	
@@ -62,15 +65,15 @@ void cRoomViewer::Draw( const Matrix4x4& ViewMatrix ) {
 //				TileHalfSize 
 //				);
 
-			gelSetColor( GEL_RGBA(0,255,0,64) );
-			if ( x == (SelectedTile % Size) )
-				if ( y == (SelectedTile / Size) )
-					gelSetColor( GEL_RGB_RED );
-
-			gelDrawSquare( 
-				DrawPos,
-				TileHalfSize 
-				);
+//			gelSetColor( GEL_RGBA(0,255,0,64) );
+//			if ( x == (SelectedTile % Size) )
+//				if ( y == (SelectedTile / Size) )
+//					gelSetColor( GEL_RGB_RED );
+//
+//			gelDrawSquare( 
+//				DrawPos,
+//				TileHalfSize 
+//				);
 		}
 	}
 

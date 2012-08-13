@@ -21,7 +21,7 @@ class cTile {
 public:
 	enum { 
 		// Constants //
-		DEFAULT_TILE_HEIGHT = 16,	// Water Level = 0 //
+		DEFAULT_TILE_HEIGHT = 8,	// Water Level = 0 //
 		MAX_ACTIVE = 4,
 		MAX_PASSIVE = 8,
 	};
@@ -141,6 +141,7 @@ public:
 	void AddMesh_Shaft0() {
 		ShaftMesh = cTileMesh( 8, 2*4 );
 
+		Vector3D DefaultNormal(0,0,-1);
 		GelColor Color1 = GEL_RGBA(255,255,255,0);
 		GelColor Color2 = GEL_RGBA(255,255,255,0);
 		
@@ -152,15 +153,15 @@ public:
 		// |   | //
 		// 6 - 7 //
 		
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Vector3D(-1,-1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Vector3D(+1,-1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Vector3D(-1,+1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Vector3D(+1,+1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), DefaultNormal /*Vector3D(-1,-1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), DefaultNormal /*Vector3D(+1,-1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), DefaultNormal /*Vector3D(-1,+1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal /*Vector3D(+1,+1,+1).Normal()*/, Color1, Color2 ) );
 		
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,0), Vector3D(-1,-1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,0), Vector3D(+1,-1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,0), Vector3D(-1,+1,0).Normal(), Color1, Color2 ) );
-		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,0), Vector3D(+1,+1,0).Normal(), Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,0), DefaultNormal /*Vector3D(-1,-1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,0), DefaultNormal /*Vector3D(+1,-1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,0), DefaultNormal /*Vector3D(-1,+1,+1).Normal()*/, Color1, Color2 ) );
+		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,0), DefaultNormal /*Vector3D(+1,+1,+1).Normal()*/, Color1, Color2 ) );
 
 		// ^  Up //
 		ShaftMesh.Index.Add( ABCSet<unsigned short>(1,0,5) );
