@@ -23,25 +23,23 @@ cRoom::cRoom( const int Width, const int Height ) :
 	Map(1,1).Passive.Get() = new cPassive( cEngine::PassiveTemplate.Back() );
 		
 	
-	Map(3,4).Height += 4;
-	Map(4,4).Height += 4;
-	Map(5,4).Height += 3;
-	Map(5,3).Height += 2;
-	Map(5,2).Height += 1;
+//	Map(3,4).Height += 4;
+//	Map(4,4).Height += 4;
+//	Map(5,4).Height += 3;
+//	Map(5,3).Height += 2;
+//	Map(5,2).Height += 1;
+//
+//	Map(7,7).Height += 8;
+//
+//	Map(1,7).Height -= 2;
+//	Map(2,7).Height -= 2;
+//	Map(2,6).Height -= 2;
+//	Map(3,7).Height -= 2;
+//	Map(3,6).Height -= 2;
+//	Map(3,8).Height -= 2;
+//	Map(4,7).Height -= 4;
 
-	Map(7,7).Height += 8;
-
-	Map(1,7).Height -= 2;
-	Map(2,7).Height -= 2;
-	Map(2,6).Height -= 2;
-	Map(3,7).Height -= 2;
-	Map(3,6).Height -= 2;
-	Map(3,8).Height -= 2;
-	Map(4,7).Height -= 4;
-
-	for ( int idx = 0; idx < Map.Size(); idx++ ) {
-		UpdateMesh( idx % Map.Width(), idx / Map.Width() );
-	}
+	Generate();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::~cRoom() {
@@ -49,79 +47,61 @@ cRoom::~cRoom() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void cRoom::UpdateMesh( const int x, const int y ) {
-	Map(x,y).UpdateMesh();// Map.Index(x-1,y), Map.Index(x+1,y), Map.Index(x,y-1), Map.Index(x,y+1) );
-/*	
-	int Height = Map(x,y).Height;
-	Map(x,y).TopMesh.Vertex[1].Normal = Map(x,y).Mesh.Vertex[0].Normal;
-	Map(x,y).TopMesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-1,y-0).Height).Min(0).Normal() * Vector3D(-1,-0,0);
-	Map(x,y).TopMesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-1,y-1).Height).Min(0).Normal() * Vector3D(-1,-1,0);
-	Map(x,y).TopMesh.Vertex[1].Normal += -Real(Map(x,y).Height - Map(x-0,y-1).Height).Min(0).Normal() * Vector3D(-0,-1,0);
-	Map(x,y).TopMesh.Vertex[1].Normal.Normalize();
-
-	Map(x,y).TopMesh.Vertex[2].Normal = Map(x,y).Mesh.Vertex[0].Normal;
-	Map(x,y).TopMesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+1,y-0).Height).Min(0).Normal() * Vector3D(+1,-0,0);
-	Map(x,y).TopMesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+1,y-1).Height).Min(0).Normal() * Vector3D(+1,-1,0);
-	Map(x,y).TopMesh.Vertex[2].Normal += -Real(Map(x,y).Height - Map(x+0,y-1).Height).Min(0).Normal() * Vector3D(+0,-1,0);
-	Map(x,y).TopMesh.Vertex[2].Normal.Normalize();
-                            
-	Map(x,y).TopMesh.Vertex[3].Normal = Map(x,y).Mesh.Vertex[0].Normal;
-	Map(x,y).TopMesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+1,y+0).Height).Min(0).Normal() * Vector3D(+1,+0,0);
-	Map(x,y).TopMesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+1,y+1).Height).Min(0).Normal() * Vector3D(+1,+1,0);
-	Map(x,y).TopMesh.Vertex[3].Normal += -Real(Map(x,y).Height - Map(x+0,y+1).Height).Min(0).Normal() * Vector3D(+0,+1,0);
-	Map(x,y).TopMesh.Vertex[3].Normal.Normalize();
-
-	Map(x,y).TopMesh.Vertex[4].Normal = Map(x,y).Mesh.Vertex[0].Normal;
-	Map(x,y).TopMesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-1,y+0).Height).Min(0).Normal() * Vector3D(-1,+0,0);
-	Map(x,y).TopMesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-1,y+1).Height).Min(0).Normal() * Vector3D(-1,+1,0);
-	Map(x,y).TopMesh.Vertex[4].Normal += -Real(Map(x,y).Height - Map(x-0,y+1).Height).Min(0).Normal() * Vector3D(-0,+1,0);
-	Map(x,y).TopMesh.Vertex[4].Normal.Normalize();
-*/
-
-	Vector3D Default = Map(x,y).TopMesh.Vertex[4].Normal;
-	int Height = Map(x,y).Height;
-
-	Map(x,y).TopMesh.Vertex[0].Normal = Default;
-	Map(x,y).TopMesh.Vertex[0].Normal += Real(Map(x-1,y-0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,-0,0);
-	Map(x,y).TopMesh.Vertex[0].Normal += Real(Map(x-1,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0.5,-0.5,0);
-	Map(x,y).TopMesh.Vertex[0].Normal += Real(Map(x-0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,-1,0);
-	Map(x,y).TopMesh.Vertex[0].Normal.Normalize();//AxisNormalize().Normalize();
-
-	Map(x,y).TopMesh.Vertex[1].Normal = Default;
-	Map(x,y).TopMesh.Vertex[1].Normal += Real(Map(x-0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,-1,0);
-	Map(x,y).TopMesh.Vertex[1].Normal.Normalize();//AxisNormalize().Normalize();
-
-	Map(x,y).TopMesh.Vertex[2].Normal = Default;
-	Map(x,y).TopMesh.Vertex[2].Normal += Real(Map(x+1,y-0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,-0,0);
-	Map(x,y).TopMesh.Vertex[2].Normal += Real(Map(x+1,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0.5,-0.5,0);
-	Map(x,y).TopMesh.Vertex[2].Normal += Real(Map(x+0,y-1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,-1,0);
-	Map(x,y).TopMesh.Vertex[2].Normal.Normalize();//AxisNormalize().Normalize();
-
-	Map(x,y).TopMesh.Vertex[3].Normal = Default;
-	Map(x,y).TopMesh.Vertex[3].Normal += Real(Map(x-1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,+0,0);
-	Map(x,y).TopMesh.Vertex[3].Normal.Normalize();//AxisNormalize().Normalize();
+void cRoom::UpdateMesh( const int Index ) {	
+	int x = Map.IndexToX( Index );
+	int y = Map.IndexToY( Index );
 	
-	// No Middle //
+	Map[Index].UpdateMesh();
 
-	Map(x,y).TopMesh.Vertex[5].Normal = Default;
-	Map(x,y).TopMesh.Vertex[5].Normal += Real(Map(x+1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,+0,0);
-	Map(x,y).TopMesh.Vertex[5].Normal.Normalize();//AxisNormalize().Normalize();
+	// Plane1 //	
+	{
+		Vector3D DefaultNormal = Map[Index].TopMesh.Vertex[4].Normal; // Center //
+		int Height = Map[Index].Height;
 
-	Map(x,y).TopMesh.Vertex[6].Normal = Default;
-	Map(x,y).TopMesh.Vertex[6].Normal += Real(Map(x-1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-1,+0,0);
-	Map(x,y).TopMesh.Vertex[6].Normal += Real(Map(x-1,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0.5,+0.5,0);
-	Map(x,y).TopMesh.Vertex[6].Normal += Real(Map(x-0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(-0,+1,0);
-	Map(x,y).TopMesh.Vertex[6].Normal.Normalize();//AxisNormalize().Normalize();
-
-	Map(x,y).TopMesh.Vertex[7].Normal = Default;
-	Map(x,y).TopMesh.Vertex[7].Normal += Real(Map(x+0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,+1,0);
-	Map(x,y).TopMesh.Vertex[7].Normal.Normalize();//AxisNormalize().Normalize();
-
-	Map(x,y).TopMesh.Vertex[8].Normal = Default;
-	Map(x,y).TopMesh.Vertex[8].Normal += Real(Map(x+1,y+0).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+1,+0,0);
-	Map(x,y).TopMesh.Vertex[8].Normal += Real(Map(x+1,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0.5,+0.5,0);
-	Map(x,y).TopMesh.Vertex[8].Normal += Real(Map(x+0,y+1).Height - Map(x,y).Height).Max(0).Normal() * Vector3D(+0,+1,0);
-	Map(x,y).TopMesh.Vertex[8].Normal.Normalize();//AxisNormalize().Normalize();
+		cTileMesh& Mesh = Map[Index].TopMesh;
+	
+		Mesh.Vertex[0].Normal = DefaultNormal;
+		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-1,y-0).Height - Height).Max(0).Normal() * Vector3D(-1,-0,0);
+		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-1,y-1).Height - Height).Max(0).Normal() * Vector3D(-0.5,-0.5,0);
+		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-0,y-1).Height - Height).Max(0).Normal() * Vector3D(-0,-1,0);
+		Mesh.Vertex[0].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[1].Normal = DefaultNormal;
+		Mesh.Vertex[1].Normal += Real(Map.Wrap(x-0,y-1).Height - Height).Max(0).Normal() * Vector3D(-0,-1,0);
+		Mesh.Vertex[1].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[2].Normal = DefaultNormal;
+		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+1,y-0).Height - Height).Max(0).Normal() * Vector3D(+1,-0,0);
+		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+1,y-1).Height - Height).Max(0).Normal() * Vector3D(+0.5,-0.5,0);
+		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+0,y-1).Height - Height).Max(0).Normal() * Vector3D(+0,-1,0);
+		Mesh.Vertex[2].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[3].Normal = DefaultNormal;
+		Mesh.Vertex[3].Normal += Real(Map.Wrap(x-1,y+0).Height - Height).Max(0).Normal() * Vector3D(-1,+0,0);
+		Mesh.Vertex[3].Normal.Normalize();//AxisNormalize().Normalize();
+		
+		// No Middle //
+	
+		Mesh.Vertex[5].Normal = DefaultNormal;
+		Mesh.Vertex[5].Normal += Real(Map.Wrap(x+1,y+0).Height - Height).Max(0).Normal() * Vector3D(+1,+0,0);
+		Mesh.Vertex[5].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[6].Normal = DefaultNormal;
+		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-1,y+0).Height - Height).Max(0).Normal() * Vector3D(-1,+0,0);
+		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-1,y+1).Height - Height).Max(0).Normal() * Vector3D(-0.5,+0.5,0);
+		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-0,y+1).Height - Height).Max(0).Normal() * Vector3D(-0,+1,0);
+		Mesh.Vertex[6].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[7].Normal = DefaultNormal;
+		Mesh.Vertex[7].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
+		Mesh.Vertex[7].Normal.Normalize();//AxisNormalize().Normalize();
+	
+		Mesh.Vertex[8].Normal = DefaultNormal;
+		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+1,y+0).Height - Height).Max(0).Normal() * Vector3D(+1,+0,0);
+		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+1,y+1).Height - Height).Max(0).Normal() * Vector3D(+0.5,+0.5,0);
+		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
+		Mesh.Vertex[8].Normal.Normalize();//AxisNormalize().Normalize();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -136,6 +116,25 @@ void cRoom::Step( ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cRoom::Draw( /* const Vector3D Pos */ ) {
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void cRoom::Generate() {
+	// Generate HeightMap //
+	cGrid2D<int> HeightMap = generate_PlasmaFractal_HeightMap( Map.Width(), Map.Height() );
+	
+	// Copy Heights //
+	for ( size_t y = 0; y < Map.Height(); y++ ) {
+		for ( size_t x = 0; x < Map.Width(); x++ ) {
+			Map(x,y).Height = HeightMap(x,y);
+		}		
+	}
+
+	// Update Meshes //
+	for ( int idx = 0; idx < Map.Size(); idx++ ) {
+		UpdateMesh( idx );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace LifeFormula //

@@ -662,10 +662,10 @@ void cGame::UpdateCameraMatrix() {
 	ObserverCamera.SetFrustum( 
 //		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 //		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		FullRefScreen::Width * Real( _TV(0.12f) ),
-		FullRefScreen::Height * Real( _TV(0.12f) ),
+		FullRefScreen::Width * Real( _TV(0.7f) ), //0.12
+		FullRefScreen::Height * Real( _TV(0.7f) ),
 		_TV(100),
-		_TV(900)
+		_TV(1900)
 		);
 
 #ifdef USES_HIDAPI
@@ -1132,12 +1132,25 @@ void cGame::Draw() {
 			Vector3D( FullRefScreen::Width>>1, 0, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"SelectedTile: %i (%i)", Engine.View->SelectedTile, Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile ) );
+			"SelectedTile: %i [%i,%i] Local: %i: %i", 
+				Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile ),
+				Engine.View->SelectedTile != -1 ? Engine.Room->Map.IndexToX(Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile)) : -1, 
+				Engine.View->SelectedTile != -1 ? Engine.Room->Map.IndexToY(Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile)) : -1, 
+				Engine.View->SelectedTile, 
+				Engine.View->SelectedTile != -1 ? Engine.Room->Map[Engine.View->ToMapIndex( Engine.Room->Map, Engine.View->SelectedTile)].Height : 0 
+			);
+		
 		Font->printf( 
 			Vector3D( FullRefScreen::Width>>1, -16, 0 ), 
 			1, 
 			GelFont::ALIGN_RIGHT | GelFont::ALIGN_VCENTER, 
-			"Focus: %i (0x%x)", Engine.View->Focus->PosIndex, Engine.View->Focus );
+			"Focus: %i [%i,%i] (0x%x): %i", 
+				Engine.View->Focus->PosIndex, 
+				Engine.Room->Map.IndexToX(Engine.View->Focus->PosIndex), 
+				Engine.Room->Map.IndexToY(Engine.View->Focus->PosIndex), 
+				Engine.View->Focus, 
+				Engine.Room->Map[Engine.View->Focus->PosIndex].Height 
+			);
 
 /*
 		Font->printf( 

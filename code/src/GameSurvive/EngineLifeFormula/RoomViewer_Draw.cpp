@@ -20,13 +20,13 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {
-			int Index = Map.Index( x, y );
+			int Index = Map.Index( x + Pos.x, y + Pos.y );
 			
 			LocalView = Matrix4x4::TranslationMatrix( 
 				Vector3D(
 					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					-Real(cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
+					-Real(cTile::DEFAULT_TILE_HEIGHT)
 					) 
 				);
 			LocalView *= Camera.ProjectionView;
@@ -48,13 +48,13 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 	if ( ShowDebug ) {
 		for ( size_t y = 0; y < Size; y++ ) {
 			for ( size_t x = 0; x < Size; x++ ) {
-				int Index = Map.Index( x, y );
+				int Index = Map.Index( x + Pos.x, y + Pos.y );
 	
 				// HACK: Funny Z to test depth			
 				Vector3D DrawPos( 
 						+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 						+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+						Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
 						);
 	
 				gelSetColor( GEL_RGBA(0,255,0,192) );
@@ -78,7 +78,7 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 	if ( SelectedTile != -1 ) {
 		int x = (SelectedTile % Size);
 		int y = (SelectedTile / Size);
-		int Index = Map.Index( x, y );
+		int Index = Map.Index( x + Pos.x, y + Pos.y );
 		
 		// HACK: Funny Z to test depth
 		Vector3D DrawPos( 
@@ -96,13 +96,13 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 			
 	for ( size_t y = 0; y < Size; y++ ) {
 		for ( size_t x = 0; x < Size; x++ ) {
-			int Index = Map.Index( x, y );
+			int Index = Map.Index( x + Pos.x, y + Pos.y );
 
 			// HACK: Funny Z to test depth			
 			Vector3D DrawPos( 
 					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
 					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)// * TileHalfSize//Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT) * TileHalfSize//(Real(x) / Real(1)) * Real(y)
+					Real(Map[Index].Height - cTile::DEFAULT_TILE_HEIGHT)
 					);
 
 			if ( Map[Index].Active.Size() > 0 ) {

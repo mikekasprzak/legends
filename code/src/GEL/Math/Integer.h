@@ -55,6 +55,16 @@
 		return A.Value _OP_ B; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
+#define OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( _TYPE_, _OP_ ) \
+	inline const bool operator _OP_ ( const _TYPE_& A, const Integer& B ) { \
+		return A _OP_ B.Value; \
+	}
+// - ------------------------------------------------------------------------------------------ - //
+#define OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( _TYPE_, _OP_ ) \
+	inline const bool operator _OP_ ( const Integer& A, const _TYPE_& B ) { \
+		return A.Value _OP_ B; \
+	}
+// - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -340,6 +350,10 @@ OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, % );
 OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, | );
 OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, & );
 OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, ^ );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, > );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, < );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, == );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, != );
 
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, + );
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, - );
@@ -349,6 +363,10 @@ OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, % );
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, | );
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, & );
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, ^ );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, > );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, < );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, == );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, != );
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

@@ -3,6 +3,7 @@
 #define __Grid_Grid2D_Class_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
+#include <math.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
 // - ------------------------------------------------------------------------------------------ - //
@@ -146,15 +147,23 @@ public:
 		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrap( const int _x, const int _y ) const {
+	inline const size_t IndexWrap( int _x, int _y ) const {
+		if ( _x < 0 )
+			_x = -_x;
+		if ( _y < 0 )
+			_y = -_y;
 		return (_x % Width()) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrapX( const int _x, const int _y ) const {
+	inline const size_t IndexWrapX( int _x, const int _y ) const {
+		if ( _x < 0 )
+			_x = -_x;
 		return (_x % Width()) + ((_y) * Height());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrapY( const int _x, const int _y ) const {
+	inline const size_t IndexWrapY( const int _x, int _y ) const {
+		if ( _y < 0 )
+			_y = -_y;
 		return (_x) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -236,8 +245,6 @@ public:
 	inline tType& Wrap( const int _x, const int _y ) {
 		return Data[ IndexWrap( _x, _y ) ];
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Get the position, with axis wrapping //
 	inline const tType& Wrap( const int _x, const int _y ) const {
 		return Data[ IndexWrap( _x, _y ) ];
 	}
@@ -324,11 +331,15 @@ public:
 		return _y;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t WrapX( const int _x ) const {
+	inline const size_t WrapX( int _x ) const {
+		if ( _x < 0 )
+			_x = -_x;
 		return (_x % Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t WrapY( const int _y ) const {
+	inline const size_t WrapY( int _y ) const {
+		if ( _y < 0 )
+			_y = -_y;
 		return (_y % Height());
 	}
 	// - -------------------------------------------------------------------------------------- - //

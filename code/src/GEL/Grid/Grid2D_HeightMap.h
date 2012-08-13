@@ -1,12 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Grid_Grid2D_H__
-#define __Grid_Grid2D_H__
+#ifndef __Grid_Grid2D_HeightMap_H__
+#define __Grid_Grid2D_HeightMap_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "Grid2D_Class.h"
-#include "Grid2D_Core.h"
-#include "Grid2D_Image.h"
-#include "Grid2D_Geometry.h"
-#include "Grid2D_HeightMap.h"
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Grid_Grid2D_H__ //
+// The Diamond-Square algorithm (Midpoint Displacement, Cloud/Plasma Fractal) -- Powers of Two //
+cGrid2D<int> generate_PlasmaFractal_HeightMap( const size_t Width, const size_t Height );
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __Grid_Grid2D_HeightMap_H__ //
 // - ------------------------------------------------------------------------------------------ - //

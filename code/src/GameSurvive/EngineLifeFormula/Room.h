@@ -12,7 +12,7 @@
 #include <Math/IVector.h>
 
 //#include <Core/GelArray.h>
-#include <Grid/Grid2D_Class.h>
+#include <Grid/Grid2D.h>
 
 #include "Active.h"
 #include "Passive.h"
@@ -31,6 +31,7 @@ public:
 	
 	cGrid2D<cTile>	Map; // Map Data //
 
+	void Generate();
 	
 public:
 	cRoom( const int Width, const int Height );
@@ -78,7 +79,7 @@ public:
 		Map[ToIndex].Passive.Get() = Object;
 	}
 
-	void UpdateMesh( const int x, const int y );
+	void UpdateMesh( const int Index );
 	
 public:
 	void Step( /*const Vector3D& MouseRay*/ );

@@ -36,19 +36,12 @@ public:
 	cRoom*		Room;		// The Room we care about //
 	cActive*	Focus;		// Who we are watching in the room (as the camera) //
 
-
-	// TODO: Replace this with a custom/generative Mesh type //
-	Vector3DAllocator 					Vertex;		// 2 - Vertexes (Size, Ptr) //
-	Allocator< ABCSet<short> >			Index;		// 2 - Vertex Indexes //
-
 public:
 	inline cRoomViewer() :
 		Pos( 0, 0 ),
-		Size( 9 ),
+		Size( 32 ),
 		Room( 0 ),
-		Focus( 0 ),
-		Vertex( Size * Size * (4) ),			// 4 = Num Verts //
-		Index( Size * Size * ((1+4)*(3*2)) )	// 1+4 = Num Faces (one less than cube), 3*2 = Two Triangles
+		Focus( 0 )
 	{
 		HalfSize = Real(Size) * Real::Half;
 
