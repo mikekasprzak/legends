@@ -109,26 +109,31 @@ public:
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+2,Height), DefaultNormal, Color1, Color2 ) );	// 7 //
 		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal, Color1, Color2 ) );	// 8 //
 
+//		// Quad A //
+//		Mesh.Index.Add( ABCSet<unsigned short>(0,1,3) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(1,4,3) );
+//		// Quad B //
+//		Mesh.Index.Add( ABCSet<unsigned short>(1,5,4) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(1,2,5) );
+//		// Quad C //
+//		Mesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(3,4,7) );
+//		// Quad D //
+//		Mesh.Index.Add( ABCSet<unsigned short>(4,5,7) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(5,8,7) );
+
 		// Quad A //
-		Mesh.Index.Add( ABCSet<unsigned short>(0,1,3) );
-		Mesh.Index.Add( ABCSet<unsigned short>(1,4,3) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(0,4,3) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(0,1,4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(0,4,3) );
+		Mesh.Index.Add( ABCSet<unsigned short>(0,1,4) );
 		// Quad B //
-//		Mesh.Index.Add( ABCSet<unsigned short>(1,2,4) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(2,5,4) );
-		Mesh.Index.Add( ABCSet<unsigned short>(1,5,4) );
-		Mesh.Index.Add( ABCSet<unsigned short>(1,2,5) );
+		Mesh.Index.Add( ABCSet<unsigned short>(1,2,4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(2,5,4) );
 		// Quad C //
-//		Mesh.Index.Add( ABCSet<unsigned short>(3,4,6) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(4,7,6) );
-		Mesh.Index.Add( ABCSet<unsigned short>(3,7,6) );
-		Mesh.Index.Add( ABCSet<unsigned short>(3,4,7) );
+		Mesh.Index.Add( ABCSet<unsigned short>(3,4,6) );
+		Mesh.Index.Add( ABCSet<unsigned short>(4,7,6) );
 		// Quad D //
-		Mesh.Index.Add( ABCSet<unsigned short>(4,5,7) );
-		Mesh.Index.Add( ABCSet<unsigned short>(5,8,7) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(4,8,7) );
-//		Mesh.Index.Add( ABCSet<unsigned short>(4,5,8) );
+		Mesh.Index.Add( ABCSet<unsigned short>(4,8,7) );
+		Mesh.Index.Add( ABCSet<unsigned short>(4,5,8) );
 	}
 	
 	void UpdateMesh() {
