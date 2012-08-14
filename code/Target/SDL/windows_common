@@ -93,3 +93,27 @@ COPY_FILES			+=
 # - ------------------------------------------------------------------------ - #
 endif # NO_HIDAPI #
 # - ------------------------------------------------------------------------ - #
+
+# - ------------------------------------------------------------------------ - #
+ifndef NO_DSONOISES
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/DSONoises/simplexnoise \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/External/DSONoises
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_DSONOISES
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+endif # NO_DSONOISES #
+# - ------------------------------------------------------------------------ - #

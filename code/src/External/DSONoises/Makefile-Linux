@@ -1,0 +1,40 @@
+all: DSOsrdnoise DSOsimplexnoise DSOcellularnoise DSOimprovednoise
+
+clean:
+	rm *.o
+
+DSOsrdnoise: DSOsrdnoise.o srdnoise23.o
+	gcc -shared -lm -o DSOsrdnoise.so DSOsrdnoise.o srdnoise23.o
+
+DSOsrdnoise.o: DSOsrdnoise.c
+	gcc -c DSOsrdnoise.c
+
+srdnoise23.o: srdnoise23.c
+	gcc -c srdnoise23.c
+
+DSOsimplexnoise: DSOsimplexnoise.o simplexnoise1234.o
+	gcc -shared -o DSOsimplexnoise.so DSOsimplexnoise.o simplexnoise1234.o
+
+DSOsimplexnoise.o: DSOsimplexnoise.c
+	gcc -c DSOsimplexnoise.c
+
+simplexnoise1234.o: simplexnoise1234.c
+	gcc -c simplexnoise1234.c
+
+DSOcellularnoise: DSOcellularnoise.o cellular.o
+	gcc -shared -o DSOcellularnoise.so DSOcellularnoise.o cellular.o
+
+DSOcellularnoise.o: DSOcellularnoise.c
+	gcc -c DSOcellularnoise.c
+
+cellular.o: cellular.c
+	gcc -c cellular.c
+
+DSOimprovednoise: DSOimprovednoise.o noise1234.o
+	gcc -shared -o DSOimprovednoise.so DSOimprovednoise.o noise1234.o
+
+DSOimprovednoise.o: DSOimprovednoise.c
+	gcc -c DSOimprovednoise.c
+
+noise1234.o: noise1234.c
+	gcc -c noise1234.c

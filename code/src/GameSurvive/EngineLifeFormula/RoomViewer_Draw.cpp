@@ -44,28 +44,6 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 	// Outline //
 	gelDrawModeFlat();
 	gelLoadMatrix( Camera.CoplanarProjectionView );
-
-	// Water Cheat //
-	for ( size_t y = 0; y < Size; y++ ) {
-		for ( size_t x = 0; x < Size; x++ ) {
-			int Index = Map.Index( x + Pos.x, y + Pos.y );
-
-			// HACK: Funny Z to test depth			
-			Vector3D DrawPos( 
-					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
-					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(0 - cTile::DEFAULT_TILE_HEIGHT)
-					);
-
-			if ( Map[Index].Height < 0 ) {
-				gelSetColor( GEL_RGBA(64,64,255,128) );
-				gelDrawSquareFill( 
-					DrawPos,
-					TileHalfSize 
-					);
-			}
-		}
-	}
 				
 	if ( ShowDebug ) {
 		for ( size_t y = 0; y < Size; y++ ) {
@@ -135,7 +113,29 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 			}
 		}
 	}
-	
+
+	// Water Cheat //
+	for ( size_t y = 0; y < Size; y++ ) {
+		for ( size_t x = 0; x < Size; x++ ) {
+			int Index = Map.Index( x + Pos.x, y + Pos.y );
+
+			// HACK: Funny Z to test depth			
+			Vector3D DrawPos( 
+					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
+					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
+					Real(0 - cTile::DEFAULT_TILE_HEIGHT)
+					);
+
+			if ( Map[Index].Height < 0 ) {
+				gelSetColor( GEL_RGBA(64,64,255,128) );
+				gelDrawSquareFill( 
+					DrawPos,
+					TileHalfSize 
+					);
+			}
+		}
+	}
+		
 	gelDisableDepthTest();
 }
 // - ------------------------------------------------------------------------------------------ - //
