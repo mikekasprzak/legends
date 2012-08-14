@@ -100,48 +100,99 @@ void cRoom::UpdateMesh( const int Index ) {
 
 	// Ambient Occlusion based on height of neighbours //
 	{
-		cTile& Left = Map.Wrap(x-1,y);
-		cTile& Right = Map.Wrap(x+1,y);
-		cTile& Top = Map.Wrap(x,y+1);
-		cTile& Bottom = Map.Wrap(x,y-1);
-		
-		int VsHeight;
+		Vector3D UpNormal(0,0,1);		
 		
 		for ( size_t idx = 0; idx < Map[Index].Mesh.Vertex.Size(); idx++ ) {
+			cTileMeshVertex& Me = Map[Index].Mesh.Vertex[idx];
 			int Value = 255;
+			int VsHeight = -1024; // SOME UNUSED TOO-LOW HEIGHT //
 			
-			if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(-1,0,0) ) {
-				VsHeight = Left.Height+1;
-			}
-			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(+1,0,0) ) {
-				VsHeight = Right.Height+1;
-			}
-			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,+1,0) ) {
-				VsHeight = Top.Height+1;
-			}
-			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,-1,0) ) {
-				VsHeight = Bottom.Height+1;
-			}
-			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,0,+1) ) {
-				VsHeight = -1024;	// SOME UNUSED TOO-LOW HIGHT //
+			bool IsUpNormal = dot( UpNormal, Me.Normal ) > Real(0.1); // Including error //
+
+			Vector3D ToCenter = (Vector3D(0,0,Me.Pos.z) - Me.Pos);
+			ToCenter.AxisNormalize();
+			
+			bool IsCornerNormal = ToCenter.Manhattan() > Real(1.01); // Including error //
+			IVector2D FromCenter( (int)-ToCenter.x, (int)-ToCenter.y );			
+			
+			if ( IsUpNormal ) {
+				// Up Normals //
+				if ( IsCornerNormal ) {
+					// 3 Corners //
+					int NewHeight = Map.Wrap( x, y + FromCenter.y ).Height;
+					if ( NewHeight > VsHeight )
+						VsHeight = NewHeight;
+					NewHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+					if ( NewHeight > VsHeight )
+						VsHeight = NewHeight;
+					NewHeight = Map.Wrap( x + FromCenter.x, y ).Height;
+					if ( NewHeight > VsHeight )
+						VsHeight = NewHeight;
+				}
+				else { // Mid Normal //
+					VsHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+				}
 				
-				Vector3D ToCenter = -(Vector3D(0,0,0) - Map[Index].Mesh.Vertex[idx].Pos);
-				ToCenter.AxisNormalize();
-				if ( ToCenter.x > Real::Zero )
-					VsHeight = VsHeight < Right.Height ? Right.Height : VsHeight;
-				if ( ToCenter.x < Real::Zero )
-					VsHeight = VsHeight < Left.Height ? Left.Height : VsHeight;
-				if ( ToCenter.y > Real::Zero )
-					VsHeight = VsHeight < Top.Height ? Top.Height : VsHeight;
-				if ( ToCenter.y < Real::Zero )
-					VsHeight = VsHeight < Bottom.Height ? Bottom.Height : VsHeight;
+				// Exclusive, because we crease only when the other is taller //
+				if ( Real(VsHeight) > Me.Pos.z ) {
+					Value = 128;
+				}
+			}
+			else {
+				// Side Normals //
+				if ( IsCornerNormal ) {
+					// Two Corners Only! //					
+					// The Diagonal //
+					int NewHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+					if ( NewHeight > VsHeight )
+						VsHeight = NewHeight;
+					// The Normal Direction //
+					NewHeight = Map.Wrap( x + (int)Me.Normal.x, y + (int)Me.Normal.y ).Height;
+					if ( NewHeight > VsHeight )
+						VsHeight = NewHeight;
+				}
+				else { // Mid Normal //
+					VsHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+				}
+				
+				// Inclusive, since we are directly a crease //
+				if ( Real(VsHeight) >= Me.Pos.z ) {
+					Value = 128;
+				}
 			}
 			
-			if ( Map[Index].Mesh.Vertex[idx].Pos.z < Real(VsHeight) ) {
-				Value = 128;
-			}
+//			if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(-1,0,0) ) {
+//				VsHeight = Left.Height+1;
+//			}
+//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(+1,0,0) ) {
+//				VsHeight = Right.Height+1;
+//			}
+//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,+1,0) ) {
+//				VsHeight = Top.Height+1;
+//			}
+//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,-1,0) ) {
+//				VsHeight = Bottom.Height+1;
+//			}
+//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,0,+1) ) {
+//				VsHeight = -1024;	// SOME UNUSED TOO-LOW HIGHT //
+//				
+//				Vector3D ToCenter = -(Vector3D(0,0,0) - Map[Index].Mesh.Vertex[idx].Pos);
+//				ToCenter.AxisNormalize();
+//				if ( ToCenter.x > Real::Zero )
+//					VsHeight = VsHeight < Right.Height ? Right.Height : VsHeight;
+//				if ( ToCenter.x < Real::Zero )
+//					VsHeight = VsHeight < Left.Height ? Left.Height : VsHeight;
+//				if ( ToCenter.y > Real::Zero )
+//					VsHeight = VsHeight < Top.Height ? Top.Height : VsHeight;
+//				if ( ToCenter.y < Real::Zero )
+//					VsHeight = VsHeight < Bottom.Height ? Bottom.Height : VsHeight;
+//			}
+//			
+//			if ( Map[Index].Mesh.Vertex[idx].Pos.z < Real(VsHeight) ) {
+//				Value = 128;
+//			}
 			
-			Map[Index].Mesh.Vertex[idx].Color2 = GEL_RGBA(Value,Value,Value,Value);
+			Me.Color2 = GEL_RGBA(Value,Value,Value,Value);
 		}
 	}
 	
