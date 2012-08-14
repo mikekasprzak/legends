@@ -96,6 +96,54 @@ void cRoom::UpdateMesh( const int Index ) {
 		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
 		Mesh.Vertex[8].Normal.Normalize();//AxisNormalize().Normalize();
 	}
+*/
+
+	// Ambient Occlusion based on height of neighbours //
+	{
+		cTile& Left = Map.Wrap(x-1,y);
+		cTile& Right = Map.Wrap(x+1,y);
+		cTile& Top = Map.Wrap(x,y+1);
+		cTile& Bottom = Map.Wrap(x,y-1);
+		
+		int VsHeight;
+		
+		for ( size_t idx = 0; idx < Map[Index].Mesh.Vertex.Size(); idx++ ) {
+			int Value = 255;
+			
+			if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(-1,0,0) ) {
+				VsHeight = Left.Height+1;
+			}
+			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(+1,0,0) ) {
+				VsHeight = Right.Height+1;
+			}
+			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,+1,0) ) {
+				VsHeight = Top.Height+1;
+			}
+			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,-1,0) ) {
+				VsHeight = Bottom.Height+1;
+			}
+			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,0,+1) ) {
+				VsHeight = -1024;	// SOME UNUSED TOO-LOW HIGHT //
+				
+				Vector3D ToCenter = -(Vector3D(0,0,0) - Map[Index].Mesh.Vertex[idx].Pos);
+				ToCenter.AxisNormalize();
+				if ( ToCenter.x > Real::Zero )
+					VsHeight = VsHeight < Right.Height ? Right.Height : VsHeight;
+				if ( ToCenter.x < Real::Zero )
+					VsHeight = VsHeight < Left.Height ? Left.Height : VsHeight;
+				if ( ToCenter.y > Real::Zero )
+					VsHeight = VsHeight < Top.Height ? Top.Height : VsHeight;
+				if ( ToCenter.y < Real::Zero )
+					VsHeight = VsHeight < Bottom.Height ? Bottom.Height : VsHeight;
+			}
+			
+			if ( Map[Index].Mesh.Vertex[idx].Pos.z < Real(VsHeight) ) {
+				Value = 128;
+			}
+			
+			Map[Index].Mesh.Vertex[idx].Color2 = GEL_RGBA(Value,Value,Value,Value);
+		}
+	}
 	
 	// Terrain change based on elevation //
 	{
@@ -106,15 +154,11 @@ void cRoom::UpdateMesh( const int Index ) {
 		if ( Value < 0 )
 			Value = 0;
 
-		for ( size_t idx = 0; idx < Map[Index].TopMesh.Vertex.Size(); idx++ ) {
-			Map[Index].TopMesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
-		}
-
-		for ( size_t idx = 0; idx < Map[Index].ShaftMesh.Vertex.Size(); idx++ ) {
-			Map[Index].ShaftMesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
+		for ( size_t idx = 0; idx < Map[Index].Mesh.Vertex.Size(); idx++ ) {
+			Map[Index].Mesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
 		}
 	}
-*/
+
 }
 // - ------------------------------------------------------------------------------------------ - //
 

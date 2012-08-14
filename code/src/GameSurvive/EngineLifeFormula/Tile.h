@@ -213,11 +213,12 @@ public:
 	}
 	
 	void AddMesh1() {
-		int Vertexes = 3*3;				// Top //
-		int Indexes = 2*4;				// Top //
+		int Vertexes = 3*(3);			// Top //
+		int Indexes = 4*(3-1);			// Top //
 		
-		int SideVertexes = 3*3;
-		int SideIndexes = 2*4;
+		int Rows = 6;
+		int SideVertexes = 3*(Rows);
+		int SideIndexes = 4*(Rows-1);
 		
 		Vertexes += SideVertexes * 4;	// Sides //
 		Indexes += SideIndexes * 4;		// Sides //
@@ -225,10 +226,10 @@ public:
 		Mesh = cTileMesh( Vertexes, Indexes );
 		
 		AddMesh1_TopPlane();
-		AddMesh1_SidePlane( 3, Vector3D(+0,+1,0) );
-		AddMesh1_SidePlane( 3, Vector3D(+0,-1,0) );
-		AddMesh1_SidePlane( 3, Vector3D(+1,+0,0) );
-		AddMesh1_SidePlane( 3, Vector3D(-1,+0,0) );
+		AddMesh1_SidePlane( Rows, Vector3D(+0,+1,0) );
+		AddMesh1_SidePlane( Rows, Vector3D(+0,-1,0) );
+		AddMesh1_SidePlane( Rows, Vector3D(+1,+0,0) );
+		AddMesh1_SidePlane( Rows, Vector3D(-1,+0,0) );
 	}
 
 	void AddMesh1_TopPlane() {
@@ -305,7 +306,7 @@ public:
 			Mesh.Vertex.Add( cTileMeshVertex( VecB + VecRow, Normal, Color1, Color2 ) );	// 1 //
 			Mesh.Vertex.Add( cTileMeshVertex( VecC + VecRow, Normal, Color1, Color2 ) );	// 2 //
 
-			VecRow -= VecUp * Real(2);
+			VecRow -= VecUp * Real(1);
 		}
 
 		// 6 Basic Coordinates, 3 more per row. If 3 rows, do 2 rows of this. //
