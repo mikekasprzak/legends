@@ -46,7 +46,7 @@ public:												// --Words (32bit)-- //
 	cTileMesh							TopMesh;	// 4 - Vertex and Index Pointers //
 	cTileMesh							ShaftMesh;	// 4 - Vertex and Index Pointers //
 	
-//	cTileMesh							Mesh;
+	cTileMesh							Mesh;
 	
 //	Allocator< ABSet<short> >			OutlineIndex;
 	// NOTES: Above is all relative 0,0,0 (Z=Height).
@@ -72,13 +72,15 @@ public:
 			Log( "+ cTile(): 0x%x", this );
 		#endif // TILE_DEBUG //
 		
-//		CornerHeight[0] = 0;
-//		CornerHeight[1] = 0;
-//		CornerHeight[2] = 0;
-//		CornerHeight[3] = 0;
+		CornerHeight[0] = 0;
+		CornerHeight[1] = 0;
+		CornerHeight[2] = 0;
+		CornerHeight[3] = 0;
+//
+//		AddMesh_TopPlane1();
+//		AddMesh_Shaft0();
 
-		AddMesh_TopPlane1();
-		AddMesh_Shaft0();
+		AddMesh1();
 
 		#ifdef TILE_DEBUG
 			Log( "- cTile(): 0x%x", this );
@@ -209,9 +211,119 @@ public:
 		ShaftMesh.Index.Add( ABCSet<unsigned short>(3,1,7) );
 		ShaftMesh.Index.Add( ABCSet<unsigned short>(1,5,7) );		
 	}
+	
+	void AddMesh1() {
+		int Vertexes = 3*3;				// Top //
+		int Indexes = 2*4;				// Top //
+		
+		int SideVertexes = 3*3;
+		int SideIndexes = 2*4;
+		
+		Vertexes += SideVertexes * 4;	// Sides //
+		Indexes += SideIndexes * 4;		// Sides //
+		
+		Mesh = cTileMesh( Vertexes, Indexes );
+		
+		AddMesh1_TopPlane();
+		AddMesh1_SidePlane( 3, Vector3D(+0,+1,0) );
+		AddMesh1_SidePlane( 3, Vector3D(+0,-1,0) );
+		AddMesh1_SidePlane( 3, Vector3D(+1,+0,0) );
+		AddMesh1_SidePlane( 3, Vector3D(-1,+0,0) );
+	}
+
+	void AddMesh1_TopPlane() {
+		Vector3D Normal(0,0,1);
+		GelColor Color1 = GEL_RGBA(255,255,255,255);	// Blend //
+		GelColor Color2 = GEL_RGBA(255,255,255,255);	// Color (Lighting) //
+
+		int Base = Mesh.Vertex.Size();
+		
+		// 0 - 1 - 2 // a -> b //      b //
+		// | A | B | // ^   /  //    / | //
+		// 3 - 4 - 5 // | /    //  /   v //
+		// | C | D | // c      // c <- d //
+		// 6 - 7 - 8 //        //        //
+		
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Height), Normal, Color1, Color2 ) );	// 0 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,-2,Height), Normal, Color1, Color2 ) );	// 1 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,-2,Height), Normal, Color1, Color2 ) );	// 2 //
+
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+0,Height), Normal, Color1, Color2 ) );	// 3 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+0,Height), Normal, Color1, Color2 ) );	// 4 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+0,Height), Normal, Color1, Color2 ) );	// 5 //
+
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), Normal, Color1, Color2 ) );	// 6 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+0,+2,Height), Normal, Color1, Color2 ) );	// 7 //
+		Mesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), Normal, Color1, Color2 ) );	// 8 //
+
+		// Note: The Mesh Top coordinates are wrapped in a specific way, for a specific outer angle //
+		
+//		// Quad A //
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+0,Base+1,Base+3) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+1,Base+4,Base+3) );
+//		// Quad B //
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+1,Base+5,Base+4) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+1,Base+2,Base+5) );
+//		// Quad C //
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+3,Base+7,Base+6) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+3,Base+4,Base+7) );
+//		// Quad D //
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+4,Base+5,Base+7) );
+//		Mesh.Index.Add( ABCSet<unsigned short>(Base+5,Base+8,Base+7) );
+
+		// Quad A //
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+0,Base+4,Base+3) );
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+0,Base+1,Base+4) );
+		// Quad B //
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+1,Base+2,Base+4) );
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+2,Base+5,Base+4) );
+		// Quad C //
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+3,Base+4,Base+6) );
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+4,Base+7,Base+6) );
+		// Quad D //
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+4,Base+8,Base+7) );
+		Mesh.Index.Add( ABCSet<unsigned short>(Base+4,Base+5,Base+8) );
+	}
+	
+	void AddMesh1_SidePlane( int Rows, const Vector3D& Normal ) {
+		GelColor Color1 = GEL_RGBA(255,255,255,255);	// Blend //
+		GelColor Color2 = GEL_RGBA(255,255,255,255);	// Color (Lighting) //
+	
+		int Base = Mesh.Vertex.Size();
+	
+		Vector3D VecUp(0,0,1);
+		Vector3D VecSide = cross( VecUp, Normal );
+		Vector3D VecA = (Normal + VecSide) * Real(2);
+		Vector3D VecB = Normal * Real(2);
+		Vector3D VecC = (Normal - VecSide) * Real(2);
+		
+		Vector3D VecRow = Vector3D(0,0,Height);
+
+		// For All Rows //
+		for ( size_t idx = 0; idx < Rows; idx++ ) {
+			Mesh.Vertex.Add( cTileMeshVertex( VecA + VecRow, Normal, Color1, Color2 ) );	// 0 //
+			Mesh.Vertex.Add( cTileMeshVertex( VecB + VecRow, Normal, Color1, Color2 ) );	// 1 //
+			Mesh.Vertex.Add( cTileMeshVertex( VecC + VecRow, Normal, Color1, Color2 ) );	// 2 //
+
+			VecRow -= VecUp * Real(2);
+		}
+
+		// 6 Basic Coordinates, 3 more per row. If 3 rows, do 2 rows of this. //
+		for ( size_t idx = 0; idx < Rows-1; idx++ ) {
+			// Quad A //
+			Mesh.Index.Add( ABCSet<unsigned short>(Base+0,Base+4,Base+3) );
+			Mesh.Index.Add( ABCSet<unsigned short>(Base+0,Base+1,Base+4) );
+			// Quad B //
+			Mesh.Index.Add( ABCSet<unsigned short>(Base+1,Base+2,Base+4) );
+			Mesh.Index.Add( ABCSet<unsigned short>(Base+2,Base+5,Base+4) );			
+
+			Base += 3;
+		}
+	}
 
 public:
 	void UpdateMesh() {
+		/*
 		// Top Mesh //
 		for ( int idx = 0; idx < TopMesh.Vertex.Size(); idx++ ) {
 			TopMesh.Vertex[idx].Pos.z = Height;
@@ -229,6 +341,9 @@ public:
 			else 
 				ShaftMesh.Vertex[idx].Pos.z = Floor;
 		}
+		*/
+		
+		AddMesh1();
 	}
 
 };

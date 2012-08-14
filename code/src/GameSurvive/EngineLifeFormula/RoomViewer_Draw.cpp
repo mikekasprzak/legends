@@ -33,9 +33,11 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 			
 			Vector2D UVPos( Map.IndexToX(Index), Map.IndexToY(Index) );
 			UVPos *= Real(4);
+
+			cEngine::TileMeshRenderer->DrawMesh( Map[Index].Mesh, UVPos, LocalView );
 			
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].ShaftMesh, UVPos, LocalView );
-			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, UVPos, LocalView );
+//			cEngine::TileMeshRenderer->DrawMesh( Map[Index].ShaftMesh, UVPos, LocalView );
+//			cEngine::TileMeshRenderer->DrawMesh( Map[Index].TopMesh, UVPos, LocalView );
 		}
 	}
 

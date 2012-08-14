@@ -46,6 +46,7 @@ void cRoom::UpdateMesh( const int Index ) {
 	
 	Map[Index].UpdateMesh();
 
+/*
 	// Plane1 //	
 	{
 		Vector3D DefaultNormal = Map[Index].TopMesh.Vertex[4].Normal; // Center //
@@ -113,6 +114,7 @@ void cRoom::UpdateMesh( const int Index ) {
 			Map[Index].ShaftMesh.Vertex[idx].Color1 = GEL_RGBA(255,255,255,Value);
 		}
 	}
+*/
 }
 // - ------------------------------------------------------------------------------------------ - //
 
