@@ -135,6 +135,35 @@ void cRoom::Generate() {
 	// Generate HeightMap //
 	cGrid2D<int> HeightMap = generate_PlasmaFractal_HeightMap( Map.Width(), Map.Height() );
 	
+	// Fill in holes and hills that are alone //
+	for ( size_t y = 0; y < Map.Height(); y++ ) {
+		for ( size_t x = 0; x < Map.Width(); x++ ) {
+			int Common = 1;
+			if ( HeightMap.Wrap(x-1,y) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x+1,y) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x,y-1) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x,y+1) == HeightMap(x,y) )
+				Common++;
+
+			if ( HeightMap.Wrap(x-1,y-1) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x+1,y-1) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x-1,y+1) == HeightMap(x,y) )
+				Common++;
+			if ( HeightMap.Wrap(x+1,y+1) == HeightMap(x,y) )
+				Common++;
+			
+			if ( Common <= 2 ) {
+				HeightMap(x,y) = HeightMap.Wrap(x-1,y);
+			}
+		}		
+	}
+	
+	
 	// Copy Heights //
 	for ( size_t y = 0; y < Map.Height(); y++ ) {
 		for ( size_t x = 0; x < Map.Width(); x++ ) {

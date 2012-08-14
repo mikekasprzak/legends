@@ -187,8 +187,8 @@ public:
 		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,+2,Height), DefaultNormal /*Vector3D(-1,+1,+1).Normal()*/, Color1, Color2 ) );
 		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(+2,+2,Height), DefaultNormal /*Vector3D(+1,+1,+1).Normal()*/, Color1, Color2 ) );
 		
-		int Floor = 0;
-		if ( Height < 0 )
+		int Floor = -16;
+		if ( Height < -16 )
 			Floor = Height-4;
 		
 		ShaftMesh.Vertex.Add( cTileMeshVertex( Vector3D(-2,-2,Floor), DefaultNormal /*Vector3D(-1,-1,+1).Normal()*/, Color1, Color2 ) );
@@ -217,8 +217,8 @@ public:
 			TopMesh.Vertex[idx].Pos.z = Height;
 		}
 
-		int Floor = 0;
-		if ( Height < 0 )
+		int Floor = -8;
+		if ( Height < -8 )
 			Floor = Height-4;
 		
 		// Shaft Mesh //

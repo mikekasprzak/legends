@@ -67,6 +67,32 @@ inline void gelDrawRectFill( const Vector3D& P1, const Vector3D& P2, const GelCo
 	gelDrawTriangleStrip( (Vector3D*)Verts, 4, Color );    
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawRectFillXZ( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
+	float Diff = P1.y + ((P2.y - P1.y) * Real::Half);
+
+    float Verts[] = {
+		(float)P1.x, (float)P1.y, (float)P1.z,
+		(float)P1.x, Diff, (float)P2.z,
+		(float)P2.x, Diff, (float)P1.z,
+		(float)P2.x, (float)P2.y, (float)P2.z,
+    };
+
+	gelDrawTriangleStrip( (Vector3D*)Verts, 4, Color );    
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void gelDrawRectFillYZ( const Vector3D& P1, const Vector3D& P2, const GelColor Color = Current::Color ) {
+	float Diff = P1.x + ((P2.x - P1.x) * Real::Half);
+
+    float Verts[] = {
+		(float)P1.x, (float)P1.y, (float)P1.z,
+		Diff, (float)P1.y, (float)P2.z,
+		Diff, (float)P2.y, (float)P1.z,
+		(float)P2.x, (float)P2.y, (float)P2.z,
+    };
+
+	gelDrawTriangleStrip( (Vector3D*)Verts, 4, Color );    
+}
+// - ------------------------------------------------------------------------------------------ - //
 inline void gelDrawRectFill( const Real P1x, const Real P1y, const Real P1z, const Real P2x, const Real P2y, const Real P2z, const GelColor Color = Current::Color ) {
 	gelDrawRectFill( Vector3D( P1x, P1y, P1z), Vector3D( P2x, P2y, P2z ), Color );
 }

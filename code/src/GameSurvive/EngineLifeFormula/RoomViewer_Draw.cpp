@@ -115,25 +115,55 @@ void cRoomViewer::Draw( const GelCamera& Camera ) {
 	}
 
 	// Water Cheat //
-	for ( size_t y = 0; y < Size; y++ ) {
-		for ( size_t x = 0; x < Size; x++ ) {
-			int Index = Map.Index( x + Pos.x, y + Pos.y );
+//	for ( size_t y = 0; y < Size; y++ ) {
+//		for ( size_t x = 0; x < Size; x++ ) {
+//			int Index = Map.Index( x + Pos.x, y + Pos.y );
+//
+//			// HACK: Funny Z to test depth			
+//			Vector3D DrawPos( 
+//					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
+//					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
+//					Real(0 - cTile::DEFAULT_TILE_HEIGHT)
+//					);
+//
+//			if ( Map[Index].Height < 0 ) {
+//				gelSetColor( GEL_RGBA(64,64,255,128) );
+//				gelDrawSquareFill( 
+//					DrawPos,
+//					TileHalfSize 
+//					);
+//			}
+//		}
+//	}
 
-			// HACK: Funny Z to test depth			
-			Vector3D DrawPos( 
-					+(((Real(x) - HalfSize) * TileSize) + TileHalfSize), 
-					+(((Real(y) - HalfSize) * TileSize) + TileHalfSize), 
-					Real(0 - cTile::DEFAULT_TILE_HEIGHT)
-					);
+	{
+		Real WaterLevel(-0.5 - Real(cTile::DEFAULT_TILE_HEIGHT));
+		Real WaterFloor(-8 - cTile::DEFAULT_TILE_HEIGHT);
 
-			if ( Map[Index].Height < 0 ) {
-				gelSetColor( GEL_RGBA(64,64,255,128) );
-				gelDrawSquareFill( 
-					DrawPos,
-					TileHalfSize 
-					);
-			}
-		}
+		Real DrawHalfSize = Real(Size) * TileHalfSize;
+		
+		gelSetColor( GEL_RGBA(64,64,255,128) );
+		gelDrawSquareFill( 
+			Vector3D(0,0,WaterLevel),
+			DrawHalfSize
+			);
+			
+		gelDrawRectFillXZ(
+			Vector3D( -DrawHalfSize, -DrawHalfSize, WaterLevel ),
+			Vector3D( +DrawHalfSize, -DrawHalfSize, WaterFloor )
+			);
+		gelDrawRectFillXZ(
+			Vector3D( -DrawHalfSize, +DrawHalfSize, WaterLevel ),
+			Vector3D( +DrawHalfSize, +DrawHalfSize, WaterFloor )
+			);
+		gelDrawRectFillYZ(
+			Vector3D( -DrawHalfSize, -DrawHalfSize, WaterLevel ),
+			Vector3D( -DrawHalfSize, +DrawHalfSize, WaterFloor )
+			);
+		gelDrawRectFillYZ(
+			Vector3D( +DrawHalfSize, -DrawHalfSize, WaterLevel ),
+			Vector3D( +DrawHalfSize, +DrawHalfSize, WaterFloor )
+			);
 	}
 		
 	gelDisableDepthTest();
