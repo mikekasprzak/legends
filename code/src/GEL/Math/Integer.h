@@ -352,6 +352,8 @@ OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, & );
 OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( int, ^ );
 OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, > );
 OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, < );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, >= );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, <= );
 OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, == );
 OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( int, != );
 
@@ -365,8 +367,40 @@ OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, & );
 OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( int, ^ );
 OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, > );
 OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, < );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, >= );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, <= );
 OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, == );
 OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, != );
+// - ------------------------------------------------------------------------------------------ - //
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, + );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, - );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, * );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, / );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, % );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, | );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, & );
+OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( unsigned int, ^ );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, > );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, < );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, >= );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, <= );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, == );
+OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( unsigned int, != );
+
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, + );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, - );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, * );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, / );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, % );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, | );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, & );
+OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( unsigned int, ^ );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, > );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, < );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, >= );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, <= );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, == );
+OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( unsigned int, != );
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
