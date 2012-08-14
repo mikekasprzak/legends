@@ -2,10 +2,12 @@
 #ifndef __Allocator_H__
 #define __Allocator_H__
 // - ------------------------------------------------------------------------------------------ - //
-//#include <Debug/Log.h>
+#include <Debug/Log.h>
 #include <Core/DataArray.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Promote this to a variant of StaticArray in the Data Library. //
+// - ------------------------------------------------------------------------------------------ - //
+//#define ALLOCATOR_DEBUG
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 class Allocator {
@@ -18,17 +20,27 @@ public:
 		_Size( 0 ),
 		Data( 0 )
 	{	
+		#ifdef ALLOCATOR_DEBUG
+			Log( "! NULL 0x%x (0x%x)", Data, this );
+		#endif // ALLOCATOR_DEBUG //
 	}
 	
 	inline Allocator( const int _MaxSize, const int Start = 0 ) :
 		_Size( Start )
 	{
 		Data = new_DataArray<Type>( _MaxSize );
-		//VVVLog( "! Allocator Construct (%i -- 0x%x) (0x%x)", _MaxSize, Data, this );
+		#ifdef ALLOCATOR_DEBUG
+			Log("! NEW 0x%x (0x%x)", Data, this );
+			//VVVLog( "! Allocator Construct (%i -- 0x%x) (0x%x)", _MaxSize, Data, this );
+		#endif // ALLOCATOR_DEBUG //
 	}
 	
 	inline ~Allocator() {
-		//VVVLog( "! Allocator Destruct (%i -- 0x%x) (0x%x)", _Size, Data, this );
+		#ifdef ALLOCATOR_DEBUG
+			Log("! ~ 0x%x (0x%x)", Data, this );
+			//VVVLog( "! Allocator Destruct (%i -- 0x%x) (0x%x)", _Size, Data, this );
+		#endif // ALLOCATOR_DEBUG //
+
 		if ( Data )
 			delete_DataArray<Type>( Data );
 	}
@@ -36,15 +48,28 @@ public:
 	inline Allocator<Type>( const Allocator& Copy ) :
 		_Size( Copy._Size )
 	{
-		//VVVLog( "! Allocator Copy (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
-		Data = copy_DataArray<Type>( Copy.Data );
+		#ifdef ALLOCATOR_DEBUG
+			Log("! COPY 0x%x = 0x%x (0x%x)", Data, &Copy, this );
+			//VVVLog( "! Allocator Copy (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
+		#endif // ALLOCATOR_DEBUG //
+
+		if ( Copy.Data )
+			Data = copy_DataArray<Type>( Copy.Data );
+		else
+			Data = 0;
 	}
 	
 	inline Allocator& operator = ( const Allocator& Copy ) {
-		//VVVLog( "! Allocator Assignment (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
+		#ifdef ALLOCATOR_DEBUG
+			Log("! ASSIGN 0x%x = 0x%x (0x%x)", Data, &Copy, this );
+			//VVVLog( "! Allocator Assignment (%i -- 0x%x <- 0x%x) (0x%x)", _Size, Data, Copy.Data, this );
+		#endif // ALLOCATOR_DEBUG //
 		if ( this != &Copy ) {
 			_Size = Copy._Size;
-			Data = copy_DataArray<Type>( Copy.Data );
+			if ( Copy.Data )
+				Data = copy_DataArray<Type>( Copy.Data );
+			else
+				Data = 0;
 		}
 		return *this;
 	}

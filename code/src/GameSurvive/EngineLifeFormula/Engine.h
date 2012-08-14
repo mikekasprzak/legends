@@ -32,16 +32,24 @@ public:
 	static cTileMeshRenderer* TileMeshRenderer;
 public:
 	cEngine() {
+		Log( "+ Start of cEngine()..." );
+		
 		Instance = this; // *IMPORTANT* THIS MUST COME FIRST BEFORE ANY ROOMS ARE CREATED! //
+
 		// - ----- - //
+
 		View = new cRoomViewer();
 		Room = new cRoom( 32, 32 );
 		View->Set( Room );
 		
 		TileMeshRenderer = new cTileMeshRenderer();
+
+		Log( "- cEngine() done." );
 	}
 
 	~cEngine() {
+		Log( "+ Start of ~cEngine()..." );
+
 		delete TileMeshRenderer;
 		
 		delete View;
@@ -49,6 +57,7 @@ public:
 		
 		ActiveTemplate._DeleteAll();
 		PassiveTemplate._DeleteAll();
+		Log( "- ~cEngine() done." );
 	}		
 public:
 	// Static Functions (using the Instance) //

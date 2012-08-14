@@ -30,10 +30,6 @@
 extern void MessageLoop();
 #endif // USES_SDL //
 // - ------------------------------------------------------------------------------------------ - //
-#ifdef PRODUCT_PALM
-#define HACK_TEXTURE5_GLITCH
-#endif // PRODUCT_PALM //
-// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // Up here, so this isn't considered part of the namespace //
@@ -43,10 +39,6 @@ extern char AppBaseDir[];
 // - ------------------------------------------------------------------------------------------ - //
 namespace AssetPool {
 // - ------------------------------------------------------------------------------------------ - //
-#ifdef HACK_TEXTURE5_GLITCH	
-	unsigned int PalmGlitch;
-#endif // HACK_TEXTURE5_GLITCH //
-
 	// - -------------------------------------------------------------------------------------- - //
 	class GelAsset_Instance {
 	public:
@@ -315,10 +307,6 @@ namespace AssetPool {
 	void Init( const char* BaseDirectory ) {		
 		GelTexture::Init();
 		
-#ifdef HACK_TEXTURE5_GLITCH
-		PalmGlitch = 0;
-#endif // HACK_TEXTURE5_GLITCH //
-		
 		// Create a string containing the base filename directory //
 		{			
 			// If an empty string (i.e. first character is terminator) //
@@ -361,7 +349,7 @@ namespace AssetPool {
 		
 		Log( "+ Adding Asset Directory \"%s\"", ReadDir.c_str() );
 		GelDirectory* Dir = new_GelDirectory( ReadDir.c_str() );
-		Log( "* %i Total Files in Directory", size_GelDirectory( Dir ) );
+		VLog( "* %i Total Files in Directory", size_GelDirectory( Dir ) );
 		
 		for( size_t idx = 0; idx < size_GelDirectory( Dir ); idx++ ) {
 			std::string SlashString = String::Slash;
@@ -371,7 +359,7 @@ namespace AssetPool {
 			std::string NoExt = String::NoExtensions( SlashString );
 			AssetLookup[ NoExt.c_str() ] = AssetInstance.size() - 1;
 			
-			Log( "* %s [%s] (%i)", SlashString.c_str(), NoExt.c_str(), idx );
+			VVLog( "* %s [%s] (%i)", SlashString.c_str(), NoExt.c_str(), idx );
 		}
 		
 		delete_GelDirectory( Dir );
@@ -448,14 +436,6 @@ namespace AssetPool {
 		// If there is only a filename, load it //
 		{
 			AssetInstance[ Asset ].Load( FilePrefix );
-
-#ifdef HACK_TEXTURE5_GLITCH
-			if ( AssetInstance[ Asset ].Texture->Handle == 5 ) {
-				Log( "** WebOS! ** : Working around 'Texture 5' glitch..." );
-				PalmGlitch = AssetInstance[ Asset ].Texture->Handle;				
-				AssetInstance[ Asset ].Load( FilePrefix );
-			}
-#endif // HACK_TEXTURE5_GLITCH //
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -507,12 +487,6 @@ namespace AssetPool {
 		for ( size_t idx = 0; idx < AssetInstance.size(); idx++ ) {
 			AssetInstance[ idx ].Free();
 		}
-		
-#ifdef HACK_TEXTURE5_GLITCH
-		if ( PalmGlitch != 0 ) {
-			glDeleteTextures( 1, (const GLuint*)&PalmGlitch );
-		}
-#endif // HACK_TEXTURE5_GLITCH //
 		
 		GelTexture::Exit();
 	}

@@ -26,7 +26,7 @@ void GelTexture::Init( const bool _Processed, const bool _UnProcessed ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::LogAllocations() {
-	VVLog( "> GelTextures GL Allocations: %i  Sum: %i", AllocCount, AllocSum );	
+	VLog( "> GelTextures GL Allocations: %i  Sum: %i", AllocCount, AllocSum );	
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::Exit( ) {
@@ -42,7 +42,7 @@ void GelTexture::Exit( ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void GelTexture::SetFreePolicy( const bool _Processed, const bool _UnProcessed ) {
-	Log("* Free Policy set: %i %i", _Processed, _UnProcessed );
+	VLog("* Free Policy set: %i %i", _Processed, _UnProcessed );
 	FreePolicy_Processed = _Processed;
 	FreePolicy_UnProcessed = _UnProcessed;
 }
@@ -195,7 +195,7 @@ bool GelTexture::Load( DataBlock* InData ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 bool GelTexture::Load( const char* FileName ) {
-	Log( "* Reading file \"%s\"...", FileName );
+	VLog( "* Reading file \"%s\"...", FileName );
 	DataBlock* InData = new_read_DataBlock( FileName );
 
 	if ( InData == 0 ) {
@@ -234,7 +234,7 @@ void GelTexture::FreeHandle() {
 		AllocCount--;
 		AllocSum -= Handle;
 
-		_VVLog( "* GL Tex (%i) ", Handle );
+		VVLog( "* GL Tex (%i) ", Handle );
 		glDeleteTextures( 1, (const GLuint*)&Handle );
 		
 		Handle = 0;

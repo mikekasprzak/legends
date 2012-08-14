@@ -15,6 +15,8 @@
 #include "CArrayPtr.h"
 #include "CArray.h"
 // - ------------------------------------------------------------------------------------------ - //
+//#define TILE_DEBUG
+// - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 class cTile {
@@ -32,13 +34,20 @@ public:												// --Words (32bit)-- //
 	CArrayPtr<cPassive*,MAX_PASSIVE>	Passive;	// 8 //
 	
 	int Height;										// 1 - Elevation //
+	signed char CornerHeight[4];					// 1 - Relative Corner Height //
+	int PAD1[2];									// 2 - PADDING //
+	
 	Vector3D Normal;								// 3 - Surface Normal //
+	int PAD2[1];									// 1 - PADDING //
 	
 //	Woof Burf;
 	
 	// TODO: Replace this with a custom/generative Mesh type //
 	cTileMesh							TopMesh;	// 4 - Vertex and Index Pointers //
 	cTileMesh							ShaftMesh;	// 4 - Vertex and Index Pointers //
+	
+//	cTileMesh							Mesh;
+	
 //	Allocator< ABSet<short> >			OutlineIndex;
 	// NOTES: Above is all relative 0,0,0 (Z=Height).
 	//        Map Rendering, I go through all visible tiles and create new Mesh
@@ -59,15 +68,34 @@ public:
 		Height( DEFAULT_TILE_HEIGHT ),
 		Normal( 0, 0, 1 )
 	{
+		#ifdef TILE_DEBUG
+			Log( "+ cTile(): 0x%x", this );
+		#endif // TILE_DEBUG //
+		
+//		CornerHeight[0] = 0;
+//		CornerHeight[1] = 0;
+//		CornerHeight[2] = 0;
+//		CornerHeight[3] = 0;
+
 		AddMesh_TopPlane1();
 		AddMesh_Shaft0();
+
+		#ifdef TILE_DEBUG
+			Log( "- cTile(): 0x%x", this );
+		#endif // TILE_DEBUG //
 	}
 	
 	~cTile() {
-		//VVVLog( "* ~cTile: 0x%x", this );
+		#ifdef TILE_DEBUG
+			Log( "+ ~cTile(): 0x%x", this );
+		#endif // TILE_DEBUG //
 		
 		Active.DeleteAll();
 		Passive.DeleteAll();
+
+		#ifdef TILE_DEBUG
+			Log( "- ~cTile(): 0x%x", this );
+		#endif // TILE_DEBUG //
 	}
 
 public:

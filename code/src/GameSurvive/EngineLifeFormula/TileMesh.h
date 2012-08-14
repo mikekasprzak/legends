@@ -13,6 +13,8 @@
 
 #include "../UberShader/UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
+//#define TILEMESH_DEBUG
+// - ------------------------------------------------------------------------------------------ - //
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 // The UVs are generated automatically from the vertex positions in the vertex shader.
@@ -45,14 +47,22 @@ public:
 	Allocator< ABCSet<unsigned short> > Index;
 
 public:
-	cTileMesh()
-	{
+	cTileMesh() {
+		#ifdef TILEMESH_DEBUG
+			Log( "* cTileMesh(): 0x%x", this );
+		#endif // TILEMESH_DEBUG //
 	}
 	
 	cTileMesh( const size_t Vertexes, const size_t Indexes ) :
 		Vertex( Vertexes ),
 		Index( Indexes )
 	{
+	}
+
+	~cTileMesh() {
+		#ifdef TILEMESH_DEBUG
+			Log( "* ~cTileMesh(): 0x%x", this );
+		#endif // TILEMESH_DEBUG //
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

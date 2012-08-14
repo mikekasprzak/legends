@@ -5,10 +5,7 @@
 cGameHost::cGameHost() {
 	Log("+ Begin GameHost Constructor");
 
-
 	// * * * * * //
-	
-
 		
 	// Setup Asset Pool //
 	AssetPool::Init( "Content" );
@@ -92,7 +89,7 @@ void cGameHost::CreateGame() {
 	// Create Game //
 	Log("+ Creating Game Instance...");	
 	Game = new cGame;
-	Log("- Game Create.");
+	Log("- Game Created.");
 
 //	if ( FirstRun() ) {
 //		Game->PlayMusic();

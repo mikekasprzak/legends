@@ -24,6 +24,8 @@ extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
+	#define NO_ANSI_COLOR_CODES
+
 	#define Log( ... ) \
 		if ( LogLevel >= 1 ) \
 			printf( __VA_ARGS__ )
@@ -138,29 +140,80 @@ extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
 */
 
+#ifndef NO_ANSI_COLOR_CODES
+	#define ANSI_HEADER					"\033["
+//	#define ANSI(attr,fg) 				"\033[" attr ";" fg "m"
+
+	#define ANSI_NORMAL					"\033[0m"
+	#define ANSI_RESET					ANSI_NORMAL
+	#define ANSI_NEGATIVE				"\033[7m"
+
+	#define ANSI_BLACK					"\033[0;30m"
+	#define ANSI_RED					"\033[0;31m"
+	#define ANSI_GREEN					"\033[0;32m"
+	#define ANSI_YELLOW					"\033[0;33m"
+	#define ANSI_BLUE					"\033[0;34m"
+	#define ANSI_MAGENTA				"\033[0;35m"
+	#define ANSI_CYAN					"\033[0;36m"
+	#define ANSI_WHITE					"\033[0;37m"
+
+	#define ANSI_BG_BLACK				"\033[0;40m"
+	#define ANSI_BG_RED					"\033[0;41m"
+	#define ANSI_BG_GREEN				"\033[0;42m"
+	#define ANSI_BG_YELLOW				"\033[0;43m"
+	#define ANSI_BG_BLUE				"\033[0;44m"
+	#define ANSI_BG_MAGENTA				"\033[0;45m"
+	#define ANSI_BG_CYAN				"\033[0;46m"
+	#define ANSI_BG_WHITE				"\033[0;47m"
+#else // NO_ANSI_COLOR_CODES //
+	#define ANSI_HEADER					""
+	#define ANSI(attr,fg) 				""
+
+	#define ANSI_NORMAL					""
+	#define ANSI_RESET					ANSI_NORMAL
+	#define ANSI_NEGATIVE				""
+
+	#define ANSI_BLACK					""
+	#define ANSI_RED					""
+	#define ANSI_GREEN					""
+	#define ANSI_YELLOW					""
+	#define ANSI_BLUE					""
+	#define ANSI_MAGENTA				""
+	#define ANSI_CYAN					""
+	#define ANSI_WHITE					""
+
+	#define ANSI_BG_BLACK				""
+	#define ANSI_BG_RED					""
+	#define ANSI_BG_GREEN				""
+	#define ANSI_BG_YELLOW				""
+	#define ANSI_BG_BLUE				""
+	#define ANSI_BG_MAGENTA				""
+	#define ANSI_BG_CYAN				""
+	#define ANSI_BG_WHITE				""
+#endif // NO_ANSI_COLOR_CODES //
+
 // Emscripten Hack //
 #ifdef EMSCRIPTEN
-#define Log( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-#define VLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-#define VVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-#define VVVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+	#define Log( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+	#define VLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+	#define VVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
+	#define VVVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
 #else // EMSCRIPTEN //
-
-// The "Forcefully Always Log" version // 
-void LogAlways( const char* s, ... );
-void _LogAlways( const char* s, ... );
-
-// Standard Logging, with newline //
-void Log( const char* s, ... );
-void VLog( const char* s, ... );
-void VVLog( const char* s, ... );
-void VVVLog( const char* s, ... );
-
-// Logging, without newline //
-void _Log( const char* s, ... );
-void _VLog( const char* s, ... );
-void _VVLog( const char* s, ... );
-void _VVVLog( const char* s, ... );
+	// The "Forcefully Always Log" version // 
+	void LogAlways( const char* s, ... );
+	void _LogAlways( const char* s, ... );
+	
+	// Standard Logging, with newline //
+	void Log( const char* s, ... );
+	void VLog( const char* s, ... );
+	void VVLog( const char* s, ... );
+	void VVVLog( const char* s, ... );
+	
+	// Logging, without newline //
+	void _Log( const char* s, ... );
+	void _VLog( const char* s, ... );
+	void _VVLog( const char* s, ... );
+	void _VVVLog( const char* s, ... );
 
 #endif // EMSCRIPTEN //
 

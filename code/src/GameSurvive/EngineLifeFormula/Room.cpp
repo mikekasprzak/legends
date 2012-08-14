@@ -6,43 +6,36 @@
 namespace LifeFormula {
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::cRoom( const int Width, const int Height ) :
-	Map( Width, Height, cTile() )
+	Map( Width, Height )
 {
+	Log("+ Start of cRoom()...");
+
 	// Dummy Create //
 	cEngine::LoadActiveTemplate( "Content/Misc/TestActive.json" );
 	
-	Log( "Active Inventory: %i", cEngine::ActiveTemplate.Back()->InventorySize );
+	Log( "* Active Inventory: %i", cEngine::ActiveTemplate.Back()->InventorySize );
 
 	cEngine::View->Focus = new cActive( cEngine::ActiveTemplate.Back() );	// Create //
 	AddActive( cEngine::View->Focus, Map.Index(1,1) );						// Add to Map //
 
 	cEngine::LoadPassiveTemplate( "Content/Misc/TestPassive.json" );
 	
-	Log( "Passive Stack Max: %i", cEngine::PassiveTemplate.Back()->MaxCount );
+	Log( "* Passive Stack Max: %i", cEngine::PassiveTemplate.Back()->MaxCount );
 
 	Map(1,1).Passive.Get() = new cPassive( cEngine::PassiveTemplate.Back() );
-		
 	
-//	Map(3,4).Height += 4;
-//	Map(4,4).Height += 4;
-//	Map(5,4).Height += 3;
-//	Map(5,3).Height += 2;
-//	Map(5,2).Height += 1;
-//
-//	Map(7,7).Height += 8;
-//
-//	Map(1,7).Height -= 2;
-//	Map(2,7).Height -= 2;
-//	Map(2,6).Height -= 2;
-//	Map(3,7).Height -= 2;
-//	Map(3,6).Height -= 2;
-//	Map(3,8).Height -= 2;
-//	Map(4,7).Height -= 4;
-
+	Log("* Generating Map");
 	Generate();
+	
+	Log("- cRoom() done.");
 }
 // - ------------------------------------------------------------------------------------------ - //
 cRoom::~cRoom() {
+	Log("+ Start of ~cRoom()...");
+	
+	// ****** //
+	
+	Log("- ~cRoom() done.");
 }
 // - ------------------------------------------------------------------------------------------ - //
 

@@ -815,14 +815,15 @@ int main( int argc, char* argv[] ) {
 //		Log("* %c[%d;%d;%dm!!!", 0x1B, attr, fg + 30, bg + 40);
 
 		// Color Code Test //
-		
-		int Constant = 0x1B;	// Octal 33
-		int attr = 0;
-		int fg = 1;
-		Log("* %c[%d;%dm!!!", Constant, attr, fg + 30);
-
-		attr = 0;
-		Log("* %c[%dm!!!", Constant, attr);
+//		int Constant = 0x1B;	// Octal 33
+//		int attr = 0;
+//		int fg = 1;
+////		Log("* %c[%d;%dm!!!", Constant, attr, fg + 30);
+////		Log("* \033[0;%dm!!!", fg + 30);
+//		Log("* " ANSI_BG_RED "!!!" ANSI_NORMAL );
+//
+//		attr = 0;
+//		Log("* %c[%dm!!!", Constant, attr);
 	}
 
 	Log( "+ Command Line Arguments: %i", argc );

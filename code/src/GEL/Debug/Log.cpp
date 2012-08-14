@@ -1,4 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
+#include "Log.h"
+// - ------------------------------------------------------------------------------------------ - //
 #ifndef EMSCRIPTEN
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_LOGGING
@@ -47,20 +49,26 @@ void PreLog( const char* s ) {
 	if ( s[0] == 0 ) {
 		return;
 	}
-	else if ( s[1] == 0 ) {
-		return;
+	else if ( s[0] == '!' ) {
+		LOG_FUNC2( LOG_TARGET, ANSI_BG_RED );
+		LogIndentation( CurrentLogIndentation, '!' );
 	}
-	else if ( s[1] == ' ' ) {
-		if ( s[0] == '*' ) {
+	else if ( s[0] == '*' ) {
+		if ( s[1] == '*' ) {
+			// Double Star+ //
+			LOG_FUNC2( LOG_TARGET, ANSI_GREEN );
+			LogIndentation( CurrentLogIndentation, '*' );
+		}
+		else if ( s[1] == ' ' ) {
+			// Single Star //
+			LOG_FUNC2( LOG_TARGET, ANSI_YELLOW );
 			LogIndentation( CurrentLogIndentation );
 		}
+	}
+	else if ( s[1] == ' ' ) {
 		if ( s[0] == '>' ) {
-			// TODO: Headline note //
+			LOG_FUNC2( LOG_TARGET, ANSI_MAGENTA );
 			LogIndentation( CurrentLogIndentation, '>' );
-		}
-		if ( s[0] == '!' ) {
-			// TODO: Error note //
-			LogIndentation( CurrentLogIndentation, '!' );
 		}
 		else if ( s[0] == '+' ) {
 			LogIndentation( CurrentLogIndentation );
@@ -71,14 +79,57 @@ void PreLog( const char* s ) {
 			LogIndentation( CurrentLogIndentation );
 		}
 	}
+	else if ( s[1] == 0 ) {
+		return;
+	}
 	else if ( s[2] == 0 ) {
 		return;
 	}
-	else if ( s[2] == ' ' ) {
-		if ( s[0] == '*' ) {
-			if ( s[1] == '*' ) {
-				// TODO: Something for Double Star //
-			}
+	else if ( s[0] == '-' ) {
+		if ( s[1] == '=' ) {
+			// Headline //
+			LOG_FUNC2( LOG_TARGET, ANSI_CYAN );
+		}
+	}
+} 
+// - ------------------------------------------------------------------------------------------ - //
+// String only, so we can take action //
+void PostLog( const char* s ) {
+	if ( s[0] == 0 ) {
+		return;
+	}
+	else if ( s[0] == '!' ) {
+		LOG_FUNC2( LOG_TARGET, ANSI_NORMAL );
+	}
+	else if ( s[0] == '*' ) {
+		if ( s[1] == '*' ) {
+			// Double Star //
+			LOG_FUNC2( LOG_TARGET, ANSI_NORMAL );
+		}
+		else if ( s[1] == ' ' ) {
+			// Single Star //
+			LOG_FUNC2( LOG_TARGET, ANSI_NORMAL );
+		}
+	}
+	else if ( s[1] == ' ' ) {
+		if ( s[0] == '>' ) {
+			LOG_FUNC2( LOG_TARGET, ANSI_NORMAL );
+		}
+		else if ( s[0] == '+' ) {
+		}
+		else if ( s[0] == '-' ) {
+		}
+	}
+	else if ( s[1] == 0 ) {
+		return;
+	}
+	else if ( s[2] == 0 ) {
+		return;
+	}
+	else if ( s[0] == '-' ) {
+		if ( s[1] == '=' ) {
+			// Headline //
+			LOG_FUNC2( LOG_TARGET, ANSI_NORMAL );
 		}
 	}
 } 
@@ -86,14 +137,14 @@ void PreLog( const char* s ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void LogAlways( const char* s, ... ) {
-	va_list vl;
-	va_start( vl, s );
-	
 	PreLog( s );
 
+	va_list vl;
+	va_start( vl, s );
 	LOG_FUNC( LOG_TARGET, s, vl );
-
 	va_end( vl );
+	
+	PostLog( s );
 
 	LOG_FUNC2( LOG_TARGET, (char*)"\n" );
 
@@ -103,24 +154,25 @@ void LogAlways( const char* s, ... ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _LogAlways( const char* s, ... ) {
-	va_list vl;
-	va_start( vl, s );
-
 	PreLog( s );
 
+	va_list vl;
+	va_start( vl, s );
 	LOG_FUNC( LOG_TARGET, s, vl );
-
 	va_end( vl );
+
+	PostLog( s );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #define GEN_LOG_FUNCTION_CRLF( _NAME, _LEVEL ) \
 	void _NAME( const char* s, ... ) { \
 		if ( LogLevel >= _LEVEL ) { \
+			PreLog( s ); \
 			va_list vl; \
 			va_start( vl, s ); \
-			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
+			PostLog( s ); \
 			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
 		} \
 	}
@@ -131,11 +183,12 @@ void _LogAlways( const char* s, ... ) {
 #define GEN_LOG_FUNCTION_CRLF( _NAME, _LEVEL ) \
 	void _NAME( const char* s, ... ) { \
 		if ( LogLevel >= _LEVEL ) { \
+			PreLog( s ); \
 			va_list vl; \
 			va_start( vl, s ); \
-			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
+			PostLog( s ); \
 			LOG_FUNC2( LOG_TARGET, (char*)"\n" ); \
 			fflush(0); \
 		} \
@@ -148,11 +201,12 @@ void _LogAlways( const char* s, ... ) {
 #define GEN_LOG_FUNCTION( _NAME, _LEVEL ) \
 	void _NAME( const char* s, ... ) { \
 		if ( LogLevel >= _LEVEL ) { \
+			PreLog( s ); \
 			va_list vl; \
 			va_start( vl, s ); \
-			PreLog( s ); \
 			LOG_FUNC( LOG_TARGET, s, vl ); \
 			va_end( vl ); \
+			PostLog( s ); \
 		} \
 	}
 // - ------------------------------------------------------------------------------------------ - //
