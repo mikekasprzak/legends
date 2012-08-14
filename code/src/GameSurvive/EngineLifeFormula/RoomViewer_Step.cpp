@@ -42,8 +42,8 @@ void cRoomViewer::Step( const Vector3D& MouseRay ) {
 	static int Tuff = 0;
 	Tuff++;
 	if ( (Tuff & 15) == 0 ) {
-		Integer Width = Room->Map.Width() - Size;
-		Integer Height = Room->Map.Height() - Size;
+		int Width = Room->Map.Width() - Size;
+		int Height = Room->Map.Height() - Size;
 		
 		Uint8 *keystate = SDL_GetKeyboardState(NULL);
 		if ( keystate[SDL_SCANCODE_W] ) {
