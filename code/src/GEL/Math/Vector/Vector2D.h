@@ -497,6 +497,48 @@ public:
 //	inline const Vector2D ApplyMatrix( const class Matrix3x2& ) const;
 	inline const Vector2D ApplyMatrix( const class Matrix4x4& ) const;
 	// - -------------------------------------------------------------------------------------- - //
+#define SWIZZLE2_PROTO( _TYPE, _A, _B ) \
+	inline const _TYPE _A ## _B () const;
+#define SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
+	inline const _TYPE _A ## _B ## _C () const;
+#define SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
+	inline const _TYPE _A ## _B ## _C ## _D() const;
+
+	SWIZZLE2_PROTO( Vector2D, x,x );
+	SWIZZLE2_PROTO( Vector2D, x,y );
+	SWIZZLE2_PROTO( Vector2D, y,x );
+	SWIZZLE2_PROTO( Vector2D, y,y );
+
+	SWIZZLE3_PROTO( Vector3D, x,x,x );
+	SWIZZLE3_PROTO( Vector3D, x,x,y );
+	SWIZZLE3_PROTO( Vector3D, x,y,x );
+	SWIZZLE3_PROTO( Vector3D, x,y,y );
+	SWIZZLE3_PROTO( Vector3D, y,x,x );
+	SWIZZLE3_PROTO( Vector3D, y,x,y );
+	SWIZZLE3_PROTO( Vector3D, y,y,x );
+	SWIZZLE3_PROTO( Vector3D, y,y,y );
+	
+	SWIZZLE4_PROTO( Vector4D, x,x,x,x );
+	SWIZZLE4_PROTO( Vector4D, x,x,x,y );
+	SWIZZLE4_PROTO( Vector4D, x,x,y,x );
+	SWIZZLE4_PROTO( Vector4D, x,x,y,y );
+	SWIZZLE4_PROTO( Vector4D, x,y,x,x );
+	SWIZZLE4_PROTO( Vector4D, x,y,x,y );
+	SWIZZLE4_PROTO( Vector4D, x,y,y,x );
+	SWIZZLE4_PROTO( Vector4D, x,y,y,y );
+	SWIZZLE4_PROTO( Vector4D, y,x,x,x );
+	SWIZZLE4_PROTO( Vector4D, y,x,x,y );
+	SWIZZLE4_PROTO( Vector4D, y,x,y,x );
+	SWIZZLE4_PROTO( Vector4D, y,x,y,y );
+	SWIZZLE4_PROTO( Vector4D, y,y,x,x );
+	SWIZZLE4_PROTO( Vector4D, y,y,x,y );
+	SWIZZLE4_PROTO( Vector4D, y,y,y,x );
+	SWIZZLE4_PROTO( Vector4D, y,y,y,y );
+	
+#undef SWIZZLE4_PROTO
+#undef SWIZZLE3_PROTO
+#undef SWIZZLE2_PROTO
+	// - -------------------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //
 
