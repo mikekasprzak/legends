@@ -100,14 +100,15 @@ void cRoom::UpdateMesh( const int Index ) {
 
 	// Ambient Occlusion based on height of neighbours //
 	{
-		Vector3D UpNormal(0,0,1);		
+		Vector3D UpNormal(0,0,1);
+		int DefaultHeight = -1024;	// SOME UNUSED TOO-LOW HEIGHT //
 		
 		for ( size_t idx = 0; idx < Map[Index].Mesh.Vertex.Size(); idx++ ) {
 			cTileMeshVertex& Me = Map[Index].Mesh.Vertex[idx];
 			int Value = 255;
-			int VsHeight = -1024; // SOME UNUSED TOO-LOW HEIGHT //
+			int VsHeight = DefaultHeight; 
 			
-			bool IsUpNormal = dot( UpNormal, Me.Normal ) > Real(0.1); // Including error //
+			bool IsUpNormal = dot( UpNormal, Me.Normal ) > Real(0.01); // Including error //
 
 			Vector3D ToCenter = (Vector3D(0,0,Me.Pos.z) - Me.Pos);
 			ToCenter.AxisNormalize();
@@ -119,15 +120,28 @@ void cRoom::UpdateMesh( const int Index ) {
 				// Up Normals //
 				if ( IsCornerNormal ) {
 					// 3 Corners //
+					int GreaterSides = 0;
+
 					int NewHeight = Map.Wrap( x, y + FromCenter.y ).Height;
-					if ( NewHeight > VsHeight )
+					if ( NewHeight > (int)Me.Pos.z )
+						GreaterSides++;						
+					if ( NewHeight >= VsHeight )
 						VsHeight = NewHeight;
+					
 					NewHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
-					if ( NewHeight > VsHeight )
+					if ( NewHeight > (int)Me.Pos.z )
+						GreaterSides++;
+					if ( NewHeight >= VsHeight )
 						VsHeight = NewHeight;
+					
 					NewHeight = Map.Wrap( x + FromCenter.x, y ).Height;
-					if ( NewHeight > VsHeight )
+					if ( NewHeight > (int)Me.Pos.z )
+						GreaterSides++;
+					if ( NewHeight >= VsHeight )
 						VsHeight = NewHeight;
+					
+					if ( GreaterSides == 1 )
+						VsHeight = DefaultHeight;
 				}
 				else { // Mid Normal //
 					VsHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
@@ -139,59 +153,47 @@ void cRoom::UpdateMesh( const int Index ) {
 				}
 			}
 			else {
+				int GreaterSides = 0;
+				
 				// Side Normals //
 				if ( IsCornerNormal ) {
-					// Two Corners Only! //					
 					// The Diagonal //
 					int NewHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+					if ( NewHeight > (int)Me.Pos.z )
+						GreaterSides++;
 					if ( NewHeight > VsHeight )
 						VsHeight = NewHeight;
+
 					// The Normal Direction //
 					NewHeight = Map.Wrap( x + (int)Me.Normal.x, y + (int)Me.Normal.y ).Height;
+					if ( NewHeight > (int)Me.Pos.z )
+						GreaterSides++;
 					if ( NewHeight > VsHeight )
 						VsHeight = NewHeight;
+						
+					// The Side Direction (Cross Product) //
+					Vector3D Cross = cross( UpNormal, Me.Normal );
+					Cross.AxisNormalize();	// NOTE: If not axis aligned angles, this will break //
+
+					// The cross product direction //
+					NewHeight = Map.Wrap( x + (int)Cross.x, y + (int)Cross.y ).Height;
+					if ( NewHeight > (int)Me.Pos.z ) {
+						GreaterSides++;
+					}
+					// No Height Setting here, because that would cause side tiles outside //
+					// the view to cast a shadow on the block, which is incorrect //
 				}
 				else { // Mid Normal //
 					VsHeight = Map.Wrap( x + FromCenter.x, y + FromCenter.y ).Height;
+					GreaterSides = 2;
 				}
 				
 				// Inclusive, since we are directly a crease //
-				if ( Real(VsHeight) >= Me.Pos.z ) {
+				if ( (VsHeight >= (int)Me.Pos.z) && GreaterSides ) {
 					Value = 128;
 				}
 			}
-			
-//			if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(-1,0,0) ) {
-//				VsHeight = Left.Height+1;
-//			}
-//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(+1,0,0) ) {
-//				VsHeight = Right.Height+1;
-//			}
-//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,+1,0) ) {
-//				VsHeight = Top.Height+1;
-//			}
-//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,-1,0) ) {
-//				VsHeight = Bottom.Height+1;
-//			}
-//			else if ( Map[Index].Mesh.Vertex[idx].Normal == Vector3D(0,0,+1) ) {
-//				VsHeight = -1024;	// SOME UNUSED TOO-LOW HIGHT //
-//				
-//				Vector3D ToCenter = -(Vector3D(0,0,0) - Map[Index].Mesh.Vertex[idx].Pos);
-//				ToCenter.AxisNormalize();
-//				if ( ToCenter.x > Real::Zero )
-//					VsHeight = VsHeight < Right.Height ? Right.Height : VsHeight;
-//				if ( ToCenter.x < Real::Zero )
-//					VsHeight = VsHeight < Left.Height ? Left.Height : VsHeight;
-//				if ( ToCenter.y > Real::Zero )
-//					VsHeight = VsHeight < Top.Height ? Top.Height : VsHeight;
-//				if ( ToCenter.y < Real::Zero )
-//					VsHeight = VsHeight < Bottom.Height ? Bottom.Height : VsHeight;
-//			}
-//			
-//			if ( Map[Index].Mesh.Vertex[idx].Pos.z < Real(VsHeight) ) {
-//				Value = 128;
-//			}
-			
+
 			Me.Color2 = GEL_RGBA(Value,Value,Value,Value);
 		}
 	}
