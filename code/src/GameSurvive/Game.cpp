@@ -531,6 +531,8 @@ void cGame::Step() {
 		if ( keystate[SDL_SCANCODE_PAGEDOWN] ) {
 			CameraWorldPos += Vector3D(0,0,-2.5f);
 		}
+	
+		CameraWorldPos += Stick.ToVector3D();
 		
 		if ( keystate[SDL_SCANCODE_SPACE] ) {
 			vm_CallFunc( "DoAwesome" );

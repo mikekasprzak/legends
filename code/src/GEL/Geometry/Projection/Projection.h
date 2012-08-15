@@ -154,17 +154,22 @@ inline void Rotate_Matrix_XY( Matrix4x4& Matrix ) {
 	Matrix[5] = -Temp[2];
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {
-	Vector3D ViewDirection = (Dest - Src).Normal();
-	Real Dot = dot(ViewDirection, CameraUp);
-	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
-//	Vector3D Up = cross(CameraUp, ViewDirection).Normal();
-	Vector3D Right = cross(Up, ViewDirection);
+inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Pos, const Vector3D& Look, const Vector3D& CameraUp ) {
+	// Build the 3 basis vectors required to create an orientation //
+	Vector3D Forward = (Look - Pos).Normal();
+	Vector3D Side = cross(Forward, CameraUp);
+	Vector3D Up = cross(Forward, Side);
+
+//	Vector3D Forward = (Look - Pos).Normal();
+//	Real Dot = dot(Forward, CameraUp);
+//	Vector3D Up = (CameraUp - (Dot * Forward)).Normal();
+////	Vector3D Up = cross(CameraUp, Forward).Normal();
+//	Vector3D Side = cross(Up, Forward);
 	
 	return Matrix4x4(
-		Right.x, Up.x, ViewDirection.x, 0.0f,
-		Right.y, Up.y, ViewDirection.y, 0.0f,
-		Right.z, Up.z, ViewDirection.z, 0.0f,
+		Side.x, Up.x, Forward.x, 0.0f,
+		Side.y, Up.y, Forward.y, 0.0f,
+		Side.z, Up.z, Forward.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 		);
 }
@@ -172,31 +177,54 @@ inline Matrix4x4 Calc_LookAtOnly( const Vector3D& Src, const Vector3D& Dest, con
 inline Matrix4x4 Calc_LookAt( const Vector3D& Pos, const Vector3D& Look, const Vector3D& CameraUp ) {
 	// Build the 3 basis vectors required to create an orientation //
 	Vector3D Forward = (Look - Pos).Normal();
-	Vector3D Right = cross(Forward, CameraUp);
-	Vector3D Up = cross(Forward, Right);
+	Vector3D Side = cross(Forward, CameraUp);
+	Vector3D Up = cross(Forward, Side);
 
-	return Matrix4x4(
-		Right.x, Up.x, Forward.x, 0.0f,
-		Right.y, Up.y, Forward.y, 0.0f,
-		Right.z, Up.z, Forward.z, 0.0f,
-		-Look.x, Look.y, Pos.z, 1.0f		// NOTE: I had to tweak this to get expected behavior. No idea why. //
-//		-Pos.x, Pos.y, Pos.z, 1.0f			//       Was this. //
+	return Matrix4x4::TranslationMatrix( -Pos ) *	
+		Matrix4x4(
+			Side.x, Up.x, Forward.x, 0.0f,
+			Side.y, Up.y, Forward.y, 0.0f,
+			Side.z, Up.z, Forward.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f 
 		);
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Matrix4x4 Calc_LookAt2( const Vector3D& Src, const Vector3D& Dest, const Vector3D& CameraUp ) {
-	Vector3D ViewDirection = (Dest - Src).Normal();
-//	Real Dot = ViewDirection * CameraUp;
-//	Vector3D Up = (CameraUp - (Dot * ViewDirection)).Normal();
-	Vector3D Up = cross(CameraUp, ViewDirection).Normal(); // This is wrong //
-	Vector3D Right = cross(Up, ViewDirection);
 
-	return Matrix4x4(
-		Right.x, Up.x, ViewDirection.x, 0,
-		Right.y, Up.y, ViewDirection.y, 0,
-		Right.z, Up.z, ViewDirection.z, 0,
-		-dot(Right, Src), -dot(Up, Src), -dot(ViewDirection, Src), 1
-		);
+// - ------------------------------------------------------------------------------------------ - //
+// Borrowed and adapted from Mesa -- src/glu/sgi/libutil/project.c
+// - ------------------------------------------------------------------------------------------ - //
+inline Matrix4x4 Calc_LookAt3( Vector3D _eye, Vector3D _look, Vector3D _up ) {
+	Vector3D forward, side, up;
+
+    forward.x = _look.x - _eye.x;
+    forward.y = _look.y - _eye.y;
+    forward.z = _look.z - _eye.z;
+    forward.Normalize();
+
+    up.x = _up.x;
+    up.y = _up.y;
+    up.z = _up.z;
+
+    /* Side = forward x up */
+    side = cross(forward, up).Normal();
+
+    /* Recompute up as: up = side x forward */
+	up = cross(side, forward);
+
+	Matrix4x4 m = Matrix4x4::Identity;
+	m(0,0) = side.x;
+	m(0,1) = side.y;
+	m(0,2) = side.z;
+
+	m(1,0) = up.x;
+	m(1,1) = up.y;
+	m(1,2) = up.z;
+
+	m(2,0) = -forward.x;
+	m(2,1) = -forward.y;
+	m(2,2) = -forward.z;
+
+	return Matrix4x4::TranslationMatrix( _eye ) * m;;
 }
 // - ------------------------------------------------------------------------------------------ - //
 

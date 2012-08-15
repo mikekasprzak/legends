@@ -69,12 +69,13 @@ public:
 	
 	void UpdateMatrix() {
 		Projection = Calc_Frustum_PerspectiveProjection( PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos );
+
 		CoplanarProjection = Calc_Frustum_CoplanarPerspectiveProjection( 
 			Real(_TV(-0.01f)), 
 			Real(_TV(100.0f)),
 			Projection, NearPlane, FarPlane
-//			PlaneWidth, PlaneHeight, NearPlane, FarPlane, PlanePos 
 			);
+
 		View = Calc_LookAt( Pos, Look, Up );
 	
 		CalculateProjectionView();
