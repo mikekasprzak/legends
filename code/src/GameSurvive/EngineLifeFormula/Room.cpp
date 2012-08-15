@@ -46,58 +46,6 @@ void cRoom::UpdateMesh( const int Index ) {
 	
 	Map[Index].UpdateMesh();
 
-/*
-	// Plane1 //	
-	{
-		Vector3D DefaultNormal = Map[Index].TopMesh.Vertex[4].Normal; // Center //
-		int Height = Map[Index].Height;
-
-		cTileMesh& Mesh = Map[Index].TopMesh;
-	
-		Mesh.Vertex[0].Normal = DefaultNormal;
-		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-1,y-0).Height - Height).Max(0).Normal() * Vector3D(-1,-0,0);
-		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-1,y-1).Height - Height).Max(0).Normal() * Vector3D(-0.5,-0.5,0);
-		Mesh.Vertex[0].Normal += Real(Map.Wrap(x-0,y-1).Height - Height).Max(0).Normal() * Vector3D(-0,-1,0);
-		Mesh.Vertex[0].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[1].Normal = DefaultNormal;
-		Mesh.Vertex[1].Normal += Real(Map.Wrap(x-0,y-1).Height - Height).Max(0).Normal() * Vector3D(-0,-1,0);
-		Mesh.Vertex[1].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[2].Normal = DefaultNormal;
-		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+1,y-0).Height - Height).Max(0).Normal() * Vector3D(+1,-0,0);
-		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+1,y-1).Height - Height).Max(0).Normal() * Vector3D(+0.5,-0.5,0);
-		Mesh.Vertex[2].Normal += Real(Map.Wrap(x+0,y-1).Height - Height).Max(0).Normal() * Vector3D(+0,-1,0);
-		Mesh.Vertex[2].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[3].Normal = DefaultNormal;
-		Mesh.Vertex[3].Normal += Real(Map.Wrap(x-1,y+0).Height - Height).Max(0).Normal() * Vector3D(-1,+0,0);
-		Mesh.Vertex[3].Normal.Normalize();//AxisNormalize().Normalize();
-		
-		// No Middle //
-	
-		Mesh.Vertex[5].Normal = DefaultNormal;
-		Mesh.Vertex[5].Normal += Real(Map.Wrap(x+1,y+0).Height - Height).Max(0).Normal() * Vector3D(+1,+0,0);
-		Mesh.Vertex[5].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[6].Normal = DefaultNormal;
-		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-1,y+0).Height - Height).Max(0).Normal() * Vector3D(-1,+0,0);
-		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-1,y+1).Height - Height).Max(0).Normal() * Vector3D(-0.5,+0.5,0);
-		Mesh.Vertex[6].Normal += Real(Map.Wrap(x-0,y+1).Height - Height).Max(0).Normal() * Vector3D(-0,+1,0);
-		Mesh.Vertex[6].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[7].Normal = DefaultNormal;
-		Mesh.Vertex[7].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
-		Mesh.Vertex[7].Normal.Normalize();//AxisNormalize().Normalize();
-	
-		Mesh.Vertex[8].Normal = DefaultNormal;
-		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+1,y+0).Height - Height).Max(0).Normal() * Vector3D(+1,+0,0);
-		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+1,y+1).Height - Height).Max(0).Normal() * Vector3D(+0.5,+0.5,0);
-		Mesh.Vertex[8].Normal += Real(Map.Wrap(x+0,y+1).Height - Height).Max(0).Normal() * Vector3D(+0,+1,0);
-		Mesh.Vertex[8].Normal.Normalize();//AxisNormalize().Normalize();
-	}
-*/
-
 	// Ambient Occlusion based on height of neighbours //
 	{
 		Vector3D UpNormal(0,0,1);
@@ -172,14 +120,23 @@ void cRoom::UpdateMesh( const int Index ) {
 						VsHeight = NewHeight;
 						
 					// The Side Direction (Cross Product) //
-					Vector3D Cross = cross( UpNormal, Me.Normal );
-					Cross.AxisNormalize();	// NOTE: If not axis aligned angles, this will break //
+//					Vector3D Cross = cross( UpNormal, Me.Normal );
+//					Vector3D Cross = cross( Me.Normal, UpNormal );
+//					Cross.AxisNormalize();	// NOTE: If not axis aligned angles, this will break //
+
+//					Vector2D Cross = -Me.Normal.ToVector2D().Tangent();
+
+					IVector2D Cross( FromCenter.x - (int)Me.Normal.x, FromCenter.y - (int)Me.Normal.y );
 
 					// The cross product direction //
 					NewHeight = Map.Wrap( x + (int)Cross.x, y + (int)Cross.y ).Height;
 					if ( NewHeight > (int)Me.Pos.z ) {
 						GreaterSides++;
 					}
+//					else if ( NewHeight == (int)Me.Pos.z ) {
+//						if ( VsHeight > NewHeight )
+//							GreaterSides++;
+//					}
 					// No Height Setting here, because that would cause side tiles outside //
 					// the view to cast a shadow on the block, which is incorrect //
 				}
@@ -189,7 +146,7 @@ void cRoom::UpdateMesh( const int Index ) {
 				}
 				
 				// Inclusive, since we are directly a crease //
-				if ( (VsHeight >= (int)Me.Pos.z) && GreaterSides ) {
+				if ( (VsHeight >= (int)Me.Pos.z) && (GreaterSides > 0) ) {
 					Value = 128;
 				}
 			}

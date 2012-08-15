@@ -216,7 +216,7 @@ public:
 		int Vertexes = 3*(3);			// Top //
 		int Indexes = 4*(3-1);			// Top //
 		
-		int Rows = 6;
+		int Rows = 8;
 		int SideVertexes = 3*(Rows);
 		int SideIndexes = 4*(Rows-1);
 		
