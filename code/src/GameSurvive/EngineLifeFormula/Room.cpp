@@ -120,12 +120,6 @@ void cRoom::UpdateMesh( const int Index ) {
 						VsHeight = NewHeight;
 						
 					// The Side Direction (Cross Product) //
-//					Vector3D Cross = cross( UpNormal, Me.Normal );
-//					Vector3D Cross = cross( Me.Normal, UpNormal );
-//					Cross.AxisNormalize();	// NOTE: If not axis aligned angles, this will break //
-
-//					Vector2D Cross = -Me.Normal.ToVector2D().Tangent();
-
 					IVector2D Cross( FromCenter.x - (int)Me.Normal.x, FromCenter.y - (int)Me.Normal.y );
 
 					// The cross product direction //
@@ -133,10 +127,6 @@ void cRoom::UpdateMesh( const int Index ) {
 					if ( NewHeight > (int)Me.Pos.z ) {
 						GreaterSides++;
 					}
-//					else if ( NewHeight == (int)Me.Pos.z ) {
-//						if ( VsHeight > NewHeight )
-//							GreaterSides++;
-//					}
 					// No Height Setting here, because that would cause side tiles outside //
 					// the view to cast a shadow on the block, which is incorrect //
 				}
