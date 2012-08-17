@@ -380,15 +380,15 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector3D XOnly() const {
+	inline const Vector3D XAxis() const {
 		return Vector3D( x, Real::Zero, Real::Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector3D YOnly() const {
+	inline const Vector3D YAxis() const {
 		return Vector3D( Real::Zero, y, Real::Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector3D ZOnly() const {
+	inline const Vector3D ZAxis() const {
 		return Vector3D( Real::Zero, Real::Zero, z );
 	}
 	// - -------------------------------------------------------------------------------------- - //

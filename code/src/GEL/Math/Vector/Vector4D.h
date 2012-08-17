@@ -342,19 +342,19 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector4D XOnly() const {
+	inline const Vector4D XAxis() const {
 		return Vector4D( x, Real::Zero, Real::Zero, Real::Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector4D YOnly() const {
+	inline const Vector4D YAxis() const {
 		return Vector4D( Real::Zero, y, Real::Zero, Real::Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector4D ZOnly() const {
+	inline const Vector4D ZAxis() const {
 		return Vector4D( Real::Zero, Real::Zero, z, Real::Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Vector4D WOnly() const {
+	inline const Vector4D WAxis() const {
 		return Vector4D( Real::Zero, Real::Zero, Real::Zero, w );
 	}
 	// - -------------------------------------------------------------------------------------- - //
