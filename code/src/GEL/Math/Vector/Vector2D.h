@@ -497,6 +497,18 @@ public:
 //	inline const Vector2D ApplyMatrix( const class Matrix3x2& ) const;
 	inline const Vector2D ApplyMatrix( const class Matrix4x4& ) const;
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector2D XOnly() const {
+		return Vector2D( x, Real::Zero );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Vector2D YOnly() const {
+		return Vector2D( Real::Zero, y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 #define SWIZZLE2_PROTO( _TYPE, _A, _B ) \
 	inline const _TYPE _A ## _B () const;
 #define SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
