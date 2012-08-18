@@ -14,6 +14,8 @@
 #include <vector>
 #include <stdio.h>
 #include <stdarg.h>
+
+#include <Util/String/String.h>
 // - ------------------------------------------------------------------------------------------ - //
 struct GelFont {
 	BMFont* Font;
@@ -24,7 +26,8 @@ public:
 		Font( new_read_BMFont( InFile ) )
 	{
 		for ( size_t idx = 0; idx < Font->PageName->Size; idx++ ) {
-			Texture.push_back( AssetPool::Load( Font->PageName->Data[idx] ) );
+			Texture.push_back( AssetPool::Load( String::NoExtensions(Font->PageName->Data[idx]).c_str() ) );
+//			Texture.push_back( AssetPool::Load( Font->PageName->Data[idx] ) );
 		}
 	}
 	

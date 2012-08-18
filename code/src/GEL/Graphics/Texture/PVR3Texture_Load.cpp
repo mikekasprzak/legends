@@ -15,6 +15,8 @@
 GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelTexture_Detail* Detail ) {
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
+	
+	LogLevel = 3;
 
 	Log("+ Loading Texture (PVR3 Loader)..." );
 
@@ -41,8 +43,12 @@ GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelT
 	int CompressedFormat = 0;
 
 	switch ( Texture->PixelFormat ) {
+		case PVR3_RGBA_4444:
+			VLog("* GL_UNSIGNED_BYTE (RGBA_4444) - (OGL4444)");
+			RGBFormat = GL_UNSIGNED_SHORT_4_4_4_4;
+			break;
 		case PVR3_RGBA_8888:
-			VLog("* GL_UNSIGNED_BYTE (RGBA_8888)");
+			VLog("* GL_UNSIGNED_BYTE (RGBA_8888) - (OGL8888)");
 			RGBFormat = GL_UNSIGNED_BYTE;
 			break;
 
@@ -171,10 +177,10 @@ GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelT
 	// New feature.  If MaxTextureSize is greater than the current mipmap size, throw it away. //
 	int OmittedTexture = 0;
 	
-	Log("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, Texture->MipMapCount );
+	Log("* Details: %ix%i, Textures (Mipmaps): %i", Width, Height, Texture->MipMapCount );
 
 	// Load the MipMaps (Mipmap count don't include the original texture) //
-	for ( int MipMap = 0; MipMap < Texture->MipMapCount+1; MipMap++ ) {
+	for ( int MipMap = 0; MipMap < Texture->MipMapCount; MipMap++ ) {
 /*
 //	int MipMap = 0; {
 #ifdef USES_PVRTC
@@ -193,18 +199,20 @@ GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelT
 		#undef MIN
 		#undef MAX
 #endif // USES_PVRTC //
+*/
 		if ( CompressedFormat == 1 ) {
+			// DXT1 //
 			ChunkSize = 8 * ((Width+3) >> 2) * ((Height+3) >> 2);
 		}
 		else if ( CompressedFormat == 3 ) {
+			// DXT3 //
 			ChunkSize = 16 * ((Width+3) >> 2) * ((Height+3) >> 2);
 		}
 		else if ( CompressedFormat == 5 ) {
+			// DXT5 //
 			ChunkSize = 16 * ((Width+3) >> 2) * ((Height+3) >> 2);
 		}
-		else
-*/
-		{
+		else {
 			// If an uncompressed scheme //
 			ChunkSize = (Width * Height) * (BitsPerPixel >> 3);
 		}
@@ -257,7 +265,7 @@ GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelT
 		Height >>= 1;
 	}
 	
-	Log("- %i Texture levels loaded.", Texture->MipMapCount+1 );
+	Log("- %i Texture levels loaded.", Texture->MipMapCount );
 
 	// Return the Texture ID //
 	return TextureID;

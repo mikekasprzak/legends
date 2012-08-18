@@ -171,7 +171,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 		int Section = Read.GetInt(1);
 		int DataSize = Read.GetInt();
 
-		Log("* Section %i", Section );
+		VVLog("* Section %i", Section );
 		
 		if ( Section == BMFONT_SECTION_INFO ) {
 			int StringSize = (DataSize-BMFONT_INFO_SIZE_STATIC);
@@ -192,7 +192,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			
 			copy_Data( Read.GetString(StringSize), &MyFont->Info->FontName, StringSize );
 			
-			Log( "** Source Font Name: %s -- %i pt", MyFont->Info->FontName, MyFont->Info->FontSize );
+			VLog( "* Source Font Name: %s -- Size: %i pt", MyFont->Info->FontName, MyFont->Info->FontSize );
 		}
 		else if ( Section == BMFONT_SECTION_COMMON ) {
 			MyFont->Common = new BMFont_Common;
@@ -212,7 +212,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			int PageNameLength = (int)length_String(Read.GetString(0)) + 1;
 			int PageCount = DataSize / PageNameLength;
 			
-			Log( "** Texture Pages: %i  Page Name Length: %i (%i)", PageCount, PageNameLength, DataSize );
+			VLog( "+ Texture Pages: %i  Page Name Length: %i (%i)", PageCount, PageNameLength, DataSize );
 			
 			MyFont->PageNameData = new_DataBlock( DataSize );
 			copy_Data( Read.GetString(DataSize), MyFont->PageNameData->Data, DataSize );
@@ -223,13 +223,15 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 			for ( int idx = 0; idx < PageCount; idx++ ) {
 				MyFont->PageName->Data[idx] = PageOffset;
 				PageOffset += PageNameLength;
-				Log( "*** %i - %s", idx, MyFont->PageName->Data[idx] );
+				VLog( "* %i - %s", idx, MyFont->PageName->Data[idx] );
 			}
+
+			VLog( "- Texture Pages: %i", PageCount );
 		}
 		else if ( Section == BMFONT_SECTION_CHARS ) {
 			int CharCount = DataSize / BMFONT_CHARS_SIZE;
 			
-			Log( "** %i characters found", CharCount );
+			VLog( "* %i characters found", CharCount );
 			
 			MyFont->Chars = new_DataArray<BMFont_Chars>( CharCount );
 			
@@ -289,7 +291,7 @@ inline BMFont* new_read_BMFont( const DataBlock* InFile ) {
 		else if ( Section == BMFONT_SECTION_KERNING ) {
 			int KerningCount = DataSize / BMFONT_KERNING_SIZE;
 			
-			Log( "* %i kerning instances found", KerningCount );
+			VLog( "* %i kerning instances found", KerningCount );
 			
 			MyFont->Kerning = new_DataArray<BMFont_Kerning>( KerningCount );
 			
