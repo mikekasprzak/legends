@@ -664,27 +664,23 @@ void cGame::UpdateCameraMatrix() {
 	ObserverCamera.SetFrustum( 
 //		ActualScreen::Width * Real(0.1f) / RefScreen::Scalar,
 //		ActualScreen::Height * Real(0.1f) / RefScreen::Scalar,
-		FullRefScreen::Width * Real( _TV(0.7f) ), //0.12
-		FullRefScreen::Height * Real( _TV(0.7f) ),
+		FullRefScreen::Width * Real( _TV(0.12f) ),
+		FullRefScreen::Height * Real( _TV(0.12f) ),
 		_TV(100),
 		_TV(1900)
 		);
+	
+	Real CenterPlane = ObserverCamera.NearPlane + ((ObserverCamera.FarPlane - ObserverCamera.NearPlane) * Real::Half);
 		
-	ObserverCamera.Pos = CameraWorldPos;
-//	 + Vector3D( 
-//		_TV(0), _TV(0), _TV(500) 
-//		);
+	Vector3D CameraTweak;
 
 #ifdef USES_HIDAPI
-	ObserverCamera.Pos = CameraWorldPos + Vector3D( 
-		_TV(0.0f) + (SpaceNavigator[_TV(4)] * 512.0f),
-		_TV(0.0f) + (SpaceNavigator[_TV(3)] * 512.0f),
-		_TV(500.0f) 
-		);
+	CameraTweak.x = (SpaceNavigator[_TV(4)] * 512.0f);
+	CameraTweak.y = (SpaceNavigator[_TV(3)] * 512.0f);
 #endif // USES_HIDAPI //
 
-//	ObserverCamera.Look = CameraWorldPos;// + Vector3D( _TV(0), _TV(100), _TV(0) );
-	ObserverCamera.Look = Vector3D(0,0,0);
+	ObserverCamera.Pos = CameraWorldPos + Vector3D( 0, 0, CenterPlane ) + CameraTweak;
+	ObserverCamera.Look = Vector3D(0,0,0) + CameraWorldPos;
 	ObserverCamera.Up = Vector3D(0,1,0);
 	
 	ObserverCamera.UpdateMatrix();

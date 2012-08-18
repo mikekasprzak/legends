@@ -39,7 +39,7 @@ public:
 public:
 	inline cRoomViewer() :
 		Pos( 0, 0 ),
-		Size( 32 ),
+		Size( 9/*32*/ ),
 		Room( 0 ),
 		Focus( 0 )
 	{
