@@ -85,7 +85,7 @@
 // Error Logging (return) //
 #define return_ELog( ... ) \
 	{ \
-		Log( "Error: " ## __VA_ARGS__ ); \
+		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
 		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: %s\n", __func__ ); \
 		return; \
@@ -94,7 +94,7 @@
 // Error Logging (return value) //
 #define return_value_ELog( ___VAL, ... ) \
 	{ \
-		Log( "Error: " ## __VA_ARGS__ ); \
+		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
 		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: %s\n", __func__ ); \
 		return ___VAL; \
@@ -108,7 +108,8 @@
 #define Assert( ___TEST, ... ) \
 	if ( ___TEST ) { \
 		Log( "- ======================================================== -" ); \
-		Log( "Assert Error: " __VA_ARGS__ ); \
+		_Log( ANSI_BG_RED "Assert Error: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: %s", __PRETTY_FUNCTION__ ); \
 		Log( "- ======================================================== -" ); \
@@ -118,7 +119,8 @@
 // Warnings //
 #define Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " __VA_ARGS__ ); \
+		_Log( ANSI_RED "Warning: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 	}
@@ -126,7 +128,8 @@
 // Warnings (return) //
 #define return_Warning( ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " __VA_ARGS__ ); \
+		_Log( ANSI_RED "Warning: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return; \
@@ -135,7 +138,8 @@
 // Warnings (return value) //
 #define return_value_Warning( ___VAL, ___TEST, ... ) \
 	if ( ___TEST ) { \
-		Log( "Warning: " __VA_ARGS__ ); \
+		_Log( ANSI_RED "Warning: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \
@@ -161,7 +165,8 @@
 // Error Logging //
 #define ELog( ... ) \
 	{ \
-		Log( "Error: " __VA_ARGS__ ); \
+		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 	}
@@ -169,7 +174,8 @@
 // Error Logging //
 #define return_ELog( ... ) \
 	{ \
-		Log( "Error: " __VA_ARGS__ ); \
+		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return; \
@@ -178,7 +184,8 @@
 // Error Logging //
 #define return_value_ELog( ___VAL, ... ) \
 	{ \
-		Log( "Error: " __VA_ARGS__ ); \
+		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+		Log( ANSI_NORMAL ); \
 		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
 		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
 		return ___VAL; \

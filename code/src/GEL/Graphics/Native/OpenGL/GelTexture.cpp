@@ -10,6 +10,7 @@
 #include <Core/DataBlock_LZMA.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Texture/PVRTexture_Load.h>
+#include <Graphics/Texture/PVR3Texture_Load.h>
 #include <Graphics/Texture/STBTexture_Load.h>
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -71,18 +72,30 @@ bool GelTexture::Process() {
 	if ( UnProcessed.Data == 0 )
 		return false;
 
+	VLog( "* Preprocessing... (FourCC 0x%x)", ((int*)UnProcessed.Data->Data)[0] );
 	UnProcessed.Asset.BitMask = is_Data_GelAsset( UnProcessed.Data->Data );
 	
-	bool ProcessNextSection = true;
+	bool ProcessNextSection = false;
 	
 	switch ( UnProcessed.Asset.Type ) {
 		case GEL_ASSET_LZMA: {
+			VLog( "* GEL_ASSET_LZMA" );
 			Processed.Data = new_unpack_LZMA_DataBlock( UnProcessed.Data );
+			ProcessNextSection = true;
 			break;
 		}
 		case GEL_ASSET_STB_IMAGE:
 		case GEL_ASSET_PVR:
+		case GEL_ASSET_PVR3:
 		{
+			// Say who I am //
+			if ( UnProcessed.Asset.Type == GEL_ASSET_STB_IMAGE )
+				VLog( "* GEL_ASSET_STB_IMAGE" );
+			else if ( UnProcessed.Asset.Type == GEL_ASSET_PVR )
+				VLog( "* GEL_ASSET_PVR" );
+			else if ( UnProcessed.Asset.Type == GEL_ASSET_PVR3 )
+				VLog( "* GEL_ASSET_PVR3" );
+
 			// Cheat! Move data over to processed, 'cause I am lazy! //
 			Processed.Data = UnProcessed.Data;
 			Processed.Asset.BitMask = UnProcessed.Asset.BitMask;
@@ -94,13 +107,14 @@ bool GelTexture::Process() {
 			break;
 		}
 		default: {
-			ELog("Unknown Asset Format!" );
+			ELog( "Unknown Asset Format! (0x%x)", UnProcessed.Asset.Type );
 			return false;
 			break;
 		}
 	};
 	
 	if ( ProcessNextSection ) {
+		VLog( "* Postprocessing..." );
 		Processed.Asset.BitMask = is_Data_GelAsset( Processed.Data->Data );
 	}
 	
@@ -119,6 +133,10 @@ bool GelTexture::Load() {
 	switch ( Processed.Asset.Type ) {
 		case GEL_ASSET_PVR: {
 			load_PVRTexture( this );
+			break;
+		}
+		case GEL_ASSET_PVR3: {
+			load_PVR3Texture( this );
 			break;
 		}
 		case GEL_ASSET_STB_IMAGE: {

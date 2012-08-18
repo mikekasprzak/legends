@@ -77,8 +77,8 @@ public:
 		UberShader( "Content/Scripts/glsl/TileMesh.json" )
 	{	
 		Handle = UberShader.Find( "Normal" );
-		Texture[0] = AssetPool::Load( "CGTextures/SoilSand0108" );
-		Texture[1] = AssetPool::Load( "CGTextures/Grass0003" );
+		Texture[0] = AssetPool::Load( "/CGTextures/SoilSand0108_" );
+		Texture[1] = AssetPool::Load( "/CGTextures/Grass0003_" );
 	}
 	
 public:
