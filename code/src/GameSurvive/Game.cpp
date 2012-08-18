@@ -669,17 +669,22 @@ void cGame::UpdateCameraMatrix() {
 		_TV(100),
 		_TV(1900)
 		);
+		
+	ObserverCamera.Pos = CameraWorldPos;
+//	 + Vector3D( 
+//		_TV(0), _TV(0), _TV(500) 
+//		);
 
 #ifdef USES_HIDAPI
 	ObserverCamera.Pos = CameraWorldPos + Vector3D( 
-		_TV(0) + (SpaceNavigator[_TV(4)] * 512),
-		_TV(0) + (SpaceNavigator[_TV(3)] * 512),
-		_TV(500) 
+		_TV(0.0f) + (SpaceNavigator[_TV(4)] * 512.0f),
+		_TV(0.0f) + (SpaceNavigator[_TV(3)] * 512.0f),
+		_TV(500.0f) 
 		);
 #endif // USES_HIDAPI //
 
-//	ObserverCamera.Pos = CameraWorldPos + Vector3D( _TV(0), _TV(0), _TV(120) );
-	ObserverCamera.Look = CameraWorldPos;// + Vector3D( _TV(0), _TV(100), _TV(0) );
+//	ObserverCamera.Look = CameraWorldPos;// + Vector3D( _TV(0), _TV(100), _TV(0) );
+	ObserverCamera.Look = Vector3D(0,0,0);
 	ObserverCamera.Up = Vector3D(0,1,0);
 	
 	ObserverCamera.UpdateMatrix();
