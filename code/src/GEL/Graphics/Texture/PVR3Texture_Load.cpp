@@ -15,8 +15,6 @@
 GelTexture_NativeHandle load_PVR3Texture( PVR3Texture* Texture, GelTexture::GelTexture_Detail* Detail ) {
 	// Texture ID we'll be returning //
 	unsigned int TextureID;
-	
-	LogLevel = 3;
 
 	Log("+ Loading Texture (PVR3 Loader)..." );
 

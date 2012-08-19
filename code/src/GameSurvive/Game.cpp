@@ -338,9 +338,8 @@ void cGame::Init() {
 //	Font = new GelFont( "Content/Misc/Fonts/CourierNew.fnt" );
 //	Font = new GelFont( "Content/Misc/Fonts/Fontin.fnt" );
 
-	GelSColor Col64 = GEL_SRGB( 280, -2, -32000 );
-	Log( "!!!!!!!!!!!!!!!!!!!!! %i %i %i %i", GEL_SGET_R(Col64), GEL_SGET_G(Col64), GEL_SGET_B(Col64), GEL_SGET_A(Col64) );
-	
+//	GelSColor Col64 = GEL_SRGB( 280, -2, -32000 );
+//	Log( "!!!!!!!!!!!!!!!!!!!!! %i %i %i %i", GEL_SGET_R(Col64), GEL_SGET_G(Col64), GEL_SGET_B(Col64), GEL_SGET_A(Col64) );	
 
 	// *** //
 
