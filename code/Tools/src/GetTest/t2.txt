@@ -1,0 +1,32 @@
+HostName: toonormal.com
+HostEnt->h_name: toonormal.com
+0 Aliases Found
+HostEnt->h_addrtype: 2
+HostEnt->h_length: 4
+HostEnt->h_addr_list[0]: 184.172.176.66
+1 Addresses Found
+** HEADER **
+GET /robots.txt HTTP/1.1
+Host: toonormal.com
+User-Agent: WASSAAAAP!_IMA_BROWSER!
+
+
+** HEADER **
+86 Bytes Sent (Header)
+
+** DATA RECEIVED **
+HTTP/1.1 200 OK
+Date: Mon, 24 Sep 2012 17:50:30 GMT
+Server: Apache
+X-Pingback: http://www.toonormal.com/xmlrpc.php
+Transfer-Encoding: chunked
+Content-Type: text/plain; charset=utf-8
+
+1a
+User-agent: *
+Disallow: /
+
+
+** DATA RECEIVED **
+222 Bytes Received (Response)
+

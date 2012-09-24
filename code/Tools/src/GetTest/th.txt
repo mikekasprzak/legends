@@ -1,0 +1,29 @@
+HostName: syk-country.appspot.com
+HostEnt->h_name: appspot.l.google.com
+HostEnt->h_aliases[0]: syk-country.appspot.com
+1 Aliases Found
+HostEnt->h_addrtype: 2
+HostEnt->h_length: 4
+HostEnt->h_addr_list[0]: 74.125.142.141
+1 Addresses Found
+** HEADER **
+HEAD / HTTP/1.1
+Host: syk-country.appspot.com
+User-Agent: WASSAAAAP!_IMA_BROWSER!
+
+
+** HEADER **
+87 Bytes Sent (Header)
+
+** DATA RECEIVED **
+HTTP/1.1 405 Method Not Allowed
+Allow: GET
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 77
+Date: Mon, 24 Sep 2012 17:55:05 GMT
+Server: Google Frontend
+
+
+** DATA RECEIVED **
+170 Bytes Received (Response)
+

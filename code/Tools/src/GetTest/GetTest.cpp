@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <winsock2.h>
 
+const char DefaultHostName[] = "syk-country.appspot.com";
 
 int main( int argc, char* argv[] ) {
 	WSADATA wsaData;
@@ -13,7 +14,12 @@ int main( int argc, char* argv[] ) {
 	setsockopt( Sock, SOL_SOCKET, SO_KEEPALIVE, 0, 0 );
 	
 	// HostName is not the url. It's the domain part of a URL //
-	char HostName[] = "syk-country.appspot.com";
+	const char* HostName = DefaultHostName;
+	
+	if ( argc > 1 ) {
+		HostName = argv[1];
+	}
+		
 	printf( "HostName: %s\n", HostName );
 
 	// FYI: Do not release this memory. Winsock stores a single HostEnt structure per thread. //
@@ -65,16 +71,18 @@ int main( int argc, char* argv[] ) {
 	int Err = connect( Sock, (const sockaddr*)&Server, sizeof(Server) );
 
 	if ( Err < 0 ) {
-		printf( "Didn't work!\n" ); 
+		printf( "Connection Failed!\n" );
+		return -1;
 	}
 	
 	{
 		// Build an HTTP Header //
 		char Header[2048];	
-		sprintf( Header, "%s /%s HTTP/1.1\015\012Host: %s\015\012User-Agent: %s\015\012%s\015\012",
+		sprintf( Header, "%s %s HTTP/1.1\015\012Host: %s\015\012User-Agent: %s\015\012%s\015\012",
 			"GET",
-			"",
-			HostName,//HostEnt->h_name,
+//			"HEAD",
+			(argc > 2) ? argv[2] : "/",
+			HostName,
 			"WASSAAAAP!_IMA_BROWSER!",
 			""
 			);
@@ -83,22 +91,23 @@ int main( int argc, char* argv[] ) {
 		printf( "** HEADER **\n%s\n** HEADER **\n", Header );
 		
 		// Send the Header //
-		int BytesSent = send( Sock, Header, HeaderLength, 0 );
+		int ByteCount = send( Sock, Header, HeaderLength, 0 );
 		
-		printf( "%i Bytes Sent (Header)\n\n", BytesSent );
+		printf( "%i Bytes Sent (Header)\n\n", ByteCount );
 	}
 	
 	// Since we have no data to send, we'll simply move on to the recieve //
 	
 	{
 		char Buffer[4096];
+		memset( (char*)&Buffer, 0, sizeof(Buffer) );
 		
 		// Get the Response //
-		int Bytes = recv( Sock, Buffer, 4096-1, 0 );
+		int ByteCount = recv( Sock, Buffer, 4096-1, 0 );
 		
 		printf( "** DATA RECEIVED **\n%s\n** DATA RECEIVED **\n", Buffer );
 		
-		printf( "%i Bytes Received (Response)\n\n", Bytes );
+		printf( "%i Bytes Received (Response)\n\n", ByteCount );
 	}
 
 	// Close Socket Connection //

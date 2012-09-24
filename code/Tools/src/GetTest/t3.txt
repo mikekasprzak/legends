@@ -1,0 +1,80 @@
+HostName: sykhronics.com
+HostEnt->h_name: sykhronics.com
+0 Aliases Found
+HostEnt->h_addrtype: 2
+HostEnt->h_length: 4
+HostEnt->h_addr_list[0]: 69.93.48.194
+1 Addresses Found
+** HEADER **
+GET / HTTP/1.1
+Host: sykhronics.com
+User-Agent: WASSAAAAP!_IMA_BROWSER!
+
+
+** HEADER **
+77 Bytes Sent (Header)
+
+** DATA RECEIVED **
+HTTP/1.1 200 OK
+Date: Mon, 24 Sep 2012 17:52:39 GMT
+Server: Apache
+Last-Modified: Tue, 01 May 2012 00:28:29 GMT
+ETag: "ff42a3-6d0-4f9f2e2d"
+Accept-Ranges: bytes
+Content-Length: 1744
+Content-Type: text/html
+
+<html>
+<head>
+<title>Sykhronics Entertainment</title>
+
+<MAP NAME="nav">
+<AREA SHAPE="rect" COORDS="171,50,246,74" HREF="/">
+<AREA SHAPE="rect" COORDS="248,50,320,74" HREF="about.html">
+<AREA SHAPE="rect" COORDS="322,50,415,74" HREF="contact.html">
+<AREA SHAPE="rect" COORDS="179,81,421,195" HREF="http://www.alonethe.com" TARGET="ALONE_THE_GAME">
+<AREA SHAPE="rect" COORDS="429,81,671,195" HREF="http://www.smileshd.com" TARGET="SMILES_GAME">
+<AREA SHAPE="rect" COORDS="179,202,421,283" HREF="http://www.sykhronics.com/nook/" TARGET="NOOK_GAME">
+<AREA SHAPE="rect" COORDS="429,202,671,283" HREF="http://www.puffbomb.com" TARGET="PUFFBOMB_COM">
+</MAP>
+
+<STYLE TYPE="text/css">
+<!--
+BODY
+{
+font-family:arial,verdana,sans-serif;
+font-size:5pt;
+}
+-->
+</STYLE>
+</head>
+<body background="greychecker.gif" bgcolor="#c0c0c0" text="#000000" link="#999999" alink="#999999" vlink="#999999" TOPMARGIN="0" LEFTMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0">
+<table height="99%" width="100%" cellpadding="0" border="0">
+	<td valign="middle" align="right" width="100%">
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<td align="center" >
+				<img src="GamePage.png" border="0" USEMAP="#nav" /><br>
+			</td>
+		</table>
+	</td>
+	</table>
+	</td>
+
+</table>
+
+        <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6566773-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+      
+</body>
+</html>
+
+** DATA RECEIVED **
+1960 Bytes Received (Response)
+

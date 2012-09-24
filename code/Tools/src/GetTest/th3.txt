@@ -1,0 +1,30 @@
+HostName: sykhronics.com
+HostEnt->h_name: sykhronics.com
+0 Aliases Found
+HostEnt->h_addrtype: 2
+HostEnt->h_length: 4
+HostEnt->h_addr_list[0]: 69.93.48.194
+1 Addresses Found
+** HEADER **
+HEAD / HTTP/1.1
+Host: sykhronics.com
+User-Agent: WASSAAAAP!_IMA_BROWSER!
+
+
+** HEADER **
+78 Bytes Sent (Header)
+
+** DATA RECEIVED **
+HTTP/1.1 200 OK
+Date: Mon, 24 Sep 2012 17:54:55 GMT
+Server: Apache
+Last-Modified: Tue, 01 May 2012 00:28:29 GMT
+ETag: "ff42a3-6d0-4f9f2e2d"
+Accept-Ranges: bytes
+Content-Length: 1744
+Content-Type: text/html
+
+
+** DATA RECEIVED **
+216 Bytes Received (Response)
+
