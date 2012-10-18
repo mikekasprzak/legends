@@ -1,3 +1,3 @@
 #!/bin/sh
 
-g++ GetTest.cpp -o GetTest.exe -lws2_32
+g++ SatServ.cpp Net_Win32.cpp -o Sat.exe -lws2_32

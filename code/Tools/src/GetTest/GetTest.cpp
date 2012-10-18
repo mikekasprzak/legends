@@ -79,11 +79,12 @@ int main( int argc, char* argv[] ) {
 		// Build an HTTP Header //
 		char Header[2048];	
 		sprintf( Header, "%s %s HTTP/1.1\015\012Host: %s\015\012User-Agent: %s\015\012%s\015\012",
+//		sprintf( Header, "%s %s HTTP/1.1\015\012Host: %s\015\012Accept-Encoding: gzip\015\012User-Agent: %s\015\012%s\015\012",
 			"GET",
 //			"HEAD",
 			(argc > 2) ? argv[2] : "/",
 			HostName,
-			"WASSAAAAP!_IMA_BROWSER!",
+			"Mozilla/5.0 (en-us) Satellite/0.01.0 (gzip) Sykhronics/1.0",
 			""
 			);
 		size_t HeaderLength = strlen( Header );
