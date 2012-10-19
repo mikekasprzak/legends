@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "NetGet.h"
 #include <cJSON/cJSON.h>
+#include <Core/Data_MD5.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "GELGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,8 +31,18 @@ int main( int argc, char* argv[] ) {
 		fflush( 0 );
 		
 		{
+			char KeyData[1024];
+			snprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
+				MyPort,
+				MyGeo.IP,
+				MyVersion,
+				"ChupacabraSatellites"
+				);
+			
+			MD5Hash MD5 = hash_MD5_Data( KeyData, strlen(KeyData) );	
+			
 			char PostData[4096];
-			snprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s",
+			snprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
 				MyGeo.IP,
 				MyPort,
 				MyVersion,
@@ -40,7 +51,8 @@ int main( int argc, char* argv[] ) {
 				"DD",
 				MyGeo.Country,
 				"__",
-				"__"
+				"__",
+				MD5.Text // Not actually a key //
 				);
 			
 			printf( "To Send: %s\n", PostData );
@@ -48,6 +60,7 @@ int main( int argc, char* argv[] ) {
 			GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
 			
 			// Nothing to do with it //
+			printf( "Return: \n%s\n", ServerData->Data );
 			
 			delete_GelArray<char>( ServerData );
 		}

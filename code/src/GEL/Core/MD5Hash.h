@@ -4,24 +4,25 @@
 #ifndef __Library_Data_MD5Hash_H__
 #define __Library_Data_MD5Hash_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <External/MD5/md5.h>
+#include <openssl/md5.h>
 // - ------------------------------------------------------------------------------------------ - //
 struct MD5Hash {
-	char Hash[MD5_DIGEST_SIZE];
+	unsigned char Hash[MD5_DIGEST_LENGTH];
+	char Text[MD5_DIGEST_LENGTH+MD5_DIGEST_LENGTH+1];
 	
 	inline const bool operator == ( const MD5Hash& Vs ) const {
-		return compare_Data( Hash, Vs.Hash, MD5_DIGEST_SIZE ) == 0;
+		return compare_Data( Hash, Vs.Hash, MD5_DIGEST_LENGTH ) == 0;
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 inline const bool equal_MD5Hash( const MD5Hash& a, const MD5Hash& b ) {
-	return compare_Data( a.Hash, b.Hash, MD5_DIGEST_SIZE ) == 0;
+	return compare_Data( a.Hash, b.Hash, MD5_DIGEST_LENGTH ) == 0;
 } 
 // - ------------------------------------------------------------------------------------------ - //
 inline const bool equal_MD5Hash( const MD5Hash* a, const MD5Hash* b ) {
-	return compare_Data( a->Hash, b->Hash, MD5_DIGEST_SIZE ) == 0;
+	return compare_Data( a->Hash, b->Hash, MD5_DIGEST_LENGTH ) == 0;
 } 
 // - ------------------------------------------------------------------------------------------ - //
 
