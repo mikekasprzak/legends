@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
+#include "NetGet.h"
+
 #include <cJSON/cJSON.h>
 
 
@@ -22,9 +24,17 @@ int main( int argc, char* argv[] ) {
 
 	// **** //
 	
+//	{
+//		GelArray<char>* Daddy = gelNetGetText( "http://syk-country.appspot.com" );
+//		
+//		printf( "Daddy (%i): %s\n", Daddy->Size, Daddy->Data );
+//		
+//		delete_GelArray<char>( Daddy );
+//	}
+	
 	{
 		cJSON *root;
-		char CopyData[CURL_MAX_WRITE_SIZE];
+/*		char CopyData[CURL_MAX_WRITE_SIZE];
 		
 		{
 			CURL* curl = curl_easy_init();
@@ -35,17 +45,16 @@ int main( int argc, char* argv[] ) {
 				curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, write_data );
 				curl_easy_setopt( curl, CURLOPT_WRITEDATA, CopyData ); 
 				
-				CURLcode Err;
-				if( (Err = curl_easy_perform( curl )) != CURLE_OK )
+				CURLcode Err = curl_easy_perform( curl );
+				if( Err != CURLE_OK )
 					fprintf( stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(Err) );
 				
 				curl_easy_cleanup(curl);
 			}
-		}
+		}*/
 		
-//		printf( "Data: %s\n", CopyData );
-			
-		root = cJSON_Parse( CopyData );
+		GelArray<char>* CountryData = gelNetGetText( "http://syk-country.appspot.com" );
+		root = cJSON_Parse( CountryData->Data );
 			
 		char* MyIP = cJSON_GetObjectItem( root, "IP" )->valuestring;
 		char* MyCountry = cJSON_GetObjectItem( root, "CountryCode" )->valuestring;
@@ -82,7 +91,8 @@ int main( int argc, char* argv[] ) {
 				);
 			
 			printf( "To Send: %s -- (%s)\n", PostData, ServerInfo );
-			
+
+/*			
 			char ReturnData[CURL_MAX_WRITE_SIZE];
 			{
 				CURL* curl = curl_easy_init();
@@ -94,19 +104,24 @@ int main( int argc, char* argv[] ) {
 					curl_easy_setopt( curl, CURLOPT_WRITEDATA, ReturnData );
 					curl_easy_setopt( curl, CURLOPT_POSTFIELDS, PostData ); 
 					
-					CURLcode Err;
-					if( (Err = curl_easy_perform( curl )) != CURLE_OK )
+					CURLcode Err = curl_easy_perform( curl );
+					if( Err != CURLE_OK )
 						fprintf( stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(Err) );
 					
 					curl_easy_cleanup(curl);
 				}
-			}
+			}*/
 			
-			// Huh //
+			GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
+			
+			// Nothing to do with it //
+			
+			delete_GelArray<char>( ServerData );
 		}
 		
 		// **** //
 
+		delete_GelArray<char>( CountryData );
 		cJSON_Delete( root );
 	}
 	
