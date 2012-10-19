@@ -67,11 +67,17 @@ GelArray<char>* gelNetGetBinary( const char* URL ) {
 	return gelNetGet_( URL, false );
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelArray<char>* gelNetPostText( const char* URL, char* PostData ) {
+GelArray<char>* gelNetPostText( const char* URL, const char* PostData ) {
 	return gelNetGet_( URL, true, PostData );
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelArray<char>* gelNetPostBinary( const char* URL, char* PostData ) {
+GelArray<char>* gelNetPostBinary( const char* URL, const char* PostData ) {
 	return gelNetGet_( URL, false, PostData );
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void gelNetInit( const bool DoWindowsInit ) {
+	curl_global_init( DoWindowsInit ? CURL_GLOBAL_WIN32 : CURL_GLOBAL_NOTHING );
 }
 // - ------------------------------------------------------------------------------------------ - //
