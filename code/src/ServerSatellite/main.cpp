@@ -24,13 +24,14 @@ int main( int argc, char* argv[] ) {
 	
 	{
 		cJSON *root;
-		char CopyData[4096];
+		char CopyData[CURL_MAX_WRITE_SIZE];
 		
 		{
 			CURL* curl = curl_easy_init();
 			
 			if ( curl ) {
 				curl_easy_setopt( curl, CURLOPT_URL, "http://syk-country.appspot.com" );
+				curl_easy_setopt( curl, CURLOPT_USERAGENT, "Mozilla/5.0 (en-us) Satellite" ); 
 				curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, write_data );
 				curl_easy_setopt( curl, CURLOPT_WRITEDATA, CopyData ); 
 				
@@ -82,12 +83,13 @@ int main( int argc, char* argv[] ) {
 			
 			printf( "To Send: %s -- (%s)\n", PostData, ServerInfo );
 			
-			char ReturnData[4096];
+			char ReturnData[CURL_MAX_WRITE_SIZE];
 			{
 				CURL* curl = curl_easy_init();
 			
 				if ( curl ) {
 					curl_easy_setopt( curl, CURLOPT_URL, "http://sykhronics.com/satellite/json.php" );
+					curl_easy_setopt( curl, CURLOPT_USERAGENT, "Mozilla/5.0 (en-us) Satellite/0.01 Sykhronics" ); 
 					curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, write_data );
 					curl_easy_setopt( curl, CURLOPT_WRITEDATA, ReturnData );
 					curl_easy_setopt( curl, CURLOPT_POSTFIELDS, PostData ); 
