@@ -30,25 +30,20 @@ int main( int argc, char* argv[] ) {
 		fflush( 0 );
 		
 		{
-			char ServerInfo[8+1];
-			sprintf( ServerInfo, "%s%s%s%s",
-				"DD",
-				MyGeo.Country,
-				"__",
-				"__"
-				);
-							
 			char PostData[4096];
-			snprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s",
+			snprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s",
 				MyGeo.IP,
 				MyPort,
 				MyVersion,
 				MyGeo.Latitude,
 				MyGeo.Longitude,
-				ServerInfo
+				"DD",
+				MyGeo.Country,
+				"__",
+				"__"
 				);
 			
-			printf( "To Send: %s -- (%s)\n", PostData, ServerInfo );
+			printf( "To Send: %s\n", PostData );
 			
 			GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
 			
@@ -59,6 +54,12 @@ int main( int argc, char* argv[] ) {
 	}	
 
 	// **** //
+
+	{
+//		GelArray<char>* ImageData = gelNetGetBinary( "http://www.gravatar.com/avatar/8266e6e52fe185d057db55021ac7bb86" );	
+//		write_GelArray<char>( ImageData, "blah.png" );
+//		delete_GelArray<char>( ImageData );
+	}
 	
 	return 0;
 }

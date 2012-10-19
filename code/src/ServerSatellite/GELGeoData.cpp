@@ -54,17 +54,82 @@ inline const GELGeoData DummyGeoData() {
 	return GELGeoData( "?.?.?.?", "__", 0, 0, false );
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+//const char LightSchema[] = "{\"IP\":\"text\",\"CountryCode\":\"text\",\"Latitude\":\"number\",\"Longitude\":\"number\"}";
+// - ------------------------------------------------------------------------------------------ - //
+int cJSON_ValidateSchema( cJSON* Schema, cJSON* Data ) {
+	for ( int idx = 0; idx < cJSON_GetArraySize(Schema); idx++ ) {
+		cJSON* Sc = cJSON_GetArrayItem(Schema,idx);
+		cJSON* Ob = cJSON_GetObjectItem( Data, Sc->string );
+
+//		printf( "> %s\n", cJSON_GetArrayItem(Schema,idx)->string );
+
+		// TODO: Objects (recursive) and maybe Arrays //
+		if ( Ob == 0 ) {
+			return 0;
+		}
+		else {
+			if ( strcmp( Sc->valuestring, "any" ) == 0 ) {
+			}
+			else if ( strcmp( Sc->valuestring, "string" ) == 0 ) {
+				if ( Ob->type != cJSON_String )
+					return 0;
+			}
+			else if ( strcmp( Sc->valuestring, "number" ) == 0 ) {
+				if ( Ob->type != cJSON_Number )
+					return 0;
+			}
+			else {
+				printf( "cJSON_ValidateSchema Error: Unknown Validation Parameter\n" );
+				return 0;
+			}
+		}
+	}
+	
+	return 1;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 	GELGeoData Ret;
 	Ret.Success = false;
-	
+		
 	GelArray<char>* NetData = gelNetGetText( Service->URL );
 	
 	if ( NetData ) {		
 		cJSON *root = cJSON_Parse( NetData->Data );
 		
 		if ( root ) {
-			// TODO: Confirm that data exists (could be a failure JSON packet returned) //
+			// Build a Schema to validate the data //
+			char SchemaText[2048];
+			safe_sprintf( SchemaText, sizeof(SchemaText),
+				"{\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\"}",
+				Service->IPField, "string",
+				Service->CountryField, "string",
+				Service->LatitudeField, (Service->Flags & GELGEO_STRINGLAT)  ? "string" : "number",
+				Service->LongitudeField,(Service->Flags & GELGEO_STRINGLONG) ? "string" : "number"
+				);
+			
+			cJSON *Schema = cJSON_Parse( SchemaText );
+			int Err;
+			
+			if ( Schema == 0 ) {
+				printf( "Schema Fail: %s\n", SchemaText );
+				goto SchemaFail;
+			}
+			
+			Err = cJSON_ValidateSchema( Schema, root );
+			
+			cJSON_Delete( Schema );
+			
+			if ( Err == 0 ) {
+				printf( "Data Failed Schema Validation!\n" );
+				goto SchemaFail;
+			}
+			
+			// ** DATA IS VALIDATED ** //
 			
 			// IP and Country //
 			safe_sprintf( Ret.IP, sizeof(Ret.IP), "%s", cJSON_GetObjectItem( root, Service->IPField )->valuestring );
@@ -87,6 +152,8 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 
 			// **** //
 			
+			SchemaFail:	// Go here if the Schema fails //
+				
 			cJSON_Delete( root );
 		}
 		
