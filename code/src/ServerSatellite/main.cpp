@@ -35,7 +35,7 @@ public:
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-struct GeoService {
+struct GELGeoService {
 	const char* URL;
 	
 	const char* IPField;
@@ -46,13 +46,24 @@ struct GeoService {
 	const int Flags;
 };
 // - ------------------------------------------------------------------------------------------ - //
-const GeoService GeoServices[] = {
-	"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", 0,
-	"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", 0, 
-	"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", 0,		// stores Lat/Long in strings //
+enum {
+	GELGEO_NONE = 			0x0,
+	GELGEO_STRINGLAT = 		0x1,
+	GELGEO_STRINGLONG = 	0x2,
+	GELGEO_STRINGLATLONG =	GELGEO_STRINGLAT | GELGEO_STRINGLONG,
 };
 // - ------------------------------------------------------------------------------------------ - //
-const GELGeoData LookupGeoData( const GeoService* Service ) {
+const GELGeoService GeoServices[] = {
+	"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", GELGEO_NONE,
+	"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", GELGEO_NONE, 
+	"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", GELGEO_STRINGLATLONG,
+};
+// - ------------------------------------------------------------------------------------------ - //
+inline const GELGeoData DummyGeoData() {
+	return GELGeoData( "?.?.?.?", "__", 0, 0, false );
+}
+// - ------------------------------------------------------------------------------------------ - //
+const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 	GELGeoData Ret;
 	Ret.Success = false;
 	
@@ -63,12 +74,28 @@ const GELGeoData LookupGeoData( const GeoService* Service ) {
 		
 		if ( root ) {
 			// TODO: Confirm that data exists (could be a failure JSON packet returned) //
+			
+			// IP and Country //
 			safe_sprintf( Ret.IP, sizeof(Ret.IP), cJSON_GetObjectItem( root, Service->IPField )->valuestring );
 			safe_sprintf( Ret.Country, sizeof(Ret.Country), cJSON_GetObjectItem( root, Service->CountryField )->valuestring );
-			Ret.Latitude = cJSON_GetObjectItem( root, Service->LatitudeField )->valuedouble;
-			Ret.Longitude = cJSON_GetObjectItem( root, Service->LongitudeField )->valuedouble;
+
+			// Latitude //
+			if ( Service->Flags & GELGEO_STRINGLAT )
+				Ret.Latitude = atof( cJSON_GetObjectItem( root, Service->LatitudeField )->valuestring );
+			else
+				Ret.Latitude = cJSON_GetObjectItem( root, Service->LatitudeField )->valuedouble;
+
+			// Longitude //
+			if ( Service->Flags & GELGEO_STRINGLONG )
+				Ret.Longitude = atof( cJSON_GetObjectItem( root, Service->LongitudeField )->valuestring );
+			else
+				Ret.Longitude = cJSON_GetObjectItem( root, Service->LongitudeField )->valuedouble;
+
+			// Success!! //
 			Ret.Success = true;
 
+			// **** //
+			
 			cJSON_Delete( root );
 		}
 		
@@ -76,24 +103,25 @@ const GELGeoData LookupGeoData( const GeoService* Service ) {
 	}
 	
 	if ( !Ret.Success ) {
-		return GELGeoData( "?.?.?.?", "??", 0, 0, false );
+		return DummyGeoData();
 	}
 	
 	return Ret;
 }
 // - ------------------------------------------------------------------------------------------ - //
 const GELGeoData GetMyGeoData() { 
-	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(GeoService); idx++ ) {
+	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(GELGeoService); idx++ ) {
 		GELGeoData Ret = LookupGeoData( &GeoServices[idx] );
 		if ( Ret.Success )
 			return Ret;
 	}
 	
-	return GELGeoData( "?.?.?.?", "??", 0, 0, false );
+	return DummyGeoData();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
+// - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
 
@@ -103,20 +131,6 @@ int main( int argc, char* argv[] ) {
 	fflush( 0 );
 
 	// **** //
-		
-//	GelArray<char>* CountryData = gelNetGetText( "http://syk-country.appspot.com" );
-//	
-//	if ( CountryData ) {
-//		cJSON *root = cJSON_Parse( CountryData->Data );
-//			
-//		char* MyIP = cJSON_GetObjectItem( root, "IP" )->valuestring;
-//		char* MyCountry = cJSON_GetObjectItem( root, "CountryCode" )->valuestring;
-//		double& MyLatitude = cJSON_GetObjectItem( root, "Latitude" )->valuedouble;
-//		double& MyLongitude = cJSON_GetObjectItem( root, "Longitude" )->valuedouble;
-//		
-//		printf( "IP: %s\n", MyIP );
-//		printf( "Country: %s\n", MyCountry );
-//		printf( "Location: %f, %f\n", MyLatitude, MyLongitude );
 
 	GELGeoData MyGeo = GetMyGeoData();
 	
@@ -160,11 +174,6 @@ int main( int argc, char* argv[] ) {
 			
 			delete_GelArray<char>( ServerData );
 		}
-		
-		// **** //
-
-//		cJSON_Delete( root );
-//		delete_GelArray<char>( CountryData );
 	}	
 
 	// **** //
