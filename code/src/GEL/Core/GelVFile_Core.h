@@ -61,6 +61,15 @@ inline void close_GelVFile( GelVFile* fp ) {
 	delete fp;
 }
 // - ------------------------------------------------------------------------------------------ - //
+// Special Function -- Destroyes the shell. Returns the important data part. // 
+inline GelArray<char>* close_skeleton_GelVFile( GelVFile* fp ) {
+	GelArray<char>* Ret = fp->Data;
+	
+	delete fp;
+	
+	return Ret;
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // Converting between other Gel Types //
