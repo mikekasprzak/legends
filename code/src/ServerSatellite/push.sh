@@ -1,3 +1,3 @@
 #!/bin/sh
 
-scp SatServ.exe mike@foagies.mooo.com:/~/ -P 2222
+scp -P 2222 SatServ.exe mike@foagies.mooo.com:/~/
