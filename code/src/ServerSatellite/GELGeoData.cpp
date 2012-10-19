@@ -20,8 +20,8 @@ GELGeoData::GELGeoData( const char* _IP, const char* _Country, const float _Lati
 	Longitude( _Longitude ),
 	Success( _Success )
 {
-	safe_sprintf( IP, sizeof(IP), _IP );
-	safe_sprintf( Country, sizeof(Country), _Country );
+	safe_sprintf( IP, sizeof(IP), "%s", _IP );
+	safe_sprintf( Country, sizeof(Country), "%s", _Country );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -67,8 +67,8 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 			// TODO: Confirm that data exists (could be a failure JSON packet returned) //
 			
 			// IP and Country //
-			safe_sprintf( Ret.IP, sizeof(Ret.IP), cJSON_GetObjectItem( root, Service->IPField )->valuestring );
-			safe_sprintf( Ret.Country, sizeof(Ret.Country), cJSON_GetObjectItem( root, Service->CountryField )->valuestring );
+			safe_sprintf( Ret.IP, sizeof(Ret.IP), "%s", cJSON_GetObjectItem( root, Service->IPField )->valuestring );
+			safe_sprintf( Ret.Country, sizeof(Ret.Country), "%s", cJSON_GetObjectItem( root, Service->CountryField )->valuestring );
 
 			// Latitude //
 			if ( Service->Flags & GELGEO_STRINGLAT )
