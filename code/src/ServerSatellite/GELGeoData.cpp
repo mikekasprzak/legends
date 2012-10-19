@@ -113,7 +113,7 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 				);
 			
 			cJSON *Schema = cJSON_Parse( SchemaText );
-			int Err;
+			int Err; // This is here, because goto requires no initializations //
 			
 			if ( Schema == 0 ) {
 				printf( "Schema Fail: %s\n", SchemaText );
