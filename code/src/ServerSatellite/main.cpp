@@ -1,6 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
+#include <Debug/Log.h>
+
 #include <Mongoose/mongoose.h>
+
 #include "NetGet.h"
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
@@ -41,20 +44,30 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
-
-	// **** //
-
-	struct mg_context *ctx;
-	const char *options[] = {"listening_ports", "10080", NULL};
 	
-	ctx = mg_start( &WebServerCallback, NULL, options );
-	getchar(); // Wait until user hits "enter"
-	mg_stop(ctx);	
-
-	return 0;
+	{
+		int Port = 10080;
+	
+		// **** //
+		
+		char PortString[7];
+		snprintf( PortString, sizeof(PortString), "%i", Port );
+	
+		struct mg_context *ctx;
+		const char *options[] = {"listening_ports", PortString, NULL};
+		
+		ctx = mg_start( &WebServerCallback, NULL, options );
+		Log( "Webserver started on Port %s. Visit http://?.?.?.?:%s in a browser to edit settings.", PortString, PortString );
+		
+		getchar(); // Wait until user hits "enter"
+		mg_stop(ctx);	
+	
+		return 0;
+	}
 
 	// **** //
 
