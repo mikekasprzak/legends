@@ -1,5 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
+#include <Mongoose/Mongoose.h>
 #include "NetGet.h"
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>

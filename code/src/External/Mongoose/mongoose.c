@@ -90,7 +90,7 @@ typedef long off_t;
 // Visual Studio 6 does not know __func__ or __FUNCTION__
 // The rest of MS compilers use __FUNCTION__, not C99 __func__
 // Also use _strtoui64 on modern M$ compilers
-#if defined(_MSC_VER) && _MSC_VER < 1300
+#if !defined(_MSC_VER) || defined(_MSC_VER) && _MSC_VER < 1300
 #define STRX(x) #x
 #define STR(x) STRX(x)
 #define __func__ "line " STR(__LINE__)
@@ -218,7 +218,7 @@ typedef int SOCKET;
 
 #include "mongoose.h"
 
-#define MONGOOSE_VERSION "3.4"
+#define MONGOOSE_VERSION "3.3"
 #define PASSWORDS_FILE_NAME ".htpasswd"
 #define CGI_ENVIRONMENT_SIZE 4096
 #define MAX_CGI_ENVIR_VARS 64
