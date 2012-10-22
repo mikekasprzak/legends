@@ -8,10 +8,53 @@
 #include "GELGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+static void* WebServerCallback( mg_event event, mg_connection *conn ) {
+	const mg_request_info* request_info = mg_get_request_info(conn);
+	
+	if (event == MG_NEW_REQUEST) {
+		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
+		
+		char content[1024];
+		int content_length = snprintf(
+			content, sizeof(content),
+			"Hello from mongoose! You: %i.%i.%i.%i:%i -- %s",
+			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
+			request_info->remote_port,
+			request_info->query_string
+			);
+
+		mg_printf(conn,
+			"HTTP/1.1 200 OK\r\n"
+			"Content-Type: text/plain\r\n"
+			"Content-Length: %d\r\n" // Always set Content-Length
+			"\r\n"
+			"%s",
+			content_length, content);
+		
+		// Mark as processed
+		return (void*)"";
+	} 
+	else {
+		return NULL;
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
+
+	// **** //
+
+	struct mg_context *ctx;
+	const char *options[] = {"listening_ports", "10080", NULL};
+	
+	ctx = mg_start( &WebServerCallback, NULL, options );
+	getchar(); // Wait until user hits "enter"
+	mg_stop(ctx);	
+
+	return 0;
 
 	// **** //
 
