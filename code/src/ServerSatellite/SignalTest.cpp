@@ -5,6 +5,9 @@
 
 #include <unistd.h>
 
+// http://en.wikipedia.org/wiki/C_signal_handling
+// http://en.wikipedia.org/wiki/Unix_signal
+
 void term_func( int Signal ) {
 	printf( "SIGTERM (Terminate) recieved -- %i\n", Signal );
 	exit(1);
@@ -12,12 +15,12 @@ void term_func( int Signal ) {
 
 void tstop_func( int Signal ) {
 	printf( "\nSIGTSTP (Terminal Stop) recieved (CTRL+Z) -- %i\n", Signal );
-//	exit(1);
 }
-
 void int_func( int Signal ) {
-	printf( "\nSIGINT (Interrupt) recieved (CTRL+Z) -- %i\n", Signal );
-//	exit(1);
+	printf( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i\n", Signal );
+}
+void quit_func( int Signal ) {
+	printf( "\nSIGQUIT (Quit) recieved (CTRL+\) -- %i\n", Signal );
 }
 
 int main( int argc, char* argv[] ) {
@@ -25,6 +28,7 @@ int main( int argc, char* argv[] ) {
 	signal( SIGTERM, term_func );
 	signal( SIGTSTP, tstop_func );
 	signal( SIGINT, int_func );
+	signal( SIGQUIT, quit_func );
 
 	printf( "Waiting for a kill signal...\n" );
 	fflush(0);
