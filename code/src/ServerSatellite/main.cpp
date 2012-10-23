@@ -18,8 +18,7 @@
 void MeMeMe() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
-		ifaddr* Current = IFA;
-		for( ifaddr Current = IFA; Current != 0; Current = Current->ifa_next ) {
+		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			printf( "> %s\n", Current->ifa_name );
 			fflush(0);
 		}
