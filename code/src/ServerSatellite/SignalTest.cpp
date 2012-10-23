@@ -15,11 +15,16 @@ void tstop_func( int Signal ) {
 //	exit(1);
 }
 
+void int_func( int Signal ) {
+	printf( "\nSIGINT (Interrupt) recieved (CTRL+Z) -- %i\n", Signal );
+//	exit(1);
+}
+
 int main( int argc, char* argv[] ) {
 	
 	signal( SIGTERM, term_func );
-//	signal( SIGTSTP, tstop_func );
-	signal( SIGINT, tstop_func );
+	signal( SIGTSTP, tstop_func );
+	signal( SIGINT, int_func );
 
 	printf( "Waiting for a kill signal...\n" );
 	fflush(0);
