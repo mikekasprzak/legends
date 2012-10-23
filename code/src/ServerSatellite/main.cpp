@@ -25,6 +25,11 @@ char InterfaceNetmask[40];
 char InterfaceBroadcast[40];
 char InterfaceMac[40];
 
+
+// Subnet Mask on WinRT
+// You can use HostName.IPInformation.PrefixLength.
+// See http://msdn.microsoft.com/en-us/library/windows/apps/windows.networking.connectivity.ipinformation.prefixlength.aspx
+
 #ifdef _WIN32
 
 #include <Iphlpapi.h>
@@ -35,28 +40,67 @@ void GetInterfaces() {
 	IP_ADAPTER_ADDRESSES* IPA = (IP_ADAPTER_ADDRESSES*)new char[IPASize];
 	
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/aa365915%28v=vs.85%29.aspx
-	GetAdaptersAddresses( AF_UNSPEC, 0, NULL, IPA, &IPASize );
+	GetAdaptersAddresses( /*AF_UNSPEC*/AF_INET, 0, NULL, IPA, &IPASize );
 	
 	for ( IP_ADAPTER_ADDRESSES* Current = IPA; Current != 0; Current = Current->Next ) {
-		//Log( "> %s", Current->FriendlyName );
-		wprintf( L"> %s [%02x:%02x:%02x:%02x:%02x:%02x] %i -- %s -- %s\n", 
+		printf( "> %s ", Current->AdapterName );
+		wprintf( L"%s -- %s\n", 
 			Current->FriendlyName,
+			Current->Description
+			);
+		
+		char MyMac[40];
+		sprintf( MyMac, "%02x:%02x:%02x:%02x:%02x:%02x",
 			Current->PhysicalAddress[0],
 			Current->PhysicalAddress[1],
 			Current->PhysicalAddress[2],
 			Current->PhysicalAddress[3],
 			Current->PhysicalAddress[4],
-			Current->PhysicalAddress[5],
-			Current->PhysicalAddressLength,
-			Current->DnsSuffix,
-			Current->Description
+			Current->PhysicalAddress[5]
 			);
 		
+		printf( "MAC: %s [%i]\n", MyMac, Current->PhysicalAddressLength );
+		
+		char MyIP[40] = "";
+		
 		for ( IP_ADAPTER_UNICAST_ADDRESS* Cur = Current->FirstUnicastAddress; Cur != 0; Cur = Cur->Next ) {
+			//printf("* %i\n", Cur->Address.lpSockaddr->sa_family);
 			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
 				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
-				printf( "** %s\n", inet_ntoa( SAI->sin_addr ) );
+				const char* Addr = inet_ntoa( SAI->sin_addr );
+				memcpy( MyIP, Addr, strlen(Addr) );
+				printf( "Unicast: %s *****\n", MyIP );
 			}
+		}
+		
+		for ( IP_ADAPTER_ANYCAST_ADDRESS* Cur = Current->FirstAnycastAddress; Cur != 0; Cur = Cur->Next ) {
+			//printf("** %i\n", Cur->Address.lpSockaddr->sa_family);
+			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+				printf( "Anycast: %s\n", inet_ntoa( SAI->sin_addr ) );
+			}
+		}
+		
+		for ( IP_ADAPTER_MULTICAST_ADDRESS* Cur = Current->FirstMulticastAddress; Cur != 0; Cur = Cur->Next ) {
+			//printf("*** %i\n", Cur->Address.lpSockaddr->sa_family);
+			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+				printf( "Multicast: %s\n", inet_ntoa( SAI->sin_addr ) );
+			}
+		}
+		
+		for ( IP_ADAPTER_DNS_SERVER_ADDRESS* Cur = Current->FirstDnsServerAddress; Cur != 0; Cur = Cur->Next ) {
+			//printf("**** %i\n", Cur->Address.lpSockaddr->sa_family);
+			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+				printf( "DNS Server: %s $$$$$$\n", inet_ntoa( SAI->sin_addr ) );
+			}
+		}
+		
+		// If Server has a DNS //
+		if ( Current->FirstDnsServerAddress != 0 ) {
+			memcpy( InterfaceMac, MyMac, strlen(MyMac) );
+			memcpy( InterfaceIP, MyIP, strlen(MyIP) );
 		}
 	}
 	Log("");
