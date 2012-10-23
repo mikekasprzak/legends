@@ -60,7 +60,7 @@ void GetInterfaces() {
             	}
             }
 
-			printf( "Interface: %s%s -- %s -- %s %s%s\n",
+			printf( "Interface: %s%s -- %s -- %s %s[%s]\n",
 				Current->ifa_name, 
 				
 				(Current->ifa_addr->sa_family == AF_PACKET) ? " (AF_PACKET)" :
@@ -69,8 +69,8 @@ void GetInterfaces() {
 				
 				MyIP, MySubnet, 
 
-				(Current->ifa_flags == IFF_BROADCAST) ?   "-- (IFF_BROADCAST) " :
-				(Current->ifa_flags == IFF_POINTOPOINT) ?  "-- (IFF_POINTOPOINT) " : "",
+				(Current->ifa_flags & IFF_BROADCAST) ?   "-- (IFF_BROADCAST) " :
+				(Current->ifa_flags & IFF_POINTOPOINT) ?  "-- (IFF_POINTOPOINT) " : "",
 				
 				MyOther
 				);
