@@ -37,6 +37,21 @@ void GetInterfaces() {
 				(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
                 MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
                 
+            char MyOther[NI_MAXHOST] = "";
+            if ( Current->ifa_flags & IFF_BROADCAST ) {            	
+				getnameinfo(
+					Current->ifa_broadaddr, 
+					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+	                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+			}
+			else if ( Current->ifa_flags & IFF_POINTTOPOINT ) {            	
+				getnameinfo(
+					Current->ifa_dstaddr, 
+					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+	                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+			}
+            
+                
             if ( Current->ifa_addr->sa_family == AF_INET ) {
             	if ( strcmp( Current->ifa_name, "lo" ) != 0 ) {
             		memcpy( InterfaceIP, MyIP, strlen(MyIP) );
@@ -44,14 +59,19 @@ void GetInterfaces() {
             	}
             }
 
-			printf( "Interface: %s%s -- %s -- %s\n",
+			printf( "Interface: %s%s -- %s -- %s %s%s\n",
 				Current->ifa_name, 
 				
 				(Current->ifa_addr->sa_family == AF_PACKET) ? " (AF_PACKET)" :
 				(Current->ifa_addr->sa_family == AF_INET) ?   " (AF_INET)" :
 				(Current->ifa_addr->sa_family == AF_INET6) ?  " (AF_INET6)" : "",
 				
-				MyIP, MySubnet
+				MyIP, MySubnet, 
+
+				(Current->ifa_flags == IFF_BROADCAST) ?   "-- (IFF_BROADCAST) " :
+				(Current->ifa_flags == IFF_POINTTOPOINT) ?  "-- (IFF_POINTTOPOINT) " : "",
+				
+				MyOther
 				);
 			fflush(0);
 		}
