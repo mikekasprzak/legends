@@ -35,10 +35,10 @@ void GetInterfaces() {
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			char MyIP[NI_MAXHOST] = "";
-			char MySubnet[NI_MAXHOST] = ""
+			char MySubnet[NI_MAXHOST] = "";
             char MyOther[NI_MAXHOST] = "";
 			
-			if ( Current->ifa_addr->sa_family == AF_INET || Current->ifa_addr->sa_family == AF_INET6 ) {			
+			if ( Current->ifa_addr->sa_family == AF_INET || Current->ifa_addr->sa_family == AF_INET6 ) {		
 				getnameinfo( 
 					Current->ifa_addr, 
 					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
