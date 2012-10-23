@@ -45,7 +45,7 @@ void GetInterfaces() {
 					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
 	                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 			}
-			else if ( Current->ifa_flags & IFF_POINTTOPOINT ) {            	
+			else if ( Current->ifa_flags & IFF_POINTOPOINT ) {            	
 				getnameinfo(
 					Current->ifa_dstaddr, 
 					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
@@ -70,7 +70,7 @@ void GetInterfaces() {
 				MyIP, MySubnet, 
 
 				(Current->ifa_flags == IFF_BROADCAST) ?   "-- (IFF_BROADCAST) " :
-				(Current->ifa_flags == IFF_POINTTOPOINT) ?  "-- (IFF_POINTTOPOINT) " : "",
+				(Current->ifa_flags == IFF_POINTOPOINT) ?  "-- (IFF_POINTOPOINT) " : "",
 				
 				MyOther
 				);
