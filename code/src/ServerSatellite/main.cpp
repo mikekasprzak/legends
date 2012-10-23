@@ -12,13 +12,16 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 
+char InterfaceIP[40];
+char InterfaceNetmask[40];
+
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <netdb.h>
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 
-void MeMeMe() {
+void GetInterfaces() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
@@ -33,6 +36,13 @@ void MeMeMe() {
 				Current->ifa_netmask, 
 				(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
                 MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+                
+            if ( Current->ifa_addr->sa_family == AF_INET ) {
+            	if ( strcmp( Current->ifa_name, "lo" ) != 0 ) {
+            		memcpy( InterfaceIP, MyIP, strlen(MyIP) );
+            		memcpy( InterfaceNetmask, MySubnet, strlen(MySubnet) );
+            	}
+            }
 
 			printf( "Interface: %s%s -- %s -- %s\n",
 				Current->ifa_name, 
@@ -63,9 +73,9 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 		char content[1024];
 		int content_length = snprintf(
 			content, sizeof(content),
-			"Hello from %s (Internet: %s, LAN: %s)! You are %i.%i.%i.%i:%i -- %s",
+			"Hello from %s (Internet: %s, LAN: %s | %s)! You are %i.%i.%i.%i:%i -- %s",
 			MyGeo.Country, MyGeo.IP,
-			"??",
+			InterfaceIP, InterfaceSubnet,
 			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
 			request_info->remote_port,
 			request_info->query_string
@@ -95,7 +105,7 @@ int main( int argc, char* argv[] ) {
 	
 	// **** //
 	
-	MeMeMe();
+	GetInterfaces();
 
 	MyGeo = GetMyGeoData();
 	
@@ -114,7 +124,8 @@ int main( int argc, char* argv[] ) {
 		const char *options[] = {"listening_ports", PortString, NULL};
 		
 		ctx = mg_start( &WebServerCallback, NULL, options );
-		Log( "Webserver started on Port %s. Visit http://?.?.?.?:%s in a browser to edit settings.", PortString, PortString );
+		Log( "Webserver started on Port %s.", PortString ); 
+		Log( "Visit http://%s:%s in a web browser to edit settings.", InterfaceIP, PortString );
 		fflush(0);
 		getchar(); // Wait until user hits "enter"
 		mg_stop(ctx);	
