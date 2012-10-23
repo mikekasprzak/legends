@@ -40,7 +40,7 @@ void LogIndentation( int Count, const char Val = ' ' ) {
 		}
 		s[Count] = 0;
 		
-		LOG_FUNC2( LOG_TARGET, s );
+		LOG_FUNC2( LOG_TARGET, "%s", s );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
