@@ -14,23 +14,25 @@
 
 #include <ifaddrs.h>
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <netdb.h>
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 
 void MeMeMe() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
-			char IP[NI_MAXHOST];
+			char MyIP[NI_MAXHOST];
 			getnameinfo( 
 				Current->ifa_addr, 
 				(family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-                IP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+                MyIP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
-			char Subnet[NI_MAXHOST];
-			getnameinfo( 
+			char MySubnet[NI_MAXHOST];
+			getnameinfo(
 				Current->ifa_netmask, 
 				(family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-                Subnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+                MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
 			printf( "Interface: %s%s -- %s -- %s\n",
 				Current->ifa_name, 
@@ -39,7 +41,7 @@ void MeMeMe() {
 				(Current->ifa_addr->sa_family == AF_INET) ?   " (AF_INET)" :
 				(Current->ifa_addr->sa_family == AF_INET6) ?  " (AF_INET6)" : "",
 				
-				IP, Subnet
+				MyIP, MySubnet
 				);
 			fflush(0);
 		}
