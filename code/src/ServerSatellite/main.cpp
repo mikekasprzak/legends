@@ -20,13 +20,27 @@ void MeMeMe() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
-			unsigned char* IP = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_addr))->sin_addr.s_addr);
-			unsigned char* SUB = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_netmask))->sin_addr.s_addr);
-			printf( "Interface: %s -- %i.%i.%i.%i -- %i.%i.%i.%i -- \n", 
+			char IP[NI_MAXHOST];
+			getnameinfo( 
+				Current->ifa_addr, 
+				(family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+                IP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+
+			char Subnet[NI_MAXHOST];
+			getnameinfo( 
+				Current->ifa_netmask, 
+				(family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+                Subnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+
+			printf( "Interface: %s%s -- %s -- %s\n",
 				Current->ifa_name, 
-				IP[3],IP[2],IP[1],IP[0], 
-				SUB[3],SUB[2],SUB[1],SUB[0]
-				 );
+				
+				(Current->ifa_addr->sa_family == AF_PACKET) ? " (AF_PACKET)" :
+				(Current->ifa_addr->sa_family == AF_INET) ?   " (AF_INET)" :
+				(Current->ifa_addr->sa_family == AF_INET6) ?  " (AF_INET6)" : "",
+				
+				IP, Subnet
+				);
 			fflush(0);
 		}
 		
