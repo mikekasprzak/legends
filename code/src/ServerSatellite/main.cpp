@@ -25,13 +25,13 @@ void MeMeMe() {
 			char MyIP[NI_MAXHOST];
 			getnameinfo( 
 				Current->ifa_addr, 
-				(Current->ifa_addr->family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+				(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
                 MyIP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
 			char MySubnet[NI_MAXHOST];
 			getnameinfo(
 				Current->ifa_netmask, 
-				(Current->ifa_addr->family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+				(Current->ifa_addr->-a_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
                 MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
 			printf( "Interface: %s%s -- %s -- %s\n",
