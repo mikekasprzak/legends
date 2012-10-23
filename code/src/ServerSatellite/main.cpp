@@ -20,8 +20,8 @@ void MeMeMe() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
-			unsigned char* IP = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_addr))->sin_addr);
-			unsigned char* SUB = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_netmask))->sin_addr);
+			unsigned char* IP = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_addr))->sin_addr.s_addr);
+			unsigned char* SUB = (unsigned char*)&(((sockaddr_in*)&(Current->ifa_netmask))->sin_addr.s_addr);
 			printf( "Interface: %s -- %i.%i.%i.%i -- %i.%i.%i.%i -- \n", 
 				Current->ifa_name, 
 				IP[3],IP[2],IP[1],IP[0], 
