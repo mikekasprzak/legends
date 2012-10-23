@@ -1,4 +1,12 @@
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef _WIN32
+
+// We need to do this ourselves: http://msdn.microsoft.com/en-us/library/aa383745.aspx
+#define _WIN32_WINNT 0x0501
+#include <windows.h>
+
+#endif // _WIN32
+// - ------------------------------------------------------------------------------------------ - //
 #include <stdio.h>
 #include <Debug/Log.h>
 
@@ -14,22 +22,58 @@
 
 char InterfaceIP[40];
 char InterfaceNetmask[40];
+char InterfaceBroadcast[40];
+char InterfaceMac[40];
 
 #ifdef _WIN32
 
-void GetInterfaces() {
+#include <Iphlpapi.h>
 
+void GetInterfaces() {
+	// http://msdn.microsoft.com/en-us/library/windows/desktop/aa366058%28v=vs.85%29.aspx
+	ULONG IPASize = 16384;
+	IP_ADAPTER_ADDRESSES* IPA = (IP_ADAPTER_ADDRESSES*)new char[IPASize];
+	
+	// http://msdn.microsoft.com/en-us/library/windows/desktop/aa365915%28v=vs.85%29.aspx
+	GetAdaptersAddresses( AF_UNSPEC, 0, NULL, IPA, &IPASize );
+	
+	for ( IP_ADAPTER_ADDRESSES* Current = IPA; Current != 0; Current = Current->Next ) {
+		//Log( "> %s", Current->FriendlyName );
+		wprintf( L"> %s [%02x:%02x:%02x:%02x:%02x:%02x] %i -- %s -- %s\n", 
+			Current->FriendlyName,
+			Current->PhysicalAddress[0],
+			Current->PhysicalAddress[1],
+			Current->PhysicalAddress[2],
+			Current->PhysicalAddress[3],
+			Current->PhysicalAddress[4],
+			Current->PhysicalAddress[5],
+			Current->PhysicalAddressLength,
+			Current->DnsSuffix,
+			Current->Description
+			);
+		
+		for ( IP_ADAPTER_UNICAST_ADDRESS* Cur = Current->FirstUnicastAddress; Cur != 0; Cur = Cur->Next ) {
+			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+				printf( "** %s\n", inet_ntoa( SAI->sin_addr ) );
+			}
+		}
+	}
+	Log("");
+	
+	delete IPA;
 }
 
 #else // NOT _WIN32
 
 #include <ifaddrs.h>
 #include <netinet/in.h>
-#include <net/if.h>
+#include <net/if.h>				// IFF_BROADCAST
 #include <sys/socket.h>
-#include <linux/if_packet.h>
+#include <linux/if_packet.h>	// sockaddr_ll
 #include <netdb.h>
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
+// http://stackoverflow.com/questions/6762766/mac-address-with-getifaddrs
 
 void GetInterfaces() {
 	ifaddrs* IFA;
@@ -38,6 +82,8 @@ void GetInterfaces() {
 			char MyIP[NI_MAXHOST] = "";
 			char MySubnet[NI_MAXHOST] = "";
             char MyOther[NI_MAXHOST] = "";
+            
+            // On BSD the MAC in under AF_LINK -- http://stackoverflow.com/questions/6762766/mac-address-with-getifaddrs
 			
 			if ( Current->ifa_addr->sa_family == AF_INET || Current->ifa_addr->sa_family == AF_INET6 ) {		
 				getnameinfo( 
@@ -80,7 +126,13 @@ void GetInterfaces() {
             	if ( strcmp( Current->ifa_name, "lo" ) != 0 ) {
             		memcpy( InterfaceIP, MyIP, strlen(MyIP) );
             		memcpy( InterfaceNetmask, MySubnet, strlen(MySubnet) );
+            		memcpy( InterfaceBroadcast, MyOther, strlen(MyOther) );
             	}
+            }
+            else if ( Current->ifa_addr->sa_family == AF_PACKET ) {
+           		if ( strcmp( Current->ifa_name, "lo" ) != 0 ) {
+            		memcpy( InterfaceMac, MyIP, strlen(MyIP) );
+            	}            	
             }
 
 			printf( "Interface: %s%s -- %s -- %s %s[%s]\n",

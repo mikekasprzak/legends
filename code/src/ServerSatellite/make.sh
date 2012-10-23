@@ -8,6 +8,8 @@ LIBS="`curl-config --static-libs` -L /usr/local/ssl/lib -lcrypto"
 # If $WINDIR is NOT set #
 if [ -z "$WINDIR" ]; then
 	LIBS="$LIBS -ldl"
+else
+	LIBS="$LIBS -lIphlpapi -static"
 fi  
 
 g++ $DEFINES $INCLUDES $FILES -o SatServ.exe $LIBS
