@@ -11,6 +11,8 @@
 #include "GELGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
+GELGeoData MyGeo;
+
 // - ------------------------------------------------------------------------------------------ - //
 static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 	const mg_request_info* request_info = mg_get_request_info(conn);
@@ -21,7 +23,9 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 		char content[1024];
 		int content_length = snprintf(
 			content, sizeof(content),
-			"Hello from mongoose! You: %i.%i.%i.%i:%i -- %s",
+			"Hello from %s (Internet: %s, LAN: %s)! You are %i.%i.%i.%i:%i -- %s",
+			MyGeo.Country, MyGeo.IP,
+			"??",
 			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
 			request_info->remote_port,
 			request_info->query_string
@@ -49,6 +53,13 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 int main( int argc, char* argv[] ) {
 	gelNetInit();
 	
+	// **** //
+
+	MyGeo = GetMyGeoData();
+	
+	//printf( "ME: %s %s %f %f\n", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
+
+	
 	{
 		int Port = 10080;
 	
@@ -62,7 +73,7 @@ int main( int argc, char* argv[] ) {
 		
 		ctx = mg_start( &WebServerCallback, NULL, options );
 		Log( "Webserver started on Port %s. Visit http://?.?.?.?:%s in a browser to edit settings.", PortString, PortString );
-		
+		fflush(0);
 		getchar(); // Wait until user hits "enter"
 		mg_stop(ctx);	
 	
@@ -75,10 +86,6 @@ int main( int argc, char* argv[] ) {
 	fflush( 0 );
 
 	// **** //
-
-	GELGeoData MyGeo = GetMyGeoData();
-	
-	printf( "ME: %s %s %f %f\n", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
 	
 	if ( MyGeo.Success ) {	
 		int MyPort = 10240;
