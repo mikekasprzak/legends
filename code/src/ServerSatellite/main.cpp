@@ -65,7 +65,7 @@ void GetInterfaces() {
 			}
 			else if ( Current->ifa_addr->sa_family == AF_PACKET ) {
 				sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
-				sprintf( MyIP, "%s:%s:%s:%s:%s:%s",
+				sprintf( MyIP, "%02x:%02x:%02x:%02x:%02x:%02x",
 					s->sll_addr[0],
 					s->sll_addr[1],
 					s->sll_addr[2],
