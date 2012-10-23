@@ -17,6 +17,7 @@ char InterfaceNetmask[40];
 
 #include <ifaddrs.h>
 #include <netinet/in.h>
+#include <net/if.h>
 #include <sys/socket.h>
 #include <netdb.h>
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
