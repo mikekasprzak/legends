@@ -13,6 +13,7 @@
 
 
 #include <ifaddrs.h>
+#include <netinet/in.h>
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 
 void MeMeMe() {
