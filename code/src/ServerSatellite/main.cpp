@@ -63,6 +63,9 @@ void GetInterfaces() {
 		
 		char MyIP[40] = "";
 		
+		// IP_ADAPTER_UNICAST_ADDRESS -- http://msdn.microsoft.com/en-us/library/windows/desktop/aa366066%28v=vs.85%29.aspx
+		// SOCKET_ADDRESS -- http://msdn.microsoft.com/en-us/library/windows/desktop/ms740507%28v=vs.85%29.aspx
+		// sockaddr/sockaddr_in -- http://msdn.microsoft.com/en-us/library/windows/desktop/ms740496%28v=vs.85%29.aspx
 		for ( IP_ADAPTER_UNICAST_ADDRESS* Cur = Current->FirstUnicastAddress; Cur != 0; Cur = Cur->Next ) {
 			//printf("* %i\n", Cur->Address.lpSockaddr->sa_family);
 			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
