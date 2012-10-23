@@ -75,7 +75,7 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 			content, sizeof(content),
 			"Hello from %s (Internet: %s, LAN: %s | %s)! You are %i.%i.%i.%i:%i -- %s",
 			MyGeo.Country, MyGeo.IP,
-			InterfaceIP, InterfaceSubnet,
+			InterfaceIP, InterfaceNetmask,
 			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
 			request_info->remote_port,
 			request_info->query_string
