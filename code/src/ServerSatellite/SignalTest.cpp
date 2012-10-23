@@ -24,7 +24,8 @@ int main( int argc, char* argv[] ) {
 	
 	char In;
 	do {
-		In = getchar();
+		//In = getchar();
+		sleep(100);
 	}
 	while( In != ' ' );
 
