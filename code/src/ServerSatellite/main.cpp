@@ -73,7 +73,7 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 		char content[1024];
 		int content_length = snprintf(
 			content, sizeof(content),
-			"Hello from %s (Internet: %s, LAN: %s | %s)! You are %i.%i.%i.%i:%i -- %s",
+			"Hello from %s (Internet: %s, LAN: %s | %s)!\n\n You are %i.%i.%i.%i:%i -- %s",
 			MyGeo.Country, MyGeo.IP,
 			InterfaceIP, InterfaceNetmask,
 			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
