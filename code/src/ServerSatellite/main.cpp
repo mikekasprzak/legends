@@ -13,10 +13,11 @@
 
 
 #include <ifaddrs.h>
+// http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 
 void MeMeMe() {
 	ifaddrs* IFA;
-	if ( getifaddrs( IFA ) == 0 ) {
+	if ( getifaddrs( &IFA ) == 0 ) {
 		ifaddr* Current = IFA;
 		for( ifaddr Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			printf( "> %s\n", Current->ifa_name );
