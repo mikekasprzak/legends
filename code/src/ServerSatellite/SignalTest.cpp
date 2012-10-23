@@ -20,7 +20,7 @@ void int_func( int Signal ) {
 	printf( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i\n", Signal );
 }
 void quit_func( int Signal ) {
-	printf( "\nSIGQUIT (Quit) recieved (CTRL+\) -- %i\n", Signal );
+	printf( "\nSIGQUIT (Quit) recieved (CTRL+\\) -- %i\n", Signal );
 }
 
 int main( int argc, char* argv[] ) {
