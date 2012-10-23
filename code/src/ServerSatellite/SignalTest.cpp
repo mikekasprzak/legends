@@ -11,8 +11,8 @@ void term_func( int Signal ) {
 }
 
 void tstop_func( int Signal ) {
-	printf( "SIGTSTP (Terminal Stop) recieved (CTRL+Z) -- %i\n", Signal );
-	exit(1);
+	printf( "\nSIGTSTP (Terminal Stop) recieved (CTRL+Z) -- %i\n", Signal );
+//	exit(1);
 }
 
 int main( int argc, char* argv[] ) {
