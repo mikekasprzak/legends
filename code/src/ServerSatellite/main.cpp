@@ -15,6 +15,14 @@
 char InterfaceIP[40];
 char InterfaceNetmask[40];
 
+#ifdef _WIN32
+
+void GetInterfaces() {
+
+}
+
+#else // NOT _WIN32
+
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <net/if.h>
@@ -26,30 +34,44 @@ void GetInterfaces() {
 	ifaddrs* IFA;
 	if ( getifaddrs( &IFA ) == 0 ) {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
-			char MyIP[NI_MAXHOST];
-			getnameinfo( 
-				Current->ifa_addr, 
-				(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-                MyIP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
-
-			char MySubnet[NI_MAXHOST];
-			getnameinfo(
-				Current->ifa_netmask, 
-				(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-                MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
-                
+			char MyIP[NI_MAXHOST] = "";
+			char MySubnet[NI_MAXHOST] = ""
             char MyOther[NI_MAXHOST] = "";
-            if ( Current->ifa_flags & IFF_BROADCAST ) {            	
-				getnameinfo(
-					Current->ifa_broadaddr, 
+			
+			if ( Current->ifa_addr->sa_family == AF_INET || Current->ifa_addr->sa_family == AF_INET6 ) {			
+				getnameinfo( 
+					Current->ifa_addr, 
 					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-	                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+	                MyIP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+	
+				getnameinfo(
+					Current->ifa_netmask, 
+					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+	                MySubnet, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+	                
+	            if ( Current->ifa_flags & IFF_BROADCAST ) {            	
+					getnameinfo(
+						Current->ifa_broadaddr, 
+						(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+		                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+				}
+				else if ( Current->ifa_flags & IFF_POINTOPOINT ) {            	
+					getnameinfo(
+						Current->ifa_dstaddr, 
+						(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
+		                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+				}
 			}
-			else if ( Current->ifa_flags & IFF_POINTOPOINT ) {            	
-				getnameinfo(
-					Current->ifa_dstaddr, 
-					(Current->ifa_addr->sa_family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6),
-	                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+			else if ( Current->ifa_addr->sa_family == AF_PACKET ) {
+				sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
+				sprintf( MyIP, "%s:%s:%s:%s:%s:%s",
+					s->sll_addr[0],
+					s->sll_addr[1],
+					s->sll_addr[2],
+					s->sll_addr[3],
+					s->sll_addr[4],
+					s->sll_addr[5]
+					);
 			}
             
                 
@@ -80,6 +102,8 @@ void GetInterfaces() {
 		freeifaddrs( IFA );
 	}
 }
+
+#endif // _WIN32 //
 
 
 GELGeoData MyGeo;
