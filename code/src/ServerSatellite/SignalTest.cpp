@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include <unistd.h>
+
 void term_func( int Signal ) {
 	printf( "SIGTERM (Terminate) recieved -- %i\n", Signal );
 	exit(1);
@@ -25,7 +27,7 @@ int main( int argc, char* argv[] ) {
 	char In;
 	do {
 		//In = getchar();
-		sleep(100);
+		sleep(1);
 	}
 	while( In != ' ' );
 
