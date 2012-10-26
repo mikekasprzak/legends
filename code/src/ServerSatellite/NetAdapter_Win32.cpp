@@ -33,7 +33,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Iphlpapi.h>
 // - ------------------------------------------------------------------------------------------ - //
-#pragma comment(lib, "Ws2_32.lib")		// Automatically include Winsock2 in Visual Studio //
+#pragma comment(lib, "Ws2_32.lib")		// Automatically including in Visual Studio //
+#pragma comment(lib, "Iphlpapi.lib")
 // - ------------------------------------------------------------------------------------------ - //
 #include "NetAdapter.h"
 #include "NetAdapter_Internal.h"
@@ -215,7 +216,7 @@ const NetAdapterInfo* get_pNetAdapterInfo( const pNetAdapterInfo* Adapters, cons
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-const NetAdapterInfo* get_current_pNetAdapterInfo( const pNetAdapterInfo* Adapters ) {
+const NetAdapterInfo* get_primary_pNetAdapterInfo( const pNetAdapterInfo* Adapters ) {
 	if ( Adapters ) {
 		size_t Index = 0;
 		
