@@ -64,7 +64,7 @@
 //         Windows XP to Windows 8 (non Metro) support.
 //         Linux support.
 // - ------------------------------------------------------------------------------------------ - //
-#include <string.h>		// size_t //
+#include <string.h>							// size_t //
 // - ------------------------------------------------------------------------------------------ - //
 #define NET_ADAPTER_IP_LENGTH	(8*4)+7+1	// 8 hex 16bit numbers, 7 colons, null terminator //
 #define NET_ADAPTER_MAC_LENGTH	(8*2)+7+1	// 8 hex 8bit numbers, 7 colons, null terminator //
@@ -79,7 +79,7 @@ struct NetAdapterInfo {
 		// Data is in LSB first format. This is suitable for display, but may not match the data //
 		//   formatting of your platforms socket library. //
 		unsigned char IPv4[4];				// Typical IPv4 address as an array of bytes //
-		unsigned short IPv6[8];				// Unused (until IPv6 support is added) //
+//		unsigned short IPv6[8];				// Unused (until IPv6 support is added) //
 		unsigned char MAC[6];				// typical MAC address as an array of bytes //
 	} Data;
 	

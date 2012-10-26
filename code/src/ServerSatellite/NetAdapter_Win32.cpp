@@ -133,6 +133,24 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 				break;
 			}
 		}
+
+		// Anycast and Multicast address code, in case I ever decide to use them //
+		
+//		for ( IP_ADAPTER_ANYCAST_ADDRESS* Cur = Current->FirstAnycastAddress; Cur != 0; Cur = Cur->Next ) {
+//			//printf("** %i\n", Cur->Address.lpSockaddr->sa_family);
+//			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+//				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+//				printf( "Anycast: %s\n", inet_ntoa( SAI->sin_addr ) );
+//			}
+//		}
+		
+//		for ( IP_ADAPTER_MULTICAST_ADDRESS* Cur = Current->FirstMulticastAddress; Cur != 0; Cur = Cur->Next ) {
+//			//printf("*** %i\n", Cur->Address.lpSockaddr->sa_family);
+//			if ( Cur->Address.lpSockaddr->sa_family == AF_INET ) {
+//				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
+//				printf( "Multicast: %s\n", inet_ntoa( SAI->sin_addr ) );
+//			}
+//		}		
 		
 		// Copy Name //
 		{
