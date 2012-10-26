@@ -15,6 +15,8 @@
 #include "NetGet.h"
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
+
+#include "NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "GELGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -243,14 +245,23 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
-
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
 	
 	// **** //
+
+	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
+	size_t AdapterCount = count_pNetAdapterInfo(Adapters);
+	for ( size_t Index = 0; Index < AdapterCount; Index++ ) {
+		const NetAdapterInfo* Current = get_pNetAdapterInfo( Adapters, Index );	// get_, not get_current_ //
+		printf( "%i - %s: %s (%s)\n", Index, Current->Name, Current->IP, Current->MAC );
+	}
+	delete_pNetAdapterInfo( Adapters );
+
 	
-	GetInterfaces();
+	//GetInterfaces();
+	//fflush(0);
 
 	MyGeo = GetMyGeoData();
 	
