@@ -32,6 +32,8 @@ char InterfaceMac[40];
 // You can use HostName.IPInformation.PrefixLength.
 // See http://msdn.microsoft.com/en-us/library/windows/apps/windows.networking.connectivity.ipinformation.prefixlength.aspx
 
+//#elif defined(__bsdi__) //defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+
 #ifdef _WIN32
 
 #include <Iphlpapi.h>
