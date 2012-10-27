@@ -5,10 +5,12 @@ INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../Exter
 FILES="main.cpp NetGet.cpp GELGeoData.cpp ../GEL/Debug/Log.cpp ../External/cJSON/cJSON.c ../External/Mongoose/mongoose.c NetAdapter/NetAdapter_*.cpp"
 LIBS="`curl-config --static-libs` -L /usr/local/ssl/lib -lcrypto"
 
+SYSTEM=`uname`
+
 # If $WINDIR is NOT set #
 if [ -z "$WINDIR" ]; then
 	LIBS="$LIBS -ldl"
-elif [ "`uname`" == "FreeBSD" ]; then
+elif [ "$SYSTEM" == "FreeBSD" ]; then
 	LIBS="$LIBS"
 else
 	LIBS="$LIBS -lIphlpapi -static"
