@@ -119,8 +119,18 @@ void GetInterfaces() {
 #include <netinet/in.h>
 #include <net/if.h>				// IFF_BROADCAST
 #include <sys/socket.h>
-#include <linux/if_packet.h>	// sockaddr_ll
 #include <netdb.h>
+
+#if defined(__linux__)
+#include <linux/if_packet.h>	// sockaddr_ll
+#elif defined(__APPLE__)
+#include <net/if_dl.h>			// sockaddr_dl
+#endif // __linux__ //
+
+#ifndef AF_PACKET
+#define AF_PACKET AF_LINK
+#endif // AF_PACKET //
+
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 // http://stackoverflow.com/questions/6762766/mac-address-with-getifaddrs
 

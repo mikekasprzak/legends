@@ -35,7 +35,7 @@
 #if defined(__linux__)
 #include <linux/if_packet.h>	// sockaddr_ll
 #elif defined(__APPLE__)
-#include <net/dl.h>				// sockaddr_dl
+#include <net/if_dl.h>			// sockaddr_dl
 #endif // __linux__ //
 // - ------------------------------------------------------------------------------------------ - //
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
