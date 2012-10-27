@@ -91,6 +91,8 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 				Adapters[Index]->Data.IPv4[2] = DataAddr[1];
 				Adapters[Index]->Data.IPv4[3] = DataAddr[0];
 			
+				printf("%i.%i.%i.%i\n", Adapters[Index]->Data.IPv4[0], Adapters[Index]->Data.IPv4[1], Adapters[Index]->Data.IPv4[2], Adapters[Index]->Data.IPv4[3] );
+			
 				Index++;	
 			}
 		}
