@@ -32,7 +32,7 @@
 #define _UNIX_PATH
 #endif // defined(__linux__) || defined(__APPLE__)
 // - ------------------------------------------------------------------------------------------ - //
-#include <types.h>
+#include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <net/if.h>				// IFF_BROADCAST
