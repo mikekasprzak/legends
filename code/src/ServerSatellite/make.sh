@@ -11,7 +11,7 @@ SYSTEM=`uname`
 if [ -n "$WINDIR" ]; then
 	LIBS="$LIBS -lIphlpapi -static"
 elif [ "$SYSTEM" == "FreeBSD" ]; then
-	LIBS="$LIBS"
+	LIBS="$LIBS -lpthread"
 else
 	LIBS="$LIBS -ldl"
 fi  
