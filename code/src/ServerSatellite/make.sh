@@ -8,6 +8,8 @@ LIBS="`curl-config --static-libs` -L /usr/local/ssl/lib -lcrypto"
 # If $WINDIR is NOT set #
 if [ -z "$WINDIR" ]; then
 	LIBS="$LIBS -ldl"
+elif [ "`uname` == "FreeBSD" ]; then
+	LIBS="$LIBS"
 else
 	LIBS="$LIBS -lIphlpapi -static"
 fi  
