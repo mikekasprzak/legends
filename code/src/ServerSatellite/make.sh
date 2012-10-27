@@ -8,12 +8,12 @@ LIBS="`curl-config --static-libs` -L /usr/local/ssl/lib -lcrypto"
 SYSTEM=`uname`
 
 # If $WINDIR is NOT set #
-if [ -z "$WINDIR" ]; then
-	LIBS="$LIBS -ldl"
-elif [ "$SYSTEM" = "FreeBSD" ]; then
+if [ -n "$WINDIR" ]; then
+	LIBS="$LIBS -lIphlpapi -static"
+elif [ "$SYSTEM" == "FreeBSD" ]; then
 	LIBS="$LIBS"
 else
-	LIBS="$LIBS -lIphlpapi -static"
+	LIBS="$LIBS -ldl"
 fi  
 
 g++ $DEFINES $INCLUDES $FILES -o SatServ.exe $LIBS
