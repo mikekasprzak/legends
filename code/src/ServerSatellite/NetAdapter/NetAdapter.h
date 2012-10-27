@@ -72,7 +72,7 @@
 // 0.3 -- NetMask and Broadcast Addresses on Windows.
 //        Cleaned up NetAdapterInfo. Less confused.
 //        QNX (BlackBerry/PlayBook) support.
-//        Fixed BSD support. Tested on FreeBSD 9.
+//        Fixed BSD support. Tested on FreeBSD 9 64bit.
 // 0.2 -- Mac and iOS support. Tested on Mountain Lion.
 //        BSD Family (Open, Free, Net) support.
 //        Android support.
