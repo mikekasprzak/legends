@@ -24,7 +24,7 @@
 // For more information, please refer to <http://unlicense.org/>
 // - ------------------------------------------------------------------------------------------ - //
 #if !defined(NET_ADAPTER_STUB)
-#if defined(__linux__) // Linux (not Mac or BSD) //
+#if defined(__linux__) || defined(__APPLE__) // Linux (not Mac or BSD) //
 // - ------------------------------------------------------------------------------------------ - //
 #include <ifaddrs.h>
 #include <netinet/in.h>

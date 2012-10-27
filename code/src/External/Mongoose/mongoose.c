@@ -58,7 +58,7 @@
 #include <stdio.h>
 
 #if defined(_WIN32) && !defined(__SYMBIAN32__) // Windows specific
-#define _WIN32_WINNT 0x0400 // To make it link in VS2005
+#define _WIN32_WINNT 0x0501 // To make it link in VS2005
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -4713,7 +4713,7 @@ void mg_stop(struct mg_context *ctx) {
   }
   free_context(ctx);
 
-#if defined(_WIN32) && !defined(__SYMBIAN32__)
+#if defined(_WIN32) && !defined(__SYMBIAN32__) && !defined(MONGOOSE_NO_WIN32_INIT)
   (void) WSACleanup();
 #endif // _WIN32
 }
@@ -4724,9 +4724,12 @@ struct mg_context *mg_start(mg_callback_t user_callback, void *user_data,
   const char *name, *value, *default_value;
   int i;
 
-#if defined(_WIN32) && !defined(__SYMBIAN32__)
+#if defined(_WIN32) && !defined(__SYMBIAN32__) && !defined(MONGOOSE_NO_WIN32_INIT)
   WSADATA data;
   WSAStartup(MAKEWORD(2,2), &data);
+#endif // _WIN32
+
+#if defined(_WIN32) && !defined(__SYMBIAN32__)
   InitializeCriticalSection(&global_log_file_lock);
 #endif // _WIN32
 
