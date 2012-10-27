@@ -65,7 +65,6 @@ int main( int argc, char* argv[] ) {
 	MyGeo = GetMyGeoData();
 	
 	//printf( "ME: %s %s %f %f\n", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
-
 	
 	{
 		int Port = 10080;
