@@ -119,7 +119,7 @@ const NetAdapterInfo* get_primary_pNetAdapterInfo( const pNetAdapterInfo* Adapte
 			if ( NotLocalHost == 0 ) {
 				int* a = (int*)LocalHostIPv4;
 				int* b = (int*)Adapters[Index]->Data.IPv4;
-				if ( a != b ) {
+				if ( *a != *b ) {
 					NotLocalHost = Adapters[Index];
 				}
 			}
