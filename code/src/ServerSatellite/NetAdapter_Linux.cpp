@@ -112,6 +112,34 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 			}
 		}
 		
+		// 2nd pass, extract other data (MAC Address, IPv6) //
+		Index = 0;
+		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
+			// If an AF_PACKET device (i.e. hardware device) //
+			if ( Current->ifa_addr->sa_family == AF_PACKET ) {
+				for( int idx=0; idx < IPv4Count; idx++ ) {
+					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
+						sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
+
+						// NOTE: I'm assuming MAC address is 6 bytes long //
+						memcpy( Adapters[idx]->Data.MAC, s->sll_addr, 6 );
+						
+						safe_sprintf( Adapters[idx]->MAC, sizeof(Adapters[idx]->MAC), "%02x:%02x:%02x:%02x:%02x:%02x",
+							s->sll_addr[0],
+							s->sll_addr[1],
+							s->sll_addr[2],
+							s->sll_addr[3],
+							s->sll_addr[4],
+							s->sll_addr[5]
+							);
+					}
+				}
+			}
+			else if ( Current->ifa_addr->sa_family == AF_INET6 ) {
+				// IPv6 Address //
+			}
+		}
+		
 
 		freeifaddrs( IFA );
 

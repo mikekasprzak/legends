@@ -264,7 +264,7 @@ int main( int argc, char* argv[] ) {
 		size_t AdapterCount = count_pNetAdapterInfo(Adapters);
 		for ( size_t Index = 0; Index < AdapterCount; Index++ ) {
 			const NetAdapterInfo* Current = get_pNetAdapterInfo( Adapters, Index );	// get_, not get_primary_ //
-			printf( "%i - %s: %s (%s) -- %s %s\n", Index, Current->Name, Current->IP, Current->MAC, Current->NetMask, Current->Broadcast );
+			printf( "%i - %s: %s (%s) -- %s [%s]\n", Index, Current->Name, Current->IP, Current->MAC, Current->NetMask, Current->Broadcast );
 		}
 		delete_pNetAdapterInfo( Adapters );
 	}
