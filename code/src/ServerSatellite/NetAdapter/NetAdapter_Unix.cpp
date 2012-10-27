@@ -35,8 +35,8 @@
 #include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h>
-#include <net/if.h>				// IFF_BROADCAST
 #include <sys/socket.h>
+#include <net/if.h>				// IFF_BROADCAST
 #include <netdb.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _LINUX_PATH
