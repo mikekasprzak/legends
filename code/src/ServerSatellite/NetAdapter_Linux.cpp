@@ -89,7 +89,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 				int* IPv4 = (int*)Adapters[Index]->Data.IPv4;
 				*IPv4 = *(int*)DataAddr;
 			
-				printf("%i.%i.%i.%i\n", Adapters[Index]->Data.IPv4[0], Adapters[Index]->Data.IPv4[1], Adapters[Index]->Data.IPv4[2], Adapters[Index]->Data.IPv4[3] );
+//				printf("%i.%i.%i.%i\n", Adapters[Index]->Data.IPv4[0], Adapters[Index]->Data.IPv4[1], Adapters[Index]->Data.IPv4[2], Adapters[Index]->Data.IPv4[3] );
 			
 				Index++;	
 			}
@@ -112,7 +112,7 @@ const NetAdapterInfo* get_primary_pNetAdapterInfo( const pNetAdapterInfo* Adapte
 		size_t Index = 0;
 		while ( Adapters[Index] != 0 ) {
 			// Assume "eth0" is the primary //
-			if ( strcmp( Adapters[Index]->Name, "eth0" ) != 0 )
+			if ( strcmp( Adapters[Index]->Name, "eth0" ) == 0 )
 				return Adapters[Index];
 			
 			// If no "eth0", then assume the first non LocalHost address is primary //
