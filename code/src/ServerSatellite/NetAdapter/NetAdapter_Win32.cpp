@@ -98,7 +98,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
 				const unsigned char* DataAddr = (const unsigned char*)&(SAI->sin_addr.s_addr);
 
-				int* IPv4 = (int*)Adapters[Index]->Data.IPv4;
+				int* IPv4 = (int*)Adapters[Index]->Data.IP;
 				*IPv4 = *(int*)DataAddr;
 								
 				safe_sprintf( Adapters[Index]->IP, sizeof(Adapters[Index]->IP), "%s", inet_ntoa( SAI->sin_addr ) );
@@ -186,7 +186,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 						
 						// Flags: IFF_UP, IFF_POINTTOPOINT, IFF_LOOPBACK, IFF_BROADCAST, IFF_MULTICAST //
 
-						int* a = (int*)Adapters[idx2]->Data.IPv4;
+						int* a = (int*)Adapters[idx2]->Data.IP;
 						int* b = (int*)&(inIP->sin_addr.s_addr);
 						
 						if ( *a == *b ) {

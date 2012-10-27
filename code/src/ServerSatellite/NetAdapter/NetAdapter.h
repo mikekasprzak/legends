@@ -87,14 +87,16 @@
 struct NetAdapterInfo {
 	char Name[128];								// A copy of its "nice" name. //
 	
-	char IP[NET_ADAPTER_IPV4_LENGTH];			// Enough for an IPv6 (though only v4 supported) //
+	char IP[NET_ADAPTER_IPV4_LENGTH];			// Enough for an IPv4 string //
 	char NetMask[NET_ADAPTER_IPV4_LENGTH];
 	char Broadcast[NET_ADAPTER_IPV4_LENGTH];
+
+//	char IPv6[NET_ADAPTER_IPV6_LENGTH];			// Enough for an IPv6 string //
 
 	char MAC[NET_ADAPTER_MAC_LENGTH];			// Enough for an 8-part MAC. Usually 6 parts. //
 	
 	struct {
-		unsigned char IPv4[4];					// Typical IPv4 address as an array of bytes //
+		unsigned char IP[4];					// Typical IPv4 address as an array of bytes //
 		unsigned char NetMask[4];				// Typical IPv4 Subnet Mask //
 		unsigned char Broadcast[4];				// Typical IPv4 Broadcast Address //
 
