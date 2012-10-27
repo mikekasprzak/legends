@@ -97,10 +97,8 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 				sockaddr_in* SAI = (sockaddr_in*)Cur->Address.lpSockaddr;
 				const unsigned char* DataAddr = (const unsigned char*)&(SAI->sin_addr.s_addr);
 
-				Adapters[Index]->Data.IPv4[0] = DataAddr[3];
-				Adapters[Index]->Data.IPv4[1] = DataAddr[2];
-				Adapters[Index]->Data.IPv4[2] = DataAddr[1];
-				Adapters[Index]->Data.IPv4[3] = DataAddr[0];
+				int* IPv4 = (int*)Adapters[Index]->Data.IPv4;
+				*IPv4 = *(int*)DataAddr;
 								
 				safe_sprintf( Adapters[Index]->IP, sizeof(Adapters[Index]->IP), "%s", inet_ntoa( SAI->sin_addr ) );
 				
