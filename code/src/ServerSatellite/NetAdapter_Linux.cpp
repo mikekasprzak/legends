@@ -148,15 +148,15 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 						sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
 
 						// NOTE: I'm assuming MAC address is 6 bytes long //
-						memcpy( Adapters[idx]->Data.MAC, s->sdl_addr, 6 );
+						memcpy( Adapters[idx]->Data.MAC, LLADDR(s), s->sdl_alen );
 						
 						safe_sprintf( Adapters[idx]->MAC, sizeof(Adapters[idx]->MAC), "%02x:%02x:%02x:%02x:%02x:%02x",
-							s->sdl_addr[0],
-							s->sdl_addr[1],
-							s->sdl_addr[2],
-							s->sdl_addr[3],
-							s->sdl_addr[4],
-							s->sdl_addr[5]
+							Adapters[idx]->Data.MAC[0],
+							Adapters[idx]->Data.MAC[1],
+							Adapters[idx]->Data.MAC[2],
+							Adapters[idx]->Data.MAC[3],
+							Adapters[idx]->Data.MAC[4],
+							Adapters[idx]->Data.MAC[5]
 							);
 					}
 				}

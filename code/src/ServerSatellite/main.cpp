@@ -184,13 +184,14 @@ void GetInterfaces() {
 #ifdef __APPLE__
 			else if ( Current->ifa_addr->sa_family == AF_LINK ) {
 				sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
+				unsigned char* SAD = (unsigned char*)LLADDR(s);
 				sprintf( MyIP, "%02x:%02x:%02x:%02x:%02x:%02x",
-					s->sdl_addr[0],
-					s->sdl_addr[1],
-					s->sdl_addr[2],
-					s->sdl_addr[3],
-					s->sdl_addr[4],
-					s->sdl_addr[5]
+					SAD[0],
+					SAD[1],
+					SAD[2],
+					SAD[3],
+					SAD[4],
+					SAD[5]
 					);
 			}
 #endif // _APPLE__          
