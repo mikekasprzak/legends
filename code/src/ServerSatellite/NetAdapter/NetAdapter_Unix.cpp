@@ -196,8 +196,12 @@ const NetAdapterInfo* get_primary_pNetAdapterInfo( const pNetAdapterInfo* Adapte
 			if ( strcmp( Adapters[Index]->Name, "eth0" ) == 0 )
 				return Adapters[Index];
 
-			// Assume "en0" is the primary (OSX) //
+			// Assume "en0" is the primary (OSX, iOS) //
 			if ( strcmp( Adapters[Index]->Name, "en0" ) == 0 )
+				return Adapters[Index];
+
+			// Assume "em0" is the primary (BSD) //
+			if ( strcmp( Adapters[Index]->Name, "em0" ) == 0 )
 				return Adapters[Index];
 			
 			// If none of the above, then assume the first non LocalHost address is primary //
