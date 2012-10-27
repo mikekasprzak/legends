@@ -10,7 +10,7 @@ SYSTEM=`uname`
 # If $WINDIR is NOT set #
 if [ -z "$WINDIR" ]; then
 	LIBS="$LIBS -ldl"
-elif [ "$SYSTEM" == "FreeBSD" ]; then
+elif [ "$SYSTEM" = "FreeBSD" ]; then
 	LIBS="$LIBS"
 else
 	LIBS="$LIBS -lIphlpapi -static"
