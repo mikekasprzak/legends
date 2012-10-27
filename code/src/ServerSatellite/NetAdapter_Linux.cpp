@@ -32,14 +32,16 @@
 #include <sys/socket.h>
 #include <netdb.h>
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(__linux__)
+#if defined(__linux__) || defined(__ANDROID__)
 #include <linux/if_packet.h>	// sockaddr_ll
-#elif defined(__APPLE__)
+#else // defined(__APPLE__) || defined(__UNIX__)
 #include <net/if_dl.h>			// sockaddr_dl
-#endif // __linux__ //
+#endif // defined(__linux__) || defined(__ANDROID__) //
 // - ------------------------------------------------------------------------------------------ - //
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 // http://stackoverflow.com/questions/6762766/mac-address-with-getifaddrs
+// http://stackoverflow.com/questions/3964494/having-a-problem-figuring-out-how-to-get-ethernet-interface-info-on-mac-os-x-usi
+// http://freebsd.active-venture.com/FreeBSD-srctree/newsrc/net/if_dl.h.html
 // - ------------------------------------------------------------------------------------------ - //
 #include "NetAdapter.h"
 #include "NetAdapter_Internal.h"
@@ -121,7 +123,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 		Index = 0;
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			// If an AF_PACKET device (i.e. hardware device) //
-			#if defined(__linux__)
+#if defined(__linux__) || defined(__ANDROID__)
 			if ( Current->ifa_addr->sa_family == AF_PACKET ) {
 				for( int idx=0; idx < IPv4Count; idx++ ) {
 					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
@@ -141,7 +143,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 					}
 				}
 			}
-			#elif defined(__APPLE__)
+#else // defined(__APPLE__) || defined(__unix__)
 			if ( Current->ifa_addr->sa_family == AF_LINK ) {
 				for( int idx=0; idx < IPv4Count; idx++ ) {
 					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
@@ -161,7 +163,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 					}
 				}
 			}
-			#endif // __linux__ //
+#endif // defined(__linux__) || defined(__ANDROID__) //
 			
 			if ( Current->ifa_addr->sa_family == AF_INET6 ) {
 				// IPv6 Address //
