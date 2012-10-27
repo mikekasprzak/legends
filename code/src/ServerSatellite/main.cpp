@@ -59,6 +59,8 @@ int main( int argc, char* argv[] ) {
 
 	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
+
+	printf( "%s: %s (%s) -- %s [%s]\n", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 		
 	MyGeo = GetMyGeoData();
 	
