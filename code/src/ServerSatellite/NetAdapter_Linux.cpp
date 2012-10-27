@@ -121,14 +121,11 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 		Index = 0;
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			// If an AF_PACKET device (i.e. hardware device) //
+			#if defined(__linux__)
 			if ( Current->ifa_addr->sa_family == AF_PACKET ) {
 				for( int idx=0; idx < IPv4Count; idx++ ) {
 					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
-						#if defined(__linux__)
-							sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
-						#elif defined(__APPLE__)
-							sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
-						#endif // __linux__, etc //
+						sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
 
 						// NOTE: I'm assuming MAC address is 6 bytes long //
 						memcpy( Adapters[idx]->Data.MAC, s->sll_addr, 6 );
@@ -144,7 +141,29 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 					}
 				}
 			}
-			else if ( Current->ifa_addr->sa_family == AF_INET6 ) {
+			#elif defined(__APPLE__)
+			if ( Current->ifa_addr->sa_family == AF_LINK ) {
+				for( int idx=0; idx < IPv4Count; idx++ ) {
+					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
+						sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
+
+						// NOTE: I'm assuming MAC address is 6 bytes long //
+						memcpy( Adapters[idx]->Data.MAC, s->sll_addr, 6 );
+						
+						safe_sprintf( Adapters[idx]->MAC, sizeof(Adapters[idx]->MAC), "%02x:%02x:%02x:%02x:%02x:%02x",
+							s->sll_addr[0],
+							s->sll_addr[1],
+							s->sll_addr[2],
+							s->sll_addr[3],
+							s->sll_addr[4],
+							s->sll_addr[5]
+							);
+					}
+				}
+			}
+			#endif // __linux__ //
+			
+			if ( Current->ifa_addr->sa_family == AF_INET6 ) {
 				// IPv6 Address //
 			}
 		}

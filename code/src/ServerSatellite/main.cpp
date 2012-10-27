@@ -158,6 +158,7 @@ void GetInterfaces() {
 		                MyOther, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 				}
 			}
+#ifdef __linux__
 			else if ( Current->ifa_addr->sa_family == AF_PACKET ) {
 				sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
 				sprintf( MyIP, "%02x:%02x:%02x:%02x:%02x:%02x",
@@ -169,7 +170,20 @@ void GetInterfaces() {
 					s->sll_addr[5]
 					);
 			}
-            
+#endif // __linux__
+#ifdef __APPLE__
+			else if ( Current->ifa_addr->sa_family == AF_LINK ) {
+				sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
+				sprintf( MyIP, "%02x:%02x:%02x:%02x:%02x:%02x",
+					s->sll_addr[0],
+					s->sll_addr[1],
+					s->sll_addr[2],
+					s->sll_addr[3],
+					s->sll_addr[4],
+					s->sll_addr[5]
+					);
+			}
+#endif // _APPLE__          
                 
             if ( Current->ifa_addr->sa_family == AF_INET ) {
             	if ( strcmp( Current->ifa_name, "lo" ) != 0 ) {
@@ -264,14 +278,14 @@ int main( int argc, char* argv[] ) {
 		size_t AdapterCount = count_pNetAdapterInfo(Adapters);
 		for ( size_t Index = 0; Index < AdapterCount; Index++ ) {
 			const NetAdapterInfo* Current = get_pNetAdapterInfo( Adapters, Index );	// get_, not get_primary_ //
-			printf( "%i - %s: %s (%s) -- %s [%s]\n", Index, Current->Name, Current->IP, Current->MAC, Current->NetMask, Current->Broadcast );
+			printf( "%i - %s: %s (%s) -- %s [%s]\n", (int)Index, Current->Name, Current->IP, Current->MAC, Current->NetMask, Current->Broadcast );
 		}
 		delete_pNetAdapterInfo( Adapters );
 	}
 
 	
-	//GetInterfaces();
-	//fflush(0);
+	GetInterfaces();
+	fflush(0);
 
 	MyGeo = GetMyGeoData();
 	
