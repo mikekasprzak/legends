@@ -81,8 +81,10 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 		for( ifaddrs* Current = IFA; Current != 0; Current = Current->ifa_next ) {
 			// If an IPv4 //
 			if ( Current->ifa_addr->sa_family == AF_INET ) {
+				// Copy IP as string //
 				getnameinfo( Current->ifa_addr, sizeof(struct sockaddr_in), Adapters[Index]->IP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
+				// Copy IP as byte array //
 				sockaddr_in* SAI = (sockaddr_in*)Current->ifa_addr;
 				const unsigned char* DataAddr = (const unsigned char*)&(SAI->sin_addr.s_addr);
 
@@ -91,6 +93,21 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 			
 //				printf("%i.%i.%i.%i\n", Adapters[Index]->Data.IPv4[0], Adapters[Index]->Data.IPv4[1], Adapters[Index]->Data.IPv4[2], Adapters[Index]->Data.IPv4[3] );
 			
+				// Copy Name //
+				safe_sprintf( Adapters[Index]->Name, sizeof(Adapters[Index]->Name), "%s", Current->ifa_name );
+				
+				// Copy Netmask //
+				getnameinfo( Current->ifa_netmask, sizeof(struct sockaddr_in), Adapters[Index]->NetMask, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+			
+				// Copy Broadcast Address //
+	            if ( Current->ifa_flags & IFF_BROADCAST ) {
+					getnameinfo( Current->ifa_broadaddr, sizeof(struct sockaddr_in), Adapters[Index]->Broadcast, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+				}
+				
+				//if ( Current->ifa_flags & IFF_POINTOPOINT ) {
+				//	getnameinfo( Current->ifa_dstaddr, sizeof(struct sockaddr_in), Adapters[Index]->Broadcast, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );					
+				//}
+				
 				Index++;	
 			}
 		}
