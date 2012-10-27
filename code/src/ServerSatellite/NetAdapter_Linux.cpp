@@ -30,8 +30,13 @@
 #include <netinet/in.h>
 #include <net/if.h>				// IFF_BROADCAST
 #include <sys/socket.h>
-#include <linux/if_packet.h>	// sockaddr_ll
 #include <netdb.h>
+// - ------------------------------------------------------------------------------------------ - //
+#if defined(__linux__)
+#include <linux/if_packet.h>	// sockaddr_ll
+#elif defined(__APPLE__)
+#include <net/dl.h>				// sockaddr_dl
+#endif // __linux__ //
 // - ------------------------------------------------------------------------------------------ - //
 // http://www.kernel.org/doc/man-pages/online/pages/man3/getifaddrs.3.html
 // http://stackoverflow.com/questions/6762766/mac-address-with-getifaddrs
@@ -119,7 +124,11 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 			if ( Current->ifa_addr->sa_family == AF_PACKET ) {
 				for( int idx=0; idx < IPv4Count; idx++ ) {
 					if ( strcmp( Adapters[idx]->Name, Current->ifa_name ) == 0 ) {
-						sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
+						#if defined(__linux__)
+							sockaddr_ll* s = (sockaddr_ll*)Current->ifa_addr;
+						#elif defined(__APPLE__)
+							sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
+						#endif // __linux__, etc //
 
 						// NOTE: I'm assuming MAC address is 6 bytes long //
 						memcpy( Adapters[idx]->Data.MAC, s->sll_addr, 6 );
