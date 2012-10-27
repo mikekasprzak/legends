@@ -185,12 +185,12 @@ void GetInterfaces() {
 			else if ( Current->ifa_addr->sa_family == AF_LINK ) {
 				sockaddr_dl* s = (sockaddr_dl*)Current->ifa_addr;
 				sprintf( MyIP, "%02x:%02x:%02x:%02x:%02x:%02x",
-					s->sll_addr[0],
-					s->sll_addr[1],
-					s->sll_addr[2],
-					s->sll_addr[3],
-					s->sll_addr[4],
-					s->sll_addr[5]
+					s->sdl_addr[0],
+					s->sdl_addr[1],
+					s->sdl_addr[2],
+					s->sdl_addr[3],
+					s->sdl_addr[4],
+					s->sdl_addr[5]
 					);
 			}
 #endif // _APPLE__          
