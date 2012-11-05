@@ -8,6 +8,8 @@
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
 
+#include "../GameSatellite/SatBody/SatBody.h"
+
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "GELGeoData.h"
@@ -50,6 +52,15 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+
+void SatBodyTest() {
+	cSatModule Module;
+	Module.Add( COM_PLANAR );
+	Module.Component->Back().Planar.Add();
+	//Module.Component->Back().Planar.Data[0];
+	
+}
 
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {

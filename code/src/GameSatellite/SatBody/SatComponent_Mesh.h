@@ -1,17 +1,29 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BODY_COMPONENT_MESH_H__
-#define __BODY_COMPONENT_MESH_H__
+#ifndef __SATBODY_COMPONENT_MESH_H__
+#define __SATBODY_COMPONENT_MESH_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelTypes.h>
+#include <Core/GelArray.h>
+#include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cComponent_Mesh {
+class cSatComponent_Mesh {
 public:
-	int		Type;
-	st32	Size;
+	int	Type;
 public:
-	// TODO: Some "Array" of polygons
-	// Consider using an extended Core type, with a "Type" header
+	class Mesh {
+	public:
+		class VertType {
+		public:
+			Vector3D Pos;
+		};
+		
+		GelArray<VertType>* Vertex;
+		GelArray<u16>* 		Index;
+	};
+
+public:
+	GelArray<Mesh>* Data;
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BODY_COMPONENT_MESH_H__ //
+#endif // __SATBODY_COMPONENT_MESH_H__ //
 // - ------------------------------------------------------------------------------------------ - //

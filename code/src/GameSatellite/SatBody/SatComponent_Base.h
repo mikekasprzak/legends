@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BODY_COMPONENT_BASE_H__
-#define __BODY_COMPONENT_BASE_H__
+#ifndef __SATBODY_COMPONENT_BASE_H__
+#define __SATBODY_COMPONENT_BASE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelTypes.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -11,13 +11,17 @@ enum {
 	COM_MESH = 3
 };
 // - ------------------------------------------------------------------------------------------ - //
-class cComponent_Base {
+class cSatComponent_Base {
 public:
 	int		Type;
-	st32	Size;
+	void*	Data;
+
 public:
-	char	Data[0];
+	// Don't do this for the components //
+//	inline const size_t Size() const {
+//		return 0;
+//	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BODY_COMPONENT_BASE_H__ //
+#endif // __SATBODY_COMPONENT_BASE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

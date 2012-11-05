@@ -1,16 +1,22 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BODY_BODY_H__
-#define __BODY_BODY_H__
+#ifndef __SATBODY_BODY_H__
+#define __SATBODY_BODY_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Module.h"
-
-#include <vector>
+#include <Core/GelArray.h>
+#include "SatModule.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cBody {
+class cSatBody {
 public:
-	// Some Container Type of Modules //
-	std::vector< cModule > Module;
+	GelArray<cSatModule>* Module;
+
+public:
+	inline const size_t Size() const {
+		if ( Module )
+			return Module->Size;
+		else
+			return 0;
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BODY_BODY_H__ //
+#endif // __SATBODY_BODY_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -8,7 +8,7 @@
 #pragma warning (disable : 4200) // Zero sized array member //
 #endif // _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
-//#include <string.h>
+#include "GelTypes.h"
 #include "DataBlock_Core.h"
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Insertion code, Alignment resizing (min, max), searching, sorting  //
@@ -19,6 +19,28 @@ struct GelArray {
 	st32 MaxSize;
 	st32 Size;
 	Type Data[0];
+	
+	inline Type& Back() {
+		// TODO: Assert Size //
+		return Data[Size-1];
+	}
+	
+	inline const Type& Back() const {
+		// TODO: Assert Size //
+		return Data[Size-1];
+	}
+	
+	inline Type& Front() {
+		// TODO: Assert Size //
+		return Data[0];
+	}
+
+	inline const Type& Front() const {
+		// TODO: Assert Size //
+		return Data[0];
+	}
+	
+	// No Operator [] because GelArray's are always pointers //
 };
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -458,17 +480,15 @@ inline void resize2_GelArray( GelArray<Type>** p, const st32 _NewSize, const Typ
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
+inline void pushback_GelArray( GelArray<Type>** p ) {
+	if ( *p == 0 )
+		resize2_GelArray<Type>( p, 1 );
+	else
+		resize2_GelArray<Type>( p, (*p)->Size + 1 );
+} 
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
 inline void pushback_GelArray( GelArray<Type>** p, const Type& _Value ) {
-//	Log( "> 0x%x %x", p, *p );
-//	if ( *p != 0 ) {
-//		Log( "> 0x%x %i (%i)", p, (*p)->Size, (*p)->MaxSize );
-//		Log( "> 0x%x %i 0x%x", p, (*p)->Size, &_Value );
-//		Log( "> 0x%x %i 0x%x 0x%x", p, (*p)->Size, _Value, &_Value );
-//	}
-//	else {
-//		Log( "* 0x%x %x KOOK", p, *p );
-//	}
-	
 	if ( *p == 0 )
 		resize2_GelArray<Type>( p, 1, _Value );
 	else
@@ -483,6 +503,26 @@ inline Type popback_GelArray( GelArray<Type>** p ) {
 	return (*p)->Data[ (*p)->Size ];
 } 
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline Type* back_GelArray( GelArray<Type>* p ) {
+	if ( p == 0 )
+		return 0;
+	else
+		return &(p->Data[ p->Size - 1 ]);
+} 
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline Type* front_GelArray( GelArray<Type>* p ) {
+	if ( p == 0 )
+		return 0;
+	else
+		return &(p->Data[ 0 ]);
+} 
+// - ------------------------------------------------------------------------------------------ - //
+
+
 
 // - ------------------------------------------------------------------------------------------ - //
 // Push and pop large groups of objects on to the GelArray //
