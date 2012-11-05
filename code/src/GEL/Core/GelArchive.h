@@ -39,7 +39,7 @@ inline GelArchive* new_GelArchive() {
 	NewDir->Name = new char[ 1 ];
 	NewDir->Name[0] = 0;
 	
-	NewDir->FileName = new_GelHeap(0, 0);
+	NewDir->FileName = new_GelHeap();
 	
 	return NewDir;
 }
@@ -53,10 +53,10 @@ inline GelArchive* new_GelArchive( const char* _BaseName ) {
 	copy_Data( _BaseName, NewGelArchive->Name, NameLength );
 	
 	// Allocate an empty FileName table //
-	NewGelArchive->FileName = new_GelHeap(0, 0);
+	NewGelArchive->FileName = new_GelHeap();
 	
 	// Allocate an empty Data table //
-	NewGelArchive->Data = new_GelHeap(0, 0);
+	NewGelArchive->Data = new_GelHeap();
 	
 	// Work //
 	

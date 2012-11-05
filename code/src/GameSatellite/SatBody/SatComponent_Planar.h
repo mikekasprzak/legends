@@ -22,6 +22,12 @@ public:
 		{
 		}
 
+		Plane( const Vector3D& _Point, const Vector3D& _Normal ) :
+			Point( _Point ),
+			Normal( _Normal )
+		{
+		}
+
 		Plane( const Real px, const Real py, const Real pz, const Real nx, const Real ny, const Real nz ) :
 			Point(px,py,pz),
 			Normal(nx,ny,nz)

@@ -125,8 +125,8 @@ inline GelDirectory* new_GelDirectory( const char* _BaseName ) {
 	GelDirectory* NewDir = new GelDirectory;
 	
 	NewDir->BaseName = new_String( _BaseName );
-	NewDir->FileName = new_GelHeap(0, 0);
-	NewDir->FileInfo = newmax_GelArray<GelFileInfo>( 0 );
+	NewDir->FileName = new_GelHeap();
+	NewDir->FileInfo = new_GelArray<GelFileInfo>( 0 );
 	
 	// Work //
 	populate_GelDirectory( NewDir );

@@ -23,17 +23,29 @@ struct GelHeap {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline GelHeap* new_GelHeap( const size_t _IndexMax, const size_t _DataMax ) {
+inline GelHeap* new_GelHeap() {
 	GelHeap* p = new GelHeap;
 
 	// Allocate an array for our entries //
-	p->Index = newmax_GelArray<size_t>(_IndexMax);
+	p->Index = new_GelArray<size_t>(0);
 	
 	// Allocate a mass of data //
-	p->Data = newmax_GelArray<char>(_DataMax);
+	p->Data = new_GelArray<char>(0);
 
 	return p;
 }
+// - ------------------------------------------------------------------------------------------ - //
+//inline GelHeap* new_GelHeap( const size_t _IndexMax, const size_t _DataMax ) {
+//	GelHeap* p = new GelHeap;
+//
+//	// Allocate an array for our entries //
+//	p->Index = newmax_GelArray<size_t>(_IndexMax);
+//	
+//	// Allocate a mass of data //
+//	p->Data = newmax_GelArray<char>(_DataMax);
+//
+//	return p;
+//}
 // - ------------------------------------------------------------------------------------------ - //
 inline void delete_GelHeap( GelHeap* p ) {
 	if ( p->Index )

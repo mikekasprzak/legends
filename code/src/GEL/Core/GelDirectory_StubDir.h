@@ -37,7 +37,7 @@ inline GelDirectory* new_GelDirectory( const char* _BaseName ) {
 	GelDirectory* NewDir = new GelDirectory;
 	
 	NewDir->BaseName = new_String( _BaseName );
-	NewDir->FileName = new_GelHeap(0, 0);
+	NewDir->FileName = new_GelHeap();
 	
 	// Work //
 	populate_GelDirectory( NewDir );

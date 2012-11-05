@@ -71,8 +71,8 @@ inline GelDirectory* new_GelDirectory() {
 	
 	// Create and initalize an empty name string //
 	NewDir->BaseName = new_String("");
-	NewDir->FileName = new_GelHeap(0, 0);
-	NewDir->FileInfo = newmax_GelArray<GelFileInfo>( 0 );
+	NewDir->FileName = new_GelHeap();
+	NewDir->FileInfo = new_GelArray<GelFileInfo>( 0 );
 
 	VVVLog("* NEWDIR: \"%s\"  0x%x  0x%x\n", NewDir->BaseName, NewDir->FileName, NewDir->FileInfo );
 	
