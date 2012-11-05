@@ -4,6 +4,8 @@
 #ifndef __Library_GEL_Core_GelTypes_H__
 #define __Library_GEL_Core_GelTypes_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <string.h>
+// - ------------------------------------------------------------------------------------------ - //
 typedef unsigned int st32;
 typedef unsigned long long int st64;
 //typedef size_t st;

@@ -1,16 +1,23 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BODY_BODY_H__
-#define __BODY_BODY_H__
+#ifndef __BODY_COMPONENT_BASE_H__
+#define __BODY_COMPONENT_BASE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Module.h"
-
-#include <vector>
+#include <Core/GelTypes.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cBody {
-public:
-	// Some Container Type of Modules //
-	std::vector< cModule > Module;
+enum {
+	COM_UNDEFINED = 0,	// Should never be used //
+	COM_BASE = 1,		// Should never be used //
+	COM_PLANAR = 2,
+	COM_MESH = 3
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BODY_BODY_H__ //
+class cComponent_Base {
+public:
+	int		Type;
+	st32	Size;
+public:
+	char	Data[0];
+};
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __BODY_COMPONENT_BASE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

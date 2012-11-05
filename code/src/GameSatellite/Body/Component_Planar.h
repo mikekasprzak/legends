@@ -2,7 +2,16 @@
 #ifndef __BODY_COMPONENT_PLANAR_H__
 #define __BODY_COMPONENT_PLANAR_H__
 // - ------------------------------------------------------------------------------------------ - //
-
+#include <Core/GelTypes.h>
+// - ------------------------------------------------------------------------------------------ - //
+class cComponent_Planar {
+public:
+	int		Type;
+	st32	Size;
+public:
+	// TODO: Some "Array" of planes
+	// Consider using an extended Core type, with a "Type" header
+};
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __BODY_COMPONENT_PLANAR_H__ //
 // - ------------------------------------------------------------------------------------------ - //

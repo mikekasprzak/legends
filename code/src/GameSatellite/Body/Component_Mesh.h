@@ -2,7 +2,16 @@
 #ifndef __BODY_COMPONENT_MESH_H__
 #define __BODY_COMPONENT_MESH_H__
 // - ------------------------------------------------------------------------------------------ - //
-
+#include <Core/GelTypes.h>
+// - ------------------------------------------------------------------------------------------ - //
+class cComponent_Mesh {
+public:
+	int		Type;
+	st32	Size;
+public:
+	// TODO: Some "Array" of polygons
+	// Consider using an extended Core type, with a "Type" header
+};
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __BODY_COMPONENT_MESH_H__ //
 // - ------------------------------------------------------------------------------------------ - //
