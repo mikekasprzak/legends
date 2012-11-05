@@ -22,7 +22,7 @@ union uComponent {
 class cModule {
 public:
 	// Some Container Type of Components //
-	std::vector< uComponent > Component;
+	std::vector< uComponent* > Component;
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __BODY_MODULE_H__ //
