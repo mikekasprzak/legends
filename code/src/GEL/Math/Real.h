@@ -1078,20 +1078,20 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool IsZero() const {
 		//return *this == Real::Zero;
-		return (*this).Abs() < Real::SmallestUnit;
+		return (*this).Abs() <= Real::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
 	inline const bool IsZeroOrLess() const {
 		//return *this == Real::Zero;
-		return *this < Real::SmallestUnit;
+		return *this <= Real::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool Is( const Real& _Vs ) const {
 		//return (*this - _Vs) == Real::Zero;
-		return (*this - _Vs).Abs() < Real::SmallestUnit;
+		return (*this - _Vs).Abs() <= Real::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
