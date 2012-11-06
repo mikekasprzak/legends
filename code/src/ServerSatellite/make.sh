@@ -11,10 +11,12 @@ LIBS="-L /usr/local/ssl/lib -lcrypto"
 
 SYSTEM=`uname`
 
+# Linux sh doesn't support ==, so use = #
+
 # If $WINDIR is NOT set #
 if [ -n "$WINDIR" ]; then
 	LIBS="$LIBS `curl-config --static-libs` -lIphlpapi -static"
-elif [ "$SYSTEM" == "FreeBSD" ]; then
+elif [ "$SYSTEM" = "FreeBSD" ]; then
 	LIBS="$LIBS `curl-config --libs` -lpthread"
 else
 	LIBS="$LIBS `curl-config --libs` -ldl"
