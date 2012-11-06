@@ -39,8 +39,15 @@ public:
 	GelArray<Plane>* Data;
 	
 public:
+	inline void New( const size_t Count = 0 ) {
+		Data = new_GelArray<Plane>( Count );
+	}
+	inline void Delete() {
+		delete_GelArray<Plane>( Data );
+		Data = 0;
+	}
+	
 	void Add( ) {
-		// Create or Resize Component //
 		pushback_GelArray<Plane>( &Data );
 		Plane* Back = back_GelArray<Plane>( Data );
 		

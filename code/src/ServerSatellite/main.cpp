@@ -56,10 +56,14 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 
 void SatBodyTest() {
 	cSatModule Module;
-	Module.Add( COM_PLANAR );
-	Module.Component->Back().Planar.Add();
-	//Module.Component->Back().Planar.Data[0];
-	
+//	Module.Add( SatComponent::PLANAR );
+//	Module.Component->Back().Planar.Add();
+//	//Module.Component->Back().Planar.Data[0];
+
+	Module.AddPlanar( 6 );
+	auto Planar = Module.Component->Back().Planar.Data;
+	Planar->Data[0].Point = Vector3D(1,2,1);
+	Planar->Data[1].Point = Vector3D(2,2,2);
 }
 
 // - ------------------------------------------------------------------------------------------ - //

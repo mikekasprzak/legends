@@ -22,7 +22,11 @@ public:
 	};
 
 public:
-	GelArray<Mesh>* Data;
+	Mesh* Data;
+
+public:
+	inline void New( const size_t = 0, const size_t = 0 ) { }
+	inline void Delete() { }
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __SATBODY_COMPONENT_MESH_H__ //

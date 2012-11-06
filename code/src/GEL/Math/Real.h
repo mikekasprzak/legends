@@ -19,42 +19,42 @@
 #pragma warning (disable : 4244) // Tructation, data loss potential 
 #endif // _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
-	// - -------------------------------------------------------------------------------------- - //
-	// Compute J terms in the series expansion.  K is the loop variable.
-	template<int N, int I, int J, int K>
-	class _SineSeries {
-	public:
-		//enum { M_PI = 3.1415926535897932384626433832795 };
-	    enum { go = (K+1 != J) };
-	
-	    static inline float accumulate() {
-	        return 1-(I*2*M_PI/N)*(I*2*M_PI/N)/(2*K+2)/(2*K+3) *
-	            _SineSeries<N*go,I*go,J*go,(K+1)*go>::accumulate();
-	    }
-	};
-	// - -------------------------------------------------------------------------------------- - //
-	// Specialization to terminate loop
-	template<>
-	class _SineSeries<0,0,0,0> {
-	public:
-	    static inline float accumulate() {
-	    	return 1;
-	    }
-	};
-	// - -------------------------------------------------------------------------------------- - //
-	// Template Math - Sine function. 
-	// Usage (45 degrees): float f = TemplateSine<360,45>::sin();
-	// - -------------------------------------------------------------------------------------- - //
-	template<int N, int I>
-	class TemplateSine {
-	public:
-		//enum { M_PI = 3.1415926535897932384626433832795 };
-		
-	    static inline float sin() {
-	        return (I*2*M_PI/N) * _SineSeries<N,I,10,0>::accumulate();
-	    }
-	};
-	// - -------------------------------------------------------------------------------------- - //
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Compute J terms in the series expansion.  K is the loop variable.
+//	template<int N, int I, int J, int K>
+//	class _SineSeries {
+//	public:
+//		//enum { M_PI = 3.1415926535897932384626433832795 };
+//	    enum { go = (K+1 != J) };
+//	
+//	    static inline float accumulate() {
+//	        return 1-(I*2*M_PI/N)*(I*2*M_PI/N)/(2*K+2)/(2*K+3) *
+//	            _SineSeries<N*go,I*go,J*go,(K+1)*go>::accumulate();
+//	    }
+//	};
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Specialization to terminate loop
+//	template<>
+//	class _SineSeries<0,0,0,0> {
+//	public:
+//	    static inline float accumulate() {
+//	    	return 1;
+//	    }
+//	};
+//	// - -------------------------------------------------------------------------------------- - //
+//	// Template Math - Sine function. 
+//	// Usage (45 degrees): float f = TemplateSine<360,45>::sin();
+//	// - -------------------------------------------------------------------------------------- - //
+//	template<int N, int I>
+//	class TemplateSine {
+//	public:
+//		//enum { M_PI = 3.1415926535897932384626433832795 };
+//		
+//	    static inline float sin() {
+//	        return (I*2*M_PI/N) * _SineSeries<N,I,10,0>::accumulate();
+//	    }
+//	};
+//	// - -------------------------------------------------------------------------------------- - //
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 // This set is used for straight duplicate overloading of types, such as the float/Real wrapper //

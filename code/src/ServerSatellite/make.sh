@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# "--std=c++11" causes failures with _fileno and other legacy macros. Solution: Use gnu++11 #
+
+FLAGS="--std=gnu++11"
 DEFINES="-DMONGOOSE_NO_WIN32_INIT -DCURL_STATICLIB"
 INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/"
 FILES="main.cpp NetGet.cpp GELGeoData.cpp ../GEL/Debug/Log.cpp ../External/cJSON/cJSON.c ../External/Mongoose/mongoose.c NetAdapter/NetAdapter_*.cpp"
@@ -16,4 +19,4 @@ else
 	LIBS="$LIBS `curl-config --libs` -ldl"
 fi  
 
-g++ $DEFINES $INCLUDES $FILES -o SatServ.exe $LIBS
+g++ $DEFINES $INCLUDES $FILES -o SatServ.exe $LIBS $FLAGS

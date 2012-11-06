@@ -59,7 +59,7 @@ inline const char* index_GelDirectory( const GelDirectory* p, const size_t Index
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline const GelFileInfo& info_GelDirectory( const GelDirectory* p, const size_t Index ) { 
-	return index_GelArray<GelFileInfo>( p->FileInfo, Index );
+	return *index_GelArray<GelFileInfo>( p->FileInfo, Index );
 }
 // - ------------------------------------------------------------------------------------------ - //
 

@@ -4,23 +4,19 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelTypes.h>
 // - ------------------------------------------------------------------------------------------ - //
+namespace SatComponent {
 enum {
-	COM_UNDEFINED = 0,	// Should never be used //
-	COM_BASE = 1,		// Should never be used //
-	COM_PLANAR = 2,
-	COM_MESH = 3
+	UNDEFINED = 0,	// Should never be used //
+	BASE = 1,		// Should never be used //
+	PLANAR = 2,
+	MESH = 3
+};
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cSatComponent_Base {
 public:
 	int		Type;
 	void*	Data;
-
-public:
-	// Don't do this for the components //
-//	inline const size_t Size() const {
-//		return 0;
-//	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __SATBODY_COMPONENT_BASE_H__ //

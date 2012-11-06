@@ -163,9 +163,10 @@ inline void delete_GelArray( GelArray<Type>* p ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+// Now returns a pointer. All functions will return pointers. Never References. //
 template< class Type >
-inline Type& index_GelArray( GelArray<Type>* p, const size_t _Index ) {
-	return (p->Data[ _Index ]);
+inline Type* index_GelArray( GelArray<Type>* p, const size_t _Index ) {
+	return &(p->Data[ _Index ]);
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
