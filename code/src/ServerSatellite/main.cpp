@@ -62,8 +62,9 @@ void SatBodyTest() {
 
 	Module.AddPlanar( 6 );
 	auto Planar = Module.Component->Back().Planar.Data;
-	Planar->Data[0].Point = Vector3D(1,2,1);
-	Planar->Data[1].Point = Vector3D(2,2,2);
+	for ( auto idx = 0; idx < Planar->Size; idx++ ) {
+		Planar->Data[idx].Point = Vector3D(idx,idx,0);
+	}
 }
 
 // - ------------------------------------------------------------------------------------------ - //
