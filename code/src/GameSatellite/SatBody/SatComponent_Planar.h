@@ -16,22 +16,27 @@ public:
 		Vector3D Point;
 		Vector3D Normal;
 	public:
-		Plane() :
+		inline Plane() :
 			Point(0,0,0),
 			Normal(0,0,0)
 		{
 		}
 
-		Plane( const Vector3D& _Point, const Vector3D& _Normal ) :
+		inline Plane( const Vector3D& _Point, const Vector3D& _Normal ) :
 			Point( _Point ),
 			Normal( _Normal )
 		{
 		}
 
-		Plane( const Real px, const Real py, const Real pz, const Real nx, const Real ny, const Real nz ) :
+		inline Plane( const Real px, const Real py, const Real pz, const Real nx, const Real ny, const Real nz ) :
 			Point(px,py,pz),
 			Normal(nx,ny,nz)
 		{
+		}
+	public:
+		inline void Set( const Vector3D& _Point, const Vector3D& _Normal ) {
+			Point = _Point;
+			Normal = _Normal;
 		}
 	};
 

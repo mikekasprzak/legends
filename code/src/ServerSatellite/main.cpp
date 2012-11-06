@@ -62,15 +62,36 @@ void SatBodyTest() {
 
 	Module.AddPlanar( 6 );
 	auto Planar = Module.Component->Back().Planar.Data;
-	for ( auto idx = 0; idx < Planar->Size; idx++ ) {
-		Planar->Data[idx].Point = Vector3D(idx,idx,0);
-	}
+	
+	size_t idx = 0;
+	
+	// Front and Back //
+	Planar->Data[idx++].Set( Vector3D(0,2,0), Vector3D(0,1,0) );
+	Planar->Data[idx++].Set( Vector3D(0,-2,0), Vector3D(0,-1,0) );
+	
+	// Sides //
+	Planar->Data[idx++].Set( Vector3D(1,0,0), Vector3D(1,0,0) );
+	Planar->Data[idx++].Set( Vector3D(-1,0,0), Vector3D(-1,0,0) );
+	
+	// Top and Bottom //
+	Planar->Data[idx++].Set( Vector3D(0,0,1), Vector3D(0,0,1) );
+	Planar->Data[idx++].Set( Vector3D(0,0,-1), Vector3D(0,0,-1) );
+	
+	Log( "> %i", Planar->Size );
+	
+//	for ( auto idx = 0; idx < Planar->Size; idx++ ) {
+//		Planar->Data[idx].Point = Vector3D(idx,idx,0);
+//	}
 }
 
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
 	
+	// **** //
+	
+	SatBodyTest();
+
 	// **** //
 
 	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
