@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# "--std=c++11" causes failures with _fileno and other legacy macros. Solution: Use gnu++11 #
+# "--std=c++11" is only supported in GCC 4.7+. Solution, use c++0x #
+# "--std=c++0x" causes failures with _fileno and other legacy macros. Solution: Use gnu++0x #
 
-FLAGS="--std=gnu++11"
+FLAGS="--std=gnu++0x"
 DEFINES="-DMONGOOSE_NO_WIN32_INIT -DCURL_STATICLIB"
 INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/"
 FILES="main.cpp NetGet.cpp GELGeoData.cpp ../GEL/Debug/Log.cpp ../External/cJSON/cJSON.c ../External/Mongoose/mongoose.c NetAdapter/NetAdapter_*.cpp"
