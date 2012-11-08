@@ -10,6 +10,8 @@
 
 #include "../GameSatellite/SatBody/SatBody.h"
 
+#include "Task/GelTask.h"
+
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "GELGeoData.h"
@@ -143,6 +145,17 @@ int main( int argc, char* argv[] ) {
 	
 	SatBodyTest();
 
+	// **** //
+	
+	{
+		class cShirt {
+		public:
+			
+		};
+		
+		cShirt Shirt;
+	}
+	
 	// **** //
 
 	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
