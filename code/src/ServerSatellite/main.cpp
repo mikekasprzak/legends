@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <stdio.h>
 #include <Debug/Log.h>
+#include "Util/sprintf.h"
 
 #include <Mongoose/mongoose.h>
 
@@ -9,8 +9,6 @@
 #include <Core/Data_MD5.h>
 
 #include "../GameSatellite/SatBody/SatBody.h"
-
-#include "Task/GelTask.h"
 
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -28,7 +26,7 @@ static void* WebServerCallback( mg_event event, mg_connection *conn ) {
 		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
 		
 		char content[1024];
-		int content_length = snprintf(
+		int content_length = safe_sprintf(
 			content, sizeof(content),
 			"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
 			MyGeo.Country, MyGeo.IP,
@@ -144,28 +142,17 @@ int main( int argc, char* argv[] ) {
 	// **** //
 	
 	SatBodyTest();
-
-	// **** //
-	
-	{
-		class cShirt {
-		public:
-			
-		};
-		
-		cShirt Shirt;
-	}
 	
 	// **** //
 
 	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
 
-	printf( "%s: %s (%s) -- %s [%s]\n", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 		
 	MyGeo = GetMyGeoData();
 	
-	//printf( "ME: %s %s %f %f\n", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
+	//Log( "ME: %s %s %f %f", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
 	
 	{
 		int Port = 10080;
@@ -173,7 +160,7 @@ int main( int argc, char* argv[] ) {
 		// **** //
 		
 		char PortString[7];
-		snprintf( PortString, sizeof(PortString), "%i", Port );
+		safe_sprintf( PortString, sizeof(PortString), "%i", Port );
 	
 		struct mg_context *ctx;
 		const char *options[] = {"listening_ports", PortString, NULL};
@@ -204,7 +191,7 @@ int main( int argc, char* argv[] ) {
 		
 		{
 			char KeyData[1024];
-			snprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
+			safe_sprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
 				MyPort,
 				MyGeo.IP,
 				MyVersion,
@@ -214,7 +201,7 @@ int main( int argc, char* argv[] ) {
 			MD5Hash MD5 = hash_MD5_Data( KeyData, strlen(KeyData) );	
 			
 			char PostData[4096];
-			snprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
+			safe_sprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
 				MyGeo.IP,
 				MyPort,
 				MyVersion,
