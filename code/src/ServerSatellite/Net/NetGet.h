@@ -16,7 +16,5 @@ GelArray<char>* gelNetPostText( const char* URL, const char* PostData );
 GelArray<char>* gelNetGetBinary( const char* URL );
 GelArray<char>* gelNetPostBinary( const char* URL, const char* PostData );
 // - ------------------------------------------------------------------------------------------ - //
-void gelNetInit( const bool DoWindowsInit = true );
-// - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_NETGET_H__ //
 // - ------------------------------------------------------------------------------------------ - //

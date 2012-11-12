@@ -2,9 +2,11 @@
 #include <Debug/Log.h>
 #include "Util/sprintf.h"
 
+#include "Net/Net.h"
+#include "Net/NetGet.h"
+
 #include <Mongoose/mongoose.h>
 
-#include "NetGet.h"
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
 

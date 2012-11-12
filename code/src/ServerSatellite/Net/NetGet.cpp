@@ -75,9 +75,3 @@ GelArray<char>* gelNetPostBinary( const char* URL, const char* PostData ) {
 	return gelNetGet_( URL, false, PostData );
 }
 // - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-void gelNetInit( const bool DoWindowsInit ) {
-	curl_global_init( DoWindowsInit ? CURL_GLOBAL_WIN32 : CURL_GLOBAL_NOTHING );
-}
-// - ------------------------------------------------------------------------------------------ - //
