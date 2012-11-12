@@ -22,14 +22,64 @@ const NetAdapterInfo* Adapter;
 Functor<SatGeoData> MyGeo;
 
 class cApp {
+public: // Class Helpers //
 	typedef cApp thistype;
-public:
+
 	inline void* GetThis() {
 		return this;
 	}
+
+public:
+	class cSettings {
+	public:
+		int Port;
 	
-	void* WebServerCallback( mg_event event, mg_connection *conn ) {
+	public:
+		cSettings() :
+			Port( 10080 )
+		{
+			Load();
+		}
+		
+		void Load() {
+		}
+
+		void Save() {
+		}
+	} Settings;
+	
+	// Not settings //
+	int Requests;
+
+public:
+	struct mg_context* WebServer_ctx;
+	
+	void WebServer_Start() {
+		char PortString[7];
+		safe_sprintf( PortString, sizeof(PortString), "%i", Settings.Port );
+	
+		const char *options[] = {"listening_ports", PortString, NULL};
+		
+		WebServer_ctx = mg_start( &stWebServer_Callback, this, options );
+		Log( "Webserver started on Port %s.", PortString ); 
+		Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );
+	}
+	
+	void WebServer_Stop() {
+//		fflush(0);
+//		getchar(); // Wait until user hits "enter"
+		mg_stop(WebServer_ctx);
+	}
+	
+	void* WebServer_Callback( mg_event event, mg_connection *conn ) {
 		const mg_request_info* request_info = mg_get_request_info(conn);
+		
+//		Requests++;
+//		Log( "* %i %i", Requests, event );
+		
+		// Standard Web Requests give me 2 messages:
+		//   1. MG_NEW_REQUEST (0)
+		//   2. MG_REQUEST_COMPLETE (1)
 		
 		if (event == MG_NEW_REQUEST) {
 			const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
@@ -55,51 +105,29 @@ public:
 			
 			// Mark as processed
 			return (void*)"";
-		} 
+		}
+		else if ( event == MG_REQUEST_COMPLETE ) {
+			// Do nothing. Be happy. //
+			return NULL;
+		}
 		else {
 			return NULL;
 		}
 	}	
 	
-	static void* stWebServerCallback( mg_event event, mg_connection *conn ) {
+	static void* stWebServer_Callback( mg_event event, mg_connection *conn ) {
 		cApp* th = (cApp*)mg_get_user_data(conn);
-		return th->WebServerCallback( event, conn );
+		return th->WebServer_Callback( event, conn );
+	}
+
+public:
+	cApp() :
+		Requests( 0 )
+	{
 	}
 };
 
-// - ------------------------------------------------------------------------------------------ - //
-//void* WebServerCallback( mg_event event, mg_connection *conn ) {
-//	const mg_request_info* request_info = mg_get_request_info(conn);
-//	
-//	if (event == MG_NEW_REQUEST) {
-//		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
-//		
-//		char content[1024];
-//		int content_length = safe_sprintf(
-//			content, sizeof(content),
-//			"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
-//			MyGeo.Country, MyGeo.IP,
-//			Adapter->IP, Adapter->NetMask,
-//			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
-//			request_info->remote_port,
-//			request_info->query_string
-//			);
-//
-//		mg_printf(conn,
-//			"HTTP/1.1 200 OK\r\n"
-//			"Content-Type: text/plain\r\n"
-//			"Content-Length: %d\r\n" // Always set Content-Length
-//			"\r\n"
-//			"%s",
-//			content_length, content);
-//		
-//		// Mark as processed
-//		return (void*)"";
-//	} 
-//	else {
-//		return NULL;
-//	}
-//}
+
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -210,27 +238,29 @@ int main( int argc, char* argv[] ) {
 	
 	//Log( "ME: %s %s %f %f", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
 	
-	{
-		int Port = 10080;
-	
-		// **** //
-		
-		char PortString[7];
-		safe_sprintf( PortString, sizeof(PortString), "%i", Port );
-	
-		struct mg_context *ctx;
-		const char *options[] = {"listening_ports", PortString, NULL};
-		
-//		ctx = mg_start( &WebServerCallback, NULL, options );
-		ctx = mg_start( &App.stWebServerCallback, App.GetThis(), options );
-		Log( "Webserver started on Port %s.", PortString ); 
-		Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );
-		fflush(0);
-		getchar(); // Wait until user hits "enter"
-		mg_stop(ctx);	
-	
-		return 0;
-	}
+//	{
+//		int Port = 10080;
+//	
+//		// **** //
+//		
+//		char PortString[7];
+//		safe_sprintf( PortString, sizeof(PortString), "%i", Port );
+//	
+//		struct mg_context *ctx;
+//		const char *options[] = {"listening_ports", PortString, NULL};
+//		
+////		ctx = mg_start( &WebServerCallback, NULL, options );
+//		ctx = mg_start( &App.stWebServerCallback, App.GetThis(), options );
+//		Log( "Webserver started on Port %s.", PortString ); 
+//		Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );
+//		fflush(0);
+//		getchar(); // Wait until user hits "enter"
+//		mg_stop(ctx);
+//	
+//		return 0;
+//	}
+
+	App.WebServer_Start();
 
 	// **** //
 
@@ -289,6 +319,15 @@ int main( int argc, char* argv[] ) {
 //		write_GelArray<char>( ImageData, "blah.png" );
 //		delete_GelArray<char>( ImageData );
 	}
+
+	// **** //
+
+	fflush(0);
+	getchar(); // Wait until user hits "enter"
+
+	// **** //
+	
+	App.WebServer_Stop();
 
 	delete_pNetAdapterInfo( Adapters );
 
