@@ -1,6 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Net/NetGet.h"
+
 #include <cJSON/cJSON.h>
+#include "Util/cJSON_ValidateSchema.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -13,12 +15,11 @@
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
 
-
 // - ------------------------------------------------------------------------------------------ - //
 SatGeoData::SatGeoData( const char* _IP, const char* _Country, const float _Latitude, const float _Longitude, const bool _Success ) :
 	Latitude( _Latitude ),
 	Longitude( _Longitude ),
-	Success( _Success )
+	Good( _Success )
 {
 	safe_sprintf( IP, sizeof(IP), "%s", _IP );
 	safe_sprintf( Country, sizeof(Country), "%s", _Country );
@@ -56,47 +57,9 @@ inline const SatGeoData DummyGeoData() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-// http://tools.ietf.org/html/draft-zyp-json-schema-03
-// - ------------------------------------------------------------------------------------------ - //
-//const char LightSchema[] = "{\"IP\":\"text\",\"CountryCode\":\"text\",\"Latitude\":\"number\",\"Longitude\":\"number\"}";
-// - ------------------------------------------------------------------------------------------ - //
-int cJSON_ValidateSchema( cJSON* Schema, cJSON* Data ) {
-	for ( int idx = 0; idx < cJSON_GetArraySize(Schema); idx++ ) {
-		cJSON* Sc = cJSON_GetArrayItem(Schema,idx);
-		cJSON* Ob = cJSON_GetObjectItem( Data, Sc->string );
-
-//		printf( "> %s\n", cJSON_GetArrayItem(Schema,idx)->string );
-
-		// TODO: Objects (recursive) and maybe Arrays //
-		if ( Ob == 0 ) {
-			return 0;
-		}
-		else {
-			if ( strcmp( Sc->valuestring, "any" ) == 0 ) {
-			}
-			else if ( strcmp( Sc->valuestring, "string" ) == 0 ) {
-				if ( Ob->type != cJSON_String )
-					return 0;
-			}
-			else if ( strcmp( Sc->valuestring, "number" ) == 0 ) {
-				if ( Ob->type != cJSON_Number )
-					return 0;
-			}
-			else {
-				printf( "cJSON_ValidateSchema Error: Unknown Validation Parameter\n" );
-				return 0;
-			}
-		}
-	}
-	
-	return 1;
-}
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
 const SatGeoData LookupGeoData( const SatGeoService* Service ) {
 	SatGeoData Ret;
-	Ret.Success = false;
+	Ret.Good = false;
 		
 	GelArray<char>* NetData = gelNetGetText( Service->URL );
 	
@@ -150,7 +113,7 @@ const SatGeoData LookupGeoData( const SatGeoService* Service ) {
 				Ret.Longitude = cJSON_GetObjectItem( root, Service->LongitudeField )->valuedouble;
 
 			// Success!! //
-			Ret.Success = true;
+			Ret.Good = true;
 
 			// **** //
 			
@@ -162,20 +125,20 @@ const SatGeoData LookupGeoData( const SatGeoService* Service ) {
 		delete_GelArray<char>( NetData );
 	}
 	
-	if ( !Ret.Success ) {
+	if ( !Ret.IsGood() ) {
 		return DummyGeoData();
 	}
 	
 	return Ret;
 }
 // - ------------------------------------------------------------------------------------------ - //
-const SatGeoData GetMyGeoData() { 
+void SatGeoData::operator()( ) { 
 	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(SatGeoService); idx++ ) {
-		SatGeoData Ret = LookupGeoData( &GeoServices[idx] );
-		if ( Ret.Success )
-			return Ret;
+		*this = LookupGeoData( &GeoServices[idx] );
+		if ( IsGood() )
+			return;
 	}
 	
-	return DummyGeoData();
+	*this = DummyGeoData();
 }
 // - ------------------------------------------------------------------------------------------ - //

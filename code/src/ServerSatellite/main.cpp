@@ -14,15 +14,17 @@
 
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
+#include "Util/Functor.h"
 #include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 const NetAdapterInfo* Adapter;
-SatGeoData MyGeo;
+Functor<SatGeoData> MyGeo;
 
 // - ------------------------------------------------------------------------------------------ - //
-static void* WebServerCallback( mg_event event, mg_connection *conn ) {
+void* WebServerCallback( mg_event event, mg_connection *conn ) {
 	const mg_request_info* request_info = mg_get_request_info(conn);
+	//mg_get_user_data(conn);
 	
 	if (event == MG_NEW_REQUEST) {
 		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
@@ -152,7 +154,10 @@ int main( int argc, char* argv[] ) {
 
 	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 		
-	MyGeo = GetMyGeoData();
+	//MyGeo.GetThread().join();
+	auto GeoThread = MyGeo.new_thread();
+	GeoThread->join();
+	MyGeo.delete_thread( GeoThread );
 	
 	//Log( "ME: %s %s %f %f", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
 	
@@ -184,7 +189,7 @@ int main( int argc, char* argv[] ) {
 
 	// **** //
 	
-	if ( MyGeo.Success ) {	
+	if ( MyGeo.IsGood() ) {	
 		int MyPort = 10240;
 		int MyVersion = 100;
 		
