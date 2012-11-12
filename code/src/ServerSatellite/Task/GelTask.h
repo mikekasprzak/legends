@@ -16,7 +16,13 @@ public:
 	
 	
 public:
+	inline const bool IsReady() const {
+		return true;
+	}
 	
+	inline const bool IsFinished() const {
+		return true;
+	}
 };
 
 // - ------------------------------------------------------------------------------------------ - //
