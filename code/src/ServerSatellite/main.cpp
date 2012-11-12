@@ -14,11 +14,11 @@
 
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include "GELGeoData.h"
+#include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 const NetAdapterInfo* Adapter;
-GELGeoData MyGeo;
+SatGeoData MyGeo;
 
 // - ------------------------------------------------------------------------------------------ - //
 static void* WebServerCallback( mg_event event, mg_connection *conn ) {

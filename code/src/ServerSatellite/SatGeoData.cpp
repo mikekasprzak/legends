@@ -2,7 +2,7 @@
 #include "Net/NetGet.h"
 #include <cJSON/cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "GELGeoData.h"
+#include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -15,7 +15,7 @@
 
 
 // - ------------------------------------------------------------------------------------------ - //
-GELGeoData::GELGeoData( const char* _IP, const char* _Country, const float _Latitude, const float _Longitude, const bool _Success ) :
+SatGeoData::SatGeoData( const char* _IP, const char* _Country, const float _Latitude, const float _Longitude, const bool _Success ) :
 	Latitude( _Latitude ),
 	Longitude( _Longitude ),
 	Success( _Success )
@@ -26,7 +26,7 @@ GELGeoData::GELGeoData( const char* _IP, const char* _Country, const float _Lati
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-struct GELGeoService {
+struct SatGeoService {
 	const char* URL;
 	
 	const char* IPField;
@@ -38,20 +38,20 @@ struct GELGeoService {
 };
 // - ------------------------------------------------------------------------------------------ - //
 enum {
-	GELGEO_NONE = 			0x0,
-	GELGEO_STRINGLAT = 		0x1,
-	GELGEO_STRINGLONG = 	0x2,
-	GELGEO_STRINGLATLONG =	GELGEO_STRINGLAT | GELGEO_STRINGLONG,
+	SATGEO_NONE = 			0x0,
+	SATGEO_STRINGLAT = 		0x1,
+	SATGEO_STRINGLONG = 	0x2,
+	SATGEO_STRINGLATLONG =	SATGEO_STRINGLAT | SATGEO_STRINGLONG,
 };
 // - ------------------------------------------------------------------------------------------ - //
-const GELGeoService GeoServices[] = {
-	"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", GELGEO_NONE,
-	"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", GELGEO_NONE, 
-	"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", GELGEO_STRINGLATLONG,
+const SatGeoService GeoServices[] = {
+	"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", SATGEO_NONE,
+	"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", SATGEO_NONE, 
+	"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", SATGEO_STRINGLATLONG,
 };
 // - ------------------------------------------------------------------------------------------ - //
-inline const GELGeoData DummyGeoData() {
-	return GELGeoData( "?.?.?.?", "__", 0, 0, false );
+inline const SatGeoData DummyGeoData() {
+	return SatGeoData( "?.?.?.?", "__", 0, 0, false );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -94,8 +94,8 @@ int cJSON_ValidateSchema( cJSON* Schema, cJSON* Data ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-const GELGeoData LookupGeoData( const GELGeoService* Service ) {
-	GELGeoData Ret;
+const SatGeoData LookupGeoData( const SatGeoService* Service ) {
+	SatGeoData Ret;
 	Ret.Success = false;
 		
 	GelArray<char>* NetData = gelNetGetText( Service->URL );
@@ -110,8 +110,8 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 				"{\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\"}",
 				Service->IPField, "string",
 				Service->CountryField, "string",
-				Service->LatitudeField, (Service->Flags & GELGEO_STRINGLAT)  ? "string" : "number",
-				Service->LongitudeField,(Service->Flags & GELGEO_STRINGLONG) ? "string" : "number"
+				Service->LatitudeField, (Service->Flags & SATGEO_STRINGLAT)  ? "string" : "number",
+				Service->LongitudeField,(Service->Flags & SATGEO_STRINGLONG) ? "string" : "number"
 				);
 			
 			cJSON *Schema = cJSON_Parse( SchemaText );
@@ -138,13 +138,13 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 			safe_sprintf( Ret.Country, sizeof(Ret.Country), "%s", cJSON_GetObjectItem( root, Service->CountryField )->valuestring );
 
 			// Latitude //
-			if ( Service->Flags & GELGEO_STRINGLAT )
+			if ( Service->Flags & SATGEO_STRINGLAT )
 				Ret.Latitude = atof( cJSON_GetObjectItem( root, Service->LatitudeField )->valuestring );
 			else
 				Ret.Latitude = cJSON_GetObjectItem( root, Service->LatitudeField )->valuedouble;
 
 			// Longitude //
-			if ( Service->Flags & GELGEO_STRINGLONG )
+			if ( Service->Flags & SATGEO_STRINGLONG )
 				Ret.Longitude = atof( cJSON_GetObjectItem( root, Service->LongitudeField )->valuestring );
 			else
 				Ret.Longitude = cJSON_GetObjectItem( root, Service->LongitudeField )->valuedouble;
@@ -169,9 +169,9 @@ const GELGeoData LookupGeoData( const GELGeoService* Service ) {
 	return Ret;
 }
 // - ------------------------------------------------------------------------------------------ - //
-const GELGeoData GetMyGeoData() { 
-	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(GELGeoService); idx++ ) {
-		GELGeoData Ret = LookupGeoData( &GeoServices[idx] );
+const SatGeoData GetMyGeoData() { 
+	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(SatGeoService); idx++ ) {
+		SatGeoData Ret = LookupGeoData( &GeoServices[idx] );
 		if ( Ret.Success )
 			return Ret;
 	}
