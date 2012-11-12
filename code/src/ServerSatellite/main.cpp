@@ -21,40 +21,85 @@
 const NetAdapterInfo* Adapter;
 Functor<SatGeoData> MyGeo;
 
-// - ------------------------------------------------------------------------------------------ - //
-void* WebServerCallback( mg_event event, mg_connection *conn ) {
-	const mg_request_info* request_info = mg_get_request_info(conn);
-	//mg_get_user_data(conn);
-	
-	if (event == MG_NEW_REQUEST) {
-		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
-		
-		char content[1024];
-		int content_length = safe_sprintf(
-			content, sizeof(content),
-			"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
-			MyGeo.Country, MyGeo.IP,
-			Adapter->IP, Adapter->NetMask,
-			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
-			request_info->remote_port,
-			request_info->query_string
-			);
-
-		mg_printf(conn,
-			"HTTP/1.1 200 OK\r\n"
-			"Content-Type: text/plain\r\n"
-			"Content-Length: %d\r\n" // Always set Content-Length
-			"\r\n"
-			"%s",
-			content_length, content);
-		
-		// Mark as processed
-		return (void*)"";
-	} 
-	else {
-		return NULL;
+class cApp {
+	typedef cApp thistype;
+public:
+	inline void* GetThis() {
+		return this;
 	}
-}
+	
+	void* WebServerCallback( mg_event event, mg_connection *conn ) {
+		const mg_request_info* request_info = mg_get_request_info(conn);
+		
+		if (event == MG_NEW_REQUEST) {
+			const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
+			
+			char content[1024];
+			int content_length = safe_sprintf(
+				content, sizeof(content),
+				"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
+				MyGeo.Country, MyGeo.IP,
+				Adapter->IP, Adapter->NetMask,
+				(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
+				request_info->remote_port,
+				request_info->query_string
+				);
+	
+			mg_printf(conn,
+				"HTTP/1.1 200 OK\r\n"
+				"Content-Type: text/plain\r\n"
+				"Content-Length: %d\r\n" // Always set Content-Length
+				"\r\n"
+				"%s",
+				content_length, content);
+			
+			// Mark as processed
+			return (void*)"";
+		} 
+		else {
+			return NULL;
+		}
+	}	
+	
+	static void* stWebServerCallback( mg_event event, mg_connection *conn ) {
+		cApp* th = (cApp*)mg_get_user_data(conn);
+		return th->WebServerCallback( event, conn );
+	}
+};
+
+// - ------------------------------------------------------------------------------------------ - //
+//void* WebServerCallback( mg_event event, mg_connection *conn ) {
+//	const mg_request_info* request_info = mg_get_request_info(conn);
+//	
+//	if (event == MG_NEW_REQUEST) {
+//		const unsigned char* IP = (const unsigned char*)&request_info->remote_ip;
+//		
+//		char content[1024];
+//		int content_length = safe_sprintf(
+//			content, sizeof(content),
+//			"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
+//			MyGeo.Country, MyGeo.IP,
+//			Adapter->IP, Adapter->NetMask,
+//			(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
+//			request_info->remote_port,
+//			request_info->query_string
+//			);
+//
+//		mg_printf(conn,
+//			"HTTP/1.1 200 OK\r\n"
+//			"Content-Type: text/plain\r\n"
+//			"Content-Length: %d\r\n" // Always set Content-Length
+//			"\r\n"
+//			"%s",
+//			content_length, content);
+//		
+//		// Mark as processed
+//		return (void*)"";
+//	} 
+//	else {
+//		return NULL;
+//	}
+//}
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -145,6 +190,10 @@ int main( int argc, char* argv[] ) {
 	
 	// **** //
 	
+	cApp App;
+	
+	// **** //	
+	
 	SatBodyTest();
 	
 	// **** //
@@ -172,7 +221,8 @@ int main( int argc, char* argv[] ) {
 		struct mg_context *ctx;
 		const char *options[] = {"listening_ports", PortString, NULL};
 		
-		ctx = mg_start( &WebServerCallback, NULL, options );
+//		ctx = mg_start( &WebServerCallback, NULL, options );
+		ctx = mg_start( &App.stWebServerCallback, App.GetThis(), options );
 		Log( "Webserver started on Port %s.", PortString ); 
 		Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );
 		fflush(0);
