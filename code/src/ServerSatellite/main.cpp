@@ -10,24 +10,18 @@
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
 
-#include "../GameSatellite/SatBody/SatBody.h"
-
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "Util/Functor.h"
 #include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
 
-const NetAdapterInfo* Adapter;
-Functor<SatGeoData> MyGeo;
+//const NetAdapterInfo* Adapter;
 
 class cApp {
 public: // Class Helpers //
 	typedef cApp thistype;
-
-	inline void* GetThis() {
-		return this;
-	}
+	inline void* GetThis() { return this; }
 
 public:
 	class cSettings {
@@ -49,16 +43,26 @@ public:
 	} Settings;
 	
 	// Not settings //
-	int Requests;
 
-public:
+	pNetAdapterInfo* Adapters;
+	const NetAdapterInfo* Adapter;
+	
+	TFunctor<SatGeoData>* MyGeo;
+
+public: // WebServer -------------------------------------------------------------------------- - //
 	struct mg_context* WebServer_ctx;
+	int WebServer_Requests;
 	
 	void WebServer_Start() {
+		WebServer_Requests = 0;
+		
 		char PortString[7];
 		safe_sprintf( PortString, sizeof(PortString), "%i", Settings.Port );
 	
-		const char *options[] = {"listening_ports", PortString, NULL};
+		const char *options[] = {
+			"listening_ports", PortString, 
+			NULL
+		};
 		
 		WebServer_ctx = mg_start( &stWebServer_Callback, this, options );
 		Log( "Webserver started on Port %s.", PortString ); 
@@ -66,15 +70,13 @@ public:
 	}
 	
 	void WebServer_Stop() {
-//		fflush(0);
-//		getchar(); // Wait until user hits "enter"
-		mg_stop(WebServer_ctx);
+		mg_stop( WebServer_ctx );
 	}
 	
 	void* WebServer_Callback( mg_event event, mg_connection *conn ) {
 		const mg_request_info* request_info = mg_get_request_info(conn);
 		
-//		Requests++;
+		WebServer_Requests++;
 //		Log( "* %i %i", Requests, event );
 		
 		// Standard Web Requests give me 2 messages:
@@ -88,7 +90,7 @@ public:
 			int content_length = safe_sprintf(
 				content, sizeof(content),
 				"Hello from %s (Internet: %s, LAN: %s | %s)!\n\nYou are %i.%i.%i.%i:%i -- %s",
-				MyGeo.Country, MyGeo.IP,
+				MyGeo->Country, MyGeo->IP,
 				Adapter->IP, Adapter->NetMask,
 				(int)IP[3],(int)IP[2],(int)IP[1],(int)IP[0],
 				request_info->remote_port,
@@ -120,10 +122,88 @@ public:
 		return th->WebServer_Callback( event, conn );
 	}
 
+public: // Matchmaking //
+	
+
 public:
-	cApp() :
-		Requests( 0 )
-	{
+	cApp() {
+		// Start Threads //
+		MyGeo = new TFunctor<SatGeoData>();
+		
+		Adapters = new_pNetAdapterInfo();
+		Adapter = get_primary_pNetAdapterInfo( Adapters );
+		
+		Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+		
+	}
+	
+	~cApp() {
+		delete_pNetAdapterInfo( Adapters );
+
+		delete( MyGeo );
+	}
+	
+	int operator()( ) {
+		// Wait for threads to finish //
+		MyGeo->join();
+
+		if ( MyGeo->IsGood() ) {	
+			int MyPort = 10240;
+			int MyVersion = 100;
+			
+			printf( "Sending Update Packet...\n" );
+			fflush( 0 );
+			
+			{
+				char KeyData[1024];
+				safe_sprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
+					MyPort,
+					MyGeo->IP,
+					MyVersion,
+					"ChupacabraSatellites"
+					);
+				
+				MD5Hash MD5 = hash_MD5_Data( KeyData, strlen(KeyData) );	
+				
+				char PostData[4096];
+				safe_sprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
+					MyGeo->IP,
+					MyPort,
+					MyVersion,
+					MyGeo->Latitude,
+					MyGeo->Longitude,
+					"DD",
+					MyGeo->Country,
+					"__",
+					"__",
+					MD5.Text // Not actually a key //
+					);
+				
+				printf( "To Send: %s\n", PostData );
+				
+				GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
+				
+				// Nothing to do with it //
+				printf( "Return: \n%s\n", ServerData->Data );
+				
+				delete_GelArray<char>( ServerData );
+			}
+		}	
+				
+		// Init //
+		WebServer_Start();
+		
+		// Do Stuff //
+		{
+			fflush(0);
+			getchar(); // Wait until user hits "enter"
+		}
+		
+		// Cleanup //		
+		WebServer_Stop();
+
+		// Finished //
+		return 0;
 	}
 };
 
@@ -131,110 +211,33 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 
 
-void SatBodyTest() {
-	cSatModule Module;
-//	Module.Add( SatComponent::PLANAR );
-//	Module.Component->Back().Planar.Add();
-//	//Module.Component->Back().Planar.Data[0];
-
-	Module.AddPlanar( 6 );
-	auto Planar = Module.Component->Back().Planar.Data;
-	
-	Log( "> %i", Planar->Size );
-
-	{
-		size_t idx = 0;
-		
-		// Front and Back //
-		Planar->Data[idx++].Set( Vector3D(0,2,0), Vector3D(0,1,0) );
-		Planar->Data[idx++].Set( Vector3D(0,-2,0), Vector3D(0,-1,0) );
-		
-		// Sides //
-//		Planar->Data[idx++].Set( Vector3D(1,0,0), Vector3D(1,0,0) );
-//		Planar->Data[idx++].Set( Vector3D(-1,0,0), Vector3D(-1,0,0) );
-		Planar->Data[idx++].Set( Vector3D(1,0,0), Vector3D(+0.9659,+0.2588,0) );
-		Planar->Data[idx++].Set( Vector3D(-1,0,0), Vector3D(-0.9659,-0.2588,0) );
-		
-		// Top and Bottom //
-		Planar->Data[idx++].Set( Vector3D(0,0,1), Vector3D(0,0,1) );
-		Planar->Data[idx++].Set( Vector3D(0,0,-1), Vector3D(0,0,-1) );
-	}
-	
-
-	int Count = 0;
-
-	// http://www.softsurfer.com/Archive/algorithm_0104/algorithm_0104B.htm#Intersection%20of%203%20Planes
-	//
-	// I am not 100% sure yet if this is detecting the correct number of intersections. //
-	// I am going to need to see the results graphed. //
-	// When I flip the sign of the Y axis in Side2 (above), I get 2 weird coords //
-	// I'm expecting 2 more coords actually, but not where they were coming up. //
-	//
-	// Our goal is to get the points, since they help us define the convex hull. //
-	// Later, take note of all points found on the specific planes. Do this during detection. //
-	// Once we have all points on each plane, we can walk around the outsides to build the polygon. //
-	// Once we have the polygon of each plane (face), we can eliminate duplicate vertices. //
-	// Then we can build the faces by triangulating. //
-	// Presto! We have build a component's mesh! //
-	//
-	// NOTE: Knowing edges will be helpful later when aligning components to other components. //
-	//   A component may want to align to the center (fin), or above and below an edge (wings) in the normal dir. //
-	for ( auto a = 0; a < Planar->Size; a++ ) {
-		for ( auto b = a+1; b < Planar->Size; b++ ) {
-			for ( auto c = b+1; c < Planar->Size; c++ ) {
-					
-				Real Intersection =
-					dot( Planar->Data[a].Normal, cross( Planar->Data[b].Normal, Planar->Data[c].Normal ) );
-				
-				if ( !Intersection.IsZero() ) {
-					// D's are the dot of the normal and point //
-					Real D1 = dot( Planar->Data[a].Normal, Planar->Data[a].Point );
-					Real D2 = dot( Planar->Data[b].Normal, Planar->Data[b].Point );
-					Real D3 = dot( Planar->Data[c].Normal, Planar->Data[c].Point );
-					
-					// Multiply the D's by the cross product of the OTHER normals //
-					Vector3D Result = (
-						-D1 * cross( Planar->Data[b].Normal, Planar->Data[c].Normal ) +
-						-D2 * cross( Planar->Data[a].Normal, Planar->Data[c].Normal ) +
-						-D3 * cross( Planar->Data[a].Normal, Planar->Data[b].Normal ) 
-						) /
-						Intersection;
-					
-					Log( "* %f -- %f, %f, %f", Intersection.ToFloat(), Result.x.ToFloat(), Result.y.ToFloat(), Result.z.ToFloat() );
-				}
-				Count++;
-			}
-		}
-	}
-	
-	Log( "> %i", Count );
-
-	
-}
-
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	gelNetInit();
 	
 	// **** //
 	
-	cApp App;
-	
-	// **** //	
-	
+	extern void SatBodyTest();
 	SatBodyTest();
 	
 	// **** //
 
-	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
-	Adapter = get_primary_pNetAdapterInfo( Adapters );
+	{
+		cApp App;
+		App();
+	}
+	
+	// **** //	
 
-	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+//	pNetAdapterInfo* Adapters = new_pNetAdapterInfo();
+//	Adapter = get_primary_pNetAdapterInfo( Adapters );
+//
+//	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 		
 	//MyGeo.GetThread().join();
-	auto GeoThread = MyGeo.new_thread();
-	GeoThread->join();
-	MyGeo.delete_thread( GeoThread );
+//	auto GeoThread = MyGeo.new_thread();
+//	GeoThread->join();
+//	MyGeo.delete_thread( GeoThread );
 	
 	//Log( "ME: %s %s %f %f", MyGeo.IP, MyGeo.Country, MyGeo.Latitude, MyGeo.Longitude );
 	
@@ -260,57 +263,57 @@ int main( int argc, char* argv[] ) {
 //		return 0;
 //	}
 
-	App.WebServer_Start();
+//	App.WebServer_Start();
 
 	// **** //
 
-	printf( "Lets Start!\n" );
-	fflush( 0 );
+//	printf( "Lets Start!\n" );
+//	fflush( 0 );
 
 	// **** //
 	
-	if ( MyGeo.IsGood() ) {	
-		int MyPort = 10240;
-		int MyVersion = 100;
-		
-		printf( "Sending Update Packet...\n" );
-		fflush( 0 );
-		
-		{
-			char KeyData[1024];
-			safe_sprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
-				MyPort,
-				MyGeo.IP,
-				MyVersion,
-				"ChupacabraSatellites"
-				);
-			
-			MD5Hash MD5 = hash_MD5_Data( KeyData, strlen(KeyData) );	
-			
-			char PostData[4096];
-			safe_sprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
-				MyGeo.IP,
-				MyPort,
-				MyVersion,
-				MyGeo.Latitude,
-				MyGeo.Longitude,
-				"DD",
-				MyGeo.Country,
-				"__",
-				"__",
-				MD5.Text // Not actually a key //
-				);
-			
-			printf( "To Send: %s\n", PostData );
-			
-			GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
-			
-			// Nothing to do with it //
-			printf( "Return: \n%s\n", ServerData->Data );
-			
-			delete_GelArray<char>( ServerData );
-		}
-	}	
+//	if ( MyGeo.IsGood() ) {	
+//		int MyPort = 10240;
+//		int MyVersion = 100;
+//		
+//		printf( "Sending Update Packet...\n" );
+//		fflush( 0 );
+//		
+//		{
+//			char KeyData[1024];
+//			safe_sprintf( KeyData, sizeof(KeyData), "%i&%s&%i&%s",
+//				MyPort,
+//				MyGeo.IP,
+//				MyVersion,
+//				"ChupacabraSatellites"
+//				);
+//			
+//			MD5Hash MD5 = hash_MD5_Data( KeyData, strlen(KeyData) );	
+//			
+//			char PostData[4096];
+//			safe_sprintf( PostData, sizeof(PostData), "action=update&Address=%s&Port=%i&Version=%i&Latitude=%f&Longitude=%f&Info=%s%s%s%s&Key=%s",
+//				MyGeo.IP,
+//				MyPort,
+//				MyVersion,
+//				MyGeo.Latitude,
+//				MyGeo.Longitude,
+//				"DD",
+//				MyGeo.Country,
+//				"__",
+//				"__",
+//				MD5.Text // Not actually a key //
+//				);
+//			
+//			printf( "To Send: %s\n", PostData );
+//			
+//			GelArray<char>* ServerData = gelNetPostText( "http://sykhronics.com/satellite/json.php", PostData );
+//			
+//			// Nothing to do with it //
+//			printf( "Return: \n%s\n", ServerData->Data );
+//			
+//			delete_GelArray<char>( ServerData );
+//		}
+//	}	
 
 	// **** //
 
@@ -322,14 +325,14 @@ int main( int argc, char* argv[] ) {
 
 	// **** //
 
-	fflush(0);
-	getchar(); // Wait until user hits "enter"
+//	fflush(0);
+//	getchar(); // Wait until user hits "enter"
 
 	// **** //
 	
-	App.WebServer_Stop();
-
-	delete_pNetAdapterInfo( Adapters );
+//	App.WebServer_Stop();
+//
+//	delete_pNetAdapterInfo( Adapters );
 
 	return 0;
 }
