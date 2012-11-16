@@ -8,13 +8,13 @@ void cApp::WebServer_Start() {
 	WebServer_Requests = 0;
 	
 	char PortString[7];
-	safe_sprintf( PortString, sizeof(PortString), "%i", Settings.Port );
+	safe_sprintf( PortString, sizeof(PortString), "%i", Settings.WebServerPort );
 
 	const char *options[] = {
 		"listening_ports", PortString, 
 		NULL
 	};
-	
+
 	WebServer_ctx = mg_start( &stWebServer_Callback, this, options );
 	Log( "Webserver started on Port %s.", PortString ); 
 	Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );

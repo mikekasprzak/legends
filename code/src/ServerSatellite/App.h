@@ -29,10 +29,12 @@ public:
 	class cSettings {
 	public:
 		int Port;
+		int WebServerPort;
 	
 	public:
 		cSettings() :
-			Port( 10080 )
+			Port( 10240 ),
+			WebServerPort( 10080 )
 		{
 			Load();
 		}
