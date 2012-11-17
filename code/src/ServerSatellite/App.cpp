@@ -28,6 +28,7 @@ int cApp::operator()( ) {
 			
 	// Init //
 	WebServer_Start();
+	Server_Start();
 	
 	// Do Stuff //
 	{
@@ -35,7 +36,8 @@ int cApp::operator()( ) {
 		getchar(); // Wait until user hits "enter"
 	}
 	
-	// Cleanup //		
+	// Cleanup //
+	Server_Stop();
 	WebServer_Stop();
 
 	// Finished //

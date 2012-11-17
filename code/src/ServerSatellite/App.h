@@ -15,6 +15,8 @@
 
 #include "NetAdapter/NetAdapter.h"
 // - ------------------------------------------------------------------------------------------ - //
+#include <enet/enet.h>
+// - ------------------------------------------------------------------------------------------ - //
 #include "Util/Functor.h"
 #include "SatGeoData.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -63,10 +65,20 @@ public: // WebServer -----------------------------------------------------------
 	void* WebServer_Callback( mg_event event, mg_connection *conn );
 	static void* stWebServer_Callback( mg_event event, mg_connection *conn );
 
-public: // Matchmaking //
-	
+public: // Matchmaking ------------------------------------------------------------------------ - //
 
-public:
+public: // Server ----------------------------------------------------------------------------- - //
+	ENetHost* Server_NetHost;
+	
+	enum {
+		CH_MESSAGE = 0,		// Messages Channel. Chat, Broadcasts, etc // 
+		CH_DATA = 1,
+	};
+
+	int Server_Start();
+	void Server_Stop();
+	
+public: // Main ------------------------------------------------------------------------------- - //
 	cApp();
 	~cApp();
 	int operator()( );
