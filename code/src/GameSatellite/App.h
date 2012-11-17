@@ -3,17 +3,17 @@
 #define __SAT_APP_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
-#include "Util/sprintf.h"
+#include <Util/sprintf.h>
 
-#include "Net/Net.h"
-#include "Net/NetGet.h"
+#include <Net/Net.h>
+#include <Net/NetGet.h>
 
-#include "NetAdapter/NetAdapter.h"
+#include <NetAdapter/NetAdapter.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <enet/enet.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Util/Functor.h"
-#include "SatGeoData.h"
+#include <Sat/SatGeoData.h>
+#include <Util/Functor.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

@@ -7,7 +7,7 @@ FLAGS="--std=gnu++0x"
 DEFINES="-DCURL_STATICLIB"
 INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ../ServerSatellite/ -I ."
 CFILES="../ServerSatellite/Util/*.c ../External/cJSON/*.c ../External/Mongoose/*.c"
-CPPFILES="*.cpp ../ServerSatellite/Net/*.cpp ../External/TinyThread/*.cpp ../GEL/Debug/*.cpp ../GEL/Math/*.cpp ../GEL/Math/Vector/*.cpp ../GEL/Math/Matrix/*.cpp ../ServerSatellite/NetAdapter/*.cpp"
+CPPFILES="*.cpp ../ServerSatellite/Net/*.cpp ../ServerSatellite/Sat/*.cpp ../External/TinyThread/*.cpp ../GEL/Debug/*.cpp ../GEL/Math/*.cpp ../GEL/Math/Vector/*.cpp ../GEL/Math/Matrix/*.cpp ../ServerSatellite/NetAdapter/*.cpp"
 LIBS="-L /usr/local/ssl/lib -lcrypto -L /usr/local/lib -lenet -lwinmm"
 
 SYSTEM=`uname`

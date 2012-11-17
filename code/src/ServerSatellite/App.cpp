@@ -32,6 +32,7 @@ int cApp::operator()( ) {
 	
 	// Do Stuff //
 	{
+		Server_Poll();
 		fflush(0);
 		getchar(); // Wait until user hits "enter"
 	}

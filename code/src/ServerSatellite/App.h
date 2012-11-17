@@ -3,22 +3,22 @@
 #define __SAT_APP_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
-#include "Util/sprintf.h"
+#include <Util/sprintf.h>
 
-#include "Net/Net.h"
-#include "Net/NetGet.h"
+#include <Net/Net.h>
+#include <Net/NetGet.h>
 
 #include <Mongoose/mongoose.h>
 
 #include <cJSON/cJSON.h>
 #include <Core/Data_MD5.h>
 
-#include "NetAdapter/NetAdapter.h"
+#include <NetAdapter/NetAdapter.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <enet/enet.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Util/Functor.h"
-#include "SatGeoData.h"
+#include <Sat/SatGeoData.h>
+#include <Util/Functor.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -79,7 +79,8 @@ public: // Server --------------------------------------------------------------
 
 	int Server_Start();
 	void Server_Stop();
-	
+	void Server_Poll();
+		
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();
 	~cApp();

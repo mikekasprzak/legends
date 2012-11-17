@@ -30,7 +30,8 @@ bool cApp::Client_Connect() {
 	ENetAddress Address;
 	ENetEvent Event;
 
-	enet_address_set_host( &Address, "foagies.mooo.com" );
+//	enet_address_set_host( &Address, "foagies.mooo.com" );
+	enet_address_set_host( &Address, "127.0.0.1" );
 	Address.port = 10240;
 
 	Client_Peer = enet_host_connect(

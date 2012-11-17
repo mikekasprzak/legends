@@ -13,7 +13,7 @@ cApp::cApp() {
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
 	
 	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
-	
+	fflush(0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
