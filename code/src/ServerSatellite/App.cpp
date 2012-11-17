@@ -3,6 +3,8 @@
 #include "Util/sprintf.h"
 
 #include "App.h"
+
+#include <curses.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -31,10 +33,12 @@ int cApp::operator()( ) {
 	Server_Start();
 	
 	// Do Stuff //
-	{
+	int TheChar;
+	while ( (TheChar = getch()) != 27 ) {
+//	{
 		Server_Poll();
 		fflush(0);
-		getchar(); // Wait until user hits "enter"
+//		getchar(); // Wait until user hits "enter"
 	}
 	
 	// Cleanup //
