@@ -32,7 +32,9 @@ int cApp::operator()( ) {
 	// Init //
 	WebServer_Start();
 	Server_Start();
-	
+
+
+
 //	cbreak();
 //	halfdelay(1);
 //	noecho();
@@ -61,6 +63,8 @@ int cApp::operator()( ) {
 //		fflush(0);
 //		getchar(); // Wait until user hits "enter"
 	}
+	
+	endwin();
 	
 	// Cleanup //
 	Server_Stop();
