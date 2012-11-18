@@ -4,6 +4,7 @@
 
 #include "App.h"
 
+#undef MOUSE_MOVED
 #include <curses.h>
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -32,12 +33,26 @@ int cApp::operator()( ) {
 	WebServer_Start();
 	Server_Start();
 	
+//	cbreak();
+//	halfdelay(1);
+//	noecho();
+//	refresh();
+
+// This doesn't work without a Window //
+
+//    filter();
+    initscr();
+//    newterm(NULL,stdout,stdin);
+    cbreak();
+	halfdelay(1);
+    noecho();
+//    keypad(stdscr, TRUE);
+	
 	// Do Stuff //
 	int TheChar;
 	while ( (TheChar = getch()) != 27 ) {
-//	{
 		Server_Poll();
-		fflush(0);
+//		fflush(0);
 //		getchar(); // Wait until user hits "enter"
 	}
 	
