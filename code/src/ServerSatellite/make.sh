@@ -23,12 +23,12 @@ if [ -n "$WINDIR" ]; then
 elif [ "$SYSTEM" = "FreeBSD" ]; then
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
-	LIBS="$LIBS `curl-config --libs` -lpthread -lncurses libenet.a"
+	LIBS="$LIBS `curl-config --libs` -lpthread -lncurses /usr/local/lib/libenet.a"
 	FLAGS="$FLAGS -Wl,-rpath,$ORIGIN"
 else
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
-	LIBS="$LIBS `curl-config --libs` -ldl -lncurses libenet.a"
+	LIBS="$LIBS `curl-config --libs` -ldl -lncurses /usr/local/lib/libenet.a"
 	FLAGS="$FLAGS -Wl,-rpath,$ORIGIN"
 fi  
 
