@@ -24,10 +24,12 @@ elif [ "$SYSTEM" = "FreeBSD" ]; then
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
 	LIBS="$LIBS `curl-config --libs` -lpthread -lncurses"
+	FLAGS="$FLAGS -Wl,-rpath,$$ORIGIN"
 else
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
 	LIBS="$LIBS `curl-config --libs` -ldl -lncurses"
+	FLAGS="$FLAGS -Wl,-rpath,$$ORIGIN"
 fi  
 
 g++ $DEFINES $INCLUDES $CPPFILES $CFILES -o SatServ.exe $LIBS $FLAGS
