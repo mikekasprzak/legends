@@ -23,11 +23,11 @@ if [ -n "$WINDIR" ]; then
 elif [ "$SYSTEM" = "FreeBSD" ]; then
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
-	LIBS="$LIBS `curl-config --libs` -lpthread"
+	LIBS="$LIBS `curl-config --libs` -lpthread -lncurses"
 else
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"
-	LIBS="$LIBS `curl-config --libs` -ldl"
+	LIBS="$LIBS `curl-config --libs` -ldl -lncurses"
 fi  
 
 g++ $DEFINES $INCLUDES $CPPFILES $CFILES -o SatServ.exe $LIBS $FLAGS
