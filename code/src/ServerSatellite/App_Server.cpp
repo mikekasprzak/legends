@@ -1,11 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include "Text/Out.h"
 
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 int cApp::Server_Start() {
 	if ( enet_initialize() != 0 ) {
-		Log("Error Initializing ENet");
+		Out("Error Initializing ENet");
 		return 1;	
 	}		
 	
@@ -21,7 +21,7 @@ int cApp::Server_Start() {
 		0 			// Outgoing Bandwidth (0=no limit) //
 		);
 
-	Log( "* %s Started on %i.%i.%i.%i %i\n", 
+	Out( "* %s Started on %i.%i.%i.%i %i\n", 
 		Server_NetHost ? "Server":"Client",
 		(Address.host>>0)&255, 
 		(Address.host>>8)&255, 
@@ -44,20 +44,20 @@ void cApp::Server_Poll() {
 	while ( enet_host_service( Server_NetHost, &NetEvent, 0 ) > 0 ) {
 		switch ( NetEvent.type ) {
 			case ENET_EVENT_TYPE_CONNECT: {
-				Log("* Connection!");
+				Out("* Connection!");
 				break;
 			}
 	        case ENET_EVENT_TYPE_RECEIVE: {
-				Log("* PACKET!");
+				Out("* PACKET!");
 	        	
 	            break;
 	        }
 			case ENET_EVENT_TYPE_DISCONNECT: {
-				Log("* Disconnected");
+				Out("* Disconnected");
 				break;
 			}
 			default: {
-				Log("* WTF!");
+				Out("* WTF!");
 				break;
 			}
 		}					

@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include "Text/Out.h"
 #include "Util/sprintf.h"
 
 #include "App.h"
@@ -16,8 +16,8 @@ void cApp::WebServer_Start() {
 	};
 
 	WebServer_ctx = mg_start( &stWebServer_Callback, this, options );
-	Log( "Webserver started on Port %s.", PortString ); 
-	Log( "Visit http://%s:%s in a web browser to edit settings.", Adapter->IP, PortString );
+	Out( "Webserver started on Port %s.", PortString ); 
+	Out( "Visit http://%s:%s (or http://localhost:%s) in a web browser to edit settings.", Adapter->IP, PortString, PortString );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::WebServer_Stop() {

@@ -15,10 +15,20 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // ** Documentation ** //
+// A Great Tutorial -- http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/intro.html
+
 // cbreak/delay/echo/etc	-- http://linux.die.net/man/3/cbreak
 // getch					-- http://linux.die.net/man/3/curs_getch
 // start_color/init_pair	-- http://linux.die.net/man/3/start_color
 // attrset/attron			-- http://linux.die.net/man/3/attron
+// clear					-- http://linux.die.net/man/3/wclear
+
+// This is cool. Win32a, an enhanced PDCurses w/ SDL. http://www.projectpluto.com/win32a.htm
+
+// - ------------------------------------------------------------------------------------------ - //
+int Out_Rows;
+int Out_Columns;
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 void OutInit() {
@@ -41,6 +51,8 @@ void OutInit() {
 	init_pair( 6, COLOR_CYAN,		COLOR_BLACK );
 	init_pair( 7, COLOR_WHITE,		COLOR_BLACK );
 	init_pair( 8, COLOR_BLACK, 		COLOR_BLACK );
+	
+	getmaxyx( stdscr, Out_Rows, Out_Columns );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void OutExit() {
@@ -93,7 +105,21 @@ void OutFlush() {
 	refresh();
 }
 // - ------------------------------------------------------------------------------------------ - //
+void OutClear() {
+	clear();
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 int GetCh() {
 	return getch();
+}
+// - ------------------------------------------------------------------------------------------ - //
+int GetRows() {
+	return Out_Rows;
+}
+// - ------------------------------------------------------------------------------------------ - //
+int GetColumns() {
+	return Out_Columns;
 }
 // - ------------------------------------------------------------------------------------------ - //

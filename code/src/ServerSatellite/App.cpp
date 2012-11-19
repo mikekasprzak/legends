@@ -1,9 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
 #include "Util/sprintf.h"
 
 #include "App.h"
 
+#include <Timer/Timer.h>
 #include <Text/Out.h>
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -14,7 +14,7 @@ cApp::cApp() {
 	Adapters = new_pNetAdapterInfo();
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
 	
-	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+	Out( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 	
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -31,33 +31,14 @@ int cApp::operator()( ) {
 	// Init //
 	WebServer_Start();
 	Server_Start();
-
-	OutInit();
-	
-	Out( "This is shitty 'eh" );
-	OutColor( OUT_RED );
-	Out( "This is shittier" );
-	OutColor( OUT_INV_RED );
-	Out( "This is shittier" );
-	OutColor( OUT_LIGHT_RED );
-	Out( "This is shittier" );
-	OutColor( OUT_INV_LIGHT_RED );
-	Out( "This is shittier" );
-	OutResetColor();
-	Out( "Indeed" );
-	
-	//OutFlush();
 	
 	// Do Stuff //
 	int TheChar;
 	while ( (TheChar = GetCh()) != 27 ) {
 		Server_Poll();
-//		fflush(0);
-//		getchar(); // Wait until user hits "enter"
+		Wait(50); // 20 times per second //
 	}
-	
-	OutExit();
-	
+		
 	// Cleanup //
 	Server_Stop();
 	WebServer_Stop();

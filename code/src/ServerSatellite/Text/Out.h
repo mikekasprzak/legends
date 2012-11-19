@@ -13,7 +13,11 @@ void OutFlush();
 void OutColor( const int Color );
 void OutResetColor();
 
+void OutClear();
+
 int GetCh();
+int GetRows();
+int GetColumns();
 
 // - ------------------------------------------------------------------------------------------ - //
 enum {
