@@ -4,7 +4,7 @@
 
 #include "App.h"
 
-#include <Util/curses.h>
+#include <Text/Out.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -32,38 +32,31 @@ int cApp::operator()( ) {
 	WebServer_Start();
 	Server_Start();
 
-
-
-//	cbreak();
-//	halfdelay(1);
-//	noecho();
-//	refresh();
-
-// This doesn't work without a Window //
-
-//    filter();
-    initscr();
-//    newterm(NULL,stdout,stdin);
-    cbreak();
-	halfdelay(1);
-    noecho();
-//    keypad(stdscr, TRUE);
-
-	start_color();
-	init_pair( 1, COLOR_RED, COLOR_BLACK );
-	attron( COLOR_PAIR(1) );
-
-	printw( "This is shitty\n" );
+	OutInit();
+	
+	Out( "This is shitty 'eh" );
+	OutColor( OUT_RED );
+	Out( "This is shittier" );
+	OutColor( OUT_INV_RED );
+	Out( "This is shittier" );
+	OutColor( OUT_LIGHT_RED );
+	Out( "This is shittier" );
+	OutColor( OUT_INV_LIGHT_RED );
+	Out( "This is shittier" );
+	OutResetColor();
+	Out( "Indeed" );
+	
+	//OutFlush();
 	
 	// Do Stuff //
 	int TheChar;
-	while ( (TheChar = getch()) != 27 ) {
+	while ( (TheChar = GetCh()) != 27 ) {
 		Server_Poll();
 //		fflush(0);
 //		getchar(); // Wait until user hits "enter"
 	}
 	
-	endwin();
+	OutExit();
 	
 	// Cleanup //
 	Server_Stop();
