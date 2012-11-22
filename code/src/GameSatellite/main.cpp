@@ -100,12 +100,37 @@ int main( int argc, char* argv[] ) {
 	
 	// **** //
 	
+	int ScreenW, ScreenH;
+	
+	{
+		Log( "Video Displays" );
+		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {		
+			SDL_DisplayMode Mode;
+			SDL_GetDesktopDisplayMode( idx, &Mode );
+			ScreenW = Mode.w;
+			ScreenH = Mode.h;
+
+			SDL_Rect Rect;
+			SDL_GetDisplayBounds( idx, &Rect );
+			
+			Log( "%i - %i, %i at %i Hz [%x] -- Location: %i, %i (%i,%i)", idx, Mode.w, Mode.h, Mode.refresh_rate, Mode.format, Rect.x, Rect.y, Rect.w, Rect.h );
+		}
+	}
+	
+	// **** //
+	
+	ScreenW *= 90;
+	ScreenW /= 100;
+
+	ScreenH *= 90;
+	ScreenH /= 100;
+	
 	SDL_Window* pWindow;
 	pWindow = SDL_CreateWindow(
 		FullProductName,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640, 480,
+		ScreenW, ScreenH,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
 		);
 	
@@ -113,9 +138,14 @@ int main( int argc, char* argv[] ) {
 	
 	if ( pWindow == NULL ) {
 		Log( "Error Creating Window: %s", SDL_GetError() );
+		return 1;
 	}
 	
+//	SDL_DisableScreenSaver();
+	
 	// **** //
+	
+	Log( "" );
 
 	{
 		cApp App;
