@@ -19,7 +19,7 @@ SYSTEM=`uname`
 # If $WINDIR is NOT set #
 if [ -n "$WINDIR" ]; then
 	INCLUDES="$INCLUDES -I ../External/PDCurses/include"
-	LIBS="$LIBS ../External/PDCurses/pdcurses.lib `curl-config --static-libs` -lIphlpapi -lwinmm -lenet -static"
+	LIBS="$LIBS -lenet -lwinmm ../External/PDCurses/pdcurses.lib `curl-config --static-libs` -lIphlpapi -static"
 elif [ "$SYSTEM" = "FreeBSD" ]; then
 	INCLUDES="$INCLUDES"
 	DEFINES="$DEFINES -DUSES_UNIX_TIMER"

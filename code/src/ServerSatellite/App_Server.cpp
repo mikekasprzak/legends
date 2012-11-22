@@ -16,7 +16,7 @@ int cApp::Server_Start() {
 	Server_NetHost = enet_host_create( 
 		&Address, 	// Address to bind to //
 		32, 		// Clients and/or outgoing connections //
-		2, 			// Channels (2 means 0,1) //
+		CH_MAX, 	// Channels //
 		0, 			// Incoming Bandwitdth (0=no limit) //
 		0 			// Outgoing Bandwidth (0=no limit) //
 		);
@@ -38,17 +38,36 @@ void cApp::Server_Stop() {
 	enet_deinitialize();
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cApp::Server_Poll() {
-	ENetEvent NetEvent;
+void cApp::Server_Poll( const int TimeInMS ) {
+	ENetEvent Event;
 	
-	while ( enet_host_service( Server_NetHost, &NetEvent, 0 ) > 0 ) {
-		switch ( NetEvent.type ) {
+	while ( enet_host_service( Server_NetHost, &Event, TimeInMS ) > 0 ) {
+		switch ( Event.type ) {
 			case ENET_EVENT_TYPE_CONNECT: {
 				Out("* Connection!");
 				break;
 			}
 	        case ENET_EVENT_TYPE_RECEIVE: {
 				Out("* PACKET!");
+				
+				if ( Event.channelID == CH_OUTSIDERS ) {
+					int* Data = (int*)Event.packet->data;
+					if ( Data[0] == 1 ) {
+						Out("* Pinged... sending Pong" );
+						
+						int Response[] = { 2 };
+						ENetPacket* Packet = enet_packet_create( &Response, sizeof(Response), ENET_PACKET_FLAG_UNSEQUENCED );
+						
+						enet_peer_send( Event.peer, CH_OUTSIDERS, Packet );
+						enet_host_flush( Server_NetHost );
+					}
+					else {
+						Out("Hmm");
+					}
+				}
+				else {
+					Out("Uh");
+				}
 	        	
 	            break;
 	        }

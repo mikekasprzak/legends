@@ -70,13 +70,22 @@ public: // Server --------------------------------------------------------------
 	enum {
 		CH_MESSAGE = 0,		// Messages Channel. Chat, Broadcasts, etc // 
 		CH_DATA,
+		CH_OUTSIDERS,		// Outside Players pinging server for latency //
 		
 		CH_MAX				// Number of Channels //
 	};
+	
+	enum {
+		MSG_PING = 1,		// Ping Message, for checking how responsive a server is //
+		MSG_PONG,			// Ping Response Message //
+		
+	};
+	
+	
 
 	int Server_Start();
 	void Server_Stop();
-	void Server_Poll();
+	void Server_Poll( const int TimeInMS = 0 );
 		
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();

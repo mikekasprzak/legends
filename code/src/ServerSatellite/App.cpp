@@ -35,8 +35,8 @@ int cApp::operator()( ) {
 	// Do Stuff //
 	int TheChar;
 	while ( (TheChar = GetCh()) != 27 ) {
-		Server_Poll();
-		Wait(50); // 20 times per second //
+		Server_Poll(50); // Time in MS //
+		//Wait(50); // 20 times per second //
 	}
 		
 	// Cleanup //

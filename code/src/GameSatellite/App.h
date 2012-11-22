@@ -55,6 +55,7 @@ public: // Client --------------------------------------------------------------
 	enum {
 		CH_MESSAGE = 0,		// Messages Channel. Chat, Broadcasts, etc // 
 		CH_DATA,
+		CH_OUTSIDERS,		// Outside Players pinging server for latency //
 		
 		CH_MAX				// Number of Channels //
 	};
