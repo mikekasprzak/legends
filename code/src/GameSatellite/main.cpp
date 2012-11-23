@@ -154,6 +154,50 @@ void DestroySDLWindows() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+void ToggleFullScreen() {
+	const int Index = 0;
+	SDL_Window* Old = pWindow[Index];
+	SDL_DestroyWindow( Old );
+
+	const int Width = pDisplay[Index].w;
+	const int Height = pDisplay[Index].h;
+	
+	pWindow[Index] = SDL_CreateWindow(
+		FullProductName,
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		Width, Height,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN 
+		);
+	
+	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
+	glViewport( 0,0, Width, Height );
+	SDL_RaiseWindow( pWindow[Index] );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleWindowed() {
+	const int Index = 0;
+	SDL_Window* Old = pWindow[Index];
+	SDL_DestroyWindow( Old );
+
+	const int Width = pDisplay[Index].w * 80 / 100;
+	const int Height = pDisplay[Index].h * 80 / 100;
+	
+	pWindow[Index] = SDL_CreateWindow(
+		FullProductName,
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		Width, Height,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL 
+		);
+	
+	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
+	glViewport( 0,0, Width, Height );
+	SDL_RaiseWindow( pWindow[Index] );	
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
 	Log( "GEL (C) Copyright 2008-2013 Mike Kasprzak and Sykhronics Entertainment" );
@@ -186,24 +230,8 @@ int main( int argc, char* argv[] ) {
 	// **** //
 
 	{
-//		
-//		SDL_Window* pCurrentWindow = pWindow;
-//		SDL_Window* pOtherWindow = pFullWindow;
-//
-//		SDL_HideWindow( pOtherWindow );
-////		pCurrentWindow = pFullWindow;
-////		SDL_GL_MakeCurrent( pCurrentWindow, GLContext );
-//		SDL_ShowWindow( pCurrentWindow );
-//		//SDL_RaiseWindow( pCurrentWindow );
-
 		cApp App;
 		fflush(0);
-		
-//		{
-//			int w, h;
-//			SDL_GetWindowSize( pCurrentWindow, &w, &h );
-//			glViewport(0,0, w, h );
-//		}
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
@@ -211,6 +239,24 @@ int main( int argc, char* argv[] ) {
 			SDL_PollEvent(&Event);
 			if ( Event.type == SDL_QUIT ) {
 				ExitApp = true;
+			}
+			else if ( Event.type == SDL_KEYUP ) {
+//				if ( Event.key.keysym.keycode == SDLK_TAB ) { // Key on current keyboard //
+//				if ( Event.key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
+
+				if ( (Event.key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
+					if ( FullScreen ) {
+						ToggleWindowed();
+						FullScreen = false;
+					}
+					else {
+						ToggleFullScreen();
+						FullScreen = true;
+					}
+				}
+				else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
+					ExitApp = true;
+				}
 			}
 			
 			App.Step();
@@ -220,7 +266,6 @@ int main( int argc, char* argv[] ) {
 				glMatrixMode(GL_PROJECTION|GL_MODELVIEW);
 				glLoadIdentity();
 				glOrtho(-320,320,240,-240,0,1);
-		
 		
 				float x = 0;
 				float y = 30;
