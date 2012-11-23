@@ -57,48 +57,40 @@
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
-#define DLog( ... ) \
-	LogAlways( __VA_ARGS__ )
-// - ------------------------------------------------------------------------------------------ - //
-#define _DLog( ... ) \
-	_LogAlways( __VA_ARGS__ )
-// - ------------------------------------------------------------------------------------------ - //
 #else // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 #define Assert( ... ) ;
 #define Warning( ... ) ;
 #define return_Warning( ... ) ;
 #define return_value_Warning( ... ) ;
-#define DLog( ... ) ;
-#define _DLog( ... ) ;
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
-// Error Logging //
-#define ELog( ... ) \
-	{ \
-		Log( "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __func__ ); \
-	}
-// - ------------------------------------------------------------------------------------------ - //
-// Error Logging (return) //
-#define return_ELog( ... ) \
-	{ \
-		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __func__ ); \
-		return; \
-	}
-// - ------------------------------------------------------------------------------------------ - //
-// Error Logging (return value) //
-#define return_value_ELog( ___VAL, ... ) \
-	{ \
-		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __func__ ); \
-		return ___VAL; \
-	}
+//// Error Logging //
+//#define ELog( ... ) \
+//	{ \
+//		Log( "Error: " ## __VA_ARGS__ ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __func__ ); \
+//	}
+//// - ------------------------------------------------------------------------------------------ - //
+//// Error Logging (return) //
+//#define return_ELog( ... ) \
+//	{ \
+//		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __func__ ); \
+//		return; \
+//	}
+//// - ------------------------------------------------------------------------------------------ - //
+//// Error Logging (return value) //
+//#define return_value_ELog( ___VAL, ... ) \
+//	{ \
+//		Log( ANSI_BG_RED "Error: " ## __VA_ARGS__ ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __func__ ); \
+//		return ___VAL; \
+//	}
 // - ------------------------------------------------------------------------------------------ - //
 #else // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
@@ -145,51 +137,43 @@
 		return ___VAL; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
-#define DLog( ___ARGS... ) \
-	LogAlways( ___ARGS )
-// - ------------------------------------------------------------------------------------------ - //
-#define _DLog( ___ARGS... ) \
-	_LogAlways( ___ARGS )
-// - ------------------------------------------------------------------------------------------ - //
 #else // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
 #define Assert( ... ) ;
 #define Warning( ... ) ;
 #define return_Warning( ... ) ;
 #define return_value_Warning( ... ) ;
-#define DLog( ... ) ;
-#define _DLog( ... ) ;
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
-// Error Logging //
-#define ELog( ... ) \
-	{ \
-		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
-		Log( ANSI_NORMAL ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
-	}
-// - ------------------------------------------------------------------------------------------ - //
-// Error Logging //
-#define return_ELog( ... ) \
-	{ \
-		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
-		Log( ANSI_NORMAL ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
-		return; \
-	}
-// - ------------------------------------------------------------------------------------------ - //
-// Error Logging //
-#define return_value_ELog( ___VAL, ... ) \
-	{ \
-		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
-		Log( ANSI_NORMAL ); \
-		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
-		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
-		return ___VAL; \
-	}
+//// Error Logging //
+//#define ELog( ... ) \
+//	{ \
+//		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+//		Log( ANSI_NORMAL ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
+//	}
+//// - ------------------------------------------------------------------------------------------ - //
+//// Error Logging //
+//#define return_ELog( ... ) \
+//	{ \
+//		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+//		Log( ANSI_NORMAL ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
+//		return; \
+//	}
+//// - ------------------------------------------------------------------------------------------ - //
+//// Error Logging //
+//#define return_value_ELog( ___VAL, ... ) \
+//	{ \
+//		_Log( ANSI_BG_RED "Error: " __VA_ARGS__ ); \
+//		Log( ANSI_NORMAL ); \
+//		Log( " Line: %i  File: %s", __LINE__, __FILE__ ); \
+//		Log( " Func: %s\n", __PRETTY_FUNCTION__ ); \
+//		return ___VAL; \
+//	}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
@@ -197,9 +181,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #define Assert( ... ) ;
 #define Warning( ... ) ;
-#define ELog( ... );
-#define return_ELog( ... );
-#define return_value_ELog( ... );
+//#define ELog( ... );
+//#define return_ELog( ... );
+//#define return_value_ELog( ... );
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NDEBUG NOLOGGING //
 // - ------------------------------------------------------------------------------------------ - //

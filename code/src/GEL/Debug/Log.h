@@ -1,148 +1,104 @@
 // - ------------------------------------------------------------------------------------------ - //
-// Log //
+// Logging //
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef __GEL_DEBUG_Log_H__
 #define __GEL_DEBUG_Log_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Logging Code. //
-// * Log and wLog always write to the console (except on game consoles).
-// * DLog and wDLong write only in the debug build.
-// * VLog and wVLog are only written when the Logging mode is 2 or higher.
-// * VVLog and wVVLog are only written when the Logging mode is 3 or higher.
-// * VVVLog and wVVVLog are only written when the Logging mode is 4 or higher.
-// * ELog and wELog do Error Logging - Print some extended debuging information.
-// * wLog, wDLog, wVLog, wELog are the w_char versions of Log.
-// * LogFlush() makes sure the log file is written to before continuing (in case of bluescreens)
-// - ------------------------------------------------------------------------------------------ - //
 #ifndef NOLOGGING
+// - ------------------------------------------------------------------------------------------ - //
+// * LogAlways *always* writes to the log.
+// * DLog writes only in the debug build.
+// * Log are only written when the Logging level is 1 or higher (default).
+// * VLog are only written when the Logging level is 2 or higher.
+// * VVLog are only written when the Logging level is 3 or higher.
+// * VVVLog are only written when the Logging level is 4 or higher.
+// * ELog does Error Logging - Print some extended debuging information.
+// * wLogAlways, wDLog, wVLog, wELog are the w_char versions of Log.
+// * _LogAlways, _DLog, _VLog don't append a newline (\n) and don't flush.
 // - ------------------------------------------------------------------------------------------ - //
 extern int LogLevel;
 // - ------------------------------------------------------------------------------------------ - //
-/*
+
 // - ------------------------------------------------------------------------------------------ - //
-// Compiler Specific //
+// Log Setup //
+void LogInit();
+void LogExit();
+
+void LogFlush();
+
+// The "Forcefully Always Log" version // 
+void LogAlways( const char* s, ... );
+void _LogAlways( const char* s, ... );
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+#define Log( ... ) { if ( LogLevel >= 1 ) LogAlways( __VA_ARGS__ ); }
+#define _Log( ... ) { if ( LogLevel >= 1 ) _LogAlways( __VA_ARGS__ ); }
+#define return_Log( ... ) { Log( __VA_ARGS__ ); return; }
+#define return_value_Log( ___VAL, ... ) { Log( __VA_ARGS__ ); return ___VAL; }
+
+#define VLog( ... ) { if ( LogLevel >= 2 ) LogAlways( __VA_ARGS__ ); }
+#define _VLog( ... ) { if ( LogLevel >= 2 ) _LogAlways( __VA_ARGS__ ); }
+#define return_VLog( ... ) { VLog( __VA_ARGS__ ); return; }
+#define return_value_VLog( ___VAL, ... ) { VLog( __VA_ARGS__ ); return ___VAL; }
+
+#define VVLog( ... ) { if ( LogLevel >= 3 ) LogAlways( __VA_ARGS__ ); }
+#define _VVLog( ... ) { if ( LogLevel >= 3 ) _LogAlways( __VA_ARGS__ ); }
+#define return_VVLog( ... ) { VVLog( __VA_ARGS__ ); return; }
+#define return_value_VVLog( ___VAL, ... ) { VVLog( __VA_ARGS__ ); return ___VAL; }
+
+#define VVVLog( ... ) { if ( LogLevel >= 4 ) LogAlways( __VA_ARGS__ ); }
+#define _VVVLog( ... ) { if ( LogLevel >= 4 ) _LogAlways( __VA_ARGS__ ); }
+#define return_VVVLog( ... ) { VVVLog( __VA_ARGS__ ); return; }
+#define return_value_VVVLog( ___VAL, ... ) { VVVLog( __VA_ARGS__ ); return ___VAL; }
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// Error Logging, like an assert for when we don't crash //
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
-	#define NO_ANSI_COLOR_CODES
+#define NO_ANSI_COLOR_CODES
 
-	#define Log( ... ) \
-		if ( LogLevel >= 1 ) \
-			printf( __VA_ARGS__ )
-	#define wLog( ... ) \
-		if ( LogLevel >= 1 ) \
-			wprintf( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VLog( ... ) \
-		if ( LogLevel >= 2 ) \
-			Log( __VA_ARGS__ )
-	#define wVLog( ... ) \
-		if ( LogLevel >= 2 ) \
-			wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VVLog( ... ) \
-		if ( LogLevel >= 3 ) \
-			Log( __VA_ARGS__ )
-	#define wVVLog( ... ) \
-		if ( LogLevel >= 3 ) \
-			wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VVVLog( ... ) \
-		if ( LogLevel >= 4 ) \
-			Log( __VA_ARGS__ )
-	#define wVVVLog( ... ) \
-		if ( LogLevel >= 4 ) \
-			wLog( __VA_ARGS__ )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define ELog( ___ARGS... ) \
-		Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
-		Log( ___ARGS )
-	#define wELog( ___ARGS... ) \
-		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); \
-		wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#ifndef NDEBUG
-		#define DLog( ... ) \
-			Log( __VA_ARGS__ )
-		#define wDLog( ... ) \
-			wLog( __VA_ARGS__ )
-	#else // NDEBUG //
-		#define DLog( ... ) ;
-		#define wDLog( ... ) ;
-	#endif // NDEBUG //
+#define ELog( ... ) \
+{ LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); LogAlways( __VA_ARGS__ ); }
+//#define wELog( ... ) \
+//{ LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __FUNCTION__, __FILE__ ); wLogAlways( __VA_ARGS__ ); }
 // - ------------------------------------------------------------------------------------------ - //
-#else // Default Logging Via Printf //
+#else // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
-	#define _Log( ___ARGS... ) \
-		printf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define Log( ___ARGS... ) \
-		_Log( ___ARGS )
-//		{ if ( LogLevel >= 1 ) Log( ___ARGS ); }
-	#define wLog( ___ARGS... ) \
-		if ( LogLevel >= 1 ) \
-			wprintf( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VLog( ___ARGS... ) \
-		_Log( ___ARGS )
-//		{ if ( LogLevel >= 2 ) Log( ___ARGS ); }
-	#define wVLog( ___ARGS... ) \
-		if ( LogLevel >= 2 ) \
-			wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VVLog( ___ARGS... ) \
-		if ( LogLevel >= 2 ) \
-			_Log( ___ARGS )
-	#define wVVLog( ___ARGS... ) \
-		if ( LogLevel >= 3 ) \
-			wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define VVVLog( ___ARGS... ) \
-		if ( LogLevel >= 4 ) \
-			_Log( ___ARGS )
-	#define wVVVLog( ___ARGS... ) \
-		if ( LogLevel >= 4 ) \
-			wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#define ELog( ___ARGS... ) \
-		_Log( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-		_Log( ___ARGS )
-	#define wELog( ___ARGS... ) \
-		wLog( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); \
-		wLog( ___ARGS )
-	// - ------------------------------------------------------------------------------------------ - //
-	#ifndef NDEBUG
-		#define DLog( ___ARGS... ) \
-			_Log( ___ARGS )
-		#define wDLog( ___ARGS... ) \
-			wLog( ___ARGS )
-	#else // NDEBUG //
-		#define DLog( ... ) ;
-		#define wDLog( ... ) ;
-	#endif // NDEBUG //
-	// - ------------------------------------------------------------------------------------------ - //
+#define ELog( ... ) \
+{ LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); LogAlways( __VA_ARGS__ ); }
+//#define wELog( ... ) \
+//{ LogAlways( "** C++ ERROR ** LINE %i ** %s ** %s ** ", __LINE__, __PRETTY_FUNCTION__, __FILE__ ); wLogAlways( __VA_ARGS__ ); }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-// Shared Logging Features //
-// - ------------------------------------------------------------------------------------------ - //
-#define LogFlush() \
-	fflush(0)
+// Debug Build Only Logging //
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NDEBUG
-	#define DLogFlush() \
-		LogFlush()
+// - ------------------------------------------------------------------------------------------ - //
+#define DLog( ... ) { LogAlways( __VA_ARGS__ ); }
+#define _DLog( ... ) { _LogAlways( __VA_ARGS__ ); }
+//#define wDLog( ... ) { wLogAlways( __VA_ARGS__ ); }
+//#define _wDLog( ... ) { _wLogAlways( __VA_ARGS__ ); }
+// - ------------------------------------------------------------------------------------------ - //
 #else // NDEBUG //
-	#define DLogFlush() ;
+// - ------------------------------------------------------------------------------------------ - //
+#define DLog( ... ) ;
+#define _DLog( ... ) ;
+//#define wDLog( ... ) ;
+//#define _wDLog( ... ) ;
+// - ------------------------------------------------------------------------------------------ - //
 #endif // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //
-*/
 
+// - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_ANSI_COLOR_CODES
+// - ------------------------------------------------------------------------------------------ - //
 	#define ANSI_HEADER					"\033["
-//	#define ANSI(attr,fg) 				"\033[" attr ";" fg "m"
 
 	#define ANSI_NORMAL					"\033[0m"
 	#define ANSI_RESET					ANSI_NORMAL
@@ -165,9 +121,10 @@ extern int LogLevel;
 	#define ANSI_BG_MAGENTA				"\033[0;45m"
 	#define ANSI_BG_CYAN				"\033[0;46m"
 	#define ANSI_BG_WHITE				"\033[0;47m"
+// - ------------------------------------------------------------------------------------------ - //
 #else // NO_ANSI_COLOR_CODES //
+// - ------------------------------------------------------------------------------------------ - //
 	#define ANSI_HEADER					""
-	#define ANSI(attr,fg) 				""
 
 	#define ANSI_NORMAL					""
 	#define ANSI_RESET					ANSI_NORMAL
@@ -190,82 +147,18 @@ extern int LogLevel;
 	#define ANSI_BG_MAGENTA				""
 	#define ANSI_BG_CYAN				""
 	#define ANSI_BG_WHITE				""
+// - ------------------------------------------------------------------------------------------ - //
 #endif // NO_ANSI_COLOR_CODES //
-
-// Emscripten Hack //
-#ifdef EMSCRIPTEN
-	#define Log( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-	#define VLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-	#define VVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-	#define VVVLog( ... ) printf( __VA_ARGS__ ); printf( "\n" )
-#else // EMSCRIPTEN //
-	// The "Forcefully Always Log" version // 
-	void LogAlways( const char* s, ... );
-	void _LogAlways( const char* s, ... );
-	
-	// Standard Logging, with newline //
-	void Log( const char* s, ... );
-	void VLog( const char* s, ... );
-	void VVLog( const char* s, ... );
-	void VVVLog( const char* s, ... );
-	
-	// Logging, without newline //
-	void _Log( const char* s, ... );
-	void _VLog( const char* s, ... );
-	void _VVLog( const char* s, ... );
-	void _VVVLog( const char* s, ... );
-
-#endif // EMSCRIPTEN //
-
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef _MSC_VER
-// - ------------------------------------------------------------------------------------------ - //
-// Log and Return //
-#define return_Log( ... ) \
-	{ Log( __VA_ARGS__ ); return; }
-#define return_VLog( ... ) \
-	{ VLog( __VA_ARGS__ ); return; }
-#define return_VVLog( ... ) \
-	{ VVLog( __VA_ARGS__ ); return; }
-#define return_VVVLog( ... ) \
-	{ VVVLog( __VA_ARGS__ ); return; }
-
-#define return_value_Log( ___VAL, ... ) \
-	{ Log( __VA_ARGS__ ); return ___VAL; }
-#define return_value_VLog( ___VAL, ... ) \
-	{ VLog( __VA_ARGS__ ); return ___VAL; }
-#define return_value_VVLog( ___VAL, ... ) \
-	{ VVLog( __VA_ARGS__ ); return ___VAL; }
-#define return_value_VVVLog( ___VAL, ... ) \
-	{ VVVLog( __VA_ARGS__ ); return ___VAL; }
-// - ------------------------------------------------------------------------------------------ - //
-#else // _MSC_VER //
-// - ------------------------------------------------------------------------------------------ - //
-// Log and Return //
-#define return_Log( ___ARGS... ) \
-	{ Log( ___ARGS ); return; }
-#define return_VLog( ___ARGS... ) \
-	{ VLog( ___ARGS ); return; }
-#define return_VVLog( ___ARGS... ) \
-	{ VVLog( ___ARGS ); return; }
-#define return_VVVLog( ___ARGS... ) \
-	{ VVVLog( ___ARGS ); return; }
-
-#define return_value_Log( ___VAL, ___ARGS... ) \
-	{ Log( ___ARGS ); return ___VAL; }
-#define return_value_VLog( ___VAL, ___ARGS... ) \
-	{ VLog( ___ARGS ); return ___VAL; }
-#define return_value_VVLog( ___VAL, ___ARGS... ) \
-	{ VVLog( ___ARGS ); return ___VAL; }
-#define return_value_VVVLog( ___VAL, ___ARGS... ) \
-	{ VVVLog( ___ARGS ); return ___VAL; }
-// - ------------------------------------------------------------------------------------------ - //
-#endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #else // NOLOGGING //
 // - ------------------------------------------------------------------------------------------ - //
+
+#define LogInit() ;
+#define LogExit() ;
+
+#define LogFlush() ;
 
 #define LogAlways( ... ) ;
 #define _LogAlways( ... ) ;
@@ -282,14 +175,14 @@ extern int LogLevel;
 #define _VVVLog( ... ) ;
 #define _DLog( ... ) ;
 
-#define return_Log( ... ) ;
-#define return_VLog( ... ) ;
-#define return_VVLog( ... ) ;
-#define return_VVVLog( ... ) ;
-#define return_value_Log( ... ) ;
-#define return_value_VLog( ... ) ;
-#define return_value_VVLog( ... ) ;
-#define return_value_VVVLog( ... ) ;
+#define return_Log( ... ) {return;}
+#define return_VLog( ... ) {return;}
+#define return_VVLog( ... ) {return;}
+#define return_VVVLog( ... ) {return;}
+#define return_value_Log( __VAL, ... ) {return __VAL;}
+#define return_value_VLog( __VAL, ... ) {return __VAL;}
+#define return_value_VVLog( __VAL, ... ) {return __VAL;}
+#define return_value_VVVLog( __VAL, ... ) {return __VAL;}
 
 // - ------------------------------------------------------------------------------------------ - //
 #endif // NOLOGGING //

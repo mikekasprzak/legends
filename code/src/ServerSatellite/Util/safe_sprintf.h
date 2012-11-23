@@ -9,8 +9,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
 #define safe_sprintf sprintf_s
+#define safe_vsprintf vsprintf_s
 #else // _MSC_VER
 #define safe_sprintf snprintf
+#define safe_vsprintf vsnprintf
 #endif // _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
 #endif // safe_sprintf //

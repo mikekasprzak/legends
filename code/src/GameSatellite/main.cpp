@@ -55,15 +55,15 @@ void AppInit( int argc, char* argv[] ) {
 	// Process ID //
 	{
 #ifdef _WIN32
-		Log( "* PID: %i", GetCurrentProcessId() );
+		Log( "PID: %i", GetCurrentProcessId() );
 #elif defined(__unix)
-		Log( "* PID: %i", (int)getpid() );
+		Log( "PID: %i", (int)getpid() );
 #endif // _WIN32 //
 	}
 
 	// Show Command Line //
 	{
-		Log( "* Command Line Arguments: %i", argc );
+		Log( "Command Line Arguments: %i", argc );
 		for ( int idx = 0; idx < argc; idx++ ) {
 			Log( "* argv[%i]: \"%s\"", idx, argv[idx] );	
 		}
@@ -89,8 +89,8 @@ void AppInit( int argc, char* argv[] ) {
 			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
 		}
 		
-		Log( "* Base Directory: %s", AppBaseDir );
-		Log( "* Save Directory: %s", AppSaveDir );
+		Log( "Base Directory: %s", AppBaseDir );
+		Log( "Save Directory: %s", AppSaveDir );
 		Log( "" );
 	}
 }
@@ -340,7 +340,7 @@ int Step() {
 		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
 			return true;
 		}
-		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F1 ) {
+		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F12 ) {
 			AddScreens();
 		}
 	}
@@ -385,27 +385,29 @@ void Draw( const int Index = 0 ) {
 // - ------------------------------------------------------------------------------------------ - //
 void term_func( int Signal ) {
 	printf( "SIGTERM (Terminate) recieved -- %i\n", Signal );
-	fflush(0);
+	LogFlush();
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void int_func( int Signal ) {
 	printf( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i\n", Signal );
-	fflush(0);
+	LogFlush();
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
+	LogInit();
+	signal( SIGTERM, term_func );
+	signal( SIGINT, int_func );
+
+	// *** //
+
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
 	Log( "GEL (C) Copyright 2008-2013 Mike Kasprzak and Sykhronics Entertainment" );
 	Log( "" );
 	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
-	Log( "" );
-
-	signal( SIGTERM, term_func );
-	signal( SIGINT, int_func );
 
 	ReportSDLVersion();
 	AppInit( argc, argv );
@@ -431,7 +433,7 @@ int main( int argc, char* argv[] ) {
 
 	{
 		cApp App;
-		fflush(0);
+		LogFlush();
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {

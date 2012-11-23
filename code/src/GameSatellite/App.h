@@ -3,7 +3,7 @@
 #define __SAT_APP_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
-#include <Util/sprintf.h>
+#include <Util/safe_sprintf.h>
 
 #include <Net/Net.h>
 #include <Net/NetGet.h>
