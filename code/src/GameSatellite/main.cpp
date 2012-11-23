@@ -98,7 +98,16 @@ int InitSDLWindows() {
 	FullScreen = false;
 
 	{
-		Log( "Video Displays" );
+		// NOTE: Not very useful. Number of drivers compiled in to SDL. //
+		Log( "-=- SDL Video Drivers (not very useful) -=-" );
+		for( int idx = 0; idx < SDL_GetNumVideoDrivers(); idx++ ) {			
+			Log( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
+		}
+		Log("");
+	}
+	
+	{
+		Log( "-=- Video Displays -=-" );
 		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {		
 			SDL_DisplayMode Mode;
 			SDL_GetDesktopDisplayMode( idx, &Mode );
@@ -113,6 +122,7 @@ int InitSDLWindows() {
 				Rect->x, Rect->y, Rect->w, Rect->h 
 				);
 		}
+		Log("");
 	}
 
 	int Index = 0;
@@ -216,16 +226,14 @@ int main( int argc, char* argv[] ) {
 	
 	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK );
 	SDL_GL_LoadLibrary( NULL );
+	SDL_DisableScreenSaver();
 	atexit(SDL_Quit);
 	atexit(SDL_GL_UnloadLibrary);
+	atexit(SDL_EnableScreenSaver);
 	
 	// **** //
 	
 	InitSDLWindows();
-
-	SDL_DisableScreenSaver();
-	
-	Log( "" );
 	
 	// **** //
 
@@ -283,18 +291,15 @@ int main( int argc, char* argv[] ) {
 				float y = 0;
 				static float r = 0;
 				r += 0.5;
-			    // Draw:
+			    // Draw //
 			    glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
 			    glClear(GL_COLOR_BUFFER_BIT); // clearing screen
 			    glRotatef(r,0.0,0.0,1.0);  // rotating everything
-			    // Note that the glBegin() ... glEnd() OpenGL style used below is actually 
-			    // obsolete, but it will do for example purposes. For more information, see
-			    // SDL_GL_GetProcAddress() or find an OpenGL extension loading library.
 			    glBegin(GL_QUADS); // drawing a multicolored triangle
-			      glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
-			      glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
-			      glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
-			      glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
+					glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
+					glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
+					glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
+					glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
 			    glEnd();
 			}			
 			
@@ -304,8 +309,6 @@ int main( int argc, char* argv[] ) {
 	}
 
 	// **** //
-	
-	SDL_EnableScreenSaver();
 
 	DestroySDLWindows();
 
