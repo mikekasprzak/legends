@@ -7,10 +7,21 @@
 #include <stdarg.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef NO_LOGGING
-	#define NO_FLOGGING			// FILE/STDIO Logging //
-	#define NO_MLOGGING			// Memory Logging //
-	#define LOG_LEVEL 0			// Disable Log Functions //
+	#define NO_FLOGGING				// FILE/STDIO Logging (either but not both) //
+	#define NO_MLOGGING				// Memory Logging - In Game Console //
+	#define LOG_LEVEL 0				// Disable Log Functions (Log=1, VLog=2, VVLog=3, VVVLog=4) //
+	#define DEFAULT_LOG_LEVEL 0		// Initial Log Level is 0 (Lets you seperately say Level and Init Level //
+	#define NO_LOG_COLORS			// Disable Color Codes in all Logs //
 #endif // NO_LOGGING //
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef _MSC_VER
+	#define NO_FLOG_COLORS			// Disable Color Codes in FLogs //
+#endif // _MSC_VER //
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef NO_LOG_COLORS
+	#define NO_FLOG_COLORS			// Disable Color Codes in FLogs //
+	#define NO_MLOG_COLORS			// Disable Color Codes in MLogs //
+#endif // NO_LOG_COLORS
 // - ------------------------------------------------------------------------------------------ - //
 // * LogAlways *always* writes to the log. - Never Use!
 // * Log are only written when the Logging level is 1 or higher (default). - Macro level and Startup
@@ -78,7 +89,7 @@ enum {
 void LogInit();
 void LogExit(); // Called in atexit, but included anyway. No need to call! //
 
-void LogColor( const int Color ); // Set Color (where supported) //
+void LogColor( const int Color ); // Set Color (where supported, ignored elsewhere) //
 // - ------------------------------------------------------------------------------------------ - //
 // Flush the log. Done automatically inside LogAlways - Do not use! //
 void LogFlush();
@@ -109,6 +120,7 @@ void _vLogAlways( const char* s, va_list vargs );
 // - ------------------------------------------------------------------------------------------ - //
 #define LogInit() ;
 #define LogExit() ;
+#define LogColor( ... ) ;
 
 #define LogAlways( ... ) ;
 #define _LogAlways( ... ) ;
@@ -218,6 +230,8 @@ void _vLogAlways( const char* s, va_list vargs );
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging, like an assert for when we don't crash //
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef NO_LOGGING
+// - ------------------------------------------------------------------------------------------ - //
 #ifdef _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
 #define ELog( ... ) \
@@ -243,6 +257,13 @@ void _vLogAlways( const char* s, va_list vargs );
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // _MSC_VER //
+// - ------------------------------------------------------------------------------------------ - //
+#else // NO_LOGGING //
+// - ------------------------------------------------------------------------------------------ - //
+#define ELog( ... ) ;
+#define wELog( ... ) ;
+// - ------------------------------------------------------------------------------------------ - //
+#endif // NO_LOGGING //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
