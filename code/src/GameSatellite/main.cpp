@@ -99,11 +99,11 @@ int InitSDLWindows() {
 
 	{
 		// NOTE: Not very useful. Number of drivers compiled in to SDL. //
-		Log( "-=- SDL Video Drivers (not very useful) -=-" );
+		VVLog( "-=- SDL Video Drivers (not very useful) -=-" );
 		for( int idx = 0; idx < SDL_GetNumVideoDrivers(); idx++ ) {			
-			Log( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
+			VVLog( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
 		}
-		Log("");
+		VVLog("");
 	}
 	
 	{
@@ -138,12 +138,15 @@ int InitSDLWindows() {
 			Width, Height,
 			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
 			);
-		
+					
 		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE, SDL_WINDOW_INPUT_GRABBED, SDL_WINDOW_FULLSCREEN
 
 		if ( pWindow[Index] == NULL ) {
 			Log( "Error Creating Window[%i]: %s", Index, SDL_GetError() );
 			return 1;
+		}
+		else {
+			Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
 		}
 
 		GLContext[Index] = SDL_GL_CreateContext( pWindow[Index] );
@@ -157,8 +160,10 @@ void DestroySDLWindows() {
 		if ( GLContext[idx] != 0 )
 			SDL_GL_DeleteContext( GLContext[idx] );
 		
-		if ( pWindow[idx] != 0 )
+		if ( pWindow[idx] != 0 ) {
+			Log( "* Window %i with ID %i Destroyed", idx, SDL_GetWindowID( pWindow[idx] ) );
 			SDL_DestroyWindow( pWindow[idx] );
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -167,6 +172,7 @@ void DestroySDLWindows() {
 void ToggleFullScreen() {
 	const int Index = 0;
 	SDL_Window* Old = pWindow[Index];
+	Log( "* Window ID %i Destroyed", SDL_GetWindowID( Old ) );
 	SDL_DestroyWindow( Old );
 
 	const int Width = Display[Index].w;
@@ -179,6 +185,7 @@ void ToggleFullScreen() {
 		Width, Height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN 
 		);
+	Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
 	
 	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
 	glViewport( 0,0, Width, Height );
@@ -188,6 +195,7 @@ void ToggleFullScreen() {
 void ToggleWindowed() {
 	const int Index = 0;
 	SDL_Window* Old = pWindow[Index];
+	Log( "* Window ID %i Destroyed", SDL_GetWindowID( Old ) );
 	SDL_DestroyWindow( Old );
 
 	const int Width = Display[Index].w * 80 / 100;
@@ -200,6 +208,7 @@ void ToggleWindowed() {
 		Width, Height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL 
 		);
+	Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
 	
 	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
 	glViewport( 0,0, Width, Height );
@@ -214,7 +223,17 @@ int main( int argc, char* argv[] ) {
 	Log( "" );
 	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
 	Log( "" );
-	
+
+#ifdef _WIN32
+	Log( "* PID: %i", GetCurrentProcessId() );
+	Log( "" );
+#elif defined(__unix)
+	Log( "* PID: %i", (int)getpid() );
+	Log( "" );
+#else // LINUX //
+
+#endif // _WIN32 //
+
 	ReportSDLVersion();
 	ProcessCommandLineArgs( argc, argv );
 
