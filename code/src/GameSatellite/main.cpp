@@ -5,6 +5,10 @@
 #include <Timer/Timer.h>
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef __unix
+#include <unistd.h>		// getpid()
+#endif // __unix //
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef PRODUCT_SKU
@@ -45,19 +49,28 @@ char AppBaseDir[2048];
 extern char AppSaveDir[];
 char AppSaveDir[2048] = "";
 // - ------------------------------------------------------------------------------------------ - //
-void ProcessCommandLineArgs( int argc, char* argv[] ) {
-	Log( "+ Command Line Arguments: %i", argc );
-	for ( int idx = 0; idx < argc; idx++ ) {
-		Log( "* \"%s\"", argv[idx] );	
+void AppInit( int argc, char* argv[] ) {
+	Log( "-=- Application Execution Info -=-" );
+	
+	// Process ID //
+	{
+#ifdef _WIN32
+		Log( "* PID: %i", GetCurrentProcessId() );
+#elif defined(__unix)
+		Log( "* PID: %i", (int)getpid() );
+#endif // _WIN32 //
 	}
-	Log( "- End of Command Line" );
-	Log( "" );
+
+	// Show Command Line //
+	{
+		Log( "* Command Line Arguments: %i", argc );
+		for ( int idx = 0; idx < argc; idx++ ) {
+			Log( "* argv[%i]: \"%s\"", idx, argv[idx] );	
+		}
+	}
 
 	// Get Base Directory //
 	{	
-		Log( "+ Getting Content Path..." );
-		//set_Data( 0, AppBaseDir, sizeof(AppBaseDir) );
-		
 		bool CalculatePath = true;
 		if ( argc > 2 ) {
 			if ( strcmp( argv[1], "-DIR" ) == 0 ) {
@@ -76,15 +89,16 @@ void ProcessCommandLineArgs( int argc, char* argv[] ) {
 			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
 		}
 		
-		Log( "- Base Directory: %s", AppBaseDir );
+		Log( "* Base Directory: %s", AppBaseDir );
+		Log( "* Save Directory: %s", AppSaveDir );
 		Log( "" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#define MAX_SDL_DISPLAYS	8
-#define MAX_SDL_WINDOWS		8
+#define MAX_SDL_DISPLAYS	16
+#define MAX_SDL_WINDOWS		16
 SDL_Rect Display[MAX_SDL_DISPLAYS];
 SDL_Window* pWindow[MAX_SDL_WINDOWS];
 SDL_GLContext GLContext[MAX_SDL_WINDOWS];	// (void*) //
@@ -108,7 +122,7 @@ int InitSDLWindows() {
 	
 	{
 		Log( "-=- Video Displays -=-" );
-		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {		
+		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {
 			SDL_DisplayMode Mode;
 			SDL_GetDesktopDisplayMode( idx, &Mode );
 
@@ -131,10 +145,13 @@ int InitSDLWindows() {
 		const int Width = Display[Index].w * 80 / 100;
 		const int Height = Display[Index].h * 80 / 100;
 	
+		const int WPx = Display[Index].x + ((Display[Index].w - Width) >> 1);
+		const int WPy = Display[Index].y + ((Display[Index].h - Height) >> 1);
+	
 		pWindow[Index] = SDL_CreateWindow(
 			FullProductName,
-			SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED,
+			WPx,//SDL_WINDOWPOS_UNDEFINED,
+			WPy,//SDL_WINDOWPOS_UNDEFINED,
 			Width, Height,
 			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
 			);
@@ -142,7 +159,7 @@ int InitSDLWindows() {
 		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE, SDL_WINDOW_INPUT_GRABBED, SDL_WINDOW_FULLSCREEN
 
 		if ( pWindow[Index] == NULL ) {
-			Log( "Error Creating Window[%i]: %s", Index, SDL_GetError() );
+			Log( "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
 			return 1;
 		}
 		else {
@@ -150,6 +167,15 @@ int InitSDLWindows() {
 		}
 
 		GLContext[Index] = SDL_GL_CreateContext( pWindow[Index] );
+		if ( GLContext[Index] == 0 ) {
+			Log( "! Error Creating GLContext[%i]", Index );
+			return 1;
+		}
+		else {
+			Log( "* Primary GLContext Created" );
+		}
+		
+		// TODO: GL //
 	}
 	
 	return 0;
@@ -169,50 +195,229 @@ void DestroySDLWindows() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void ToggleFullScreen() {
-	const int Index = 0;
+void ToggleFullScreen( const int Index ) {
 	SDL_Window* Old = pWindow[Index];
-	Log( "* Window ID %i Destroyed", SDL_GetWindowID( Old ) );
-	SDL_DestroyWindow( Old );
+	if ( Old ) {
+		Log( "* Window ID %i Destroyed", SDL_GetWindowID( Old ) );
+		SDL_DestroyWindow( Old );
+	}
 
 	const int Width = Display[Index].w;
 	const int Height = Display[Index].h;
+
+	const int WPx = Display[Index].x + ((Display[Index].w - Width) >> 1);
+	const int WPy = Display[Index].y + ((Display[Index].h - Height) >> 1);
 	
 	pWindow[Index] = SDL_CreateWindow(
 		FullProductName,
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
+		WPx,//SDL_WINDOWPOS_UNDEFINED,
+		WPy,//SDL_WINDOWPOS_UNDEFINED,
 		Width, Height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN 
 		);
-	Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
-	
-	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
-	glViewport( 0,0, Width, Height );
-	SDL_RaiseWindow( pWindow[Index] );
+
+	if ( pWindow[Index] == NULL ) {
+		Log( "! Error Creating Full Screen Window[%i]: %s", Index, SDL_GetError() );
+		return;
+	}
+	else {
+		Log( "* Full Screen Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-void ToggleWindowed() {
-	const int Index = 0;
+void ToggleFullScreen() {
+	for ( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
+		if ( pWindow[idx] ) {
+			ToggleFullScreen(idx);
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleWindowed( const int Index ) {
 	SDL_Window* Old = pWindow[Index];
 	Log( "* Window ID %i Destroyed", SDL_GetWindowID( Old ) );
 	SDL_DestroyWindow( Old );
 
 	const int Width = Display[Index].w * 80 / 100;
 	const int Height = Display[Index].h * 80 / 100;
+
+	const int WPx = Display[Index].x + ((Display[Index].w - Width) >> 1);
+	const int WPy = Display[Index].y + ((Display[Index].h - Height) >> 1);
 	
 	pWindow[Index] = SDL_CreateWindow(
 		FullProductName,
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
+		WPx,//SDL_WINDOWPOS_UNDEFINED,
+		WPy,//SDL_WINDOWPOS_UNDEFINED,
 		Width, Height,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL 
 		);
-	Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
+
+	if ( pWindow[Index] == NULL ) {
+		Log( "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
+		return;
+	}
+	else {
+		Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow[Index] ) );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleWindowed() {
+	for ( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
+		if ( pWindow[idx] ) {
+			ToggleWindowed(idx);
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleScreen( const int Index ) {
+	if ( FullScreen ) {
+		ToggleFullScreen( Index );
+	}
+	else {
+		ToggleWindowed( Index );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleScreen() {
+	if ( FullScreen ) {
+		ToggleFullScreen();
+	}
+	else {
+		ToggleWindowed();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void AddScreens() {
+	// TODO: Replace with better test. Keep a count of active pWindows //
+	if ( pWindow[1] == 0 ) {
+		// Do first one like this //
+		ToggleScreen(0);
+
+		for( int idx = 1; idx < SDL_GetNumVideoDisplays(); idx++ ) {			
+			ToggleScreen(idx);
+
+			if ( GLContext[idx] == 0 ) {
+				GLContext[idx] = SDL_GL_CreateContext( pWindow[idx] );
+			}
+		}
+	}
+	else {
+//		if ( pWindow[0] ) {
+//			SDL_DestroyWindow( pWindow[0] );
+//			pWindow[0] = 0;
+//		}
+
+		for( int idx = 1; idx < SDL_GetNumVideoDisplays(); idx++ ) {
+			if ( pWindow[idx] ) {
+				SDL_DestroyWindow( pWindow[idx] );
+				pWindow[idx] = 0;
+			}
 	
-	SDL_GL_MakeCurrent( pWindow[Index], GLContext[Index] );
-	glViewport( 0,0, Width, Height );
-	SDL_RaiseWindow( pWindow[Index] );	
+//			if ( GLContext[idx] ) {
+//				SDL_GL_DeleteContext( GLContext[idx] );
+//				GLContext[idx] = 0;
+//			}
+		}
+
+		// Do first one like this //
+		ToggleScreen(0);
+	}
+	
+	extern void UpdateScreens();
+	UpdateScreens();
+}
+// - ------------------------------------------------------------------------------------------ - //
+void UpdateScreens() {
+	for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {
+		if ( pWindow[idx] ) {
+			int Width;
+			int Height;
+			SDL_GetWindowSize( pWindow[idx], &Width, &Height );
+	
+			SDL_GL_MakeCurrent( pWindow[idx], GLContext[idx] );
+			glViewport( 0,0, Width, Height );
+		}
+	}
+	SDL_RaiseWindow( pWindow[0] );
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+int Step() {
+	SDL_Event Event;
+	SDL_PollEvent(&Event);
+	if ( Event.type == SDL_QUIT ) {
+		return true;
+	}
+	else if ( Event.type == SDL_KEYUP ) {
+//		if ( Event.key.keysym.keycode == SDLK_TAB ) { // Key on current keyboard //
+//		if ( Event.key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
+
+		if ( (Event.key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
+			FullScreen = !FullScreen;
+			ToggleScreen();
+			UpdateScreens();
+		}
+		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
+			return true;
+		}
+		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F1 ) {
+			AddScreens();
+		}
+	}
+	
+	return false;
+}
+// - ------------------------------------------------------------------------------------------ - //
+void Draw( const int Index = 0 ) {
+	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
+	glLoadIdentity();
+	
+	//float DisplayAspect = (float)Display[0].h / (float)Display[0].w;
+	
+	int w, h;
+	SDL_GetWindowSize( pWindow[Index], &w, &h );
+	float Aspect = (float)h / (float)w;
+	
+	float NewSize = 320.0f * Aspect;
+	glOrtho(
+		-320,320,
+		NewSize,-NewSize,
+		0,1
+		);
+
+	float x = 0;
+	float y = 0;
+	static float r = 0;
+	r += 0.5;
+    // Draw //
+    glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
+    glClear(GL_COLOR_BUFFER_BIT); // clearing screen
+    glRotatef(r,0.0,0.0,1.0);  // rotating everything
+    glBegin(GL_QUADS); // drawing a multicolored triangle
+		glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
+		glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
+		glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
+		glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
+    glEnd();
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+#include <signal.h>
+// - ------------------------------------------------------------------------------------------ - //
+void term_func( int Signal ) {
+	printf( "SIGTERM (Terminate) recieved -- %i\n", Signal );
+	fflush(0);
+	exit(1);
+}
+// - ------------------------------------------------------------------------------------------ - //
+void int_func( int Signal ) {
+	printf( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i\n", Signal );
+	fflush(0);
+	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -224,18 +429,11 @@ int main( int argc, char* argv[] ) {
 	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
 	Log( "" );
 
-#ifdef _WIN32
-	Log( "* PID: %i", GetCurrentProcessId() );
-	Log( "" );
-#elif defined(__unix)
-	Log( "* PID: %i", (int)getpid() );
-	Log( "" );
-#else // LINUX //
-
-#endif // _WIN32 //
+	signal( SIGTERM, term_func );
+	signal( SIGINT, int_func );
 
 	ReportSDLVersion();
-	ProcessCommandLineArgs( argc, argv );
+	AppInit( argc, argv );
 
 	// **** //
 
@@ -262,67 +460,20 @@ int main( int argc, char* argv[] ) {
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
-			SDL_Event Event;
-			SDL_PollEvent(&Event);
-			if ( Event.type == SDL_QUIT ) {
-				ExitApp = true;
-			}
-			else if ( Event.type == SDL_KEYUP ) {
-//				if ( Event.key.keysym.keycode == SDLK_TAB ) { // Key on current keyboard //
-//				if ( Event.key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
-
-				if ( (Event.key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
-					if ( FullScreen ) {
-						ToggleWindowed();
-						FullScreen = false;
-					}
-					else {
-						ToggleFullScreen();
-						FullScreen = true;
-					}
-				}
-				else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
-					ExitApp = true;
-				}
-			}
+			ExitApp = Step();
 			
 			App.Step();
 			App.Draw();
 
-			{
-				glMatrixMode(GL_PROJECTION|GL_MODELVIEW);
-				glLoadIdentity();
-				
-				//float DisplayAspect = (float)Display[0].h / (float)Display[0].w;
-				
-				int w, h;
-				SDL_GetWindowSize( pWindow[0], &w, &h );
-				float Aspect = (float)h / (float)w;
-				
-				float NewSize = 320.0f * Aspect;
-				glOrtho(
-					-320,320,
-					NewSize,-NewSize,
-					0,1
-					);
-
-				float x = 0;
-				float y = 0;
-				static float r = 0;
-				r += 0.5;
-			    // Draw //
-			    glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
-			    glClear(GL_COLOR_BUFFER_BIT); // clearing screen
-			    glRotatef(r,0.0,0.0,1.0);  // rotating everything
-			    glBegin(GL_QUADS); // drawing a multicolored triangle
-					glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
-					glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
-					glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
-					glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
-			    glEnd();
-			}			
-			
-			SDL_GL_SwapWindow( pWindow[0] );
+			for ( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
+				if ( pWindow[idx] ) {
+					SDL_GL_MakeCurrent( pWindow[idx], GLContext[idx] );
+					
+					Draw( idx );		
+					
+					SDL_GL_SwapWindow( pWindow[idx] );
+				}
+			}
 			Wait(5);
 		}
 	}
