@@ -1,8 +1,18 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <SDL2/SDL.h>
+#include <gl/gl.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Timer/Timer.h>
 #include "App.h"
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+#ifndef PRODUCT_SKU
+	#define PRODUCT_SKU		"UNKNOWN"
+	
+	const char* ProductName = "Unknown";
+	const char* FullProductName = "Unknown (?) v0.0";
+#endif // PRODUCT_SKU //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -73,12 +83,76 @@ void ProcessCommandLineArgs( int argc, char* argv[] ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef PRODUCT_SKU
-	#define PRODUCT_SKU		"UNKNOWN"
+#define MAX_SDL_DISPLAYS	8
+#define MAX_SDL_WINDOWS		8
+SDL_Rect pDisplay[MAX_SDL_DISPLAYS];
+SDL_Window* pWindow[MAX_SDL_WINDOWS];
+SDL_GLContext GLContext[MAX_SDL_WINDOWS];	// (void*) //
+bool FullScreen = false;
+// - ------------------------------------------------------------------------------------------ - //
+int InitSDLWindows() {
+	memset( pWindow, 0, sizeof(pWindow) );
+	memset( pDisplay, 0, sizeof(pDisplay) );
+	memset( GLContext, 0, sizeof(GLContext) );
 	
-	const char* ProductName = "Unknown";
-	const char* FullProductName = "Unknown (?) v0.0";
-#endif // PRODUCT_SKU //
+	FullScreen = false;
+
+	{
+		Log( "Video Displays" );
+		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {		
+			SDL_DisplayMode Mode;
+			SDL_GetDesktopDisplayMode( idx, &Mode );
+
+			SDL_Rect* Rect;
+			SDL_GetDisplayBounds( idx, &pDisplay[idx] );
+			Rect = &pDisplay[idx];
+			
+			Log( "%i - %i, %i at %i Hz [%x] -- Location: %i, %i (%i,%i)", 
+				idx, 
+				Mode.w, Mode.h, Mode.refresh_rate, Mode.format, 
+				Rect->x, Rect->y, Rect->w, Rect->h 
+				);
+		}
+	}
+
+	int Index = 0;
+	
+	{
+		const int Width = pDisplay[Index].w * 80 / 100;
+		const int Height = pDisplay[Index].h * 80 / 100;
+	
+		pWindow[Index] = SDL_CreateWindow(
+			FullProductName,
+			SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED,
+			Width, Height,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
+			);
+		
+		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE, SDL_WINDOW_INPUT_GRABBED, SDL_WINDOW_FULLSCREEN
+
+		if ( pWindow[Index] == NULL ) {
+			Log( "Error Creating Window[%i]: %s", Index, SDL_GetError() );
+			return 1;
+		}
+
+		GLContext[Index] = SDL_GL_CreateContext( pWindow[Index] );
+	}
+	
+	return 0;
+}
+// - ------------------------------------------------------------------------------------------ - //
+void DestroySDLWindows() {
+	for( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
+		if ( GLContext[idx] != 0 )
+			SDL_GL_DeleteContext( GLContext[idx] );
+		
+		if ( pWindow[idx] != 0 )
+			SDL_DestroyWindow( pWindow[idx] );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
@@ -97,52 +171,14 @@ int main( int argc, char* argv[] ) {
 	// **** //
 	
 	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK );
+	SDL_GL_LoadLibrary( NULL );
 	atexit(SDL_Quit);
+	atexit(SDL_GL_UnloadLibrary);
 	
 	// **** //
 	
-	int ScreenW, ScreenH;
-	
-	{
-		Log( "Video Displays" );
-		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {		
-			SDL_DisplayMode Mode;
-			SDL_GetDesktopDisplayMode( idx, &Mode );
-			ScreenW = Mode.w;
-			ScreenH = Mode.h;
+	InitSDLWindows();
 
-			SDL_Rect Rect;
-			SDL_GetDisplayBounds( idx, &Rect );
-			
-			Log( "%i - %i, %i at %i Hz [%x] -- Location: %i, %i (%i,%i)", idx, Mode.w, Mode.h, Mode.refresh_rate, Mode.format, Rect.x, Rect.y, Rect.w, Rect.h );
-		}
-	}
-	
-	// **** //
-	
-	ScreenW *= 90;
-	ScreenW /= 100;
-
-	ScreenH *= 90;
-	ScreenH /= 100;
-	
-	SDL_Window* pWindow = SDL_CreateWindow(
-		FullProductName,
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		ScreenW, ScreenH,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
-		);
-	
-	// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE, SDL_WINDOW_INPUT_GRABBED, SDL_WINDOW_FULLSCREEN
-	
-	if ( pWindow == NULL ) {
-		Log( "Error Creating Window: %s", SDL_GetError() );
-		return 1;
-	}
-	
-	SDL_GLContext GLContext = SDL_GL_CreateContext( pWindow );
-	
 	SDL_DisableScreenSaver();
 	
 	Log( "" );
@@ -150,9 +186,24 @@ int main( int argc, char* argv[] ) {
 	// **** //
 
 	{
+//		
+//		SDL_Window* pCurrentWindow = pWindow;
+//		SDL_Window* pOtherWindow = pFullWindow;
+//
+//		SDL_HideWindow( pOtherWindow );
+////		pCurrentWindow = pFullWindow;
+////		SDL_GL_MakeCurrent( pCurrentWindow, GLContext );
+//		SDL_ShowWindow( pCurrentWindow );
+//		//SDL_RaiseWindow( pCurrentWindow );
+
 		cApp App;
 		fflush(0);
 		
+//		{
+//			int w, h;
+//			SDL_GetWindowSize( pCurrentWindow, &w, &h );
+//			glViewport(0,0, w, h );
+//		}
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
@@ -164,7 +215,30 @@ int main( int argc, char* argv[] ) {
 			
 			App.Step();
 			App.Draw();
-			SDL_GL_SwapWindow( pWindow );
+
+			{
+				glMatrixMode(GL_PROJECTION|GL_MODELVIEW);
+				glLoadIdentity();
+				glOrtho(-320,320,240,-240,0,1);
+		
+		
+				float x = 0;
+				float y = 30;
+			    // Draw:
+			    glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
+			    glClear(GL_COLOR_BUFFER_BIT); // clearing screen
+			    glRotatef(10.0,0.0,0.0,1.0);  // rotating everything
+			    // Note that the glBegin() ... glEnd() OpenGL style used below is actually 
+			    // obsolete, but it will do for example purposes. For more information, see
+			    // SDL_GL_GetProcAddress() or find an OpenGL extension loading library.
+			    glBegin(GL_TRIANGLES); // drawing a multicolored triangle
+			      glColor3f(1.0,0.0,0.0); glVertex2f(x, y+90.0);
+			      glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
+			      glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
+			    glEnd();
+			}			
+			
+			SDL_GL_SwapWindow( pWindow[0] );
 			Wait(5);
 		}
 	}
@@ -172,9 +246,8 @@ int main( int argc, char* argv[] ) {
 	// **** //
 	
 	SDL_EnableScreenSaver();
-	
-	SDL_GL_DeleteContext( GLContext );
-	SDL_DestroyWindow( pWindow );
+
+	DestroySDLWindows();
 
 	return 0;
 }
