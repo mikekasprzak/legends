@@ -85,14 +85,14 @@ void ProcessCommandLineArgs( int argc, char* argv[] ) {
 // - ------------------------------------------------------------------------------------------ - //
 #define MAX_SDL_DISPLAYS	8
 #define MAX_SDL_WINDOWS		8
-SDL_Rect pDisplay[MAX_SDL_DISPLAYS];
+SDL_Rect Display[MAX_SDL_DISPLAYS];
 SDL_Window* pWindow[MAX_SDL_WINDOWS];
 SDL_GLContext GLContext[MAX_SDL_WINDOWS];	// (void*) //
 bool FullScreen = false;
 // - ------------------------------------------------------------------------------------------ - //
 int InitSDLWindows() {
 	memset( pWindow, 0, sizeof(pWindow) );
-	memset( pDisplay, 0, sizeof(pDisplay) );
+	memset( Display, 0, sizeof(Display) );
 	memset( GLContext, 0, sizeof(GLContext) );
 	
 	FullScreen = false;
@@ -104,8 +104,8 @@ int InitSDLWindows() {
 			SDL_GetDesktopDisplayMode( idx, &Mode );
 
 			SDL_Rect* Rect;
-			SDL_GetDisplayBounds( idx, &pDisplay[idx] );
-			Rect = &pDisplay[idx];
+			SDL_GetDisplayBounds( idx, &Display[idx] );
+			Rect = &Display[idx];
 			
 			Log( "%i - %i, %i at %i Hz [%x] -- Location: %i, %i (%i,%i)", 
 				idx, 
@@ -118,8 +118,8 @@ int InitSDLWindows() {
 	int Index = 0;
 	
 	{
-		const int Width = pDisplay[Index].w * 80 / 100;
-		const int Height = pDisplay[Index].h * 80 / 100;
+		const int Width = Display[Index].w * 80 / 100;
+		const int Height = Display[Index].h * 80 / 100;
 	
 		pWindow[Index] = SDL_CreateWindow(
 			FullProductName,
@@ -159,8 +159,8 @@ void ToggleFullScreen() {
 	SDL_Window* Old = pWindow[Index];
 	SDL_DestroyWindow( Old );
 
-	const int Width = pDisplay[Index].w;
-	const int Height = pDisplay[Index].h;
+	const int Width = Display[Index].w;
+	const int Height = Display[Index].h;
 	
 	pWindow[Index] = SDL_CreateWindow(
 		FullProductName,
@@ -180,8 +180,8 @@ void ToggleWindowed() {
 	SDL_Window* Old = pWindow[Index];
 	SDL_DestroyWindow( Old );
 
-	const int Width = pDisplay[Index].w * 80 / 100;
-	const int Height = pDisplay[Index].h * 80 / 100;
+	const int Width = Display[Index].w * 80 / 100;
+	const int Height = Display[Index].h * 80 / 100;
 	
 	pWindow[Index] = SDL_CreateWindow(
 		FullProductName,
@@ -265,19 +265,34 @@ int main( int argc, char* argv[] ) {
 			{
 				glMatrixMode(GL_PROJECTION|GL_MODELVIEW);
 				glLoadIdentity();
-				glOrtho(-320,320,240,-240,0,1);
-		
+				
+				//float DisplayAspect = (float)Display[0].h / (float)Display[0].w;
+				
+				int w, h;
+				SDL_GetWindowSize( pWindow[0], &w, &h );
+				float Aspect = (float)h / (float)w;
+				
+				float NewSize = 320.0f * Aspect;
+				glOrtho(
+					-320,320,
+					NewSize,-NewSize,
+					0,1
+					);
+
 				float x = 0;
-				float y = 30;
+				float y = 0;
+				static float r = 0;
+				r += 0.5;
 			    // Draw:
 			    glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
 			    glClear(GL_COLOR_BUFFER_BIT); // clearing screen
-			    glRotatef(10.0,0.0,0.0,1.0);  // rotating everything
+			    glRotatef(r,0.0,0.0,1.0);  // rotating everything
 			    // Note that the glBegin() ... glEnd() OpenGL style used below is actually 
 			    // obsolete, but it will do for example purposes. For more information, see
 			    // SDL_GL_GetProcAddress() or find an OpenGL extension loading library.
-			    glBegin(GL_TRIANGLES); // drawing a multicolored triangle
-			      glColor3f(1.0,0.0,0.0); glVertex2f(x, y+90.0);
+			    glBegin(GL_QUADS); // drawing a multicolored triangle
+			      glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
+			      glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
 			      glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
 			      glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
 			    glEnd();
