@@ -1,6 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <SDL2/SDL.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include <Timer/Timer.h>
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -125,8 +126,7 @@ int main( int argc, char* argv[] ) {
 	ScreenH *= 90;
 	ScreenH /= 100;
 	
-	SDL_Window* pWindow;
-	pWindow = SDL_CreateWindow(
+	SDL_Window* pWindow = SDL_CreateWindow(
 		FullProductName,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
@@ -141,17 +141,39 @@ int main( int argc, char* argv[] ) {
 		return 1;
 	}
 	
-//	SDL_DisableScreenSaver();
+	SDL_GLContext GLContext = SDL_GL_CreateContext( pWindow );
 	
-	// **** //
+	SDL_DisableScreenSaver();
 	
 	Log( "" );
+	
+	// **** //
 
 	{
 		cApp App;
-		App();
+		fflush(0);
+		
+		
+		bool ExitApp = false;
+		while ( !ExitApp ) {
+			SDL_Event Event;
+			SDL_PollEvent(&Event);
+			if ( Event.type == SDL_QUIT ) {
+				ExitApp = true;
+			}
+			
+			App.Step();
+			App.Draw();
+			SDL_GL_SwapWindow( pWindow );
+			Wait(5);
+		}
 	}
+
+	// **** //
 	
+	SDL_EnableScreenSaver();
+	
+	SDL_GL_DeleteContext( GLContext );
 	SDL_DestroyWindow( pWindow );
 
 	return 0;

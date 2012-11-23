@@ -13,34 +13,29 @@ cApp::cApp() {
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
 	
 	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
-	fflush(0);
-}
-// - ------------------------------------------------------------------------------------------ - //
-cApp::~cApp() {
-	delete_pNetAdapterInfo( Adapters );
 
-	delete( MyGeo );
-}
-// - ------------------------------------------------------------------------------------------ - //
-int cApp::operator()( ) {
 	// Wait for threads to finish //
 	MyGeo->join();
 			
 	// Init //
 	Client_Start();
 	Client_Connect();
-	
-	// Do Stuff //
-	{
-		fflush(0);
-		getchar(); // Wait until user hits "enter"
-	}
-	
+
+}
+// - ------------------------------------------------------------------------------------------ - //
+cApp::~cApp() {
 	// Cleanup //
 	Client_Stop();
 
-	// Finished //
-	return 0;
+	delete_pNetAdapterInfo( Adapters );
+
+	delete( MyGeo );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cApp::Step( ) {
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cApp::Draw( ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
