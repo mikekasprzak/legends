@@ -465,10 +465,6 @@ int main( int argc, char* argv[] ) {
 	DestroySDLWindows();	
 	
 	// **** //
-	
-	extern char* GetMLogData();
-	Log( "> %s", GetMLogData() );
-
 
 	return 0;
 }
