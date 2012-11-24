@@ -32,7 +32,7 @@ int Out_Columns;
 
 // - ------------------------------------------------------------------------------------------ - //
 void OutInit() {
-	initscr();					// Default Init //
+//	initscr();					// Default Init //
 
 	//raw();					// CTRL-Z and CTRL-C *DON'T* trigger signals //
 	cbreak();					// CTRL-Z and CTRL-C trigger signals //
@@ -41,22 +41,24 @@ void OutInit() {
 	keypad( stdscr, TRUE ); 	// Enable Arrow Keys, Function Keys, etc //
 	noecho();					// User input not displayed. "echo()" to display //
 	
-	start_color();				// Enable Color //
-	
-	init_pair( 1, COLOR_RED, 		COLOR_BLACK );
-	init_pair( 2, COLOR_GREEN,		COLOR_BLACK );
-	init_pair( 3, COLOR_YELLOW,		COLOR_BLACK );
-	init_pair( 4, COLOR_BLUE,		COLOR_BLACK );
-	init_pair( 5, COLOR_MAGENTA,	COLOR_BLACK );
-	init_pair( 6, COLOR_CYAN,		COLOR_BLACK );
-	init_pair( 7, COLOR_WHITE,		COLOR_BLACK );
-	init_pair( 8, COLOR_BLACK, 		COLOR_BLACK );
+//	start_color();				// Enable Color //
+//	
+//	init_pair( 1, COLOR_RED, 		COLOR_BLACK );
+//	init_pair( 2, COLOR_GREEN,		COLOR_BLACK );
+//	init_pair( 3, COLOR_YELLOW,		COLOR_BLACK );
+//	init_pair( 4, COLOR_BLUE,		COLOR_BLACK );
+//	init_pair( 5, COLOR_MAGENTA,	COLOR_BLACK );
+//	init_pair( 6, COLOR_CYAN,		COLOR_BLACK );
+//	init_pair( 7, COLOR_WHITE,		COLOR_BLACK );
+//	init_pair( 8, COLOR_BLACK, 		COLOR_BLACK );
 	
 	getmaxyx( stdscr, Out_Rows, Out_Columns );
+	
+	refresh();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void OutExit() {
-	endwin();	// Shutdown Curses //
+//	endwin();	// Shutdown Curses //
 }
 // - ------------------------------------------------------------------------------------------ - //
 

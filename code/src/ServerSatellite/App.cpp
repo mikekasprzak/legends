@@ -4,7 +4,8 @@
 #include "App.h"
 
 #include <Timer/Timer.h>
-#include <Text/Out.h>
+#include <Debug/Log.h>
+#include "Text/Out.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -14,7 +15,7 @@ cApp::cApp() {
 	Adapters = new_pNetAdapterInfo();
 	Adapter = get_primary_pNetAdapterInfo( Adapters );
 	
-	Out( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 	
 }
 // - ------------------------------------------------------------------------------------------ - //

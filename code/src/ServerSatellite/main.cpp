@@ -1,11 +1,39 @@
 // - ------------------------------------------------------------------------------------------ - //
+#include <Debug/Log.h>
+#include <Timer/Timer.h>
+
 #include "App.h"
 #include <Util/curses.h>
 #include "Text/Out.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-int main( int argc, char* argv[] ) {
+#ifndef PRODUCT_SKU
+	#define PRODUCT_SKU		"UNKNOWN"
+	
+	const char* ProductName = "Unknown";
+	const char* FullProductName = "Unknown (?) v0.0";
+#endif // PRODUCT_SKU //
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+#include <signal.h>
+// - ------------------------------------------------------------------------------------------ - //
+void term_func( int Signal ) {
+	ELog( "SIGTERM (Terminate) recieved -- %i", Signal );
+	LogFlush();
+	exit(1);
+}
+// - ------------------------------------------------------------------------------------------ - //
+void int_func( int Signal ) {
+	ELog( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i", Signal );
+	LogFlush();
+	exit(1);
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+int main( int argc, char* argv[] ) {	
 	if ( !curses_IsSupported() ) {
 		printf( "ERROR: PDCurses is not supported. :(\n\n");
 		printf( "Hey, let information@sykhronics.com know you got this error and you could win a\n" );
@@ -17,6 +45,22 @@ int main( int argc, char* argv[] ) {
 	}
 
 	// **** //
+
+	LogInit();
+	
+	signal( SIGTERM, term_func );
+	signal( SIGINT, int_func );
+
+	// **** //
+
+	Log( "-=======- GEL2 Server Started -- Curses Branch -- SKU: %s -=======-", PRODUCT_SKU );
+	Log( "GEL (C) Copyright 2008-2013 Mike Kasprzak and Sykhronics Entertainment" );
+	Log( "" );
+	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
+
+	OutInit();	
+	
+	// **** //
 	
 	gelNetInit();	// Mainly for WinSock //
 	
@@ -26,10 +70,7 @@ int main( int argc, char* argv[] ) {
 	SatBodyTest();
 	
 	// **** //
-
-	OutInit();
-	OutClear();
-
+	
 	{
 		cApp App;
 		App();

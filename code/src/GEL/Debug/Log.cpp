@@ -44,19 +44,33 @@ int CurrentLogIndentation = 0;
 // - ------------------------------------------------------------------------------------------ - //
 #endif // _WIN32
 // - ------------------------------------------------------------------------------------------ - //
-#define FLOG_FUNCV( ... )		vwprintf( __VA_ARGS__ )
-#define FLOG_FUNC( ... )		wprintf( __VA_ARGS__ )
+WINDOW* FLOG_TARGET = 			0; // stdscr not initialized until init //
+#define FLOG_FUNCV( ... )		vwprintw( FLOG_TARGET, __VA_ARGS__ )
+#define FLOG_FUNC( ... )		wprintw( FLOG_TARGET, __VA_ARGS__ )
 // - ------------------------------------------------------------------------------------------ - //
 inline void _FLogFlush() {
-	
+	refresh();
 }
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_FLOG_COLORS
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void FLogColor( const int Color ) {
+inline void FLogColor( const int InColor ) {
+	if ( InColor < 0 ) {
+		standend();
+	}
+	else {
+		int Color = InColor & 7;
+		if ( Color == 0 )
+			Color = 8;
 	
+		attrset( 
+			COLOR_PAIR(Color) | 
+			(((InColor & 15) > 7) ? A_BOLD : A_NORMAL) |
+			((InColor > 15) ? A_REVERSE : A_NORMAL)
+			);
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 #else // NO_FLOG_COLORS //
@@ -68,9 +82,29 @@ inline void FLogColor( const int Color ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 inline void FLogInit( const char* ) {
+	FLOG_TARGET = initscr();	// Default Init //
+
+//	//raw();					// CTRL-Z and CTRL-C *DON'T* trigger signals //
+//	cbreak();					// CTRL-Z and CTRL-C trigger signals //
+//	//halfdelay(1);				// Calls to getch() return 'ERR' if no key pressed. Time in 10ths //
+//	nodelay( stdscr, TRUE );	// Non-Blocking getch(). Returns 'ERR' if no key pressed //
+//	keypad( stdscr, TRUE ); 	// Enable Arrow Keys, Function Keys, etc //
+//	noecho();					// User input not displayed. "echo()" to display //
+
+	start_color();				// Enable Color //
+
+	init_pair( 1, COLOR_RED, 		COLOR_BLACK );
+	init_pair( 2, COLOR_GREEN,		COLOR_BLACK );
+	init_pair( 3, COLOR_YELLOW,		COLOR_BLACK );
+	init_pair( 4, COLOR_BLUE,		COLOR_BLACK );
+	init_pair( 5, COLOR_MAGENTA,	COLOR_BLACK );
+	init_pair( 6, COLOR_CYAN,		COLOR_BLACK );
+	init_pair( 7, COLOR_WHITE,		COLOR_BLACK );
+	init_pair( 8, COLOR_BLACK, 		COLOR_BLACK );
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void FLogExit() {	
+	endwin();	// Shutdown Curses //
 }
 // - ------------------------------------------------------------------------------------------ - //
 #else // USES_CURSES //

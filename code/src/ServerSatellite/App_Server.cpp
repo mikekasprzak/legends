@@ -1,11 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include "Text/Out.h"
+#include <Debug/Log.h>
 
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 int cApp::Server_Start() {
 	if ( enet_initialize() != 0 ) {
-		Out("Error Initializing ENet");
+		Log("Error Initializing ENet");
 		return 1;	
 	}		
 	
@@ -21,7 +21,7 @@ int cApp::Server_Start() {
 		0 			// Outgoing Bandwidth (0=no limit) //
 		);
 
-	Out( "* %s Started on %i.%i.%i.%i %i\n", 
+	Log( "* %s Started on %i.%i.%i.%i %i\n", 
 		Server_NetHost ? "Server":"Client",
 		(Address.host>>0)&255, 
 		(Address.host>>8)&255, 
@@ -44,16 +44,16 @@ void cApp::Server_Poll( const int TimeInMS ) {
 	while ( enet_host_service( Server_NetHost, &Event, TimeInMS ) > 0 ) {
 		switch ( Event.type ) {
 			case ENET_EVENT_TYPE_CONNECT: {
-				Out("* Connection!");
+				Log("* Connection!");
 				break;
 			}
 	        case ENET_EVENT_TYPE_RECEIVE: {
-				Out("* PACKET!");
+				Log("* PACKET!");
 				
 				if ( Event.channelID == CH_OUTSIDERS ) {
 					int* Data = (int*)Event.packet->data;
 					if ( Data[0] == 1 ) {
-						Out("* Pinged... sending Pong" );
+						Log("* Pinged... sending Pong" );
 						
 						int Response[] = { 2 };
 						ENetPacket* Packet = enet_packet_create( &Response, sizeof(Response), ENET_PACKET_FLAG_UNSEQUENCED );
@@ -62,21 +62,21 @@ void cApp::Server_Poll( const int TimeInMS ) {
 						enet_host_flush( Server_NetHost );
 					}
 					else {
-						Out("Hmm");
+						Log("Hmm");
 					}
 				}
 				else {
-					Out("Uh");
+					Log("Uh");
 				}
 	        	
 	            break;
 	        }
 			case ENET_EVENT_TYPE_DISCONNECT: {
-				Out("* Disconnected");
+				Log("* Disconnected");
 				break;
 			}
 			default: {
-				Out("* WTF!");
+				Log("* WTF!");
 				break;
 			}
 		}					

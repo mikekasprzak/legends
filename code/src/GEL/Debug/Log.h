@@ -116,7 +116,7 @@ void _vLogAlways( const char* s, va_list vargs );
 #define vwLogAlways( ... ) ;
 #define _vwLogAlways( ... ) ;
 // Post underscore version means no wchar (fwide) state changes //
-#define LogWide( ... ) ;
+#define LogWide( ... ) ; // true = fwide(+1), false = fwide(-1)
 #define wLogAlways_( ... ) ;
 #define _wLogAlways_( ... ) ;
 #define vwLogAlways_( ... ) ;
