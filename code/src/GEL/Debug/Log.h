@@ -108,6 +108,9 @@ void _LogAlways( const char* s, ... );
 void vLogAlways( const char* s, va_list vargs );
 void _vLogAlways( const char* s, va_list vargs );
 
+// Get access to the Data stored in the Memory Log //
+extern const char* GetMLogData();
+
 // Disabled (for now). Will need to call fwide(+1) before and fwide(-1) after each call. Also <wchar.h> //
 //   These calls can afford to be wasteful, since they're mainly for logging wchar data. I will never //
 //   ever actually localize the logging, so in practice wchar's are not needed by my logging code. //

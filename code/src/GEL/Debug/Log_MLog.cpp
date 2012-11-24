@@ -4,8 +4,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_MLOGGING
 // - ------------------------------------------------------------------------------------------ - //
-#include <stdio.h>
-#include <stdlib.h>
+#include <Util/safe_sprintf.h>
+#include <string.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -15,19 +15,93 @@ extern int CurrentLogIndentation;
 // - ------------------------------------------------------------------------------------------ - //
 // Memory Log Implimentation //
 // - ------------------------------------------------------------------------------------------ - //
-FILE* MLOG_TARGET = 			stdout;
-#define MLOG_FUNCV( ... )		vfprintf( MLOG_TARGET, __VA_ARGS__ )
-#define MLOG_FUNC( ... )		fprintf( MLOG_TARGET, __VA_ARGS__ )
+struct MLogType {
+	int Size;		// How Large the Data is //
+	int Used;		// How much space is Used //
+	char* Data;		// The Data //
+
+	MLogType() {
+		Size = 32*1024;				// Start with a 32k buffer //
+		Data = new char[Size];		// Allocate Memory //
+		Data[0] = 0;				// Add Null Character //
+		
+		Used = 0;					// No space used yet //
+	}
+	
+	~MLogType() {
+		if ( Data ) {
+			delete [] Data;
+		}
+	}
+	
+	void Grow() {
+		char* OldData = Data;				// Store Old Pointer //
+		
+		Size += 32*1024;					// Add 32k more data space //
+		Data = new char[Size];				// Alloc new Memory //
+		
+		memcpy( Data, OldData, Size );		// Copy the good part over //
+		
+		delete [] OldData;					// Delete the Old Data now that we're done with it //
+	}
+};
 // - ------------------------------------------------------------------------------------------ - //
-inline void _MLogFlush() {
-	fflush( MLOG_TARGET );
+MLogType* MLOG_TARGET = 0;
+
+#define MLOG_FUNCV( ... )		vMEMprintf( MLOG_TARGET, __VA_ARGS__ )
+#define MLOG_FUNC( ... )		MEMprintf( MLOG_TARGET, __VA_ARGS__ )
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void MLogInit() {
+	MLOG_TARGET = new MLogType;
 }
 // - ------------------------------------------------------------------------------------------ - //
+void MLogExit() {
+	delete MLOG_TARGET;
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* GetMLogData() {
+	return MLOG_TARGET->Data;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+int vMEMprintf( MLogType* Dest, const char* Format, va_list VArgs ) {	
+	while( true ) {
+		int Count = safe_vsprintf( 
+			&(Dest->Data[ Dest->Used ]),
+			Dest->Size - Dest->Used,
+			Format, 
+			VArgs 
+			);
+
+		if ( Count >= 0 ) { // Zero too, in case we print a "" string //
+			Dest->Used += Count;
+			return Count;
+		}
+		else { 				// Need More Room //
+			Dest->Grow();
+		}
+	};
+}
+// - ------------------------------------------------------------------------------------------ - //
+int MEMprintf( MLogType* Dest, const char* Format, ... ) {
+	va_list VArgs;
+	va_start( VArgs, Format );
+	int Count = vMEMprintf( Dest, Format, VArgs );
+	va_end( VArgs );
+	
+	return Count;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef NO_MLOG_COLORS
 // - ------------------------------------------------------------------------------------------ - //
 inline void _MLogColor( const int Color ) {
+	// TODO: Interpret Color as some sort of color code //
 }
 // - ------------------------------------------------------------------------------------------ - //
 #else // NO_MLOG_COLORS //
@@ -38,15 +112,8 @@ inline void _MLogColor( const int Color ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void MLogInit() {
-}
-// - ------------------------------------------------------------------------------------------ - //
-void MLogExit() {
-}
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
 inline void MLogIndentation( int Count, const char Val = ' ' ) {
+	// NOTE: We now have a limited number of Indentation Level... because it made MSVC simpler. //
 	enum {
 		INDENTATION_MAX = 128
 	};
@@ -165,7 +232,6 @@ void MLogColor( const int InColor ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void MLogFlush() {
-	_MLogFlush();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void MLogAlways( const char* s, va_list vargs ) {
@@ -174,8 +240,6 @@ void MLogAlways( const char* s, va_list vargs ) {
 	MPostLog( s );
 
 	MLOG_FUNC( (char*)"\n" );
-
-	_MLogFlush();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _MLogAlways( const char* s, va_list vargs ) {

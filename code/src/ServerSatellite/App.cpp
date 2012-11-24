@@ -1,10 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include "Util/safe_sprintf.h"
-
 #include "App.h"
 
 #include <Timer/Timer.h>
 #include <Debug/Log.h>
+#include <Util/safe_sprintf.h>
+
 #include "Text/Out.h"
 // - ------------------------------------------------------------------------------------------ - //
 
