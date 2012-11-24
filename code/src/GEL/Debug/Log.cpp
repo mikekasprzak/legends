@@ -410,15 +410,24 @@ void LogExit() {
 //	MLogExit();
 }
 // - ------------------------------------------------------------------------------------------ - //
+#include <time.h>
+// - ------------------------------------------------------------------------------------------ - //
 void LogInit( const char* TargetFile ) {
 	FLogInit( TargetFile );
 //	MLogInit();
 
 	atexit(LogExit);
 
-	// Embedded LogLevel Test (since Log isn't available yet) //
+	// Embedded LogLevel Test (since Log isn't available... yet) //
 	if ( LogLevel >= 1 ) {
-		LogAlways( "-=- Logging Started - %i", 25);
+		time_t rawtime;
+		struct tm* timeinfo;
+		
+		time( &rawtime );
+		timeinfo = localtime( &rawtime );
+		
+		// asctime adds a "\n" //
+		_LogAlways( "-=- Logging Started - %s", asctime(timeinfo) );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
