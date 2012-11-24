@@ -92,7 +92,7 @@ enum {
 #ifndef NO_LOGGING
 // - ------------------------------------------------------------------------------------------ - //
 // Log Setup //
-void LogInit();
+void LogInit( const char* TargetFile = 0 );
 void LogExit(); // Called in atexit, but included anyway. No need to call! //
 
 void LogColor( const int Color ); // Set Color (where supported, ignored elsewhere) //
@@ -124,7 +124,7 @@ void _vLogAlways( const char* s, va_list vargs );
 // - ------------------------------------------------------------------------------------------ - //
 #else // NO_LOGGING //
 // - ------------------------------------------------------------------------------------------ - //
-#define LogInit() ;
+#define LogInit( ... ) ;
 #define LogExit() ;
 #define LogColor( ... ) ;
 

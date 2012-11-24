@@ -65,7 +65,7 @@ void AppInit( int argc, char* argv[] ) {
 	{
 		Log( "Command Line Arguments: %i", argc );
 		for ( int idx = 0; idx < argc; idx++ ) {
-			Log( "* argv[%i]: \"%s\"", idx, argv[idx] );	
+			Log( "argv[%i]: \"%s\"", idx, argv[idx] );	
 		}
 	}
 
@@ -258,12 +258,16 @@ int InitSDLWindows() {
 // - ------------------------------------------------------------------------------------------ - //
 void DestroySDLWindows() {
 	for( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
-		if ( GLContext[idx] != 0 )
+		if ( GLContext[idx] != 0 ) {
+			Log( "* GLContext %i Destroyed", idx );
 			SDL_GL_DeleteContext( GLContext[idx] );
+			GLContext[idx] = 0;
+		}
 		
 		if ( pWindow[idx] != 0 ) {
 			Log( "* Window %i with ID %i Destroyed", idx, SDL_GetWindowID( pWindow[idx] ) );
 			SDL_DestroyWindow( pWindow[idx] );
+			pWindow[idx] = 0;
 		}
 	}
 }
@@ -306,6 +310,7 @@ void AddScreens() {
 				pWindow[idx] = 0;
 			}
 	
+			// Don't delete GL Context. Bad drivers crash if you do it too much. //
 //			if ( GLContext[idx] ) {
 //				SDL_GL_DeleteContext( GLContext[idx] );
 //				GLContext[idx] = 0;
@@ -384,13 +389,13 @@ void Draw( const int Index = 0 ) {
 #include <signal.h>
 // - ------------------------------------------------------------------------------------------ - //
 void term_func( int Signal ) {
-	printf( "SIGTERM (Terminate) recieved -- %i\n", Signal );
+	ELog( "SIGTERM (Terminate) recieved -- %i", Signal );
 	LogFlush();
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void int_func( int Signal ) {
-	printf( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i\n", Signal );
+	ELog( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i", Signal );
 	LogFlush();
 	exit(1);
 }
@@ -399,9 +404,10 @@ void int_func( int Signal ) {
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	LogInit();
+	
 	signal( SIGTERM, term_func );
 	signal( SIGINT, int_func );
-
+	
 	// *** //
 
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
@@ -433,7 +439,6 @@ int main( int argc, char* argv[] ) {
 
 	{
 		cApp App;
-		LogFlush();
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
@@ -457,7 +462,9 @@ int main( int argc, char* argv[] ) {
 
 	// **** //
 
-	DestroySDLWindows();
+	DestroySDLWindows();	
+	
+	// **** //
 
 	return 0;
 }
