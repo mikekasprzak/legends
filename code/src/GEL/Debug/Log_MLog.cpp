@@ -21,11 +21,11 @@ struct MLogType {
 	char* Data;		// The Data //
 
 	MLogType() {
-		Size = 32*1024;				// Start with a 32k buffer //
-		Data = new char[Size];		// Allocate Memory //
-		Data[0] = 0;				// Add Null Character //
-		
-		Used = 0;					// No space used yet //
+		Size = 32*1024;						// Start with a 32k buffer //
+		Data = new char[Size];				// Allocate Memory //
+		Used = 0;							// No space used yet //
+
+		Data[Used] = 0;						// Null Terminate (Alloc ensures there will be room) //		
 	}
 	
 	~MLogType() {
@@ -37,10 +37,12 @@ struct MLogType {
 	void Grow() {
 		char* OldData = Data;				// Store Old Pointer //
 		
-		Size += 32*1024;					// Add 32k more data space //
+		Size += 32*1024;					// Add 32k more buffer size //
 		Data = new char[Size];				// Alloc new Memory //
 		
-		memcpy( Data, OldData, Size );		// Copy the good part over //
+		memcpy( Data, OldData, Used );		// Copy the good part over //
+		
+		Data[Used] = 0;						// Null Terminate (Alloc ensures there will be room) //
 		
 		delete [] OldData;					// Delete the Old Data now that we're done with it //
 	}
@@ -76,12 +78,15 @@ int vMEMprintf( MLogType* Dest, const char* Format, va_list VArgs ) {
 			VArgs 
 			);
 
-		if ( Count >= 0 ) { // Zero too, in case we print a "" string //
+		if ( Count < 0 ) { // Less than Zero (vsprintf_s) not enough room //
+			Dest->Grow();
+		}
+		else if ( Count >= (Dest->Size - Dest->Used) ) { // Greater & Equal (vsnprintf) not enough room
+			Dest->Grow();
+		}
+		else {
 			Dest->Used += Count;
 			return Count;
-		}
-		else { 				// Need More Room //
-			Dest->Grow();
 		}
 	};
 }
