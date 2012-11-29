@@ -97,6 +97,152 @@ void AppInit( int argc, char* argv[] ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+#include <Core/GelArray.h>
+// - ------------------------------------------------------------------------------------------ - //
+namespace Screen {
+// - ------------------------------------------------------------------------------------------ - //
+// TODO: Derive from cNativeBase. Base is the only one visible to game code. //
+class cNative {
+public:
+	SDL_Rect DisplayBounds;		// x,y,w,h //
+	SDL_Window* pWindow;		// Opaque. No direct access to members. //
+	SDL_GLContext GLContext;	// (void*) //
+
+public:
+	inline cNative() :
+		pWindow( 0 ),
+		GLContext( 0 )
+	{
+	}
+	
+	// Call when you just want the NativeScreen to know it's own bounds //
+	inline const int Init( const int Index = 0 ) {
+		GetDisplayBounds( Index );
+	}
+	
+	// Call when you want to create a Window and Context for this screen //
+	inline const int InitWindow( const int Index = 0, const bool FullScreen = true ) {
+		GetDisplayBounds( Index );
+		
+		float Scalar = 1.0f;
+		if ( !FullScreen ) {
+			Scalar = 0.8f;
+		}
+		
+		if ( const int Err = NewWindow( Index, (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.w*Scalar), FullScreen ) ) {
+			return Err;
+		}
+
+		if ( const int Err = NewGLContext( Index ) ) {
+			return Err;
+		}
+		
+		return 0;
+	}
+	
+	inline const int Destroy( const int Index = 0 ) {
+		DeleteGLContext( Index );
+		DeleteWindow( Index );
+	}
+		
+public:
+	inline const int GetDisplayBounds( const int Index ) {
+		SDL_GetDisplayBounds( Index, &DisplayBounds );
+	}
+	
+	inline const int NewWindow( const int Index, const int Width, const int Height, const bool FullScreen ) {
+		DeleteWindow( Index );
+
+		pWindow = SDL_CreateWindow(
+			FullProductName, 						// Window Title //
+			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position X //
+			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position Y //
+			Width, Height,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : 0) | ((Index==0) ? SDL_WINDOW_INPUT_GRABBED : 0)
+			);
+		
+		if ( FullScreen ) {
+			if ( pWindow == NULL ) {
+				return_value_Log( 1, "! Error Creating Full Screen Window[%i]: %s", Index, SDL_GetError() );
+			}
+			else {
+				Log( "* Full Screen Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
+			}
+		}
+		else {
+			if ( pWindow == NULL ) {
+				return_value_Log( 1, "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
+			}
+			else {
+				Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
+			}
+		}
+		
+		return 0;
+	}
+
+	inline void DeleteWindow( const int Index ) {
+		if ( pWindow ) {
+			Log( "* Window %i with ID %i Destroyed", Index, SDL_GetWindowID( pWindow ) );
+			SDL_DestroyWindow( pWindow );
+			pWindow = 0;
+		}
+	}
+	
+	inline const int NewGLContext( const int Index ) {
+		DeleteGLContext( Index );
+		
+		Assert( pWindow == 0, "Window not created before SDL_GL_CreateContext called" );
+		
+		GLContext = SDL_GL_CreateContext( pWindow );
+		
+		if ( GLContext == NULL ) {
+			return_value_Log( 1, "! Error Creating GLContext %i: %i", Index, GLContext );
+		}
+		else {
+			Log( "* GLContext %i Created: %i", Index, GLContext );
+		}
+		
+		return 0;
+	}
+	
+	inline void DeleteGLContext( const int Index ) {
+		if ( GLContext != NULL ) {
+			Log( "* GLContext %i Destroyed: %i", Index, GLContext );
+			SDL_GL_DeleteContext( GLContext );
+			GLContext = 0;
+		}
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
+bool FullScreen = false;
+GelArray<cNative>* Native;
+// - ------------------------------------------------------------------------------------------ - //
+void InitNative() {
+	FullScreen = false;
+
+	const size_t NumVideoDisplays = SDL_GetNumVideoDisplays();
+	Native = new_GelArray<cNative>( NumVideoDisplays );
+	
+	// Init the Bounds, Window and GL Context for the first display //
+	Native->Data[0].InitWindow( 0, FullScreen );
+
+	// Only Init the Bounds for the rest of the displays //
+	for ( size_t idx = 1; idx < NumVideoDisplays; idx++ ) {
+		Native->Data[idx].Init( idx );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void DestroyNative() {
+	for ( size_t idx = 0; idx < Native->Size; idx++ ) {
+		Native->Data[idx].Destroy();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+}; // namespace Screen //
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 #define MAX_SDL_DISPLAYS	16
 #define MAX_SDL_WINDOWS		16
 SDL_Rect Display[MAX_SDL_DISPLAYS];
