@@ -4,7 +4,9 @@
 #ifndef __GEL_DEBUG_Log_H__
 #define __GEL_DEBUG_Log_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <stdarg.h>
+#include <stdarg.h>	// For va_list
+#include <stdlib.h>	// For exit(1);
+#include <Util/return_if.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef NO_LOGGING
 	#define NO_FLOGGING				// FILE/STDIO Logging (either but not both) //
@@ -198,61 +200,121 @@ extern const char* GetMLogData();
 #if (LOG_LEVEL >= 2) || !defined(LOG_LEVEL)
 	#define VLog( ... ) { if ( LogLevel >= 2 ) LogAlways( __VA_ARGS__ ); }
 	#define _VLog( ... ) { if ( LogLevel >= 2 ) _LogAlways( __VA_ARGS__ ); }
-	#define return_VLog( ... ) { VLog( __VA_ARGS__ ); return; }
-	#define return_value_VLog( ___VAL, ... ) { VLog( __VA_ARGS__ ); return ___VAL; }
+	#define if_VLog( __TEST, ... ) { if ( __TEST ) { VLog( __VA_ARGS__ ); } }
+	#define return_VLog( __RETCODE, ... ) { VLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_VLog( ... ) { VLog( __VA_ARGS__ ); return; }
+	#define return_value_VLog( __RETCODE, ... ) { VLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_VLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { VLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_VLog( __TEST, ... ) { if( __TEST ) { VLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_VLog( __RETCODE, __TEST, ... ) { if( __TEST ) { VLog( __VA_ARGS__ ); return __RETCODE; } }
 	#define wVLog( ... ) { if ( LogLevel >= 2 ) wLogAlways( __VA_ARGS__ ); }
 	#define _wVLog( ... ) { if ( LogLevel >= 2 ) _wLogAlways( __VA_ARGS__ ); }
-	#define return_wVLog( ... ) { wVLog( __VA_ARGS__ ); return; }
-	#define return_value_wVLog( ___VAL, ... ) { wVLog( __VA_ARGS__ ); return ___VAL; }
-#else // LOG_LEVEL //
+	#define if_wVLog( __TEST, ... ) { if ( __TEST ) { VLog( __VA_ARGS__ ); } }
+	#define return_wVLog( __RETCODE, ... ) { wVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_wVLog( ... ) { wVLog( __VA_ARGS__ ); return; }
+	#define return_value_wVLog( __RETCODE, ... ) { wVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_wVLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { wVLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_wVLog( __TEST, ... ) { if( __TEST ) { wVLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_wVLog( __RETCODE, __TEST, ... ) { if( __TEST ) { wVLog( __VA_ARGS__ ); return __RETCODE; } }
+#else // VLog_LEVEL //
 	#define VLog( ... ) ;
 	#define _VLog( ... ) ;
-	#define return_VLog( ... ) {return;}
-	#define return_value_VLog( __VAL, ... ) {return __VAL;}
+	#define if_VLog( ... ) ;
+	#define return_VLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_VLog( ... ) { return; }
+	#define return_value_VLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_VLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_VLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_VLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 	#define wVLog( ... ) ;
 	#define _wVLog( ... ) ;
-	#define return_wVLog( ... ) {return;}
-	#define return_value_wVLog( __VAL, ... ) {return __VAL;}
+	#define if_wVLog( ... ) ;
+	#define return_wVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_wVLog( ... ) { return; }
+	#define return_value_wVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_wVLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_wVLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_wVLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 #if (LOG_LEVEL >= 3) || !defined(LOG_LEVEL)
 	#define VVLog( ... ) { if ( LogLevel >= 3 ) LogAlways( __VA_ARGS__ ); }
 	#define _VVLog( ... ) { if ( LogLevel >= 3 ) _LogAlways( __VA_ARGS__ ); }
-	#define return_VVLog( ... ) { VVLog( __VA_ARGS__ ); return; }
-	#define return_value_VVLog( ___VAL, ... ) { VVLog( __VA_ARGS__ ); return ___VAL; }
+	#define if_VVLog( __TEST, ... ) { if ( __TEST ) { VVLog( __VA_ARGS__ ); } }
+	#define return_VVLog( __RETCODE, ... ) { VVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_VVLog( ... ) { VVLog( __VA_ARGS__ ); return; }
+	#define return_value_VVLog( __RETCODE, ... ) { VVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_VVLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { VVLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_VVLog( __TEST, ... ) { if( __TEST ) { VVLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_VVLog( __RETCODE, __TEST, ... ) { if( __TEST ) { VVLog( __VA_ARGS__ ); return __RETCODE; } }
 	#define wVVLog( ... ) { if ( LogLevel >= 3 ) wLogAlways( __VA_ARGS__ ); }
 	#define _wVVLog( ... ) { if ( LogLevel >= 3 ) _wLogAlways( __VA_ARGS__ ); }
-	#define return_wVVLog( ... ) { wVVLog( __VA_ARGS__ ); return; }
-	#define return_value_wVVLog( ___VAL, ... ) { wVVLog( __VA_ARGS__ ); return ___VAL; }
-#else // LOG_LEVEL //
+	#define if_wVVLog( __TEST, ... ) { if ( __TEST ) { VVLog( __VA_ARGS__ ); } }
+	#define return_wVVLog( __RETCODE, ... ) { wVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_wVVLog( ... ) { wVVLog( __VA_ARGS__ ); return; }
+	#define return_value_wVVLog( __RETCODE, ... ) { wVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_wVVLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { wVVLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_wVVLog( __TEST, ... ) { if( __TEST ) { wVVLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_wVVLog( __RETCODE, __TEST, ... ) { if( __TEST ) { wVVLog( __VA_ARGS__ ); return __RETCODE; } }
+#else // VVLog_LEVEL //
 	#define VVLog( ... ) ;
 	#define _VVLog( ... ) ;
-	#define return_VVLog( ... ) {return;}
-	#define return_value_VVLog( __VAL, ... ) {return __VAL;}
+	#define if_VVLog( ... ) ;
+	#define return_VVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_VVLog( ... ) { return; }
+	#define return_value_VVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_VVLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_VVLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_VVLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 	#define wVVLog( ... ) ;
 	#define _wVVLog( ... ) ;
-	#define return_wVVLog( ... ) {return;}
-	#define return_value_wVVLog( __VAL, ... ) {return __VAL;}
+	#define if_wVVLog( ... ) ;
+	#define return_wVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_wVVLog( ... ) { return; }
+	#define return_value_wVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_wVVLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_wVVLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_wVVLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 #if (LOG_LEVEL >= 4) || !defined(LOG_LEVEL)
 	#define VVVLog( ... ) { if ( LogLevel >= 4 ) LogAlways( __VA_ARGS__ ); }
 	#define _VVVLog( ... ) { if ( LogLevel >= 4 ) _LogAlways( __VA_ARGS__ ); }
-	#define return_VVVLog( ... ) { VVVLog( __VA_ARGS__ ); return; }
-	#define return_value_VVVLog( ___VAL, ... ) { VVVLog( __VA_ARGS__ ); return ___VAL; }
+	#define if_VVVLog( __TEST, ... ) { if ( __TEST ) { VVVLog( __VA_ARGS__ ); } }
+	#define return_VVVLog( __RETCODE, ... ) { VVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_VVVLog( ... ) { VVVLog( __VA_ARGS__ ); return; }
+	#define return_value_VVVLog( __RETCODE, ... ) { VVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_VVVLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { VVVLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_VVVLog( __TEST, ... ) { if( __TEST ) { VVVLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_VVVLog( __RETCODE, __TEST, ... ) { if( __TEST ) { VVVLog( __VA_ARGS__ ); return __RETCODE; } }
 	#define wVVVLog( ... ) { if ( LogLevel >= 4 ) wLogAlways( __VA_ARGS__ ); }
 	#define _wVVVLog( ... ) { if ( LogLevel >= 4 ) _wLogAlways( __VA_ARGS__ ); }
-	#define return_wVVVLog( ... ) { wVVVLog( __VA_ARGS__ ); return; }
-	#define return_value_wVVVLog( ___VAL, ... ) { wVVVLog( __VA_ARGS__ ); return ___VAL; }
-#else // LOG_LEVEL //
+	#define if_wVVVLog( __TEST, ... ) { if ( __TEST ) { VVVLog( __VA_ARGS__ ); } }
+	#define return_wVVVLog( __RETCODE, ... ) { wVVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_wVVVLog( ... ) { wVVVLog( __VA_ARGS__ ); return; }
+	#define return_value_wVVVLog( __RETCODE, ... ) { wVVVLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_wVVVLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { wVVVLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_wVVVLog( __TEST, ... ) { if( __TEST ) { wVVVLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_wVVVLog( __RETCODE, __TEST, ... ) { if( __TEST ) { wVVVLog( __VA_ARGS__ ); return __RETCODE; } }
+#else // VVVLog_LEVEL //
 	#define VVVLog( ... ) ;
 	#define _VVVLog( ... ) ;
-	#define return_VVVLog( ... ) {return;}
-	#define return_value_VVVLog( __VAL, ... ) {return __VAL;}
+	#define if_VVVLog( ... ) ;
+	#define return_VVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_VVVLog( ... ) { return; }
+	#define return_value_VVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_VVVLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_VVVLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_VVVLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 	#define wVVVLog( ... ) ;
 	#define _wVVVLog( ... ) ;
-	#define return_wVVVLog( ... ) {return;}
-	#define return_value_wVVVLog( __VAL, ... ) {return __VAL;}
+	#define if_wVVVLog( ... ) ;
+	#define return_wVVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_wVVVLog( ... ) { return; }
+	#define return_value_wVVVLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_wVVVLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_wVVVLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_wVVVLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 

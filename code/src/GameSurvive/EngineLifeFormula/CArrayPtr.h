@@ -6,7 +6,7 @@
 //   T is assumed to be a pointer //
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
-#include <Debug/Assert.h>
+#include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
 template<class T, size_t _Size>
 class CArrayPtr {

@@ -4,7 +4,7 @@
 #ifndef __Library_Data_GelArray_Class_H__
 #define __Library_Data_GelArray_Class_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Assert.h>
+#include <Debug/Log.h>
 
 #include "DataBlock_Core.h"
 #include "DataBlock_File.h"
