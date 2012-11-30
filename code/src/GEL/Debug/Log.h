@@ -31,7 +31,6 @@
 // * VVLog are only written when the Logging level is 3 or higher. - Fine grain details, overly verbose (loops)
 // * VVVLog are only written when the Logging level is 4 or higher. - Ultimate detail, overkill debugging
 // * DLog writes only in the debug build.
-// * ELog does Error Logging - Print some extended debuging information.
 // * wLogAlways, wDLog, wVLog, wELog are the w_char versions of Log.
 // * _LogAlways, _DLog, _VLog *DON'T* append a newline (\n) and *DON'T* flush.
 // - ------------------------------------------------------------------------------------------ - //
