@@ -139,7 +139,7 @@ public:
 			Scalar = 0.8f;
 		}
 		
-		return_if( NewWindow( (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.w*Scalar), FullScreen ) );
+		return_if( NewWindow( (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.h*Scalar), FullScreen ) );
 
 		return_if( NewGLContext() );
 		
@@ -172,6 +172,8 @@ public:
 			Width, Height,
 			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : 0) | ((Index==0) ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
+		
+		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE
 		
 		if ( FullScreen ) {
 			return_if_Log( pWindow == NULL, "! Error Creating Full Screen Window[%i]: %s", Index, SDL_GetError() );

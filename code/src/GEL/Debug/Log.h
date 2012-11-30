@@ -258,6 +258,7 @@ extern const char* GetMLogData();
 
 // - ------------------------------------------------------------------------------------------ - //
 // Error Logging, like an assert for when we don't crash //
+// TODO: Modify this to be MessageBox style alert, as suggested in the style guide.
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef NO_LOGGING
 // - ------------------------------------------------------------------------------------------ - //
