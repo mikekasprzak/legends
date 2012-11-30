@@ -153,26 +153,42 @@ extern const char* GetMLogData();
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-// Log family of calls - Should probably be a singe macro *shrug* //
+// Log family of calls - Should probably be a singe macro *shrug* - EDIT: Can't be. No nested Macros. //
 // - ------------------------------------------------------------------------------------------ - //
 #if (LOG_LEVEL >= 1) || !defined(LOG_LEVEL)
 	#define Log( ... ) { if ( LogLevel >= 1 ) LogAlways( __VA_ARGS__ ); }
 	#define _Log( ... ) { if ( LogLevel >= 1 ) _LogAlways( __VA_ARGS__ ); }
+	#define if_Log( __TEST, ... ) { if ( __TEST ) { Log( __VA_ARGS__ ); } }
 	#define return_Log( ... ) { Log( __VA_ARGS__ ); return; }
-	#define return_value_Log( ___VAL, ... ) { Log( __VA_ARGS__ ); return ___VAL; }
+	#define return_value_Log( __RETCODE, ... ) { Log( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_Log( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { Log( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_Log( __TEST, ... ) { if( __TEST ) { Log( __VA_ARGS__ ); return; } }
+	#define return_if_value_Log( __RETCODE, __TEST, ... ) { if( __TEST ) { Log( __VA_ARGS__ ); return __RETCODE; } }
 	#define wLog( ... ) { if ( LogLevel >= 1 ) wLogAlways( __VA_ARGS__ ); }
 	#define _wLog( ... ) { if ( LogLevel >= 1 ) _wLogAlways( __VA_ARGS__ ); }
+	#define if_wLog( __TEST, ... ) { if ( __TEST ) { Log( __VA_ARGS__ ); } }
 	#define return_wLog( ... ) { wLog( __VA_ARGS__ ); return; }
-	#define return_value_wLog( ___VAL, ... ) { wLog( __VA_ARGS__ ); return ___VAL; }
+	#define return_value_wLog( __RETCODE, ... ) { wLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_if_wLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { wLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
+	#define return_if_void_wLog( __TEST, ... ) { if( __TEST ) { wLog( __VA_ARGS__ ); return; } }
+	#define return_if_value_wLog( __RETCODE, __TEST, ... ) { if( __TEST ) { wLog( __VA_ARGS__ ); return __RETCODE; } }
 #else // LOG_LEVEL //
 	#define Log( ... ) ;
 	#define _Log( ... ) ;
-	#define return_Log( ... ) {return;}
-	#define return_value_Log( __VAL, ... ) {return __VAL;}
+	#define if_Log( ... ) ;
+	#define return_Log( ... ) { return; }
+	#define return_value_Log( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_Log( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_Log( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_Log( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 	#define wLog( ... ) ;
 	#define _wLog( ... ) ;
-	#define return_wLog( ... ) {return;}
-	#define return_value_wLog( __VAL, ... ) {return __VAL;}
+	#define if_wLog( ... ) ;
+	#define return_wLog( ... ) { return; }
+	#define return_value_wLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_if_wLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
+	#define return_if_void_wLog( __TEST, ... ) { if ( __TEST ) { return; } }
+	#define return_if_value_wLog( __RETCODE, __TEST, ... ) { if ( __TEST ) { return __RETCODE; } }
 #endif // LOG_LEVEL //
 // - ------------------------------------------------------------------------------------------ - //
 #if (LOG_LEVEL >= 2) || !defined(LOG_LEVEL)

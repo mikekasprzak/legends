@@ -3,7 +3,12 @@
 #include <gl/gl.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Timer/Timer.h>
+#include <Core/GelError.h>
+#include <Util/return_if.h>
+// - ------------------------------------------------------------------------------------------ - //
 #include "App.h"
+// - ------------------------------------------------------------------------------------------ - //
+
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef __unix
 #include <unistd.h>		// getpid()
@@ -103,6 +108,7 @@ namespace Screen {
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Derive from cNativeBase. Base is the only one visible to game code. //
 class cNative {
+	int Index;					// Stored Index //
 public:
 	SDL_Rect DisplayBounds;		// x,y,w,h //
 	SDL_Window* pWindow;		// Opaque. No direct access to members. //
@@ -110,48 +116,54 @@ public:
 
 public:
 	inline cNative() :
+		Index( 0 ),
 		pWindow( 0 ),
 		GLContext( 0 )
 	{
 	}
 	
 	// Call when you just want the NativeScreen to know it's own bounds //
-	inline const int Init( const int Index = 0 ) {
-		GetDisplayBounds( Index );
+	inline GelError Init( const int _Index ) {
+		Index = _Index;
+		return_if( GetDisplayBounds() );
+		return GEL_OK;
 	}
 	
 	// Call when you want to create a Window and Context for this screen //
-	inline const int InitWindow( const int Index = 0, const bool FullScreen = true ) {
-		GetDisplayBounds( Index );
+	inline GelError InitWindow( const int _Index, const bool FullScreen = true ) {
+		Index = _Index;
+		return_if( GetDisplayBounds() );
 		
 		float Scalar = 1.0f;
 		if ( !FullScreen ) {
 			Scalar = 0.8f;
 		}
 		
-		if ( const int Err = NewWindow( Index, (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.w*Scalar), FullScreen ) ) {
-			return Err;
-		}
+		return_if( NewWindow( (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.w*Scalar), FullScreen ) );
 
-		if ( const int Err = NewGLContext( Index ) ) {
-			return Err;
-		}
+		return_if( NewGLContext() );
 		
-		return 0;
+		return GEL_OK;
 	}
 	
-	inline const int Destroy( const int Index = 0 ) {
-		DeleteGLContext( Index );
-		DeleteWindow( Index );
+	inline GelError Destroy() {
+		return_if( DeleteGLContext() );
+		return_if( DeleteWindow() );
+		return GEL_OK;
+	}
+	
+	inline const int GetIndex() const {
+		return Index;
 	}
 		
 public:
-	inline const int GetDisplayBounds( const int Index ) {
-		SDL_GetDisplayBounds( Index, &DisplayBounds );
+	inline GelError GetDisplayBounds() {
+		return_if( SDL_GetDisplayBounds( Index, &DisplayBounds ) );
+		return GEL_OK;
 	}
 	
-	inline const int NewWindow( const int Index, const int Width, const int Height, const bool FullScreen ) {
-		DeleteWindow( Index );
+	inline GelError NewWindow( const int Width, const int Height, const bool FullScreen ) {
+		return_if( DeleteWindow() );
 
 		pWindow = SDL_CreateWindow(
 			FullProductName, 						// Window Title //
@@ -162,56 +174,46 @@ public:
 			);
 		
 		if ( FullScreen ) {
-			if ( pWindow == NULL ) {
-				return_value_Log( 1, "! Error Creating Full Screen Window[%i]: %s", Index, SDL_GetError() );
-			}
-			else {
-				Log( "* Full Screen Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
-			}
+			return_if_Log( pWindow == NULL, "! Error Creating Full Screen Window[%i]: %s", Index, SDL_GetError() );
+			Log( "* Full Screen Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
 		}
 		else {
-			if ( pWindow == NULL ) {
-				return_value_Log( 1, "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
-			}
-			else {
-				Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
-			}
+			return_if_Log( pWindow == NULL, "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
+			Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
 		}
 		
-		return 0;
+		return GEL_OK;
 	}
 
-	inline void DeleteWindow( const int Index ) {
+	inline GelError DeleteWindow() {
 		if ( pWindow ) {
 			Log( "* Window %i with ID %i Destroyed", Index, SDL_GetWindowID( pWindow ) );
 			SDL_DestroyWindow( pWindow );
 			pWindow = 0;
 		}
+		return (GelError)pWindow; // Should always be zero //
 	}
 	
-	inline const int NewGLContext( const int Index ) {
-		DeleteGLContext( Index );
+	inline GelError NewGLContext() {
+		return_if( DeleteGLContext() );
 		
 		Assert( pWindow == 0, "Window not created before SDL_GL_CreateContext called" );
 		
 		GLContext = SDL_GL_CreateContext( pWindow );
 		
-		if ( GLContext == NULL ) {
-			return_value_Log( 1, "! Error Creating GLContext %i: %i", Index, GLContext );
-		}
-		else {
-			Log( "* GLContext %i Created: %i", Index, GLContext );
-		}
+		return_if_Log( GLContext == NULL, "! Error Creating GLContext %i: %i", Index, GLContext );
+		Log( "* GLContext %i Created: %i", Index, GLContext );
 		
-		return 0;
+		return GEL_OK;
 	}
 	
-	inline void DeleteGLContext( const int Index ) {
-		if ( GLContext != NULL ) {
+	inline GelError DeleteGLContext() {
+		if ( GLContext ) {
 			Log( "* GLContext %i Destroyed: %i", Index, GLContext );
 			SDL_GL_DeleteContext( GLContext );
 			GLContext = 0;
 		}
+		return (GelError)GLContext;	// Should always be zero //
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
