@@ -9,7 +9,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-extern int CurrentLogIndentation;
+int CurrentMLogIndentation = 0;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -56,6 +56,7 @@ MLogType* MLOG_TARGET = 0;
 
 // - ------------------------------------------------------------------------------------------ - //
 void MLogInit() {
+	CurrentMLogIndentation = 0;
 	MLOG_TARGET = new MLogType;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -124,7 +125,11 @@ inline void MLogIndentation( int Count, const char Val = ' ' ) {
 	};
 	
 	if ( Count > 0 ) {
-		char s[INDENTATION_MAX];
+		char s[INDENTATION_MAX+1];
+		
+		if ( Count > INDENTATION_MAX )
+			Count = INDENTATION_MAX;
+			
 		for ( int idx = 0; idx < Count; idx++ ) {
 			s[idx] = Val;
 		}
@@ -141,32 +146,35 @@ inline void MPreLog( const char* s ) {
 	}
 	else if ( s[0] == '!' ) {
 		_MLogColor( LOG_INV_RED );
-		MLogIndentation( CurrentLogIndentation, '!' );
+		MLogIndentation( CurrentMLogIndentation, '!' );
 	}
 	else if ( s[0] == '*' ) {
 		if ( s[1] == '*' ) {
 			// Double Star+ //
 			_MLogColor( LOG_GREEN );
-			MLogIndentation( CurrentLogIndentation, '*' );
+			MLogIndentation( CurrentMLogIndentation, '*' );
 		}
 		else if ( s[1] == ' ' ) {
 			// Single Star //
-			_MLogColor( LOG_YELLOW );
-			MLogIndentation( CurrentLogIndentation );
+			MLogIndentation( CurrentMLogIndentation );
 		}
 	}
 	else if ( s[1] == ' ' ) {
 		if ( s[0] == '>' ) {
 			_MLogColor( LOG_MAGENTA );
-			MLogIndentation( CurrentLogIndentation, '>' );
+			MLogIndentation( CurrentMLogIndentation, '>' );
 		}
 		else if ( s[0] == '+' ) {
-			MLogIndentation( CurrentLogIndentation );
-			CurrentLogIndentation++;
+			_MLogColor( LOG_YELLOW );
+			MLogIndentation( CurrentMLogIndentation );
+
+			CurrentMLogIndentation += 2;
 		}
 		else if ( s[0] == '-' ) {
-			CurrentLogIndentation--;
-			MLogIndentation( CurrentLogIndentation );
+			CurrentMLogIndentation -= 2;
+
+			_MLogColor( LOG_YELLOW );
+			MLogIndentation( CurrentMLogIndentation );
 		}
 	}
 	else if ( s[1] == 0 ) {
@@ -198,7 +206,6 @@ inline void MPostLog( const char* s ) {
 		}
 		else if ( s[1] == ' ' ) {
 			// Single Star //
-			_MLogColor( LOG_NORMAL );
 		}
 	}
 	else if ( s[1] == ' ' ) {
@@ -206,8 +213,10 @@ inline void MPostLog( const char* s ) {
 			_MLogColor( LOG_NORMAL );
 		}
 		else if ( s[0] == '+' ) {
+			_MLogColor( LOG_NORMAL );
 		}
 		else if ( s[0] == '-' ) {
+			_MLogColor( LOG_NORMAL );
 		}
 	}
 	else if ( s[1] == 0 ) {

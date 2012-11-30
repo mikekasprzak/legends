@@ -9,7 +9,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-extern int CurrentLogIndentation;
+int CurrentFLogIndentation = 0;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -62,6 +62,8 @@ inline void _FLogColor( const int InColor ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void FLogInit( const char* ) {
+	CurrentFLogIndentation = 0;
+
 	FLOG_TARGET = initscr();	// Default Init //
 
 //	//raw();					// CTRL-Z and CTRL-C *DON'T* trigger signals //
@@ -100,6 +102,7 @@ void FLogExit() {
 #define _FLogColor( ... ) ;
 // - ------------------------------------------------------------------------------------------ - //
 void FLogInit( const char* ) {
+	CurrentFLogIndentation = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void FLogExit() {	
@@ -251,6 +254,8 @@ inline void _FLogColor( const int Color ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 void FLogInit( const char* TargetFile ) {
+	CurrentFLogIndentation = 0;
+
 	if ( TargetFile ) {
 		FLOG_TARGET = fopen( TargetFile, "wb" );
 	}
@@ -268,12 +273,17 @@ void FLogExit() {
 
 // - ------------------------------------------------------------------------------------------ - //
 inline void FLogIndentation( int Count, const char Val = ' ' ) {
+	// NOTE: We now have a limited number of Indentation Level... because it made MSVC simpler. //
 	enum {
 		INDENTATION_MAX = 128
 	};
 	
 	if ( Count > 0 ) {
-		char s[INDENTATION_MAX];
+		char s[INDENTATION_MAX+1];
+
+		if ( Count > INDENTATION_MAX )
+			Count = INDENTATION_MAX;
+
 		for ( int idx = 0; idx < Count; idx++ ) {
 			s[idx] = Val;
 		}
@@ -290,32 +300,35 @@ inline void FPreLog( const char* s ) {
 	}
 	else if ( s[0] == '!' ) {
 		_FLogColor( LOG_INV_RED );
-		FLogIndentation( CurrentLogIndentation, '!' );
+		FLogIndentation( CurrentFLogIndentation, '!' );
 	}
 	else if ( s[0] == '*' ) {
 		if ( s[1] == '*' ) {
 			// Double Star+ //
 			_FLogColor( LOG_GREEN );
-			FLogIndentation( CurrentLogIndentation, '*' );
+			FLogIndentation( CurrentFLogIndentation, '*' );
 		}
 		else if ( s[1] == ' ' ) {
 			// Single Star //
-			_FLogColor( LOG_YELLOW );
-			FLogIndentation( CurrentLogIndentation );
+			FLogIndentation( CurrentFLogIndentation );
 		}
 	}
 	else if ( s[1] == ' ' ) {
 		if ( s[0] == '>' ) {
 			_FLogColor( LOG_MAGENTA );
-			FLogIndentation( CurrentLogIndentation, '>' );
+			FLogIndentation( CurrentFLogIndentation, '>' );
 		}
 		else if ( s[0] == '+' ) {
-			FLogIndentation( CurrentLogIndentation );
-			CurrentLogIndentation++;
+			_FLogColor( LOG_YELLOW );
+			FLogIndentation( CurrentFLogIndentation );
+
+			CurrentFLogIndentation += 2;
 		}
 		else if ( s[0] == '-' ) {
-			CurrentLogIndentation--;
-			FLogIndentation( CurrentLogIndentation );
+			CurrentFLogIndentation -= 2;
+
+			_FLogColor( LOG_YELLOW );
+			FLogIndentation( CurrentFLogIndentation );
 		}
 	}
 	else if ( s[1] == 0 ) {
@@ -347,7 +360,6 @@ inline void FPostLog( const char* s ) {
 		}
 		else if ( s[1] == ' ' ) {
 			// Single Star //
-			_FLogColor( LOG_NORMAL );
 		}
 	}
 	else if ( s[1] == ' ' ) {
@@ -355,8 +367,10 @@ inline void FPostLog( const char* s ) {
 			_FLogColor( LOG_NORMAL );
 		}
 		else if ( s[0] == '+' ) {
+			_FLogColor( LOG_NORMAL );
 		}
 		else if ( s[0] == '-' ) {
+			_FLogColor( LOG_NORMAL );
 		}
 	}
 	else if ( s[1] == 0 ) {

@@ -37,7 +37,7 @@ public:
 	
 	// Given a filename as an argument, load it //
 	inline cGelArray( const char* _FileName ) :
-		_Data( new_GelArray<Type>( _FileName ) )
+		_Data( new_read_GelArray<Type>( _FileName ) )
 	{
 	}
 	
@@ -54,8 +54,17 @@ public:
 	{
 	}
 	
+	// Assignment Operator -- for compatibility with new_GelArray, use it as is //
+	inline GelArray<Type>* operator = ( GelArray<Type>* Val ) {
+		if ( _Data )
+			delete_GelArray<Type>( _Data );
+			
+		_Data = Val;
+		return _Data;
+	}
+	
 	// Destructor //
-	inline virtual ~cGelArray() {
+	inline ~cGelArray() {
 		if ( _Data )
 			delete_GelArray<Type>( _Data );
 	}

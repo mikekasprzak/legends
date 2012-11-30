@@ -46,6 +46,35 @@ void ReportSDLVersion() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+void ReportSDLGraphicsInfo() {
+	{
+		// NOTE: Not very useful. Number of drivers compiled in to SDL. //
+		Log( "-=- SDL Video Drivers (not very useful) -=-" );
+		for( int idx = 0; idx < SDL_GetNumVideoDrivers(); idx++ ) {			
+			Log( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
+		}
+		Log("");
+	}
+	
+	{
+		Log( "-=- Video Displays -=-" );
+		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {
+			SDL_DisplayMode Mode;
+			SDL_GetDesktopDisplayMode( idx, &Mode );
+
+			SDL_Rect Rect;
+			SDL_GetDisplayBounds( idx, &Rect );
+			
+			Log( "%i - %i, %i at %i Hz [%x] -- Location: %i, %i (%i,%i)", 
+				idx, 
+				Mode.w, Mode.h, Mode.refresh_rate, Mode.format, 
+				Rect.x, Rect.y, Rect.w, Rect.h 
+				);
+		}
+		Log("");
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
 #include <System/Path.h>
 
 extern char AppBaseDir[];
@@ -125,27 +154,25 @@ public:
 	// Call when you just want the NativeScreen to know it's own bounds //
 	inline GelError Init( const int _Index ) {
 		Index = _Index;
+		
 		return_if( GetDisplayBounds() );
+		
 		return GEL_OK;
 	}
 	
 	// Call when you want to create a Window and Context for this screen //
 	inline GelError InitWindow( const int _Index, const bool FullScreen = true ) {
 		Index = _Index;
+		
 		return_if( GetDisplayBounds() );
 		
-		float Scalar = 1.0f;
-		if ( !FullScreen ) {
-			Scalar = 0.8f;
-		}
-		
-		return_if( NewWindow( (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.h*Scalar), FullScreen ) );
+		return_if( NewWindow( FullScreen ) );
 
 		return_if( NewGLContext() );
 		
 		return GEL_OK;
 	}
-	
+		
 	inline GelError Destroy() {
 		return_if( DeleteGLContext() );
 		return_if( DeleteWindow() );
@@ -155,11 +182,48 @@ public:
 	inline const int GetIndex() const {
 		return Index;
 	}
+	
+	inline GelError MakeCurrent() { // const?
+		return SDL_GL_MakeCurrent( pWindow, GLContext );
+	}
+
+	inline GelError Swap() { // const?
+		SDL_GL_SwapWindow( pWindow );
+		return GEL_OK;
+	}
+	
+	inline GelError UpdateViewport( const bool FullScreen ) const {
+		float Scalar = 1.0f;
+		if ( !FullScreen ) {
+			Scalar = 0.8f;
+		}
+
+		glViewport( 0, 0, (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.h*Scalar) );
+		
+		return GEL_OK;
+	}
 		
 public:
 	inline GelError GetDisplayBounds() {
 		return_if( SDL_GetDisplayBounds( Index, &DisplayBounds ) );
 		return GEL_OK;
+	}
+	
+	// Call these only after an inital call to GetDisplayBounds (i.e. Init does this) //
+	inline int GetWidth() const {
+		return DisplayBounds.w;
+	}
+	
+	inline int GetHeight() const {
+		return DisplayBounds.h;
+	}
+	
+	inline int GetX() const {
+		return DisplayBounds.x;
+	}
+	
+	inline int GetY() const {
+		return DisplayBounds.y;
 	}
 	
 	inline GelError NewWindow( const int Width, const int Height, const bool FullScreen ) {
@@ -170,7 +234,7 @@ public:
 			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position X //
 			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position Y //
 			Width, Height,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : 0) | ((Index==0) ? SDL_WINDOW_INPUT_GRABBED : 0)
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : 0) | ((FullScreen && (Index==0)) ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
 		
 		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE
@@ -184,7 +248,25 @@ public:
 			Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
 		}
 		
+		return_if( MakeCurrent() );
+		
+		return_if( UpdateViewport( FullScreen ) );
+		
 		return GEL_OK;
+	}
+
+	// Creates a Window based on the knowledge of the DisplayBounds //
+	inline GelError NewWindow( const bool FullScreen ) {
+		float Scalar = 1.0f;
+		if ( !FullScreen ) {
+			Scalar = 0.8f;
+		}
+
+		return NewWindow( 
+			(int)((float)GetWidth()*Scalar), 
+			(int)((float)GetHeight()*Scalar), 
+			FullScreen 
+			);
 	}
 
 	inline GelError DeleteWindow() {
@@ -220,7 +302,7 @@ public:
 };
 // - ------------------------------------------------------------------------------------------ - //
 bool FullScreen = false;
-GelArray<cNative>* Native;
+cGelArray<cNative> Native;
 // - ------------------------------------------------------------------------------------------ - //
 void InitNative() {
 	FullScreen = false;
@@ -229,23 +311,37 @@ void InitNative() {
 	Native = new_GelArray<cNative>( NumVideoDisplays );
 	
 	// Init the Bounds, Window and GL Context for the first display //
-	Native->Data[0].InitWindow( 0, FullScreen );
+	Native[0].InitWindow( 0, FullScreen );
 
 	// Only Init the Bounds for the rest of the displays //
 	for ( size_t idx = 1; idx < NumVideoDisplays; idx++ ) {
-		Native->Data[idx].Init( idx );
+		Native[idx].Init( idx );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void DestroyNative() {
-	for ( size_t idx = 0; idx < Native->Size; idx++ ) {
-		Native->Data[idx].Destroy();
+	for ( size_t idx = 0; idx < Native.Size(); idx++ ) {
+		Native[idx].Destroy();
 	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleScreens( const bool _FullScreen ) {
+	FullScreen = _FullScreen;
+
+	for ( size_t idx = 0; idx < Native.Size(); idx++ ) {
+		Native[idx].NewWindow( FullScreen );
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ToggleScreens() {	
+	ToggleScreens( !FullScreen );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Screen //
 // - ------------------------------------------------------------------------------------------ - //
 
+
+/*
 // - ------------------------------------------------------------------------------------------ - //
 #define MAX_SDL_DISPLAYS	16
 #define MAX_SDL_WINDOWS		16
@@ -422,7 +518,7 @@ void DestroySDLWindows() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-
+*/
 enum {
 	// Four Split //
 	// +-----+-----+ //
@@ -539,7 +635,7 @@ const float RenderRegion[] = {
 // 
 
 
-
+/*
 // - ------------------------------------------------------------------------------------------ - //
 void UpdateScreens() {
 	for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {
@@ -590,7 +686,7 @@ void AddScreens() {
 	
 	UpdateScreens();
 }
-
+*/
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -605,15 +701,18 @@ int Step() {
 //		if ( Event.key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
 
 		if ( (Event.key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
-			FullScreen = !FullScreen;
-			ToggleScreen();
-			UpdateScreens();
+			Screen::ToggleScreens();
+		}
+		else if ( (Event.key.keysym.scancode == SDL_SCANCODE_F4) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
+			Log( "> ALT+F4 Kill Signal Recieved" );
+			return true;
 		}
 		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
+			Log( "> F10 Kill Signal Recieved" );
 			return true;
 		}
 		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F12 ) {
-			AddScreens();
+//			AddScreens();
 		}
 	}
 	
@@ -624,9 +723,7 @@ void Draw( const int Index = 0 ) {
 	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
 	glLoadIdentity();
 	
-	int w, h;
-	SDL_GetWindowSize( pWindow[Index], &w, &h );
-	float Aspect = (float)h / (float)w;
+	float Aspect = (float)Screen::Native[Index].DisplayBounds.h / (float)Screen::Native[Index].DisplayBounds.w;
 	
 	float NewSize = 320.0f * Aspect;
 	glOrtho(
@@ -682,7 +779,7 @@ int main( int argc, char* argv[] ) {
 	Log( "" );
 	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
 
-	ReportSDLVersion();
+	ReportSDLVersion();	
 	AppInit( argc, argv );
 
 	// **** //
@@ -698,9 +795,11 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_GL_UnloadLibrary);
 	atexit(SDL_EnableScreenSaver);
 	
+	ReportSDLGraphicsInfo();
+
 	// **** //
 	
-	InitSDLWindows();
+	Screen::InitNative();
 	
 	// **** //
 
@@ -714,13 +813,13 @@ int main( int argc, char* argv[] ) {
 			App.Step();
 			App.Draw();
 
-			for ( int idx = 0; idx < MAX_SDL_WINDOWS; idx++ ) {
-				if ( pWindow[idx] ) {
-					SDL_GL_MakeCurrent( pWindow[idx], GLContext[idx] );
+			for ( int idx = 0; idx < Screen::Native.Size(); idx++ ) {
+				if ( Screen::Native[idx].pWindow ) {
+					Screen::Native[idx].MakeCurrent();
 					
 					Draw( idx );		
 					
-					SDL_GL_SwapWindow( pWindow[idx] );
+					Screen::Native[idx].Swap();
 				}
 			}
 			Wait(5);
@@ -728,8 +827,10 @@ int main( int argc, char* argv[] ) {
 	}
 
 	// **** //
-
-	DestroySDLWindows();	
+	
+	Log( "+ Shutdown Started..." );
+	Screen::DestroyNative();
+	Log( "- Shutdown Complete." );
 	
 	// **** //
 

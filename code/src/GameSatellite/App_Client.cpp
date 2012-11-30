@@ -61,7 +61,7 @@ bool cApp::Client_Connect() {
 		//enet_host_flush( Client_NetHost ); // enet_host_service() 
 		
 		ENetEvent Event;
-		while( enet_host_service( Client_NetHost, &Event, 3000 ) > 0 ) {
+		while( enet_host_service( Client_NetHost, &Event, 1000 ) > 0 ) {
 			switch( Event.type ) {
 				case ENET_EVENT_TYPE_RECEIVE: {
 					enet_uint32 TimeStamp2 = enet_time_get();
