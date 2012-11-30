@@ -6,6 +6,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 void ReportSDLVersion();
 void ReportSDLGraphicsInfo();
+void ReportSDLInputInfo();
 const char* SDL_WindowEventName( Uint8 EventName );
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_MAIN_SDLINIT_H__ //

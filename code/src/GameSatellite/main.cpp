@@ -45,23 +45,27 @@ void AppInit( int argc, char* argv[] ) {
 			LogLevel = 3;
 		}
 
-		bool CalculatePath = true;
+		bool DetermineContentPath = true;
 		if ( argc > 2 ) {
 			if ( strcmp( argv[1], "-DIR" ) == 0 ) {
 				strcpy( AppBaseDir, argv[2] );
-				CalculatePath = false;
+				DetermineContentPath = false;
 			}
 		}
 
+		bool DetermineSavePath = true;
 		if ( argc > 4 ) {
 			if ( strcmp( argv[3], "-SAVE" ) == 0 ) {
 				strcpy( AppSaveDir, argv[4] );
+				DetermineSavePath = false;
 			}
 		}
 		
-		if ( CalculatePath ) {
+		if ( DetermineContentPath )
 			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
-		}
+
+		if ( DetermineSavePath )
+			gelGetStoragePath( AppSaveDir, sizeof(AppSaveDir) );
 		
 		Log( "Base Directory: %s", AppBaseDir );
 		Log( "Save Directory: %s", AppSaveDir );
@@ -187,29 +191,45 @@ const float RenderRegion[] = {
 // 
 
 // - ------------------------------------------------------------------------------------------ - //
-int Step() {
-	SDL_Event Event;
-	SDL_PollEvent(&Event);
-	if ( Event.type == SDL_QUIT ) {
+void PollInput() {
+	#ifdef USES_XINPUT
+	{
+		XInput::Poll();
+		if ( XInput::HasConnectionChanged() ) {
+			for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
+				if ( XInput::HasConnectionChanged(idx) ) {
+					Log( "** XInput Controller %i %s", idx, XInput::IsConnected(idx) ? "Connected" : "Disconnected" );
+				}
+			}
+		}
+	}
+	#endif // USES_XINPUT //	
+}
+// - ------------------------------------------------------------------------------------------ - //
+int EventHandler( const SDL_Event* Event ) {
+	if ( Event->type == SDL_QUIT ) {
 		Log( "> SDL_QUIT Signal Recieved" );
 		return true;
 	}
-	else if ( Event.type == SDL_KEYUP ) {
-//		if ( Event.key.keysym.keycode == SDLK_TAB ) { // Key on current keyboard //
-//		if ( Event.key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
+	else if ( Event->type == SDL_KEYUP ) {
+//		if ( Event->key.keysym.keycode == SDLK_TAB ) { // Key on current keyboard //
+//		if ( Event->key.keysym.scancode == SDL_SCANCODE_TAB ) { // Key on all keyboards //
 
-		if ( (Event.key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
+		if ( (Event->key.keysym.scancode == SDL_SCANCODE_RETURN) && (Event->key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
 			Screen::ToggleScreens();
 		}
-		else if ( (Event.key.keysym.scancode == SDL_SCANCODE_F4) && (Event.key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
+		else if ( (Event->key.keysym.scancode == SDL_SCANCODE_F4) && (Event->key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
 			Log( "> ALT+F4 Kill Signal Recieved" );
 			return true;
 		}
-		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F10 ) {
+		#ifndef ndebug
+		// Only I use F10 as a standard exit key, so remove it when a release build //
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F10 ) {
 			Log( "> F10 Kill Signal Recieved" );
 			return true;
 		}
-		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F12 ) {
+		#endif // ndebug //
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F12 ) {
 			if ( Screen::Native.Size() > 1 ) {
 				if ( Screen::Native[1].HasWindow() ) {
 					Screen::RemoveScreens();
@@ -220,33 +240,43 @@ int Step() {
 			}
 		}
 	}
-	else if ( Event.type == SDL_WINDOWEVENT ) {
-		VVLog( "** [%i] %s [%i,%i]", Event.window.windowID, SDL_WindowEventName( Event.window.event ), Event.window.data1, Event.window.data2 );
+	else if ( Event->type == SDL_WINDOWEVENT ) {
+		VVLog( "**** [%i] %s [%i,%i]", Event->window.windowID, SDL_WindowEventName( Event->window.event ), Event->window.data1, Event->window.data2 );
 		
-		int WindowIndex = Screen::GetIndexByWindowID( Event.window.windowID );
+		int WindowIndex = Screen::GetIndexByWindowID( Event->window.windowID );
 			
 		if ( WindowIndex >= 0 ) {
-			if ( Event.window.event == SDL_WINDOWEVENT_MOVED ) {
+			if ( Event->window.event == SDL_WINDOWEVENT_MOVED ) {
 				Screen::Update( WindowIndex );
 			}
-			else if ( Event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ) {	// Preferred //
+			else if ( Event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED ) {	// Preferred //
 				Screen::Update( WindowIndex );
 			}
-			else if ( Event.window.event == SDL_WINDOWEVENT_CLOSE )  {
-				Log( "> SDL_WINDOWEVENT_CLOSE Signal Recieved from Window %i", Event.window.windowID );
+			else if ( Event->window.event == SDL_WINDOWEVENT_CLOSE )  {
+				Log( "> SDL_WINDOWEVENT_CLOSE Signal Recieved from Window %i", Event->window.windowID );
 				return true;		
 			}
 		}
 	}
-	
 	return false;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void Draw( const int Index = 0 ) {
+
+// - ------------------------------------------------------------------------------------------ - //
+int Step() {
+	SDL_Event Event;
+	while ( SDL_PollEvent(&Event) ) {
+		return_if( EventHandler( &Event ) );
+	}
+		
+	return false;
+}
+// - ------------------------------------------------------------------------------------------ - //
+void Draw( const Screen::cNative& Native ) {
 	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
 	glLoadIdentity();
 	
-	float NewSize = 320.0f * Screen::Native[Index].GetAspectRatio();
+	float NewSize = 320.0f * Native.GetAspectRatio();
 	glOrtho(
 		-320,320,
 		NewSize,-NewSize,
@@ -317,21 +347,7 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_EnableScreenSaver);
 	
 	ReportSDLGraphicsInfo();
-	
-	#ifdef USES_XINPUT
-	{
-		XInput::Init();
-		XInput::Poll();
-		
-		Log( "-=- XInput -- %i Device(s) Connected -=-", XInput::DevicesConnected() );
-		for ( int idx = 0; idx < XInput::Size(); idx++ ) {
-	        if ( XInput::IsConnected(idx) ) {
-	        	Log( "%i - Connected", idx );
-			}			
-		}
-		Log( "" );		
-	}
-	#endif // USES_XINPUT //
+	ReportSDLInputInfo();
 
 	// **** //
 	
@@ -344,29 +360,18 @@ int main( int argc, char* argv[] ) {
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
-			ExitApp = Step();
-			
-			// Poll Input Devices //
-			{
-				#ifdef USES_XINPUT
-				XInput::Poll();
-				if ( XInput::HasConnectionChanged() ) {
-					for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
-						if ( XInput::HasConnectionChanged(idx) ) {
-							Log( "** XInput Controller %i %s", idx, XInput::IsConnected(idx) ? "Connected" : "Disconnected" );
-						}
-					}
-				}
-				#endif // USES_XINPUT //
-			}
-			App.Step();
-			App.Draw();
+			PollInput();
 
+			ExitApp = Step();
+			App.Step();
+
+			// For All Screens //
 			for ( int idx = 0; idx < Screen::Native.Size(); idx++ ) {
 				if ( Screen::Native[idx].pWindow ) {
 					Screen::Native[idx].MakeCurrent();
 					
-					Draw( idx );		
+					Draw( Screen::Native[idx] );		
+					App.Draw(); // TODO: Something //
 					
 					Screen::Native[idx].Swap();
 				}

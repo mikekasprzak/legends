@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include "Input_XInput.h"
 #include "main_SDLInit.h"
 // - ------------------------------------------------------------------------------------------ - //
 void ReportSDLVersion() {
@@ -54,6 +55,26 @@ void ReportSDLGraphicsInfo() {
 		}
 		Log("");
 	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void ReportSDLInputInfo() {
+	// TODO: Poll Input Devices //
+	
+	// Not Actually SDL, but Input //
+	#ifdef USES_XINPUT
+	{
+		XInput::Init();
+		XInput::Poll();
+		
+		Log( "-=- XInput -- %i Device(s) Connected -=-", XInput::DevicesConnected() );
+		for ( int idx = 0; idx < XInput::Size(); idx++ ) {
+	        if ( XInput::IsConnected(idx) ) {
+	        	Log( "%i - Connected", idx );
+			}			
+		}
+		Log( "" );		
+	}
+	#endif // USES_XINPUT //
 }
 // - ------------------------------------------------------------------------------------------ - //
 const char* SDL_WindowEventName( Uint8 EventName ) {
