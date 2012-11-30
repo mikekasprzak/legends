@@ -83,6 +83,7 @@ char AppBaseDir[2048];
 extern char AppSaveDir[];
 char AppSaveDir[2048] = "";
 // - ------------------------------------------------------------------------------------------ - //
+// TODO: Rename this. ArgInit? SystemInit? Only non arg is the PID
 void AppInit( int argc, char* argv[] ) {
 	Log( "-=- Application Execution Info -=-" );
 	
@@ -137,9 +138,10 @@ namespace Screen {
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Derive from cNativeBase. Base is the only one visible to game code. //
 class cNative {
-	int Index;					// Stored Index //
+	int Index;					// Stored Index... it's either this or pass it in always //
 public:
-	SDL_Rect DisplayBounds;		// x,y,w,h //
+	SDL_Rect DisplayBounds;		// x,y,w,h of the Actual Display //
+	SDL_Rect Bounds;			// x,y,w,h of the Window //
 	SDL_Window* pWindow;		// Opaque. No direct access to members. //
 	SDL_GLContext GLContext;	// (void*) //
 
@@ -150,7 +152,25 @@ public:
 		GLContext( 0 )
 	{
 	}
+
+public:
+	// Outside Interface. Call these only after creating a Window. //
+	const int GetWidth() const {
+		return Bounds.w;
+	}
+	const int GetHeight() const {
+		return Bounds.h;
+	}
+	const int GetX() const {
+		return Bounds.x;
+	}
+	const int GetY() const {
+		return Bounds.y;
+	}
 	
+	// TODO: Some sort of "IsAvailable" //
+
+public:	
 	// Call when you just want the NativeScreen to know it's own bounds //
 	inline GelError Init( const int _Index ) {
 		Index = _Index;
@@ -193,13 +213,24 @@ public:
 	}
 	
 	inline GelError UpdateViewport( const bool FullScreen ) const {
-		float Scalar = 1.0f;
-		if ( !FullScreen ) {
-			Scalar = 0.8f;
-		}
-
-		glViewport( 0, 0, (int)((float)DisplayBounds.w*Scalar), (int)((float)DisplayBounds.h*Scalar) );
+		glViewport( 0, 0, Bounds.w, Bounds.h );
 		
+		return GEL_OK;
+	}
+
+	inline bool HasWindow() const {
+		return pWindow;
+	}
+	inline bool HasGLContext() const {
+		return GLContext;
+	}
+	
+	// Call me inside Resize and Move events so the Bounds are updated correctly //
+	inline GelError UpdateBounds() {
+		if ( HasWindow() ) {
+			SDL_GetWindowPosition( pWindow, &Bounds.x, &Bounds.y );
+			SDL_GetWindowSize( pWindow, &Bounds.w, &Bounds.h );
+		}
 		return GEL_OK;
 	}
 		
@@ -207,23 +238,6 @@ public:
 	inline GelError GetDisplayBounds() {
 		return_if( SDL_GetDisplayBounds( Index, &DisplayBounds ) );
 		return GEL_OK;
-	}
-	
-	// Call these only after an inital call to GetDisplayBounds (i.e. Init does this) //
-	inline int GetWidth() const {
-		return DisplayBounds.w;
-	}
-	
-	inline int GetHeight() const {
-		return DisplayBounds.h;
-	}
-	
-	inline int GetX() const {
-		return DisplayBounds.x;
-	}
-	
-	inline int GetY() const {
-		return DisplayBounds.y;
 	}
 	
 	inline GelError NewWindow( const int Width, const int Height, const bool FullScreen ) {
@@ -247,6 +261,8 @@ public:
 			return_if_Log( pWindow == NULL, "! Error Creating Window[%i]: %s", Index, SDL_GetError() );
 			Log( "* Window %i with ID %i Created", Index, SDL_GetWindowID( pWindow ) );
 		}
+
+		return_if( UpdateBounds() );		
 		
 		return_if( MakeCurrent() );
 		
@@ -263,14 +279,14 @@ public:
 		}
 
 		return NewWindow( 
-			(int)((float)GetWidth()*Scalar), 
-			(int)((float)GetHeight()*Scalar), 
+			(int)((float)DisplayBounds.w * Scalar),
+			(int)((float)DisplayBounds.h * Scalar),
 			FullScreen 
 			);
 	}
 
 	inline GelError DeleteWindow() {
-		if ( pWindow ) {
+		if ( HasWindow() ) {
 			Log( "* Window %i with ID %i Destroyed", Index, SDL_GetWindowID( pWindow ) );
 			SDL_DestroyWindow( pWindow );
 			pWindow = 0;
@@ -292,7 +308,7 @@ public:
 	}
 	
 	inline GelError DeleteGLContext() {
-		if ( GLContext ) {
+		if ( HasGLContext() ) {
 			Log( "* GLContext %i Destroyed: %i", Index, GLContext );
 			SDL_GL_DeleteContext( GLContext );
 			GLContext = 0;
@@ -329,12 +345,53 @@ void ToggleScreens( const bool _FullScreen ) {
 	FullScreen = _FullScreen;
 
 	for ( size_t idx = 0; idx < Native.Size(); idx++ ) {
-		Native[idx].NewWindow( FullScreen );
-	}	
+		if ( Native[idx].HasWindow() ) { // Only toggle if there is a Window. Otherwise ignore //
+			Native[idx].NewWindow( FullScreen );
+		}
+	}
+	
+	Assert( !Native[0].HasWindow(), "Screen 0 has no Window" );
+	SDL_RaiseWindow( Native[0].pWindow ); // Make [0] the focus Window //
 }
 // - ------------------------------------------------------------------------------------------ - //
 void ToggleScreens() {	
 	ToggleScreens( !FullScreen );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void AddScreen( const int Index ) {
+	Warning( Index < 0, "Invalid Index: %i [%i]", Index, Native.Size() );
+	Warning( Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
+	
+	Native[Index].NewWindow( FullScreen );
+	
+	if ( !Native[Index].HasGLContext() ) {
+		Native[Index].NewGLContext();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void RemoveScreen( const int Index ) {
+	Warning( Index < 0, "Invalid Index: %i [%i]", Index, Native.Size() );
+	Warning( Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
+	
+	Native[Index].DeleteWindow();
+}
+// - ------------------------------------------------------------------------------------------ - //
+void AddScreens() {
+	for ( size_t idx = 1; idx < Native.Size(); idx++ ) {
+		AddScreen( idx );
+	}
+
+	Assert( !Native[0].HasWindow(), "Screen 0 has no Window" );
+	SDL_RaiseWindow( Native[0].pWindow ); // Make [0] the focus Window //
+}
+// - ------------------------------------------------------------------------------------------ - //
+void RemoveScreens() {
+	for ( size_t idx = 1; idx < Native.Size(); idx++ ) {
+		RemoveScreen( idx );
+	}
+
+	Assert( !Native[0].HasWindow(), "Screen 0 has no Window" );
+	SDL_RaiseWindow( Native[0].pWindow ); // Make [0] the focus Window //
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Screen //
@@ -712,7 +769,14 @@ int Step() {
 			return true;
 		}
 		else if ( Event.key.keysym.scancode == SDL_SCANCODE_F12 ) {
-//			AddScreens();
+			if ( Screen::Native.Size() > 1 ) {
+				if ( Screen::Native[1].HasWindow() ) {
+					Screen::RemoveScreens();
+				}
+				else {
+					Screen::AddScreens();
+				}
+			}
 		}
 	}
 	
@@ -723,7 +787,7 @@ void Draw( const int Index = 0 ) {
 	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
 	glLoadIdentity();
 	
-	float Aspect = (float)Screen::Native[Index].DisplayBounds.h / (float)Screen::Native[Index].DisplayBounds.w;
+	float Aspect = (float)Screen::Native[Index].GetHeight() / (float)Screen::Native[Index].GetWidth();
 	
 	float NewSize = 320.0f * Aspect;
 	glOrtho(
