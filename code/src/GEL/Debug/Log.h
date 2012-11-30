@@ -159,7 +159,8 @@ extern const char* GetMLogData();
 	#define Log( ... ) { if ( LogLevel >= 1 ) LogAlways( __VA_ARGS__ ); }
 	#define _Log( ... ) { if ( LogLevel >= 1 ) _LogAlways( __VA_ARGS__ ); }
 	#define if_Log( __TEST, ... ) { if ( __TEST ) { Log( __VA_ARGS__ ); } }
-	#define return_Log( ... ) { Log( __VA_ARGS__ ); return; }
+	#define return_Log( __RETCODE, ... ) { Log( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_Log( ... ) { Log( __VA_ARGS__ ); return; }
 	#define return_value_Log( __RETCODE, ... ) { Log( __VA_ARGS__ ); return __RETCODE; }
 	#define return_if_Log( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { Log( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
 	#define return_if_void_Log( __TEST, ... ) { if( __TEST ) { Log( __VA_ARGS__ ); return; } }
@@ -167,7 +168,8 @@ extern const char* GetMLogData();
 	#define wLog( ... ) { if ( LogLevel >= 1 ) wLogAlways( __VA_ARGS__ ); }
 	#define _wLog( ... ) { if ( LogLevel >= 1 ) _wLogAlways( __VA_ARGS__ ); }
 	#define if_wLog( __TEST, ... ) { if ( __TEST ) { Log( __VA_ARGS__ ); } }
-	#define return_wLog( ... ) { wLog( __VA_ARGS__ ); return; }
+	#define return_wLog( __RETCODE, ... ) { wLog( __VA_ARGS__ ); return __RETCODE; }
+	#define return_void_wLog( ... ) { wLog( __VA_ARGS__ ); return; }
 	#define return_value_wLog( __RETCODE, ... ) { wLog( __VA_ARGS__ ); return __RETCODE; }
 	#define return_if_wLog( __TEST, ... ) { if( auto __Error ## __COUNTER__ = (__TEST) ) { wLog( __VA_ARGS__ ); return __Error ## __COUNTER__; } }
 	#define return_if_void_wLog( __TEST, ... ) { if( __TEST ) { wLog( __VA_ARGS__ ); return; } }
@@ -176,7 +178,8 @@ extern const char* GetMLogData();
 	#define Log( ... ) ;
 	#define _Log( ... ) ;
 	#define if_Log( ... ) ;
-	#define return_Log( ... ) { return; }
+	#define return_Log( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_Log( ... ) { return; }
 	#define return_value_Log( __RETCODE, ... ) { return __RETCODE; }
 	#define return_if_Log( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
 	#define return_if_void_Log( __TEST, ... ) { if ( __TEST ) { return; } }
@@ -184,7 +187,8 @@ extern const char* GetMLogData();
 	#define wLog( ... ) ;
 	#define _wLog( ... ) ;
 	#define if_wLog( ... ) ;
-	#define return_wLog( ... ) { return; }
+	#define return_wLog( __RETCODE, ... ) { return __RETCODE; }
+	#define return_void_wLog( ... ) { return; }
 	#define return_value_wLog( __RETCODE, ... ) { return __RETCODE; }
 	#define return_if_wLog( __TEST, ... ) { if ( auto __Error ## __COUNTER__ = (__TEST) ) { return __Error ## __COUNTER__; } }
 	#define return_if_void_wLog( __TEST, ... ) { if ( __TEST ) { return; } }
