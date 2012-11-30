@@ -14,10 +14,11 @@ LIBS="-L /usr/local/ssl/lib -lcrypto -L /usr/local/lib"
 
 SYSTEM=`uname`
 
-# Linux sh doesn't support ==, so use = #
+# Ubuntu's sh doesn't support "==", so use "=" #
 
 # If $WINDIR is NOT set #
 if [ -n "$WINDIR" ]; then
+	DEFINES="$DEFINES"
 	INCLUDES="$INCLUDES -I ../External/PDCurses/include"
 	LIBS="$LIBS -lenet -lwinmm ../External/PDCurses/pdcurses.lib `curl-config --static-libs` -lIphlpapi -static"
 elif [ "$SYSTEM" = "FreeBSD" ]; then

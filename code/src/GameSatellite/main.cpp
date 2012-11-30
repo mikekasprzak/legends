@@ -2,17 +2,11 @@
 #include <SDL2/SDL.h>
 #include <gl/gl.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Timer/Timer.h>
+#include <Debug/Log.h>
 #include <Core/GelError.h>
-#include <Util/return_if.h>
+#include <Timer/Timer.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "App.h"
-// - ------------------------------------------------------------------------------------------ - //
-
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef __unix
-#include <unistd.h>		// getpid()
-#endif // __unix //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -57,7 +51,7 @@ void ReportSDLGraphicsInfo() {
 	}
 	
 	{
-		Log( "-=- Video Displays -=-" );
+		Log( "-=- Video Displays -- %i Device(s) Connected -=-", SDL_GetNumVideoDisplays() );
 		for( int idx = 0; idx < SDL_GetNumVideoDisplays(); idx++ ) {
 			SDL_DisplayMode Mode;
 			SDL_GetDesktopDisplayMode( idx, &Mode );
@@ -108,15 +102,6 @@ char AppSaveDir[2048] = "";
 void AppInit( int argc, char* argv[] ) {
 	Log( "-=- Application Execution Info -=-" );
 	
-	// Process ID //
-	{
-#ifdef _WIN32
-		Log( "PID: %i", GetCurrentProcessId() );
-#elif defined(__unix)
-		Log( "PID: %i", (int)getpid() );
-#endif // _WIN32 //
-	}
-
 	// Show Command Line //
 	{
 		Log( "Command Line Arguments: %i", argc );
@@ -565,6 +550,97 @@ const float RenderRegion[] = {
 
 
 // - ------------------------------------------------------------------------------------------ - //
+#include <XInput/XInput.h>
+// - ------------------------------------------------------------------------------------------ - //
+namespace XInput {
+// - ------------------------------------------------------------------------------------------ - //
+// Reference: http://code.google.com/p/xcontroller/
+// MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinputenable%28v=vs.85%29.aspx
+// - ------------------------------------------------------------------------------------------ - //
+bool Connected[XUSER_MAX_COUNT];
+bool OldConnected[XUSER_MAX_COUNT];
+
+XINPUT_STATE State[XUSER_MAX_COUNT];
+XINPUT_CAPABILITIES Caps[XUSER_MAX_COUNT];
+XINPUT_BATTERY_INFORMATION Battery[XUSER_MAX_COUNT];
+XINPUT_BATTERY_INFORMATION HeadsetBattery[XUSER_MAX_COUNT];
+XINPUT_VIBRATION Vibration[XUSER_MAX_COUNT];
+
+void Init() {
+	ZeroMemory( &Connected, sizeof(Connected) );
+	ZeroMemory( &OldConnected, sizeof(OldConnected) );
+	
+	ZeroMemory( &State, sizeof(State) );
+	ZeroMemory( &Vibration, sizeof(Vibration) );
+	
+	// TODO: Add the Focus Lost and Gained events via a signal
+}
+
+void LoseFocus() {
+	XInputEnable( FALSE );
+}
+
+void GainFocus() {
+	XInputEnable( TRUE );
+}
+
+void Poll() {
+	for ( int idx = 0; idx < XUSER_MAX_COUNT; idx++ ) {
+		OldConnected[idx] = Connected[idx];
+		
+		Connected[idx] = (XInputGetState(idx, &State[idx]) == ERROR_SUCCESS);
+		// ERROR_SUCCESS, ERROR_DEVICE_NOT_CONNECTED
+
+		if( Connected[idx] ) {
+			XInputGetCapabilities( idx, 0, &Caps[idx] );
+			XInputGetBatteryInformation( idx, BATTERY_DEVTYPE_GAMEPAD, &Battery[idx] );
+			XInputGetBatteryInformation( idx, BATTERY_DEVTYPE_HEADSET, &HeadsetBattery[idx] );
+			XInputSetState( idx, &Vibration[idx] );
+		}
+	}
+	
+	// TODO: KeyStrokes
+}	
+
+inline size_t Size() {
+	return XUSER_MAX_COUNT;
+}
+
+
+inline bool IsConnected( const int Index ) {
+	return Connected[Index];
+}
+inline bool IsConnected() {
+	for ( int idx = 0; idx < XUSER_MAX_COUNT; idx++ ) {
+		return_if( IsConnected(idx) );
+	}
+	return false;
+}
+
+inline int DevicesConnected() {
+	int Count = 0;
+	for ( int idx = 0; idx < XUSER_MAX_COUNT; idx++ ) {
+		if( IsConnected(idx) ) {
+			Count++;
+		}
+	}
+	return Count;
+}
+
+inline bool HasConnectionChanged( const int Index ) {
+	return OldConnected[Index] != Connected[Index];
+}
+inline bool HasConnectionChanged() {
+	for ( int idx = 0; idx < XUSER_MAX_COUNT; idx++ ) {
+		return_if( HasConnectionChanged(idx) );
+	}
+	return false;
+}
+// - ------------------------------------------------------------------------------------------ - //
+}; // namespace XInput //
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 int Step() {
 	SDL_Event Event;
 	SDL_PollEvent(&Event);
@@ -695,6 +771,21 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_EnableScreenSaver);
 	
 	ReportSDLGraphicsInfo();
+	
+	#ifdef USES_XINPUT
+	{
+		XInput::Init();
+		XInput::Poll();
+		
+		Log( "-=- XInput -- %i Device(s) Connected -=-", XInput::DevicesConnected() );
+		for ( int idx = 0; idx < XInput::Size(); idx++ ) {
+	        if ( XInput::IsConnected(idx) ) {
+	        	Log( "%i - Connected", idx );
+			}			
+		}
+		Log( "" );		
+	}
+	#endif // USES_XINPUT //
 
 	// **** //
 	
@@ -709,6 +800,19 @@ int main( int argc, char* argv[] ) {
 		while ( !ExitApp ) {
 			ExitApp = Step();
 			
+			// Poll Input Devices //
+			{
+				#ifdef USES_XINPUT
+				XInput::Poll();
+				if ( XInput::HasConnectionChanged() ) {
+					for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
+						if ( XInput::HasConnectionChanged(idx) ) {
+							Log( "** XInput Controller %i %s", idx, XInput::IsConnected(idx) ? "Connected" : "Disconnected" );
+						}
+					}
+				}
+				#endif // USES_XINPUT //
+			}
 			App.Step();
 			App.Draw();
 
