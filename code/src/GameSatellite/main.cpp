@@ -264,6 +264,10 @@ int EventHandler( const SDL_Event* Event ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 int Step() {
+	// Poll Input //
+	PollInput();
+
+	// Poll Events //
 	SDL_Event Event;
 	while ( SDL_PollEvent(&Event) ) {
 		return_if( EventHandler( &Event ) );
@@ -360,8 +364,6 @@ int main( int argc, char* argv[] ) {
 		
 		bool ExitApp = false;
 		while ( !ExitApp ) {
-			PollInput();
-
 			ExitApp = Step();
 			App.Step();
 
