@@ -49,11 +49,11 @@ void ReportSDLVersion() {
 void ReportSDLGraphicsInfo() {
 	{
 		// NOTE: Not very useful. Number of drivers compiled in to SDL. //
-		Log( "-=- SDL Video Drivers (not very useful) -=-" );
+		VLog( "-=- SDL Video Drivers (not very useful) -=-" );
 		for( int idx = 0; idx < SDL_GetNumVideoDrivers(); idx++ ) {			
-			Log( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
+			VLog( "%i - %s", idx, SDL_GetVideoDriver( idx ) );
 		}
-		Log("");
+		VLog("");
 	}
 	
 	{
@@ -73,6 +73,27 @@ void ReportSDLGraphicsInfo() {
 		}
 		Log("");
 	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* SDL_WindowEventName( Uint8 EventName ) {
+	switch( EventName ) {
+		case SDL_WINDOWEVENT_NONE:			return "SDL_WINDOWEVENT_NONE";
+		case SDL_WINDOWEVENT_SHOWN:			return "SDL_WINDOWEVENT_SHOWN";
+		case SDL_WINDOWEVENT_HIDDEN:		return "SDL_WINDOWEVENT_HIDDEN";
+		case SDL_WINDOWEVENT_EXPOSED:		return "SDL_WINDOWEVENT_EXPOSED";
+		case SDL_WINDOWEVENT_MOVED:			return "SDL_WINDOWEVENT_MOVED";
+		case SDL_WINDOWEVENT_RESIZED:		return "SDL_WINDOWEVENT_RESIZED";
+		case SDL_WINDOWEVENT_SIZE_CHANGED:	return "SDL_WINDOWEVENT_SIZE_CHANGED";
+		case SDL_WINDOWEVENT_MINIMIZED:		return "SDL_WINDOWEVENT_MINIMIZED";
+		case SDL_WINDOWEVENT_MAXIMIZED:		return "SDL_WINDOWEVENT_MAXIMIZED";
+		case SDL_WINDOWEVENT_RESTORED:		return "SDL_WINDOWEVENT_RESTORED";
+		case SDL_WINDOWEVENT_ENTER:			return "SDL_WINDOWEVENT_ENTER";
+		case SDL_WINDOWEVENT_LEAVE:			return "SDL_WINDOWEVENT_LEAVE";
+		case SDL_WINDOWEVENT_FOCUS_GAINED:	return "SDL_WINDOWEVENT_FOCUS_GAINED";
+		case SDL_WINDOWEVENT_FOCUS_LOST:	return "SDL_WINDOWEVENT_FOCUS_LOST";
+		case SDL_WINDOWEVENT_CLOSE:			return "SDL_WINDOWEVENT_CLOSE";
+	};
+	return "SDL_WINDOWEVENT_???";
 }
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/Path.h>
@@ -106,6 +127,12 @@ void AppInit( int argc, char* argv[] ) {
 
 	// Get Base Directory //
 	{	
+		// TODO: Add Arg Decomposer //
+		if ( argc > 1 ) {
+			// HACK: if more than 1 args, assume higher Log Level //
+			LogLevel = 3;
+		}
+
 		bool CalculatePath = true;
 		if ( argc > 2 ) {
 			if ( strcmp( argv[1], "-DIR" ) == 0 ) {
@@ -166,6 +193,10 @@ public:
 	}
 	const int GetY() const {
 		return Bounds.y;
+	}
+	
+	const float GetAspectRatio() const {
+		return (float)Bounds.h / (float)Bounds.w;
 	}
 	
 	// TODO: Some sort of "IsAvailable" //
@@ -230,6 +261,8 @@ public:
 		if ( HasWindow() ) {
 			SDL_GetWindowPosition( pWindow, &Bounds.x, &Bounds.y );
 			SDL_GetWindowSize( pWindow, &Bounds.w, &Bounds.h );
+			
+			VVLog( "** Window %i [%i] Bounds Updated: (%i, %i) (%i, %i)", Index, SDL_GetWindowID(pWindow), Bounds.x, Bounds.y, Bounds.w, Bounds.h );
 		}
 		return GEL_OK;
 	}
@@ -248,7 +281,7 @@ public:
 			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position X //
 			SDL_WINDOWPOS_CENTERED_DISPLAY(Index),	// Window Position Y //
 			Width, Height,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : 0) | ((FullScreen && (Index==0)) ? SDL_WINDOW_INPUT_GRABBED : 0)
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | (FullScreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE) | ((FullScreen && (Index==0)) ? SDL_WINDOW_INPUT_GRABBED : 0)
 			);
 		
 		// SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE
@@ -394,6 +427,23 @@ void RemoveScreens() {
 	SDL_RaiseWindow( Native[0].pWindow ); // Make [0] the focus Window //
 }
 // - ------------------------------------------------------------------------------------------ - //
+int GetIndexByWindowID( const Uint32 WindowID ) {
+	for ( size_t idx = 0; idx < Native.Size(); idx++ ) {
+		if ( SDL_GetWindowID( Native[idx].pWindow ) == WindowID ) {
+			return idx;
+		}
+	}
+	Log( "! WindowID %i Not Found!", WindowID );
+	return -1;
+}
+// - ------------------------------------------------------------------------------------------ - //
+GelError Update( const int Index ) {
+	return_if( Native[Index].UpdateBounds() );
+	return_if( Native[Index].MakeCurrent() );
+	return_if( Native[Index].UpdateViewport( FullScreen ) );
+	return GEL_OK;
+}
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Screen //
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -519,6 +569,7 @@ int Step() {
 	SDL_Event Event;
 	SDL_PollEvent(&Event);
 	if ( Event.type == SDL_QUIT ) {
+		Log( "> SDL_QUIT Signal Recieved" );
 		return true;
 	}
 	else if ( Event.type == SDL_KEYUP ) {
@@ -547,6 +598,24 @@ int Step() {
 			}
 		}
 	}
+	else if ( Event.type == SDL_WINDOWEVENT ) {
+		VVLog( "** [%i] %s [%i,%i]", Event.window.windowID, SDL_WindowEventName( Event.window.event ), Event.window.data1, Event.window.data2 );
+		
+		int WindowIndex = Screen::GetIndexByWindowID( Event.window.windowID );
+			
+		if ( WindowIndex >= 0 ) {
+			if ( Event.window.event == SDL_WINDOWEVENT_MOVED ) {
+				Screen::Update( WindowIndex );
+			}
+			else if ( Event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ) {	// Preferred //
+				Screen::Update( WindowIndex );
+			}
+			else if ( Event.window.event == SDL_WINDOWEVENT_CLOSE )  {
+				Log( "> SDL_WINDOWEVENT_CLOSE Signal Recieved from Window %i", Event.window.windowID );
+				return true;		
+			}
+		}
+	}
 	
 	return false;
 }
@@ -555,9 +624,7 @@ void Draw( const int Index = 0 ) {
 	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
 	glLoadIdentity();
 	
-	float Aspect = (float)Screen::Native[Index].GetHeight() / (float)Screen::Native[Index].GetWidth();
-	
-	float NewSize = 320.0f * Aspect;
+	float NewSize = 320.0f * Screen::Native[Index].GetAspectRatio();
 	glOrtho(
 		-320,320,
 		NewSize,-NewSize,
