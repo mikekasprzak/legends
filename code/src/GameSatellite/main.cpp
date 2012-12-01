@@ -290,16 +290,16 @@ void Draw( const Screen::cNative& Native ) {
 	float x = 0;
 	float y = 0;
 	static float r = 0;
-	r += 0.5;
+	r += 0.5f;
     // Draw //
     glClearColor(0,0,0,1); // Use OpenGL commands, see the OpenGL reference.
     glClear(GL_COLOR_BUFFER_BIT); // clearing screen
-    glRotatef(r,0.0,0.0,1.0);  // rotating everything
+    glRotatef(r,0.0f,0.0f,1.0f);  // rotating everything
     glBegin(GL_QUADS); // drawing a multicolored triangle
-		glColor3f(1.0,0.0,0.0); glVertex2f(x-90.0, y+90.0);
-		glColor3f(1.0,1.0,1.0); glVertex2f(x+90.0, y+90.0);
-		glColor3f(0.0,1.0,0.0); glVertex2f(x+90.0, y-90.0);
-		glColor3f(0.0,0.0,1.0); glVertex2f(x-90.0, y-90.0);
+		glColor3f(1.0f,0.0f,0.0f); glVertex2f(x-90.0f, y+90.0f);
+		glColor3f(1.0f,1.0f,1.0f); glVertex2f(x+90.0f, y+90.0f);
+		glColor3f(0.0f,1.0f,0.0f); glVertex2f(x+90.0f, y-90.0f);
+		glColor3f(0.0f,0.0f,1.0f); glVertex2f(x-90.0f, y-90.0f);
     glEnd();
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -369,7 +369,7 @@ int main( int argc, char* argv[] ) {
 			App.Step();
 
 			// For All Screens //
-			for ( int idx = 0; idx < Screen::Native.Size(); idx++ ) {
+			for ( size_t idx = 0; idx < Screen::Native.Size(); idx++ ) {
 				if ( Screen::Native[idx].pWindow ) {
 					Screen::Native[idx].MakeCurrent();
 					

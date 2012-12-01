@@ -246,7 +246,7 @@ inline void ToggleScreens() {
 // - ------------------------------------------------------------------------------------------ - //
 inline void AddScreen( const int Index ) {
 	Warning( Index < 0, "Invalid Index: %i [%i]", Index, Native.Size() );
-	Warning( Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
+	Warning( (size_t)Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
 	
 	Native[Index].NewWindow( FullScreen );
 	
@@ -257,7 +257,7 @@ inline void AddScreen( const int Index ) {
 // - ------------------------------------------------------------------------------------------ - //
 inline void RemoveScreen( const int Index ) {
 	Warning( Index < 0, "Invalid Index: %i [%i]", Index, Native.Size() );
-	Warning( Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
+	Warning( (size_t)Index >= Native.Size(), "Invalid Index: %i [%i]", Index, Native.Size() );
 	
 	Native[Index].DeleteWindow();
 }

@@ -86,7 +86,7 @@ void ReportSDLInputInfo() {
 		XInput::Poll();
 		
 		Log( "-=- XInput -- %i Device(s) Connected -=-", XInput::DevicesConnected() );
-		for ( int idx = 0; idx < XInput::Size(); idx++ ) {
+		for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
 	        if ( XInput::IsConnected(idx) ) {
 	        	Log( "%i - Connected", idx );
 			}			

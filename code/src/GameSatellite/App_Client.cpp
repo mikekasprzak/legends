@@ -80,7 +80,11 @@ bool cApp::Client_Connect() {
 					}
 					break;
 				}
+				default: {
+					break;
+				}
 			};	
+			// ENET_EVENT_TYPE_CONNECT, ENET_EVENT_TYPE_DISCONNECT (also NONE but unused)
 		}
 		enet_peer_disconnect( Client_Peer, 2 );
 		Log( "Done." );

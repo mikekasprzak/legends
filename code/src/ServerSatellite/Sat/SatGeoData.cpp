@@ -17,9 +17,9 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 SatGeoData::SatGeoData( const char* _IP, const char* _Country, const float _Latitude, const float _Longitude, const bool _Success ) :
+	Good( _Success ),
 	Latitude( _Latitude ),
-	Longitude( _Longitude ),
-	Good( _Success )
+	Longitude( _Longitude )
 {
 	safe_sprintf( IP, sizeof(IP), "%s", _IP );
 	safe_sprintf( Country, sizeof(Country), "%s", _Country );
@@ -46,9 +46,9 @@ enum {
 };
 // - ------------------------------------------------------------------------------------------ - //
 const SatGeoService GeoServices[] = {
-	"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", SATGEO_NONE,
-	"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", SATGEO_NONE, 
-	"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", SATGEO_STRINGLATLONG,
+	{"http://syk-country.appspot.com", "IP", "CountryCode", "Latitude", "Longitude", SATGEO_NONE},
+	{"http://api.easyjquery.com/ips/", "IP", "COUNTRY", "cityLatitude", "cityLongitude", SATGEO_NONE}, 
+	{"http://freegeoip.net/json/", "ip", "country_code", "latitude", "longitude", SATGEO_STRINGLATLONG},
 };
 // - ------------------------------------------------------------------------------------------ - //
 inline const SatGeoData DummyGeoData() {
@@ -133,7 +133,7 @@ const SatGeoData LookupGeoData( const SatGeoService* Service ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void SatGeoData::operator()( ) { 
-	for ( int idx = 0; idx < sizeof(GeoServices) / sizeof(SatGeoService); idx++ ) {
+	for ( size_t idx = 0; idx < sizeof(GeoServices) / sizeof(SatGeoService); idx++ ) {
 		*this = LookupGeoData( &GeoServices[idx] );
 		if ( IsGood() )
 			return;

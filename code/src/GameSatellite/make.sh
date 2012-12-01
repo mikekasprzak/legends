@@ -3,7 +3,15 @@
 # "--std=c++11" is only supported in GCC 4.7+. Solution, use c++0x #
 # "--std=c++0x" causes failures with _fileno and other legacy macros. Solution: Use gnu++0x #
 
-FLAGS="--std=gnu++0x"
+# -Wunused-variable -- unused variables
+# -Wmissing-braces -- arrays of types need more {}'s
+# -Wdouble-promotion -- float's becoming double
+# -Wformat -- printf formatting warnings
+# -Wsign-compare -- signed vs unsigned checks. Notably, ENUM's are signed.
+
+FLAGS="-O2 --std=gnu++0x -fstrict-aliasing -Wunused-variable -Wmissing-braces -Wdouble-promotion -Wformat"
+#FLAGS="$FLAGS -Wsign-compare"
+#FLAGS="$FLAGS -Wall -Wextra"
 DEFINES="-DCURL_STATICLIB"
 INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ../ServerSatellite/ -I ."
 CFILES="../ServerSatellite/Util/*.c ../External/cJSON/*.c ../External/Mongoose/*.c"

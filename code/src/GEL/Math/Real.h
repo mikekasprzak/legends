@@ -461,7 +461,7 @@ public:
 	// I'm assuming "log10" is the faster logarithm function. If wrong, make it log. 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real TwoLog() const {
-		return std::log10( *this ) * std::log10( 2 );
+		return (float)std::log10( *this ) * (float)std::log10( 2 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real NaturalLog() const {
@@ -469,7 +469,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real OctLog() const {
-		return std::log10( *this ) * std::log10( 8 );
+		return (float)std::log10( *this ) * (float)std::log10( 8 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real TenLog() const {
@@ -477,7 +477,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real HexLog() const {
-		return std::log10( *this ) * std::log10( 16 );
+		return (float)std::log10( *this ) * (float)std::log10( 16 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -534,13 +534,13 @@ public:
 		return *this - Floor(*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Inverse SawTooth Wave |\ |\  
+	// Inverse SawTooth Wave |\ |\																  //
 	//                       | \| \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	inline const Real InvSawTooth() const {
 		return Real::One - SawTooth();
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// Triangle Wave  /\  /\  
+	// Triangle Wave  /\  /\																	  //
 	//               /  \/  \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	inline const Real Triangle() const {
 		Real Period = SawTooth() * Real::Two; // Get a 0-2 range //
@@ -708,7 +708,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Pulse Waves -- Waveforms with a controllable HalfPeriod, which is the midpoint of the waveform //
 	// - -------------------------------------------------------------------------------------- - //
-	// Triangle Pulse Wave  /\  /\  
+	// Triangle Pulse Wave  /\  /\  															  //
 	//                     /  \/  \ -- 2 periods shown -- Input *[0,1] -- Output *[0,1]
 	// A period of 0 and 1 return a Sawtooth like curve //
 	inline const Real TrianglePulse( const Real& HalfPeriod = Real::Half ) const {
