@@ -10,8 +10,7 @@
 HRESULT EnumerateDevices(REFGUID category, IEnumMoniker **ppEnum)
 {
     ICreateDevEnum *pDevEnum;
-    HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL,  
-        CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pDevEnum));
+    HRESULT hr = CoCreateInstance( CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pDevEnum));
 
     if (SUCCEEDED(hr)) {
         hr = pDevEnum->CreateClassEnumerator(category, ppEnum, 0);
@@ -31,11 +30,9 @@ HRESULT InitCaptureGraphBuilder(IGraphBuilder **ppGraph, ICaptureGraphBuilder2 *
     IGraphBuilder *pGraph = NULL;
     ICaptureGraphBuilder2 *pBuild = NULL;
 
-    HRESULT hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, 
-        CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, (void**)&pBuild );
+    HRESULT hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, (void**)&pBuild );
     if (SUCCEEDED(hr)) {
-        hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER,
-            IID_IGraphBuilder, (void**)&pGraph);
+        hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&pGraph);
         if (SUCCEEDED(hr)) {
             pBuild->SetFiltergraph(pGraph);
 
@@ -57,6 +54,9 @@ HRESULT GetCameraFilter(IBaseFilter** ppCap)
     HRESULT hr = EnumerateDevices(CLSID_VideoInputDeviceCategory, &pEnum);
     if (SUCCEEDED(hr)) {
         if (pEnum->Next(1, &pMoniker, NULL) == S_OK) {
+        	LPOLESTR Name;
+        	pMoniker->GetDisplayName( 0, NULL, &Name );
+        	wprintf( L"* %s\n", Name );
             hr = pMoniker->BindToObject(0, 0, IID_IBaseFilter, (void**)&pCap);
             *ppCap = pCap;
             pMoniker->Release();
@@ -91,8 +91,7 @@ int main()
         pGraph->AddFilter(pCap, L"");
     }
 
-    HRESULT hr = pBuild->RenderStream(&PIN_CATEGORY_PREVIEW, &MEDIATYPE_Video, 
-            pCap, NULL, NULL);
+    HRESULT hr = pBuild->RenderStream(&PIN_CATEGORY_PREVIEW, &MEDIATYPE_Video, pCap, NULL, NULL);
     if (SUCCEEDED(hr)) {
         printf("ready run...\n");
         hr = pControl->Run();

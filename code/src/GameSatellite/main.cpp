@@ -206,7 +206,7 @@ void PollInput() {
 	#endif // USES_XINPUT //	
 }
 // - ------------------------------------------------------------------------------------------ - //
-int EventHandler( const SDL_Event* Event ) {
+int EventHandler( void* UserData, SDL_Event* Event ) {
 	if ( Event->type == SDL_QUIT ) {
 		Log( "> SDL_QUIT Signal Recieved" );
 		return true;
@@ -270,7 +270,7 @@ int Step() {
 	// Poll Events //
 	SDL_Event Event;
 	while ( SDL_PollEvent(&Event) ) {
-		return_if( EventHandler( &Event ) );
+		return_if( EventHandler( 0, &Event ) );
 	}
 		
 	return false;
@@ -350,6 +350,7 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_GL_UnloadLibrary);
 	atexit(SDL_EnableScreenSaver);
 	
+	ReportSDLSystemInfo();
 	ReportSDLGraphicsInfo();
 	ReportSDLInputInfo();
 

@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 // - ------------------------------------------------------------------------------------------ - //
 void ReportSDLVersion();
+void ReportSDLSystemInfo();
 void ReportSDLGraphicsInfo();
 void ReportSDLInputInfo();
 const char* SDL_WindowEventName( Uint8 EventName );

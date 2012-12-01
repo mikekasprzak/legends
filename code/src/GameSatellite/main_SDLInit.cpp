@@ -28,6 +28,25 @@ void ReportSDLVersion() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+void ReportSDLSystemInfo() {
+	{
+		Log( "-=- SDL System Information -=-" );
+		Log( "Platform: %s", SDL_GetPlatform() );
+		Log( "CPU Cores: %i", SDL_GetCPUCount() );
+		Log( "L1 Cache Line Size: %i", SDL_GetCPUCacheLineSize() );
+		Log( "Has MMX: %s", SDL_HasMMX() ? "Yes" : "No" );
+		Log( "Has 3DNow: %s", SDL_Has3DNow() ? "Yes" : "No" );
+		Log( "Has SSE: %s", SDL_HasSSE() ? "Yes" : "No" );
+		Log( "Has SSE 2: %s", SDL_HasSSE2() ? "Yes" : "No" );
+		Log( "Has SSE 3: %s", SDL_HasSSE3() ? "Yes" : "No" );
+		Log( "Has SSE 4.1: %s", SDL_HasSSE41() ? "Yes" : "No" );
+		Log( "Has SSE 4.2: %s", SDL_HasSSE42() ? "Yes" : "No" );
+		Log( "Has RDTSC Instruction: %s", SDL_HasRDTSC() ? "Yes" : "No" );
+		Log( "Has AltiVec: %s", SDL_HasAltiVec() ? "Yes" : "No" );
+		Log("");
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
 void ReportSDLGraphicsInfo() {
 	{
 		// NOTE: Not very useful. Number of drivers compiled in to SDL. //
