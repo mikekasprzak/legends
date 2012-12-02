@@ -368,6 +368,7 @@ extern bool _AssertFlush;
 			LogAlways( "-========================================================-" ); \
 			_LogAlways( "! Assert Error: " ); \
 			LogAlways( __VA_ARGS__ ); \
+			LogAlways( "   Condition: " #__TEST ); \
 			LogAlways( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 			LogAlways( "   Func: %s", __PRETTY_FUNCTION__ ); \
 			\
@@ -384,24 +385,25 @@ extern bool _AssertFlush;
 
 // - ------------------------------------------------------------------------------------------ - //
 // Just the Warning text. Do not use! //
-#define __WarningText( ... ) \
+#define __WarningText( __TEST, ... ) \
 	{ \
 		LogAlways( "-========================================================-" ); \
 		_LogAlways( "! Warning: " ); \
 		LogAlways( __VA_ARGS__ ); \
+		LogAlways( "   Condition: " #__TEST ); \
 		LogAlways( "   Line: %i  File: %s", __LINE__, __FILE__ ); \
 		LogAlways( "   Func: %s\n", __PRETTY_FUNCTION__ ); \
 	}
 // - ------------------------------------------------------------------------------------------ - //
-#define Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); } }
-#define return_Warning( __TEST, ... ) { if ( auto __ERROR = (__TEST) ) { __WarningText( __VA_ARGS__ ); return __ERROR; } }
-#define return_void_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); return; } }
-#define return_value_Warning( __RETCODE, __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); return __RETCODE; } }
+#define Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); } }
+#define return_Warning( __TEST, ... ) { if ( auto __ERROR = (__TEST) ) { __WarningText( __TEST, __VA_ARGS__ ); return __ERROR; } }
+#define return_void_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); return; } }
+#define return_value_Warning( __RETCODE, __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); return __RETCODE; } }
 
-#define if_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); } }
-#define return_if_Warning( __TEST, ... ) { if ( auto __ERROR = (__TEST) ) { __WarningText( __VA_ARGS__ ); return __ERROR; } }
-#define return_if_void_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); return; } }
-#define return_if_value_Warning( __RETCODE, __TEST, ... ) { if ( __TEST ) { __WarningText( __VA_ARGS__ ); return __RETCODE; } }
+#define if_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); } }
+#define return_if_Warning( __TEST, ... ) { if ( auto __ERROR = (__TEST) ) { __WarningText( __TEST, __VA_ARGS__ ); return __ERROR; } }
+#define return_if_void_Warning( __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); return; } }
+#define return_if_value_Warning( __RETCODE, __TEST, ... ) { if ( __TEST ) { __WarningText( __TEST, __VA_ARGS__ ); return __RETCODE; } }
 // - ------------------------------------------------------------------------------------------ - //
 #else // NDEBUG //
 // - ------------------------------------------------------------------------------------------ - //

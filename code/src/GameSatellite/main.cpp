@@ -11,6 +11,7 @@
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "main_Product.h"
+#include "main_SVNVersion.h"
 #include "main_SDLInit.h"
 #include "Screen_Native_SDL.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -332,9 +333,14 @@ int main( int argc, char* argv[] ) {
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
 	Log( "GEL (C) Copyright 2008-2013 Mike Kasprzak and Sykhronics Entertainment" );
 	Log( "" );
+	
 	Log( "-=- SKU: %s -=- %s -=-", PRODUCT_SKU, FullProductName );
-
+	Log( "SVN Revision: %i", SVN_VERSION );
+	Log( "Compiled on: %s %s", __DATE__, __TIME__ );
+	
+	ReportCompilerVersion();
 	ReportSDLVersion();	
+	
 	AppInit( argc, argv );
 
 	// **** //

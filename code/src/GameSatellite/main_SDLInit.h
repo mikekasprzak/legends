@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <SDL2/SDL.h>
 // - ------------------------------------------------------------------------------------------ - //
+void ReportCompilerVersion();
 void ReportSDLVersion();
 void ReportSDLSystemInfo();
 void ReportSDLGraphicsInfo();
