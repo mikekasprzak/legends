@@ -95,13 +95,13 @@ public:
 	
 	inline Type& operator [] ( const size_t Index ) {
 		Warning( _Data == 0, "cGelArray w/o Data" );
-		Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
+		//Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
 		Warning( Index > Size(), "Index out of bounds (%i >= %i)", Index, Size() );
 		return _Data->Data[ Index ];
 	}
 	inline const Type& operator [] ( const size_t Index ) const {
 		Warning( _Data == 0, "cGelArray w/o Data" );
-		Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
+		//Warning( Index < 0, "Index out of bounds (%i < 0)", Index );
 		Warning( Index > Size(), "Index out of bounds (%i >= %i)", Index, Size() );
 		return _Data->Data[ Index ];
 	}

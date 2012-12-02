@@ -50,24 +50,24 @@ bool cApp::Client_Connect() {
 	if ( enet_host_service( Client_NetHost, &Event, 5000 ) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT ) {
 		Log( "Connection Success!" );
 		
-		int Data[] = { 1 };
+		int SendData[] = { 1 };
 		
 		Log( "Sending Ping..." );
-		ENetPacket* Packet = enet_packet_create( &Data, sizeof(Data), ENET_PACKET_FLAG_UNSEQUENCED );
+		ENetPacket* Packet = enet_packet_create( &SendData, sizeof(SendData), ENET_PACKET_FLAG_UNSEQUENCED );
 		enet_uint32 TimeStamp = enet_time_get();
 		if ( int Error = enet_peer_send( Client_Peer, CH_OUTSIDERS, Packet ) ) {
 			Log("* Send Error: %i", Error);
 		}
 		//enet_host_flush( Client_NetHost ); // enet_host_service() 
 		
-		ENetEvent Event;
-		while( enet_host_service( Client_NetHost, &Event, 1000 ) > 0 ) {
-			switch( Event.type ) {
+		ENetEvent Event2;
+		while( enet_host_service( Client_NetHost, &Event2, 1000 ) > 0 ) {
+			switch( Event2.type ) {
 				case ENET_EVENT_TYPE_RECEIVE: {
 					enet_uint32 TimeStamp2 = enet_time_get();
 					
-					if ( Event.channelID == CH_OUTSIDERS ) {
-						int* Data = (int*)Event.packet->data;
+					if ( Event2.channelID == CH_OUTSIDERS ) {
+						int* Data = (int*)Event2.packet->data;
 						if ( Data[0] == 2 ) {
 							Log( "Ping Recieved in %i ms", (int)(TimeStamp2-TimeStamp) );
 						}

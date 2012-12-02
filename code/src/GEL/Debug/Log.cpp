@@ -116,6 +116,9 @@ void LogInit( const char* TargetFile ) {
 		time( &rawtime );
 		timeinfo = localtime( &rawtime );
 		
+//		__BASE_FILE__ is a lot like __FILE__
+//		__TIMESTAMP__ -- Source File Time Stamp
+		
 		// asctime adds a "\n" //
 		_LogAlways( "-=- Logging Started -- PID: %i -- %s", GetPID(), asctime(timeinfo) );
 	}

@@ -3,15 +3,45 @@
 # "--std=c++11" is only supported in GCC 4.7+. Solution, use c++0x #
 # "--std=c++0x" causes failures with _fileno and other legacy macros. Solution: Use gnu++0x #
 
-# -Wunused-variable -- unused variables
-# -Wmissing-braces -- arrays of types need more {}'s
-# -Wdouble-promotion -- float's becoming double
-# -Wformat -- printf formatting warnings
-# -Wsign-compare -- signed vs unsigned checks. Notably, ENUM's are signed.
+# -fmudflap -- Pointer protection. Like an integrated valgrind. Currently unavailable in MinGW :(
 
-FLAGS="-O2 --std=gnu++0x -fstrict-aliasing -Wunused-variable -Wmissing-braces -Wdouble-promotion -Wformat"
-#FLAGS="$FLAGS -Wsign-compare"
-#FLAGS="$FLAGS -Wall -Wextra"
+# -Wdouble-promotion -- float's becoming double
+# -Wfloat-equal -- Warn about equality tests done for floats, since they are unsafe
+# -Wshadow -- Warn about variable name re-use.
+# -Wlogical-op -- Warn about cases where you should be using | instead of ||, and vice versa.
+# -Winline -- Warn if inline is impossible
+# -Wundef -- Warns about other #if checks to undefined macros (i.e. #if LOG_LEVEL > 1)
+# -Wcast-qual -- Warn about going from const to non-const in a cast
+# -Wconversion -- Warn about explicit type conversion (double to float to int) without a cast
+# -Wpadded -- Warn whenever a type is padded
+# -Wuseless-cast -- Warn about pointless casts. GCC 4.8+ only.
+# -Wmissing-braces -- arrays of types need more {}'s. Typically ignored in C++, but not C.
+# -Wmissing-include-dirs -- Complains when an -I neglects points to a non existing path ?
+
+# -Wzero-as-null-pointer-constant -- 
+
+# -fstrict-aliasing enables strict aliasing, but with -Wno-strict-aliasing you wont get warned about potential dangeous aliases #
+
+# All Flags that aren't warnings #
+FLAGS="$FLAGS --std=gnu++0x -fstrict-aliasing"
+# Warnings not included with -Wall and -Wextra #
+FLAGS="$FLAGS -Wshadow -Wlogical-op -Wmissing-braces -Wmissing-include-dirs"
+#-Wdouble-promotion -Wfloat-equal 
+
+# -Wall and -Wextra, with warnings I will not fix removed #
+FLAGS="$FLAGS -Wall -Wno-unknown-pragmas -Wextra -Wno-ignored-qualifiers"
+# Additional Warnings from -Wall and -Wextra I would like to remove, but still want to know about #
+FLAGS="$FLAGS -Wno-strict-aliasing -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-but-set-parameter"
+# Verbose Warnings #
+#FLAGS="$FLAGS -Winline -Wundef -Wcast-qual -Wconversion -Wpadded"
+
+# Release Mode Flags #
+FLAGS="$FLAGS -O2 -funsafe-loop-optimizations -Wunsafe-loop-optimizations "
+
+# Debug Mode Flags #
+#FLAGS="$FLAGS -fstack-protector"
+
+# Defines (with -D) #
 DEFINES="-DCURL_STATICLIB"
 INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ../ServerSatellite/ -I ."
 CFILES="../ServerSatellite/Util/*.c ../External/cJSON/*.c ../External/Mongoose/*.c"

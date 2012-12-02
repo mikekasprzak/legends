@@ -1208,7 +1208,7 @@ static struct dirent *readdir(DIR *dir) {
 #define set_close_on_exec(fd) // No FD_CLOEXEC on Windows
 
 int mg_start_thread(mg_thread_func_t f, void *p) {
-  return _beginthread((void (__cdecl *)(void *)) f, 0, p) == -1L ? -1 : 0;
+  return (long)_beginthread((void (__cdecl *)(void *)) f, 0, p) == -1L ? -1 : 0;
 }
 
 static HANDLE dlopen(const char *dll_name, int flags) {
@@ -1281,7 +1281,7 @@ static pid_t spawn_process(struct mg_connection *conn, const char *prog,
   if (CreateProcessA(NULL, cmdline, NULL, NULL, TRUE,
         CREATE_NEW_PROCESS_GROUP, envblk, dir, &si, &pi) == 0) {
     cry(conn, "%s: CreateProcess(%s): %d",
-        __func__, cmdline, ERRNO);
+        __func__, cmdline, (int)ERRNO);
     pi.hProcess = (pid_t) -1;
   }
 
@@ -4327,7 +4327,7 @@ struct mg_connection *mg_connect(struct mg_context *ctx,
     cry(fc(ctx), "%s: SSL is not initialized", __func__);
   } else if ((he = gethostbyname(host)) == NULL) {
     cry(fc(ctx), "%s: gethostbyname(%s): %s", __func__, host, strerror(ERRNO));
-  } else if ((sock = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+  } else if ((SOCKET)(sock = socket(PF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
     cry(fc(ctx), "%s: socket: %s", __func__, strerror(ERRNO));
   } else {
     sin.sin_family = AF_INET;
@@ -4803,7 +4803,7 @@ struct mg_context *mg_start(mg_callback_t user_callback, void *user_data,
   // Start worker threads
   for (i = 0; i < atoi(ctx->config[NUM_THREADS]); i++) {
     if (mg_start_thread((mg_thread_func_t) worker_thread, ctx) != 0) {
-      cry(fc(ctx), "Cannot start worker thread: %d", ERRNO);
+      cry(fc(ctx), "Cannot start worker thread: %d", (int)ERRNO);
     } else {
       ctx->num_threads++;
     }
