@@ -66,19 +66,31 @@ void ReportCompilerVersion() {
 	#endif
 	#ifdef __BYTE_ORDER__
 		#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) " " );
 		#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) " " );
 		#elif __BYTE_ORDER__ == __ORDER_PDP_ENDIAN__
-			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_PDP_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_PDP_ENDIAN__) " " );
 		#endif
+//		#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+//			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+//		#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+//			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+//		#elif __BYTE_ORDER__ == __ORDER_PDP_ENDIAN__
+//			_Log( _STR(__BYTE_ORDER__) "=" _STR(__ORDER_PDP_ENDIAN__) "=\"" _XSTR(__BYTE_ORDER__) "\" " );
+//		#endif
 	#endif
 	#ifdef __FLOAT_WORD_ORDER__
 		#if __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN__
-			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) "=\"" _XSTR(__FLOAT_WORD_ORDER__) "\" " );
+			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) " " );
 		#elif __FLOAT_WORD_ORDER__ == __ORDER_BIG_ENDIAN__
-			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) "=\"" _XSTR(__FLOAT_WORD_ORDER__) "\" " );
+			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) " " );
 		#endif
+//		#if __FLOAT_WORD_ORDER__ == __ORDER_LITTLE_ENDIAN__
+//			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_LITTLE_ENDIAN__) "=\"" _XSTR(__FLOAT_WORD_ORDER__) "\" " );
+//		#elif __FLOAT_WORD_ORDER__ == __ORDER_BIG_ENDIAN__
+//			_Log( _STR(__FLOAT_WORD_ORDER__) "=" _STR(__ORDER_BIG_ENDIAN__) "=\"" _XSTR(__FLOAT_WORD_ORDER__) "\" " );
+//		#endif
 	#endif
 	#ifdef __DEPRECATED
 		_Log( _STR(__DEPRECATED) " " );
