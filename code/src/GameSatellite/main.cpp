@@ -5,6 +5,7 @@
 #include <Debug/Log.h>
 #include <Core/GelError.h>
 #include <Timer/Timer.h>
+#include <DrMinGW/DrMinGW.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Input_XInput.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -339,7 +340,8 @@ int main( int argc, char* argv[] ) {
 	Log( "Compiled on: %s %s", __DATE__, __TIME__ );
 	
 	ReportCompilerVersion();
-	ReportSDLVersion();	
+	Log( "Using DrMinGW: %s", (InitDrMinGW() ? "No" : "Yes") );
+	ReportSDLVersion();
 	
 	AppInit( argc, argv );
 

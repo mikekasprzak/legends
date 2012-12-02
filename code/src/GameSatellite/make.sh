@@ -36,10 +36,10 @@ FLAGS="$FLAGS -Wno-strict-aliasing -Wno-missing-field-initializers -Wno-unused-p
 #FLAGS="$FLAGS -Winline -Wundef -Wcast-qual -Wconversion -Wpadded"
 
 # Release Mode Flags #
-FLAGS="$FLAGS -O2 -funsafe-loop-optimizations -Wunsafe-loop-optimizations "
+#FLAGS="$FLAGS -Dndebug -O2 -funsafe-loop-optimizations -Wunsafe-loop-optimizations "
 
-# Debug Mode Flags #
-#FLAGS="$FLAGS -fstack-protector"
+# Debug Mode Flags -- GCC 4.8 is getting -Og, an ideal optimization level for debugging #
+FLAGS="$FLAGS -Ddebug -O0 -g -fstack-protector"
 
 # Defines (with -D) #
 DEFINES="-DCURL_STATICLIB -DSVN_VERSION=`../../Tools/SVNVersion.sh .`"
