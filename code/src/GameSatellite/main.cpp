@@ -383,6 +383,24 @@ int main( int argc, char* argv[] ) {
 
 	ReportOpenGLGraphicsInfo();
 	
+	{
+		GelArray<int>* Test = 0;
+		
+		insert_GelArray<int>( &Test, 0, 1 );
+		insert_GelArray<int>( &Test, 0, 2 );
+		insert_GelArray<int>( &Test, 0, 3 );
+
+		erase_GelArray<int>( &Test, 2 );
+
+		insert_GelArray<int>( &Test, 2, 4 );
+		
+		for ( size_t idx = 0; idx < Test->Size; idx++ ) {
+			Log( "%i -- %i", idx, Test->Data[idx] );
+		}
+		
+		delete_GelArray<int>( Test );
+	}
+	
 	// **** //
 
 	{

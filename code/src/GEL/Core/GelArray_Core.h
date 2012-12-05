@@ -10,6 +10,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <new>
 
+#include <Debug/Log.h>
 #include "GelTypes.h"
 #include "DataBlock_Core.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -506,17 +507,23 @@ inline void resize_GelArray( GelArray<Type>** p, const st32 _NewSize, const Type
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushback_GelArray( GelArray<Type>** p ) {
-	if ( *p == 0 )
+	Warning( p == 0, "Zero Pointer Pointer" );
+
+	if ( (*p) == 0 ) {
 //		resize2_GelArray<Type>( p, 1 );
 		resize_GelArray<Type>( p, 1 );
-	else
+	}
+	else {
 //		resize2_GelArray<Type>( p, (*p)->Size + 1 );
 		resize_GelArray<Type>( p, (*p)->Size + 1 );
+	}
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushback_GelArray( GelArray<Type>** p, const Type& _Value ) {
-	if ( *p == 0 )
+	Warning( p == 0, "Zero Pointer Pointer" );
+
+	if ( (*p) == 0 )
 //		resize2_GelArray<Type>( p, 1, _Value );
 		resize_GelArray<Type>( p, 1, _Value );
 	else
@@ -526,11 +533,58 @@ inline void pushback_GelArray( GelArray<Type>** p, const Type& _Value ) {
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline Type popback_GelArray( GelArray<Type>** p ) {
+	Warning( p == 0, "Zero Pointer Pointer" );
+	
+	return_value_Warning ( Type(), (*p)->Size == 0, "Zero Size" );
+
 	// TODO: Assert if Size == 0 //
 	(*p)->Size--;
 	
 	return (*p)->Data[ (*p)->Size ];
 } 
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline void insert_GelArray( GelArray<Type>** p, const size_t Index, const Type& _Value ) {
+	Warning( p == 0, "Zero Pointer Pointer" );
+
+	pushback_GelArray( p );
+
+	Warning( Index >= (*p)->Size, "Invalid Index %i (Size: %i)", (int)Index, (int)(*p)->Size );
+
+	if ( (*p)->Size > 1 ) {
+		for( st idx = (*p)->Size-1; idx-- != Index; ) {
+			(*p)->Data[idx+1] = (*p)->Data[idx];
+		}
+	}
+
+	(*p)->Data[ Index ] = _Value;
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline void erase_GelArray( GelArray<Type>** p, const size_t Index ) {
+	Warning( p == 0, "Zero Pointer Pointer" );
+	//Warning( (*p) == 0, "Zero Pointer" );
+	Warning( Index >= (*p)->Size, "Invalid Index %i (Size: %i)", Index, (*p)->Size );
+
+	// This is okay //
+	if ( (*p) == 0 )
+		return;
+	
+	// TODO: Assert this? 
+	if ( (*p)->Size == 0 )
+		return;
+	
+	st Size = (*p)->Size-1;
+	for( st idx = Index; idx < Size; idx++ ) {
+		(*p)->Data[idx] = (*p)->Data[idx+1];
+	}
+
+	(*p)->Size--;
+	
+	// NOTE: popback doesn't work here, since popback gets the last element //
+}
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
