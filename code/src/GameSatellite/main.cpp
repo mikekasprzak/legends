@@ -28,7 +28,7 @@ extern char AppSaveDir[];
 char AppSaveDir[2048] = "";
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Rename this. ArgInit? SystemInit? Only non arg is the PID
-void AppInit( int argc, char* argv[] ) {
+void ArgInit( int argc, char* argv[] ) {
 	Log( "-=- Application Execution Info -=-" );
 	
 	// Show Command Line //
@@ -208,9 +208,14 @@ void PollInput() {
 	#endif // USES_XINPUT //	
 }
 // - ------------------------------------------------------------------------------------------ - //
+bool KillSignal = false;
+// - ------------------------------------------------------------------------------------------ - //
 int EventHandler( void* UserData, SDL_Event* Event ) {
+	extern bool KillSignal;
+	
 	if ( Event->type == SDL_QUIT ) {
 		Log( "> SDL_QUIT Signal Recieved" );
+		KillSignal = true;
 		return true;
 	}
 	else if ( Event->type == SDL_KEYUP ) {
@@ -222,12 +227,14 @@ int EventHandler( void* UserData, SDL_Event* Event ) {
 		}
 		else if ( (Event->key.keysym.scancode == SDL_SCANCODE_F4) && (Event->key.keysym.mod & (KMOD_LALT | KMOD_RALT)) ) {
 			Log( "> ALT+F4 Kill Signal Recieved" );
+			KillSignal = true;
 			return true;
 		}
 		#ifndef ndebug
 		// Only I use F10 as a standard exit key, so remove it when a release build //
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F10 ) {
 			Log( "> F10 Kill Signal Recieved" );
+			KillSignal = true;
 			return true;
 		}
 		#endif // ndebug //
@@ -256,6 +263,7 @@ int EventHandler( void* UserData, SDL_Event* Event ) {
 			}
 			else if ( Event->window.event == SDL_WINDOWEVENT_CLOSE )  {
 				Log( "> SDL_WINDOWEVENT_CLOSE Signal Recieved from Window %i", Event->window.windowID );
+				KillSignal = true;
 				return true;		
 			}
 		}
@@ -269,11 +277,13 @@ int Step() {
 	// Poll Input //
 	PollInput();
 
-	// Poll Events //
-	SDL_Event Event;
-	while ( SDL_PollEvent(&Event) ) {
-		return_if( EventHandler( 0, &Event ) );
-	}
+//	// Poll Events //
+//	SDL_Event Event;
+//	while ( SDL_PollEvent(&Event) ) {
+//		return_if( EventHandler( 0, &Event ) );
+//	}
+
+	SDL_PumpEvents();
 		
 	return false;
 }
@@ -343,7 +353,7 @@ int main( int argc, char* argv[] ) {
 	Log( "Using DrMinGW: %s", (InitDrMinGW() ? "No" : "Yes") );
 	ReportSDLVersion();
 	
-	AppInit( argc, argv );
+	ArgInit( argc, argv );
 
 	// **** //
 
@@ -351,7 +361,7 @@ int main( int argc, char* argv[] ) {
 		
 	// **** //
 	
-	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK );
+	SDL_Init( SDL_INIT_VIDEO /*| SDL_INIT_JOYSTICK*/ );
 	SDL_GL_LoadLibrary( NULL );
 	SDL_DisableScreenSaver();
 	atexit(SDL_Quit);
@@ -359,21 +369,29 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_EnableScreenSaver);
 	
 	ReportSDLSystemInfo();
-	ReportSDLGraphicsInfo();
 	ReportSDLInputInfo();
+	ReportSDLGraphicsInfo();
 
 	// **** //
 	
+	Log( "+ Creating Primary Window..." );
 	Screen::InitNative();
+	Log( "- Primary Window Created." );
+	Log( "" );
+
+	// **** //
+
+	ReportOpenGLGraphicsInfo();
 	
 	// **** //
 
 	{
 		cApp App;
+		SDL_SetEventFilter( EventHandler, 0 );
 		
-		bool ExitApp = false;
-		while ( !ExitApp ) {
-			ExitApp = Step();
+		extern bool KillSignal;
+		while ( !KillSignal ) {
+			Step();
 			App.Step();
 
 			// For All Screens //

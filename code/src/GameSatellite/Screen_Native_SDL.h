@@ -111,7 +111,7 @@ public:
 			SDL_GetWindowPosition( pWindow, &Bounds.x, &Bounds.y );
 			SDL_GetWindowSize( pWindow, &Bounds.w, &Bounds.h );
 			
-			VVLog( "** Window %i [%i] Bounds Updated: (%i, %i) (%i, %i)", Index, SDL_GetWindowID(pWindow), Bounds.x, Bounds.y, Bounds.w, Bounds.h );
+			Log( "* Window %i [%i] Bounds Updated: (%i, %i) (%i, %i)", Index, SDL_GetWindowID(pWindow), Bounds.x, Bounds.y, Bounds.w, Bounds.h );
 		}
 		return GEL_OK;
 	}
