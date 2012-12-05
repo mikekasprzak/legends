@@ -54,7 +54,7 @@ SYSTEM=`uname`
 
 # If $WINDIR is NOT set #
 if [ -n "$WINDIR" ]; then
-	DEFINES="$DEFINES -DUSES_WINDOWS -DUSES_XINPUT"
+	DEFINES="$DEFINES -DUSES_WINDOWS -DUSES_MINGW -DUSES_XINPUT"
 	INCLUDES="$INCLUDES -I ../External/XInput/include"
 	LIBS="$LIBS ../External/XInput/lib/XInput.lib `curl-config --static-libs` -lIphlpapi -static"
 elif [ "$SYSTEM" = "FreeBSD" ]; then

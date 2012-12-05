@@ -7,7 +7,7 @@
 #include <Timer/Timer.h>
 #include <DrMinGW/DrMinGW.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Input_XInput.h"
+#include "Input.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -195,21 +195,6 @@ const float RenderRegion[] = {
 // 
 
 // - ------------------------------------------------------------------------------------------ - //
-void PollInput() {
-	#ifdef USES_XINPUT
-	{
-		XInput::Poll();
-		if ( XInput::HasConnectionChanged() ) {
-			for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
-				if ( XInput::HasConnectionChanged(idx) ) {
-					Log( "** XInput Controller %i %s", idx, XInput::IsConnected(idx) ? "Connected" : "Disconnected" );
-				}
-			}
-		}
-	}
-	#endif // USES_XINPUT //	
-}
-// - ------------------------------------------------------------------------------------------ - //
 bool KillSignal = false;
 // - ------------------------------------------------------------------------------------------ - //
 int EventHandler( void* UserData, SDL_Event* Event ) {
@@ -282,8 +267,7 @@ int EventHandler( void* UserData, SDL_Event* Event ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 int Step() {
-	// Poll Input //
-	PollInput();
+	Input::Poll();
 
 //	// Poll Events //
 //	SDL_Event Event;
@@ -358,7 +342,9 @@ int main( int argc, char* argv[] ) {
 	Log( "Compiled on: %s %s", __DATE__, __TIME__ );
 	
 	ReportCompilerVersion();
+	#ifdef USES_MINGW
 	Log( "Using DrMinGW: %s", (InitDrMinGW() ? "No" : "Yes") );
+	#endif // USES_MINGW //
 	ReportSDLVersion();
 	
 	ArgInit( argc, argv );
@@ -377,19 +363,18 @@ int main( int argc, char* argv[] ) {
 	atexit(SDL_EnableScreenSaver);
 	
 	ReportSDLSystemInfo();
-	ReportSDLInputInfo();
 	ReportSDLGraphicsInfo();
-
+	
 	// **** //
 	
 	Log( "+ Creating Primary Window..." );
 	Screen::InitNative();
-	Log( "- Primary Window Created." );
-	Log( "" );
+	Log( "- Primary Window Created.\n" );
 
 	// **** //
 
-	ReportOpenGLGraphicsInfo();
+	System::Init();
+	Input::Init();
 	
 	// **** //
 

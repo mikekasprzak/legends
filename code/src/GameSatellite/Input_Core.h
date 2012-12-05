@@ -1,14 +1,14 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL_MAIN_SDLINIT_H__
-#define __GEL_MAIN_SDLINIT_H__
+#ifndef __GEL_INPUT_CORE_H__
+#define __GEL_INPUT_CORE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <SDL2/SDL.h>
+namespace Input {
 // - ------------------------------------------------------------------------------------------ - //
-void ReportCompilerVersion();
-void ReportSDLVersion();
-void ReportSDLSystemInfo();
-void ReportSDLGraphicsInfo();
-const char* SDL_WindowEventName( Uint8 EventName );
+void Init();
+
+void Poll();
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL_MAIN_SDLINIT_H__ //
+}; // namespace Input //
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __GEL_INPUT_CORE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

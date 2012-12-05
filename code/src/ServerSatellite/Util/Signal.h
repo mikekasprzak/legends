@@ -1,5 +1,5 @@
 // - ------------------------------------------------------------------------------------------ - //
-// My own barebones version of Signal, inspired by Boost and Loki signals, but not shit * //
+// My own barebones version of Signal, inspired by Boost and Loki signals, but not shit //
 //
 // Does not do: Slot Ordering, Arguments, Chaining Arguments/Returns, Blocking, Scoped Connections
 // Reference: http://www.boost.org/doc/libs/1_52_0/doc/html/signals/tutorial.html
