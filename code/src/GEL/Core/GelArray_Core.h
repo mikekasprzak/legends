@@ -586,6 +586,40 @@ inline void erase_GelArray( GelArray<Type>** p, const size_t Index ) {
 	// NOTE: popback doesn't work here, since popback gets the last element //
 }
 // - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline int findfirst_GelArray( GelArray<Type>** p, const Type& _Value ) {
+	Warning( p == 0, "Zero Pointer Pointer" );
+
+	// This is okay //
+	if ( (*p) == 0 )
+		return -1;
+		
+	for( st idx = 0; idx < (*p)->Size; idx++ ) {
+		if ( (*p)->Data[idx] == _Value ) {
+			return idx;
+		}
+	}
+
+	return -1;
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< class Type >
+inline int findlast_GelArray( GelArray<Type>** p, const Type& _Value ) {
+	Warning( p == 0, "Zero Pointer Pointer" );
+
+	// This is okay //
+	if ( (*p) == 0 )
+		return -1;
+		
+	for( st idx = (*p)->Size; idx--; ) {
+		if ( (*p)->Data[idx] == _Value ) {
+			return idx;
+		}
+	}
+
+	return -1;
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >

@@ -14,7 +14,9 @@
 #include "main_Product.h"
 #include "main_SVNVersion.h"
 #include "main_SDLInit.h"
-#include "Screen_Native_SDL.h"
+
+#include "System.h"
+#include "Screen.h"
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -255,7 +257,13 @@ int EventHandler( void* UserData, SDL_Event* Event ) {
 		int WindowIndex = Screen::GetIndexByWindowID( Event->window.windowID );
 			
 		if ( WindowIndex >= 0 ) {
-			if ( Event->window.event == SDL_WINDOWEVENT_MOVED ) {
+			if ( Event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED ) {
+				System::GainFocus();
+			}
+			else if ( Event->window.event == SDL_WINDOWEVENT_FOCUS_LOST ) {
+				System::LoseFocus();
+			}
+			else if ( Event->window.event == SDL_WINDOWEVENT_MOVED ) {
 				Screen::Update( WindowIndex );
 			}
 			else if ( Event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED ) {	// Preferred //
@@ -382,24 +390,6 @@ int main( int argc, char* argv[] ) {
 	// **** //
 
 	ReportOpenGLGraphicsInfo();
-	
-	{
-		GelArray<int>* Test = 0;
-		
-		insert_GelArray<int>( &Test, 0, 1 );
-		insert_GelArray<int>( &Test, 0, 2 );
-		insert_GelArray<int>( &Test, 0, 3 );
-
-		erase_GelArray<int>( &Test, 2 );
-
-		insert_GelArray<int>( &Test, 2, 4 );
-		
-		for ( size_t idx = 0; idx < Test->Size; idx++ ) {
-			Log( "%i -- %i", idx, Test->Data[idx] );
-		}
-		
-		delete_GelArray<int>( Test );
-	}
 	
 	// **** //
 

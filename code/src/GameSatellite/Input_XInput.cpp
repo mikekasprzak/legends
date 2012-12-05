@@ -6,6 +6,7 @@
 #include "Input_XInput.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
+#include "System.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace XInput {
 // - ------------------------------------------------------------------------------------------ - //
@@ -21,6 +22,14 @@ XINPUT_BATTERY_INFORMATION Battery[XUSER_MAX_COUNT];
 XINPUT_BATTERY_INFORMATION HeadsetBattery[XUSER_MAX_COUNT];
 XINPUT_VIBRATION Vibration[XUSER_MAX_COUNT];
 // - ------------------------------------------------------------------------------------------ - //
+void LoseFocus( void* ) {
+	XInputEnable( FALSE );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void GainFocus( void* ) {
+	XInputEnable( TRUE );
+}
+// - ------------------------------------------------------------------------------------------ - //
 void Init() {
 	ZeroMemory( &Connected, sizeof(Connected) );
 	ZeroMemory( &OldConnected, sizeof(OldConnected) );
@@ -28,15 +37,9 @@ void Init() {
 	ZeroMemory( &State, sizeof(State) );
 	ZeroMemory( &Vibration, sizeof(Vibration) );
 	
-	// TODO: Add the Focus Lost and Gained events via a signal
-}
-// - ------------------------------------------------------------------------------------------ - //
-void LoseFocus( void* ) {
-	XInputEnable( FALSE );
-}
-// - ------------------------------------------------------------------------------------------ - //
-void GainFocus( void* ) {
-	XInputEnable( TRUE );
+	// Connect Signals //
+	System::GainFocus.Connect( GainFocus );
+	System::LoseFocus.Connect( LoseFocus );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void Poll() {
