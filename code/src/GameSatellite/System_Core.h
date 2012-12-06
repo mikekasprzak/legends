@@ -11,8 +11,14 @@ extern Signal GainFocus;
 extern Signal LoseFocus;
 
 void Init();
+
+const char* GetUserName();
+const char* GetComputerName();
+const char** GetEnv();
+const char* GetEnv( const char* Var );
+
 // - ------------------------------------------------------------------------------------------ - //
-// Platform Specific Features //
+// Graphics API Specific Features //
 void GraphicsAPIInit();	// Called from Init() //
 
 // Set inside GraphicsAPIInit //
