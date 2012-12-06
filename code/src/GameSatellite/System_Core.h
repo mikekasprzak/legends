@@ -11,6 +11,9 @@ extern Signal GainFocus;
 extern Signal LoseFocus;
 
 void Init();
+// - ------------------------------------------------------------------------------------------ - //
+// Platform Specific Features //
+void GraphicsAPIInit();	// Called from Init() //
 
 // Set inside GraphicsAPIInit //
 extern int DepthBits;
@@ -30,9 +33,6 @@ enum eGPU {
 };
 
 extern eGPU GPUVendor;
-// - ------------------------------------------------------------------------------------------ - //
-// Platform Specific Features //
-void GraphicsAPIInit();	// Called from Init() //
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //
 // - ------------------------------------------------------------------------------------------ - //
