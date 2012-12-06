@@ -1,14 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL_MAIN_SDLINIT_H__
-#define __GEL_MAIN_SDLINIT_H__
+#ifndef __GEL_API_OPENGL2_H__
+#define __GEL_API_OPENGL2_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <SDL2/SDL.h>
+#include <gl/gl.h>
 // - ------------------------------------------------------------------------------------------ - //
-void ReportCompilerVersion();
-void ReportSDLVersion();
-void ReportSDLSystemInfo();
-void ReportSDLGraphicsInfo();
-const char* SDL_WindowEventName( Uint8 EventName );
-// - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL_MAIN_SDLINIT_H__ //
+#endif // __GEL_API_OPENGL2_H__ //
 // - ------------------------------------------------------------------------------------------ - //
