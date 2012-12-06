@@ -2,7 +2,7 @@
 #ifndef __GEL_MAIN_SDL_INITLOG_H__
 #define __GEL_MAIN_SDL_INITLOG_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "API_SDL2.h"
+#include <API/API_SDL2.h>
 // - ------------------------------------------------------------------------------------------ - //
 void ReportCompilerVersion();
 void ReportSDLVersion();

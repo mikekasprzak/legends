@@ -5,7 +5,7 @@
 #include <Core/GelString.h>
 #include "System.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include <GL/gl.h>
+#include <API/API_OpenGL2.h>
 #include <External/OpenGL/glext.h>
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_WGL
