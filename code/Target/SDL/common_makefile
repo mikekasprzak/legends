@@ -11,7 +11,14 @@ TARGET				:=	$(TARGET_DIR)/$(BINARY_NAME)$(BINARY_SUFFIX)
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (NOTE: Optimizations are in Target/common_tools) #
 CFLAGS				+=	-fno-strict-aliasing
-CPPFLAGS			+=	-fno-rtti -fno-strict-aliasing
+# - ------------------------------------------------------------------------ - #
+CPPFLAGS			+=	--std=gnu++0x -fno-rtti -fno-strict-aliasing	\
+						-Wshadow -Wlogical-op \
+						-Wmissing-braces -Wmissing-include-dirs \
+						-Wall -Wno-unknown-pragmas -Wextra -Wno-ignored-qualifiers \
+#						-Winline -Wundef -Wcast-qual -Wconversion -Wpadded \
+#						-Wdouble-promotion -Wfloat-equal \
+# - ------------------------------------------------------------------------ - #
 LDFLAGS				+=	
 # - ------------------------------------------------------------------------ - #
 
@@ -84,9 +91,9 @@ cache:
 	@echo Depend Cache Updated
 # - ------------------------------------------------------------------------ - #
 startcache:
-	make --quiet -j 1 cache NO_DEPEND=true &
+	$(MAKE) --quiet -j 1 cache NO_DEPEND=true &
 # - ------------------------------------------------------------------------ - #
-phony: run clean cleanmain cleandeps deps makedirs cache startcache
+.PHONY: run clean cleanmain cleandeps deps makedirs cache startcache
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #

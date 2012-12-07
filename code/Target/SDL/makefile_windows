@@ -1,1 +1,1 @@
-include Target/SDL/makefile_windows_irrklang
+include Target/SDL/makefile_windows_sdlmixer

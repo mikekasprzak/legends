@@ -16,7 +16,7 @@ BINARY_SUFFIX		:=	.exe
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-ifndef NO_SIXENSE
+ifdef USES_SIXENSE
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Sixense/include \
@@ -31,11 +31,11 @@ LIBRARIES			+=	src/External/Sixense/lib/win32/release_dll/sixense.lib \
 COPY_FILES			+=	src/External/Sixense/bin/win32/DeviceDLL.dll \
 						src/External/Sixense/bin/win32/release_dll/sixense.dll \
 # - ------------------------------------------------------------------------ - #
-endif # NO_SIXENSE #
+endif # USES_SIXENSE #
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-ifndef NO_ASSIMP
+ifdef USES_ASSIMP
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/External/Assimp/include \
@@ -49,11 +49,11 @@ LIBRARIES			+=	src/External/Assimp/mingw32/libassimp.dll.a \
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	src/External/Assimp/mingw32/libassimp.dll \
 # - ------------------------------------------------------------------------ - #
-endif # NO_ASSIMP #
+endif # USES_ASSIMP #
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-ifndef NO_MONGOOSE
+ifdef USES_MONGOOSE
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/External/Mongoose \
@@ -70,11 +70,11 @@ LIBRARIES			+=	-lws2_32
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
-endif # NO_MONGOOSE #
+endif # USES_MONGOOSE #
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-ifndef NO_HIDAPI
+ifdef USES_HIDAPI
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/External/HidAPI/windows \
@@ -91,11 +91,11 @@ LIBRARIES			+=	-lsetupapi
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
-endif # NO_HIDAPI #
+endif # USES_HIDAPI #
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-ifndef NO_DSONOISES
+ifdef USES_DSONOISES
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/External/DSONoises/simplexnoise \
@@ -115,5 +115,5 @@ COPY_FILES			+=
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
-endif # NO_DSONOISES #
+endif # USES_DSONOISES #
 # - ------------------------------------------------------------------------ - #
