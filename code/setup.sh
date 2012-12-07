@@ -140,7 +140,7 @@ if [ "$WINDIR" != "" ]; then
 fi
 
 echo "All SKUs:"
-echo "$SKU_ALL"
+echo $SKU_ALL | awk '{for(idx=1;idx<=NF;idx++) { printf "- %s\n",$idx;}}'
 rm -f $CONFIGDIR/.sku_all
 echo "$SKU_ALL">$CONFIGDIR/.sku_all
 if [ "$WINDIR" != "" ]; then
