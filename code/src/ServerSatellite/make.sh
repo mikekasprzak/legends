@@ -5,7 +5,7 @@
 
 FLAGS="--std=gnu++0x"
 DEFINES="-DMONGOOSE_NO_WIN32_INIT -DCURL_STATICLIB -DUSES_CURSES"
-INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ."
+INCLUDES=" -I . -I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include"
 CFILES="Util/*.c ../External/cJSON/*.c ../External/Mongoose/*.c"
 CPPFILES="*.cpp Net/*.cpp Sat/*.cpp Text/*.cpp ../External/TinyThread/*.cpp ../GEL/Debug/Log*.cpp ../GEL/Timer/*.cpp ../GEL/Math/*.cpp ../GEL/Math/Vector/*.cpp ../GEL/Math/Matrix/*.cpp NetAdapter/*.cpp"
 LIBS="-L /usr/local/ssl/lib -lcrypto -L /usr/local/lib"

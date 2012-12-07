@@ -9,16 +9,16 @@
 #include <Timer/Timer.h>
 #include <DrMinGW/DrMinGW.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Input.h"
+#include <Input/Input.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include "main_Product.h"
-#include "main_SVNVersion.h"
-#include "main_SDL_InitLog.h"
+#include <MainClient/Main_Product.h>
+#include <MainClient/Main_SVNVersion.h>
+#include <MainClient/Main_SDL_InitLog.h>
 
-#include "System.h"
-#include "Screen.h"
+#include <System/System.h>
+#include <Screen/Screen.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 

@@ -43,9 +43,11 @@ FLAGS="$FLAGS -Ddebug -O0 -g -gstabs3 -fstack-protector"
 
 # Defines (with -D) #
 DEFINES="-DCURL_STATICLIB -DSVN_VERSION=`../../Tools/SVNVersion.sh .` -DUSES_WGL -DUSES_OPENGL2 -DUSES_SDL2"
-INCLUDES="-I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ../ServerSatellite/ -I ."
+INCLUDES=" -I . -I /usr/local/include -I /usr/local/ssl/include -I ../GEL/ -I ../External/ -I ../External/ENet/include -I ../ServerSatellite/"
 CFILES="../ServerSatellite/Util/*.c ../External/cJSON/*.c ../External/Mongoose/*.c"
-CPPFILES="*.cpp ../ServerSatellite/Net/*.cpp ../ServerSatellite/Sat/*.cpp ../External/TinyThread/*.cpp ../GEL/Debug/*.cpp ../GEL/Timer/*.cpp ../GEL/System/*.cpp ../GEL/Math/*.cpp ../GEL/Math/Vector/*.cpp ../GEL/Math/Matrix/*.cpp ../ServerSatellite/NetAdapter/*.cpp"
+CPPFILES="*.cpp ../ServerSatellite/Net/*.cpp ../ServerSatellite/Sat/*.cpp"
+CPPFILES="$CPPFILES Input/*.cpp MainClient/*.cpp Screen/*.cpp System/*.cpp"
+CPPFILES="$CPPFILES ../External/TinyThread/*.cpp ../GEL/Debug/*.cpp ../GEL/Timer/*.cpp ../GEL/System/*.cpp ../GEL/Math/*.cpp ../GEL/Math/Vector/*.cpp ../GEL/Math/Matrix/*.cpp ../ServerSatellite/NetAdapter/*.cpp"
 LIBS="-L /usr/local/ssl/lib -lcrypto -L /usr/local/lib -lenet -lwinmm `sdl2-config --static-libs` -lopengl32"
 
 SYSTEM=`uname`
