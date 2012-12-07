@@ -58,17 +58,35 @@ const char* GetTimeString() {
 // - ------------------------------------------------------------------------------------------ - //
 // Returns Time Diference in Seconds //
 const double GetTimeDiff( const time_t Start, const time_t End ) {
+	// NOTE: TBH, I have no idea why there is a C std library function, when I could just subtract.
 	return difftime( End, Start );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Returns Time Diference in Seconds //
 const char* GetTimeDiffString( const time_t Start, const time_t End ) {
-	return GetDoubleTimeString( GetTimeDiff( End, Start ) );
+	return DoubleTimeToString( GetTimeDiff( End, Start ) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Diference in Seconds //
+const char* GetTimeDiffShortString( const time_t Start, const time_t End ) {
+	return DoubleTimeToShortString( GetTimeDiff( End, Start ) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Time since program start //
 const clock_t GetClock() {
 	return clock();
+}
+// - ------------------------------------------------------------------------------------------ - //
+const double GetClockSeconds() {
+	return (double)GetClock() / (double)CLOCKS_PER_SEC;
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* GetClockString() {
+	return DoubleTimeToString( GetClockSeconds() );
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* GetClockShortString() {
+	return DoubleTimeToShortString( GetClockSeconds() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Returns Time Difference in Seconds //
@@ -78,11 +96,19 @@ const double GetClockDiff( const clock_t Start, const clock_t End ) {
 // - ------------------------------------------------------------------------------------------ - //
 // Returns Time Difference in Seconds //
 const char* GetClockDiffString( const clock_t Start, const clock_t End ) {
-	return GetDoubleTimeString( GetClockDiff( End, Start ) );
+	return DoubleTimeToString( GetClockDiff( End, Start ) );
 }
 // - ------------------------------------------------------------------------------------------ - //
+// Returns Time Difference in Seconds //
+const char* GetClockDiffShortString( const clock_t Start, const clock_t End ) {
+	return DoubleTimeToShortString( GetClockDiff( End, Start ) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 // Returns Time Diference in Seconds //
-const char* GetDoubleTimeString( const double DTime ) {
+const char* DoubleTimeToString( const double DTime ) {
+	// WARNING: Static buffer here. Will be erased after each call. //
 	static char OutString[64];
 	double Diff = DTime;
 	
@@ -120,6 +146,26 @@ const char* GetDoubleTimeString( const double DTime ) {
 			Seconds, (Seconds == 1) ? "second" : "seconds"
 		);
 	}
+	return OutString;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Diference in Seconds //
+const char* DoubleTimeToShortString( const double DTime ) {
+	// WARNING: Static buffer here. Will be erased after each call. //
+	static char OutString[32];
+	double Diff = DTime;
+	
+	int Seconds = (int)Diff % 60;
+	Diff /= 60;
+	int Minutes = (int)Diff % 60;
+	Diff /= 60;
+	int Hours = (int)Diff;
+
+	safe_sprintf( OutString, sizeof(OutString), "%i:%02i:%02i",
+		Hours,
+		Minutes,
+		Seconds
+	);
 	return OutString;
 }
 // - ------------------------------------------------------------------------------------------ - //
