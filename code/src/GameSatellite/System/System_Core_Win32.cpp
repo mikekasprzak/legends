@@ -1,10 +1,14 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_WINDOWS
 // - ------------------------------------------------------------------------------------------ - //
-#include <Windows.h>	// prerequisites, GetCurrentProcessId //
-#include <Psapi.h> 		// GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS //
+#include <windows.h>	// prerequisites, GetCurrentProcessId //
+#include <psapi.h> 		// GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS //
 
-#include <stdlib.h>
+#include <stdlib.h>		// getenv //
+#include <time.h>		// time, time_t //
+// - ------------------------------------------------------------------------------------------ - //
+#include "System_Core_Win32.h"
+#include <Util/safe_sprintf.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace System {
 // - ------------------------------------------------------------------------------------------ - //
@@ -35,6 +39,102 @@ const size_t GetMemoryUsage() {
 // - ------------------------------------------------------------------------------------------ - //
 const int GetPID() {
 	return GetCurrentProcessId();
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// http://www.cplusplus.com/reference/ctime/
+// - ------------------------------------------------------------------------------------------ - //
+// Time since the epoch //
+const time_t GetTime() {
+	return time(NULL);
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* GetTimeString() {
+	time_t CurTime = GetTime();
+	// WARNING: ctime shares a buffer with asctime. new calls erase it. //
+	return ctime( &CurTime );
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Diference in Seconds //
+const double GetTimeDiff( const time_t Start, const time_t End ) {
+	return difftime( End, Start );
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Diference in Seconds //
+const char* GetTimeDiffString( const time_t Start, const time_t End ) {
+	return GetDoubleTimeString( GetTimeDiff( End, Start ) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Time since program start //
+const clock_t GetClock() {
+	return clock();
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Difference in Seconds //
+const double GetClockDiff( const clock_t Start, const clock_t End ) {
+	return (double)(End-Start) / (double)CLOCKS_PER_SEC;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Difference in Seconds //
+const char* GetClockDiffString( const clock_t Start, const clock_t End ) {
+	return GetDoubleTimeString( GetClockDiff( End, Start ) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Diference in Seconds //
+const char* GetDoubleTimeString( const double DTime ) {
+	static char OutString[64];
+	double Diff = DTime;
+	
+	int Seconds = (int)Diff % 60;
+	Diff /= 60;
+	int Minutes = (int)Diff % 60;
+	Diff /= 60;
+	int Hours = (int)Diff % 24;
+	Diff /= 24;
+	int Days = (int)Diff;
+
+	if ( Days ) {
+		safe_sprintf( OutString, sizeof(OutString), "%i %s, %i %s, %i %s, %i %s" ,
+			Days, (Days == 1) ? "day" : "days",
+			Hours, (Hours == 1) ? "hour" : "hours",
+			Minutes, (Minutes == 1) ? "minute" : "minutes",
+			Seconds, (Seconds == 1) ? "second" : "seconds"
+		);
+	}
+	else if ( Hours ) {
+		safe_sprintf( OutString, sizeof(OutString), "%i %s, %i %s, %i %s" ,
+			Hours, (Hours == 1) ? "hour" : "hours",
+			Minutes, (Minutes == 1) ? "minute" : "minutes",
+			Seconds, (Seconds == 1) ? "second" : "seconds"
+		);
+	}
+	else if ( Minutes ) {
+		safe_sprintf( OutString, sizeof(OutString), "%i %s, %i %s" ,
+			Minutes, (Minutes == 1) ? "minute" : "minutes",
+			Seconds, (Seconds == 1) ? "second" : "seconds"
+		);
+	}
+	else {
+		safe_sprintf( OutString, sizeof(OutString), "%i %s" ,
+			Seconds, (Seconds == 1) ? "second" : "seconds"
+		);
+	}
+	return OutString;
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// tick_t defined inside header //
+// - ------------------------------------------------------------------------------------------ - //
+const tick_t GetTick() {
+	// WARNING: Wraps every 49 days! //
+	return timeGetTime();
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Difference in 1000ths of a Second //
+const int GetTickDiff( const tick_t Start, const tick_t End ) {
+	return (int)(End - Start);
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //
