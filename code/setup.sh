@@ -124,11 +124,27 @@ else
 	fi
 fi
 
+if [ -e "$CONFIGDIR/.sku_all" ]; then
+	SKU_ALL=`cat $CONFIGDIR/.sku_all | awk '{for(idx=1;idx<=NF;idx++) print $idx;}'`
+elif [ -e "SKU/$PROJECT/.all" ]; then
+	SKU_ALL=`cat SKU/$PROJECT/.all | awk '{for(idx=1;idx<=NF;idx++) print $idx;}'`
+else
+	SKU_ALL=$SKU
+fi
+
 echo "Target SKU: $SKU"
 rm -f $CONFIGDIR/.sku
 echo "$SKU">$CONFIGDIR/.sku
 if [ "$WINDIR" != "" ]; then
 	attrib +h $CONFIGDIR/.sku
+fi
+
+echo "All SKUs:"
+echo "$SKU_ALL"
+rm -f $CONFIGDIR/.sku_all
+echo "$SKU_ALL">$CONFIGDIR/.sku_all
+if [ "$WINDIR" != "" ]; then
+	attrib +h $CONFIGDIR/.sku_all
 fi
 
 
