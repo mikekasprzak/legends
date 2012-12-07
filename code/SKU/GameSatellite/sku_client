@@ -2,10 +2,27 @@
 # NOTE: Only reference files here suitable for GAME scope (no platform) #
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/GEL2 src/GEL src/GameSatellite \
+SRC_FOLDERS			+=	src/GEL2 src/MainClient \
+						src/GameSatellite \
+						src/External/TinyThread \
+						src/External/ENet \
+						src/External/cJSON \
+						src/External/STB/STB \
+						src/ServerSatellite/Net \
+						src/ServerSatellite/NetAdapter \
+						src/ServerSatellite/Sat \
+						src/GEL/Core \
+						src/GEL/Debug \
+						src/GEL/System \
+						src/GEL/Timer \
+						src/GEL/External \
+						src/GEL/Graphics/Texture \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
-INCLUDE_FOLDERS		+=	
+INCLUDE_FOLDERS		+=	src/ServerSatellite \
+						src/GEL \
+						src/External \
+						src/External/ENet/include \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
@@ -13,9 +30,15 @@ IGNORE_LIST			+=
 # Defines specific to this file #
 DEFINES				+=	PRODUCT_SATELLITE \
 						USES_GEL2 USES_GEL \
+						CURL_STATICLIB \
+						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
+						USES_WGL
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	
+LIBRARIES			+=	-lcrypto -lenet \
+						-lwinmm -lIphlpapi -lPsapi \
+						src/External/XInput/lib/XInput.lib \
+						`curl-config --static-libs`
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	

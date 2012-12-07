@@ -13,9 +13,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include <MainClient/Main_Product.h>
-#include <MainClient/Main_SVNVersion.h>
-#include <MainClient/Main_SDL_InitLog.h>
+#include <Main/Main_Product.h>
+#include <Main/Main_SVNVersion.h>
+#include <Main/Main_SDL_InitLog.h>
 
 #include <System/System.h>
 #include <Screen/Screen.h>

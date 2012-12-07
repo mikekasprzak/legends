@@ -9,7 +9,8 @@
 //const char LightSchema[] = "{\"IP\":\"text\",\"CountryCode\":\"text\",\"Latitude\":\"number\",\"Longitude\":\"number\"}";
 // - ------------------------------------------------------------------------------------------ - //
 int cJSON_ValidateSchema( cJSON* Schema, cJSON* Data ) {
-	for ( int idx = 0; idx < cJSON_GetArraySize(Schema); idx++ ) {
+	int idx = 0;
+	for ( ; idx < cJSON_GetArraySize(Schema); idx++ ) {
 		cJSON* Sc = cJSON_GetArrayItem(Schema,idx);
 		cJSON* Ob = cJSON_GetObjectItem( Data, Sc->string );
 

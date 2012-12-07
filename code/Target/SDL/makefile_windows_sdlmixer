@@ -2,8 +2,7 @@
 # NOTE: Only reference files here suitable for PLATFORM scope (no game) #
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/Main/SDL \
-
+SRC_FOLDERS			+=	src/MainSDL
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	
@@ -12,7 +11,7 @@ INCLUDE_FOLDERS		+=
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_SDL USES_SDL_2 USES_SDLMIXER \
+DEFINES				+=	USES_SDL2 USES_SDLMIXER USES_OPENGL2 \
 						USES_WINDOWS USES_MINGW NO_STDIO_REDIRECT \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #

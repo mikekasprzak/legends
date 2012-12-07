@@ -97,7 +97,7 @@
 #include <OpenGLES/ES2/gl2.h>
 #include <OpenGLES/ES2/gl2ext.h>
 // - ------------------------------------------------------------------------------------------ - //
-#elif defined(USES_SDL)
+#elif defined(USES_SDL) || defined(USES_SDL2)
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_WINDOWS
 	#include <windows.h>

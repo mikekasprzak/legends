@@ -2,9 +2,9 @@
 CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
 # - ------------------------------------------------------------------------ - #
 # Compiler and Linker Flags (specific to this target) #
-CFLAGS				+=	-I /usr/local/include $(CPUFLAGS)
-CPPFLAGS			+=	-I /usr/local/include $(CPUFLAGS)
-LDFLAGS				+=	-L /usr/local/lib -static-libgcc -static-libstdc++ -static
+CFLAGS				+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
+CPPFLAGS			+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
+LDFLAGS				+=	-L /usr/local/lib -L /usr/local/ssl/lib -static-libgcc -static-libstdc++ -static
 # - ------------------------------------------------------------------------ - #
 # Release Build Only #
 ifdef NDEBUG

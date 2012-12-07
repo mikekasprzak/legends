@@ -34,7 +34,7 @@ endif # WINDIR #
 CODE_FILES			:=	$(filter %.cpp %.c,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
 H_FILES				:=	$(filter %.hpp %.h,$(filter $(SRC_FILTER),$(ALL_CODE_FILES)))
 
-INCLUDES			:=	$(addprefix -I,$(INCLUDE_FOLDERS) $(SRC_FOLDERS))
+INCLUDES			:=	$(addprefix -I,$(SRC_FOLDERS) $(INCLUDE_FOLDERS))
 DEFINES				:=	$(addprefix -D,$(DEFINES))
 # - ------------------------------------------------------------------------ - #
 .O_FILES			:=	$(addprefix obj/$(TARGET_NAME)/,$(addsuffix .o,$(filter-out $(IGNORE_LIST),$(CODE_FILES))))

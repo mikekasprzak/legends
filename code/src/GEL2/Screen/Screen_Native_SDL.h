@@ -10,7 +10,7 @@
 #include <Core/GelError.h>
 #include <Core/GelArray.h>
 #include <Debug/Log.h>
-#include <MainClient/Main_Product.h>
+#include <Main/Main_Product.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Screen {
 // - ------------------------------------------------------------------------------------------ - //
