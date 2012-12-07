@@ -74,6 +74,8 @@ int main( int argc, char* argv[] ) {
 	{
 		cApp App;
 		App();
+		
+		//Log( "Uptime: %s", System::GetClockString() );
 	}
 
 	OutExit();
