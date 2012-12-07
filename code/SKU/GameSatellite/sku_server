@@ -1,0 +1,36 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for GAME scope (no platform) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/GEL src/GameSurvive src/Foundation \
+						src/External/Squirrel \
+						src/External/NVTriStrip \
+						src/External/cJSON \
+						src/External/TinyXML \
+						src/External/PugiXML \
+						src/External/STB/STB \
+						src/External/AnimKit/Source \
+						src/External/AnimKit/Dependencies/vectormath \
+						src/External/AnimKit/Dependencies/Utils \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/External/Squirrel/include \
+						src/External/NVTriStrip/include \
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	PRODUCT_SURVIVE \
+						USES_GEL USES_FOUNDATION \
+#						TINY_WINDOW
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Game Specific Target Influencing Defines #
+REQUIRES_OPENGL2	:=	true
+# - ------------------------------------------------------------------------ - #
