@@ -228,6 +228,8 @@ int main( int argc, char* argv[] ) {
 		cApp App;
 		SDL_SetEventFilter( EventHandler, 0 );
 		
+		Log( "Mem: %i", System::GetMemoryUsage() );
+		
 		extern bool KillSignal;
 		while ( !KillSignal ) {
 			Input::Poll();
@@ -237,13 +239,21 @@ int main( int argc, char* argv[] ) {
 			// For All Screens //
 			for ( size_t idx = 0; idx < Screen::Native.Size(); idx++ ) {
 				if ( Screen::Native[idx].pWindow ) {
-					Screen::Native[idx].MakeCurrent();
+					Screen::Native[idx].MakeCurrent(); // Memory Leak //
 					
 					App.Draw( Screen::Native[idx] );
 					
-					Screen::Native[idx].Swap();
+					Screen::Native[idx].Swap(); // Memory Leak //
 				}
 			}
+			
+			{
+				static int MemDrop = 0;
+				MemDrop++;
+				if ( (MemDrop & 255) == 255 )
+					Log( "Mem: %i (%i)", System::GetMemoryUsage(), System::GetMemoryUsage() / 1024 );
+			}
+			
 			Wait(5);
 		}
 	}

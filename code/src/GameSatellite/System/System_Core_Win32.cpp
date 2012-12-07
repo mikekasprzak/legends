@@ -1,6 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_WINDOWS
 // - ------------------------------------------------------------------------------------------ - //
+#include <Windows.h>
+#include <Psapi.h> // GetProcessMemoryInfo //
+
 #include <stdlib.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace System {
@@ -20,6 +23,12 @@ const char** GetEnv() {
 // - ------------------------------------------------------------------------------------------ - //
 const char* GetEnv( const char* Var ) {
 	return getenv( Var );
+}
+// - ------------------------------------------------------------------------------------------ - //
+const size_t GetMemoryUsage() {
+	PROCESS_MEMORY_COUNTERS MemInfo;
+	GetProcessMemoryInfo( GetCurrentProcess(), &MemInfo, sizeof(MemInfo) );
+	return MemInfo.WorkingSetSize;
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //

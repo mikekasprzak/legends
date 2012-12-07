@@ -17,6 +17,7 @@ const char* GetComputerName();
 const char** GetEnv();
 const char* GetEnv( const char* Var );
 
+const size_t GetMemoryUsage();
 // - ------------------------------------------------------------------------------------------ - //
 // Graphics API Specific Features //
 void GraphicsAPIInit();	// Called from Init() //
