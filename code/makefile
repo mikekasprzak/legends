@@ -15,13 +15,13 @@ endif # NUMBER_OF_PROCESSORS #
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-.PHONY: default run clean cleanmain info all
+.PHONY: default run clean cleanmain info all cache startcache
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
 default:
 	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS)
-run clean cleanmain info upload package install:
+run clean cleanmain info upload package install cache startcache:
 	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS) $@
 # - ------------------------------------------------------------------------ - #
 

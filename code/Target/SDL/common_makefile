@@ -54,12 +54,12 @@ TARGET_STUBS_CHECK	:=	$(shell Tools/FileExists.sh $(TARGET_STUBS))
 
 # - ------------------------------------------------------------------------ - #
 $(TARGET): $(TARGET_STUBS) $(FOLDER_STUBS) $(H_FILES) $(.O_FILES) $(OTHER_FILES_DEP) startcache
-	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
 ifneq ($(strip $(COPY_FILES)),)
 	cp -t $(TARGET_DIR) $(COPY_FILES)
 endif
 	$(GXX) $(DEFINES) $(LDFLAGS) $(OTHER_O_FILES) $(.O_FILES) obj/$(TARGET_NAME)/BuildVersion.cpp -o $@ $(LIBRARIES)
 # - ------------------------------------------------------------------------ - #
+#	./Tools/version.sh>obj/$(TARGET_NAME)/BuildVersion.cpp
 
 
 # - ------------------------------------------------------------------------ - #
@@ -91,7 +91,7 @@ cache:
 	@echo Depend Cache Updated
 # - ------------------------------------------------------------------------ - #
 startcache:
-	$(MAKE) --quiet -j 1 cache NO_DEPEND=true &
+	@$(MAKE) --quiet --no-print-directory cache NO_DEPEND=true &
 # - ------------------------------------------------------------------------ - #
 .PHONY: run clean cleanmain cleandeps deps makedirs cache startcache
 # - ------------------------------------------------------------------------ - #
