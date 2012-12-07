@@ -9,11 +9,13 @@ namespace Input {
 namespace XInput {
 // - ------------------------------------------------------------------------------------------ - //
 void Init();
+void InitEvent( void* = 0 );
+
+void Poll();
+void PollEvent( void* = 0 );
 
 void LoseFocus( void* = 0 );
 void GainFocus( void* = 0 );
-
-void Poll();
 
 size_t Size();
 

@@ -5,7 +5,7 @@
 #include <windows.h>
 
 #include <XInput/XInput.h>
-#include "Input_XInput.h"
+#include "Input.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
 #include <System/System.h>
@@ -26,14 +26,6 @@ XINPUT_BATTERY_INFORMATION Battery[XUSER_MAX_COUNT];
 XINPUT_BATTERY_INFORMATION HeadsetBattery[XUSER_MAX_COUNT];
 XINPUT_VIBRATION Vibration[XUSER_MAX_COUNT];
 // - ------------------------------------------------------------------------------------------ - //
-void LoseFocus( void* ) {
-	XInputEnable( FALSE );
-}
-// - ------------------------------------------------------------------------------------------ - //
-void GainFocus( void* ) {
-	XInputEnable( TRUE );
-}
-// - ------------------------------------------------------------------------------------------ - //
 void Init() {
 	ZeroMemory( &Connected, sizeof(Connected) );
 	ZeroMemory( &OldConnected, sizeof(OldConnected) );
@@ -41,9 +33,24 @@ void Init() {
 	ZeroMemory( &State, sizeof(State) );
 	ZeroMemory( &Vibration, sizeof(Vibration) );
 	
-	// Connect Signals //
+	// Connect Signals (Functions to be called) //
 	System::GainFocus.Connect( GainFocus );
 	System::LoseFocus.Connect( LoseFocus );
+		
+	Input::Poll.Connect( PollEvent );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void InitEvent( void* ) {
+	Init();
+	Poll();
+	
+	Log( "-=- XInput -- %i Device(s) Connected -=-", DevicesConnected() );
+	for ( size_t idx = 0; idx < Size(); idx++ ) {
+        if ( IsConnected(idx) ) {
+        	Log( "%i - Connected", idx );
+		}			
+	}
+	Log( "" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void Poll() {
@@ -62,7 +69,26 @@ void Poll() {
 	}
 	
 	// TODO: KeyStrokes
-}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void PollEvent( void* ) {
+	Poll();
+	if ( HasConnectionChanged() ) {
+		for ( size_t idx = 0; idx < XInput::Size(); idx++ ) {
+			if ( HasConnectionChanged(idx) ) {
+				Log( "** XInput Controller %i %s", idx, IsConnected(idx) ? "Connected" : "Disconnected" );
+			}
+		}
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void LoseFocus( void* ) {
+	XInputEnable( FALSE );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void GainFocus( void* ) {
+	XInputEnable( TRUE );
+}
 // - ------------------------------------------------------------------------------------------ - //
 size_t Size() {
 	return XUSER_MAX_COUNT;
