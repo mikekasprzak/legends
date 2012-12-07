@@ -20,7 +20,7 @@ const char* GetEnv( const char* Var );
 const size_t GetMemoryUsage();
 // - ------------------------------------------------------------------------------------------ - //
 // Graphics API Specific Features //
-void GraphicsAPIInit();	// Called from Init() //
+void GraphicsAPIInit();		// Called from Init() //
 
 // Set inside GraphicsAPIInit //
 extern int DepthBits;

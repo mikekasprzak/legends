@@ -14,8 +14,8 @@ void InitEvent( void* = 0 );
 void Poll();
 void PollEvent( void* = 0 );
 
-void LoseFocus( void* = 0 );
-void GainFocus( void* = 0 );
+void LoseFocusEvent( void* = 0 );
+void GainFocusEvent( void* = 0 );
 
 size_t Size();
 

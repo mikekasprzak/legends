@@ -247,12 +247,12 @@ int main( int argc, char* argv[] ) {
 				}
 			}
 			
-			{
-				static int MemDrop = 0;
-				MemDrop++;
-				if ( (MemDrop & 255) == 255 )
-					Log( "Mem: %i (%i)", System::GetMemoryUsage(), System::GetMemoryUsage() / 1024 );
-			}
+//			{
+//				static int MemDrop = 0;
+//				MemDrop++;
+//				if ( (MemDrop & 255) == 255 )
+//					Log( "Mem: %i (%i)", System::GetMemoryUsage(), System::GetMemoryUsage() / 1024 );
+//			}
 			
 			Wait(5);
 		}

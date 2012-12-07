@@ -34,8 +34,8 @@ void Init() {
 	ZeroMemory( &Vibration, sizeof(Vibration) );
 	
 	// Connect Signals (Functions to be called) //
-	System::GainFocus.Connect( GainFocus );
-	System::LoseFocus.Connect( LoseFocus );
+	System::GainFocus.Connect( GainFocusEvent );
+	System::LoseFocus.Connect( LoseFocusEvent );
 		
 	Input::Poll.Connect( PollEvent );
 }
@@ -82,11 +82,11 @@ void PollEvent( void* ) {
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //
-void LoseFocus( void* ) {
+void LoseFocusEvent( void* ) {
 	XInputEnable( FALSE );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void GainFocus( void* ) {
+void GainFocusEvent( void* ) {
 	XInputEnable( TRUE );
 }
 // - ------------------------------------------------------------------------------------------ - //
