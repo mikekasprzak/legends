@@ -113,8 +113,8 @@ GelTexture_NativeHandle load_STBTexture( STBTexture* Texture, GelTexture::GelTex
 	// Premultiply the Alpha, but only if it has alpha //
 	if ( Texture->Info == 4 ) {
 		VLog("* Premultiplying Alpha...");
-		for ( size_t texHeight = 0; texHeight < Texture->Height; texHeight++ ) {
-			for ( size_t texWidth = 0; texWidth < Texture->Width; texWidth++ ) {
+		for ( int texHeight = 0; texHeight < Texture->Height; texHeight++ ) {
+			for ( int texWidth = 0; texWidth < Texture->Width; texWidth++ ) {
 				register int Index = (texHeight * (int)Texture->Width) + texWidth;
 				unsigned int* Data = (unsigned int*)(&Texture->Data[0]);
 				int R = (Data[ Index ] >> 0) & 0xff;

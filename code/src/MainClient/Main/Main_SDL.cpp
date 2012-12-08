@@ -85,7 +85,7 @@ void ArgInit( int argc, char* argv[] ) {
 // - ------------------------------------------------------------------------------------------ - //
 bool KillSignal = false;
 // - ------------------------------------------------------------------------------------------ - //
-int EventHandler( void* UserData, SDL_Event* Event ) {
+int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 	extern bool KillSignal;
 	
 	if ( Event->type == SDL_QUIT ) {
@@ -158,14 +158,12 @@ int EventHandler( void* UserData, SDL_Event* Event ) {
 #include <signal.h>
 // - ------------------------------------------------------------------------------------------ - //
 void term_func( int Signal ) {
-	ELog( "SIGTERM (Terminate) recieved -- %i", Signal );
-	LogFlush();
+	Log( "\nSIGTERM (Terminate) recieved -- %i", Signal );
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void int_func( int Signal ) {
-	ELog( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i", Signal );
-	LogFlush();
+	Log( "\nSIGINT (Interrupt) recieved (CTRL+C) -- %i", Signal );
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //

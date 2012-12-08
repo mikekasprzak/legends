@@ -143,7 +143,7 @@ struct GelAssetType {
 		int AsInt;
 		GelAsset_T BitMask;				// Whole type of the asset //
 		struct {
-			int Type:16;				// The type of the Asset //
+			unsigned Type:16;			// The type of the Asset //
 			bool HasInfo:1;				// Has information about its contents //
 			bool IsShare:1;				// Shares data with the a proxy asset //
 			bool IsProxy:1;				// References other data. DO NOT DELETE ME! //

@@ -94,7 +94,7 @@ public:
 		return GEL_OK;
 	}
 	
-	inline GelError UpdateViewport( const bool FullScreen ) const {
+	inline GelError UpdateViewport( const bool /*FullScreen*/ ) const {
 		glViewport( 0, 0, Bounds.w, Bounds.h );
 		
 		return GEL_OK;

@@ -53,7 +53,7 @@ inline DataBlock* new_unpack_LZMA_DataBlock( const DataBlock* _Src ) {
 	LzmaDec_Init(&state);
 
 	// Decompress File //
-    int Result = LzmaDec_DecodeToBuf(
+    /*int Result =*/ LzmaDec_DecodeToBuf(
 		&state,
 		(unsigned char*)UBuffer->Data,
 		&destLength, 
@@ -161,7 +161,7 @@ inline const SizeT unpack_LZMA_DataBlock( const DataBlock* _Src, DataBlock* _Des
 	LzmaDec_Init(&state);
 
 	// Decompress File //
-    int Result = LzmaDec_DecodeToBuf(
+    /*int Result =*/ LzmaDec_DecodeToBuf(
 		&state,
 		(unsigned char*)&_Dest->Data,
 		&destLength, 

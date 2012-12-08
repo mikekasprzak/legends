@@ -5381,7 +5381,7 @@ FILE *  stb_fopen(char *filename, char *mode)
    #else
    {
       strcpy(temp_full+p, "stmpXXXXXX");
-      int fd = stb_mktemp(temp_full);
+      int fd = (int)stb_mktemp(temp_full);
       if (fd == -1) return NULL;
       f = fdopen(fd, mode);
       if (f == NULL) {

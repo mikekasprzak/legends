@@ -15,7 +15,8 @@ CFLAGS				+=	-fno-strict-aliasing
 CPPFLAGS			+=	--std=gnu++0x -fno-rtti -fno-strict-aliasing	\
 						-Wshadow -Wlogical-op \
 						-Wmissing-braces -Wmissing-include-dirs \
-						-Wall -Wno-unknown-pragmas -Wextra -Wno-ignored-qualifiers \
+						-Wall -Wno-unknown-pragmas -Wno-unused-parameter \
+						-Wextra -Wno-ignored-qualifiers \
 #						-Winline -Wundef -Wcast-qual -Wconversion -Wpadded \
 #						-Wdouble-promotion -Wfloat-equal \
 # - ------------------------------------------------------------------------ - #
@@ -91,7 +92,7 @@ cache:
 	@echo Depend Cache Updated
 # - ------------------------------------------------------------------------ - #
 startcache:
-	@$(MAKE) --quiet --no-print-directory cache NO_DEPEND=true &
+	$(MAKE) --quiet --no-print-directory cache NO_DEPEND=true &
 # - ------------------------------------------------------------------------ - #
 .PHONY: run clean cleanmain cleandeps deps makedirs cache startcache
 # - ------------------------------------------------------------------------ - #

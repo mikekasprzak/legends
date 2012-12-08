@@ -9,7 +9,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-const char LZMA_FILE_HEADER[] = { 0x5D, 0x0, 0x0, 0x80 };
+const char LZMA_FILE_HEADER[] = { (const char)0x5D, 0x0, 0x0, (const char)0x80 };
 
 GelAsset_T is_Compression_Data_GelAsset( const char* InData ) {
 	// TODO: Verify there's enough data space to determine file format //
@@ -23,7 +23,7 @@ GelAsset_T is_Compression_Data_GelAsset( const char* InData ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-const char PNG_FILE_HEADER[] = { 0x89, 'P', 'N', 'G' };
+const char PNG_FILE_HEADER[] = { (const char)0x89, 'P', 'N', 'G' };
 
 GelAsset_T is_Texture_Data_GelAsset( const char* InData ) {
 	if ( IsPVR( InData ) ) {
@@ -43,15 +43,15 @@ GelAsset_T is_Texture_Data_GelAsset( const char* InData ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Mesh_Data_GelAsset( const char* InData ) {
+GelAsset_T is_Mesh_Data_GelAsset( const char* /*InData*/ ) {
 	return GEL_ASSET_NULL;
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Audio_Data_GelAsset( const char* InData ) {
+GelAsset_T is_Audio_Data_GelAsset( const char* /*InData*/ ) {
 	return GEL_ASSET_NULL;
 }
 // - ------------------------------------------------------------------------------------------ - //
-GelAsset_T is_Text_Data_GelAsset( const char* InData ) {
+GelAsset_T is_Text_Data_GelAsset( const char* /*InData*/ ) {
 	// NOTE: Text formats can only be detected from filenames. //
 	return GEL_ASSET_NULL;
 }
