@@ -4,6 +4,7 @@
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/GEL2 src/MainClient \
 						src/GameSatellite \
+						src/VNet \
 						src/External/TinyThread \
 						src/External/ENet \
 						src/External/cJSON \
@@ -23,6 +24,7 @@ INCLUDE_FOLDERS		+=	src/ServerSatellite \
 						src/GEL \
 						src/External \
 						src/External/ENet/include \
+						src/VNet/include \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
@@ -36,6 +38,7 @@ DEFINES				+=	PRODUCT_SATELLITE \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	-lcrypto -lenet \
+						-levent \
 						-lwinmm -lIphlpapi -lPsapi \
 						src/External/XInput/lib/XInput.lib \
 						`curl-config --static-libs`

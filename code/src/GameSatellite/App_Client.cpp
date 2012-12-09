@@ -47,7 +47,7 @@ bool cApp::Client_Connect() {
 		return false;
 	}
 	
-	if ( enet_host_service( Client_NetHost, &Event, 5000 ) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT ) {
+	if ( enet_host_service( Client_NetHost, &Event, 1000 ) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT ) {
 		Log( "Connection Success!" );
 		
 		int SendData[] = { 1 };
