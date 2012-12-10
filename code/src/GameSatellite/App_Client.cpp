@@ -4,6 +4,10 @@
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 int cApp::Client_Start() {
+	Log( "-=- Networking -=-" );
+	Log( "Using ENet v%i.%i.%i", ENET_VERSION_MAJOR, ENET_VERSION_MINOR, ENET_VERSION_PATCH );
+	Log( "" );
+	
 	if ( enet_initialize() != 0 ) {
 		Log("Error Initializing ENet");
 		return 1;	
@@ -28,7 +32,6 @@ void cApp::Client_Stop() {
 // - ------------------------------------------------------------------------------------------ - //
 bool cApp::Client_Connect() {
 	ENetAddress Address;
-	ENetEvent Event;
 
 //	enet_address_set_host( &Address, "127.0.0.1" );
 //	enet_address_set_host( &Address, "192.168.1.111" );
@@ -47,6 +50,7 @@ bool cApp::Client_Connect() {
 		return false;
 	}
 	
+	ENetEvent Event;
 	if ( enet_host_service( Client_NetHost, &Event, 1000 ) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT ) {
 		Log( "Connection Success!" );
 		
@@ -58,7 +62,7 @@ bool cApp::Client_Connect() {
 		if ( int Error = enet_peer_send( Client_Peer, CH_OUTSIDERS, Packet ) ) {
 			Log("* Send Error: %i", Error);
 		}
-		//enet_host_flush( Client_NetHost ); // enet_host_service() 
+		//enet_host_flush( Client_NetHost ); // or use enet_host_service() 
 		
 		ENetEvent Event2;
 		while( enet_host_service( Client_NetHost, &Event2, 1000 ) > 0 ) {

@@ -18,14 +18,14 @@ cApp::cApp() {
 	MyGeo->join();
 			
 	// Init //
-//	Client_Start();
-//	Client_Connect();
+	Client_Start();
+	Client_Connect();
 
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
 	// Cleanup //
-//	Client_Stop();
+	Client_Stop();
 
 	delete_pNetAdapterInfo( Adapters );
 

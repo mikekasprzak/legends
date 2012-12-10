@@ -9,5 +9,8 @@ typedef signed char vnet_int8;			// signed 8-bit type //
 typedef signed short vnet_int16;		// signed 16-bit type //
 typedef signed int vnet_int32;			// signed 32-bit type //
 
+// This shouldn't go here (per platform), but I'm not dealing with DLLs //
+#define VNET_API
+
 #endif // __VNET_TYPES_H__ //
 
