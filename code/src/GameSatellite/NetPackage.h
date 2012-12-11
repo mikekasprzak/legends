@@ -30,8 +30,6 @@ enum {	// Package Chunk Types //
 struct cNP_Header {
 	unsigned short Type;				// One of the above enums, or custom (NP_RELIABLE_BASE+value) //
 	unsigned short Size;				// In Bytes //
-//	unsigned short UID;					// Unique Packet ID (Just a local incrementing number) //
-//	st32 Size;							// In Bytes //
 };
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type = char >
@@ -39,24 +37,11 @@ struct cNP_Chunk {
 	cNP_Header Header;
 	Type Data[0];
 
-	inline const size_t Size() const {
+	inline const size_t Size() const {	// In Types //
 		return Header.Size / sizeof(Type);
 	}
-	inline const size_t SizeOf() const {
-		return Header.Size;				// Always in Bytes //
-	}
-};
-// - ------------------------------------------------------------------------------------------ - //
-// Receipts are confirmations that a reliable packet was recieved //
-struct cNP_ReceiptChunk {
-	cNP_Header Header;
-	unsigned short Data[0];				// UIDs //
-	
-	inline const size_t Size() const {
-		return Header.Size >> 1;		// We know the correct Data Size! //
-	}
-	inline const size_t SizeOf() const {
-		return Header.Size;				// Always in Bytes //
+	inline const size_t SizeOf() const {// In Bytes //
+		return Header.Size;				
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -65,15 +50,12 @@ struct cNP_ReceiptChunk {
 // A chunked data format that is built by Clients and Servers, then sent over some transport. //
 // NetPackage structures contain padding, and each chunk has an 8 byte header. //
 class cNetPackage {
-//	static unsigned short _NextUID;
-//	inline static const unsigned short NextUID() {
-//		return _NextUID++;		// Thread Unsafe //
-//	}
 	static unsigned _NextUID;
 	inline static const unsigned NextUID() {
 		return _NextUID++;		// Thread Unsafe //
 	}
-		
+	
+	// TODO: Replace with cGelArray2 replacement //
 	cGelArray<char> Data;
 public:
 	cNetPackage() {
@@ -88,20 +70,19 @@ public:
 		
 		cNP_Chunk<>* Base = (cNP_Chunk<>*)Data.PushBlockBack( sizeof(cNP_Chunk<>) );
 		Base->Header.Type = Type;
-
-//		if ( Type & NP_RELIABLE ) {
-//			Base->Header.UID = NextUID();
-//		}
-//		else {
-//			Base->Header.UID = 0;
-//		}
-
 		Base->Header.Size = 0;
 	}
 	
 	inline void Write( const void* Src, const unsigned short _Size ) {
+		// TODO: Assert //
 		cNP_Chunk<>* Base = (cNP_Chunk<>*)Data.PushBlockBack( Src, _Size );
 		Base->Header.Size += _Size;
+	}
+	
+	inline void WriteCopy( const void* Src ) {
+		// TODO: Assert //
+		cNP_Chunk<>* Base = (cNP_Chunk<>*)Src;
+		Write( Src, Base->Header.Size + sizeof(cNP_Chunk<>) );
 	}
 
 	inline void WriteU8( const u8 Value )   { Write( (void*)&Value, sizeof(Value) ); }
@@ -119,6 +100,10 @@ public:
 	inline void AddUID() {
 		AddChunk( NP_UID );
 		WriteU32( NextUID() );
+	}
+	inline void AddReceipt( const unsigned UID ) {
+		AddChunk( NP_RECEIPT );
+		WriteU32( UID );
 	}
 	
 	// Add a chunk that signifies the ending of the packet //
@@ -138,10 +123,25 @@ public:
 	
 	// Takes an incoming NetPackage and generates a receipt //
 	inline void AddReceipt( cNetPackage* In ) {
+		typedef cNP_Chunk<unsigned> cNP_ReceiptChunk;
+		cNP_ReceiptChunk* Chunk = (cNP_ReceiptChunk*)Get();
+		while( Chunk ) {
+			if ( Chunk->Header.Type == NP_UID ) {
+				AddReceipt( Chunk->Data[0] );		// Only because it's an <unsigned> this is legal //
+			}
+			Chunk = (cNP_ReceiptChunk*)Next( Chunk );
+		}
 	}
 	
 	// Copies all the reliable chunks from a NetPackage (used to resend) //
 	inline void AddReliableChunks( cNetPackage* In ) {
+		cNP_Chunk<>* Chunk = Get();
+		while( Chunk ) {
+			if ( Chunk->Header.Type & NP_RELIABLE ) {
+				WriteCopy( Chunk );
+			}
+			Chunk = Next( Chunk );
+		}
 	}
 
 public:
@@ -152,24 +152,24 @@ public:
 		return Data.SizeOf();
 	}
 	
-	inline char* Front() {
-		return (*Data)->Data;
+	inline cNP_Chunk<>* Get() {
+		return (cNP_Chunk<>*)(*Data)->Data;
 	}
 	
-	inline char* Next( const char* Pos ) {
+	inline cNP_Chunk<>* Next( void* Pos ) {
 		// TODO: Assert //
-
 		cNP_Chunk<>* Base = (cNP_Chunk<>*)Pos;
 		if ( Base->Header.Type == NP_EOF ) {
 			return 0;
 		}
 		
 		size_t NextPos = Base->Header.Size;
+		// If misaligned, then skip over padding //
 		if ( NextPos & 3 ) {
 			NextPos += 4 - (NextPos & 3);
 		}
 		Base += sizeof(cNP_Chunk<>) + NextPos;
-		return (char*)Base;
+		return Base;
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
