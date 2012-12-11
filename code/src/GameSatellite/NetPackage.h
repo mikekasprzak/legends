@@ -121,7 +121,7 @@ public:
 		AddEnd();
 	}
 	
-	// Takes an incoming NetPackage and generates a receipt //
+	// Takes an incoming NetPackage and generates a receipt plus a copy of all reliable data //
 	inline void AddReceipt( cNetPackage* In ) {
 		typedef cNP_Chunk<unsigned> cNP_ReceiptChunk;
 		cNP_ReceiptChunk* Chunk = (cNP_ReceiptChunk*)Get();
