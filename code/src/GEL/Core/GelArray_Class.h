@@ -85,11 +85,11 @@ public:
 		return _Data->Size;
 	}
 	
-	// SizeOf() returns the maxiumum size, or rather, how much memory is used //
+	// SizeOf() returns the size in bytes //
 	inline const size_t SizeOf() const {
 		if ( _Data == 0 )
 			return 0;
-		return _Data->MaxSize;
+		return _Data->Size * sizeof( Type );
 	}
 
 	
