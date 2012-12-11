@@ -6,6 +6,8 @@
 #ifndef __NET_NETPACKAGE_H__
 #define __NET_NETPACKAGE_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <string.h>
+// - ------------------------------------------------------------------------------------------ - //
 enum {	// Package Types //
 	NP_UNRELIABLE = 0x0000,
 	NP_RELIABLE = 0x8000,
@@ -13,6 +15,8 @@ enum {	// Package Types //
 	NP_EOF = 0,							// Special code for no more chunks (Type=0 and Size=0) //
 	NP_RECEIPT = 0 | NP_RELIABLE,		// Special code for receipts (also reliable) //
 	NP_MESSAGE = 1 | NP_RELIABLE,		// Chat Messages //
+	
+	// TODO: File Payloads? //
 	
 	NP_BASE = 2,						// Base ID to use for new message codes //
 	NP_RELIABLE_BASE = 2 | NP_RELIABLE,	// Base ID to use for new reliable message codes //
