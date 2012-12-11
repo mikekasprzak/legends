@@ -124,6 +124,23 @@ public:
 		return _Data->Data[ LastIndex() ];
 	}
 
+	inline Type* FrontPtr() {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return &_Data->Data[ FirstIndex() ];
+	}
+	inline const Type* FrontPtr() const {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return &_Data->Data[ FirstIndex() ];
+	}
+	inline Type* BackPtr() {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return &_Data->Data[ LastIndex() ];
+	}
+	inline const Type* BackPtr() const {
+		Warning( _Data == 0, "cGelArray w/o Data" );
+		return &_Data->Data[ LastIndex() ];
+	}
+
 	
 	inline GelArray<Type>* operator * () {
 		return _Data;	
@@ -160,12 +177,32 @@ public:
 		Resize( 0 );
 	}
 	
-	inline void PushBack( const Type& _Value ) {
+	inline Type* PushBack() {
+		const st32 OldSize = Size();
+		pushback_GelArray<Type>( &_Data );
+		return &_Data->Data[ OldSize ];
+	}
+	inline Type* PushBack( const Type& _Value ) {
+		const st32 OldSize = Size();
 		pushback_GelArray<Type>( &_Data, _Value );
+		return &_Data->Data[ OldSize ];
+	}
+	inline Type* PushBlockBack( const st32 _Count ) {
+		const st32 OldSize = Size();
+		pushblockback_GelArray<Type>( &_Data, _Count );
+		return &_Data->Data[ OldSize ];
+	}
+	inline Type* PushBlockBack( const void* Src, const st32 _Count ) {
+		const st32 OldSize = Size();
+		pushblockback_GelArray<Type>( &_Data, Src, _Count );
+		return &_Data->Data[ OldSize ];
 	}
 	
 	inline const Type PopBack() {
 		return popback_GelArray<Type>( &_Data );
+	}
+	inline const Type* PopBlockBack( const st32 _Count ) {
+		return popblockback_GelArray<Type>( &_Data, _Count );
 	}
 
 public:

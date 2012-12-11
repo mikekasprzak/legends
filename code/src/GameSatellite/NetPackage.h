@@ -7,6 +7,7 @@
 #define __NET_NETPACKAGE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
+#include <Core/GelArray.h>
 // - ------------------------------------------------------------------------------------------ - //
 enum {	// Package Types //
 	NP_UNRELIABLE = 0x0000,
@@ -73,11 +74,45 @@ struct cNP_ReceiptChunk {
 
 // - ------------------------------------------------------------------------------------------ - //
 // A chunked data format that is built by Clients and Servers, then sent over some transport //
-struct cNetPackage {
+class cNetPackage {
 	static unsigned short _NextUID;
 	inline static const unsigned short NextUID() {
-		return _NextUID++;		// TODO: Thread locking? So long as we package in 1 thread we're ok
+		return _NextUID++;		// Thread Unsafe //
 	}
+	
+	cGelArray<char> Data;
+public:
+	cNetPackage() {
+	}
+	
+	inline void AddChunk( const unsigned short Type ) {
+		if ( Type >= NP_RELIABLE ) {
+			cNP_ReliableChunk* Base = (cNP_ReliableChunk*)Data.PushBlockBack( sizeof(cNP_ReliableChunk) );
+			Base->Header.Type = Type;
+			Base->Header.Size = 0;
+			Base->Header.UID = NextUID();
+		}
+		else {
+			cNP_Chunk* Base = (cNP_Chunk*)Data.PushBlockBack( sizeof(cNP_Chunk) );
+			Base->Header.Type = Type;
+			Base->Header.Size = 0;
+		}
+	}
+	
+	inline void Write( const void* Src, const unsigned short _Size ) {
+		Data.PushBlockBack( Src, _Size );
+	}
+
+	inline void WriteU8( const u8 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteS8( const s8 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteU16( const u16 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteS16( const s16 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteU32( const u32 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteS32( const s32 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteU64( const u64 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteS64( const s64 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteF32( const f32 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
+	inline void WriteF64( const f64 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
 	
 };
 // - ------------------------------------------------------------------------------------------ - //

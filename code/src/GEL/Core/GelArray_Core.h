@@ -645,23 +645,25 @@ inline Type* front_GelArray( GelArray<Type>* p ) {
 // Push and pop large groups of objects on to the GelArray //
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline void pushblockback_GelArray( GelArray<Type>** p, const st32 _Value ) {
-//	resize2_GelArray( p, (*p)->Size + _Value );
-	resize_GelArray( p, (*p)->Size + _Value );
+inline void pushblockback_GelArray( GelArray<Type>** p, const st32 _Count ) {
+//	resize2_GelArray( p, (*p)->Size + _Count );
+	resize_GelArray( p, (*p)->Size + _Count );
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline void pushblockback_GelArray( GelArray<Type>** p, const st32 _Value, const Type& _InitValue ) {
-//	resize2_GelArray( p, (*p)->Size + _Value, _InitValue );
-	resize_GelArray( p, (*p)->Size + _Value, _InitValue );
+inline void pushblockback_GelArray( GelArray<Type>** p, const void* Src, const st32 _Count ) {
+	st32 OldSize = (*p)->Size;
+//	resize2_GelArray( p, (*p)->Size + _Count );
+	resize_GelArray( p, (*p)->Size + _Count );
+	copy_Data( Src, &((*p)->Data[ OldSize ]), sizeof( Type ) * _Count );
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline Type popblockback_GelArray( GelArray<Type>** p, const st32 _Value ) {
+inline Type* popblockback_GelArray( GelArray<Type>** p, const st32 _Count ) {
 	// TODO: Assert if Size == 0 //
-	(*p)->Size -= _Value;
+	(*p)->Size -= _Count;
 	
-	return (*p)->Data[ (*p)->Size ];
+	return &((*p)->Data[ (*p)->Size ]);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
