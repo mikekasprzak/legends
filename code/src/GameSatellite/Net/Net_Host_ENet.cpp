@@ -17,6 +17,7 @@ namespace Net {
 // - ------------------------------------------------------------------------------------------ - //
 ENetHost* Host;
 ENetPeer* Peer;
+bool Server = false;
 // - ------------------------------------------------------------------------------------------ - //
 void Host_Exit() {
 	enet_deinitialize();
@@ -59,6 +60,8 @@ void Host_StartServer() {
 //		(Address.host>>16)&255, 
 //		(Address.host>>24)&255, 
 //		Address.port );
+
+	Server = true;
 		
 	//return (Server_NetHost == 0) ? 1 : 0;
 }
@@ -80,6 +83,8 @@ void Host_StartClient() {
 		0, 			// Incoming Bandwitdth (0=no limit) //
 		0 			// Outgoing Bandwidth (0=no limit) //
 		);
+		
+	Server = false;
 	
 	//return (Host == 0) ? 1 : 0;
 }
@@ -92,6 +97,9 @@ void Host_StopClient() {
 // - ------------------------------------------------------------------------------------------ - //
 void Host_Send( cNetPackage* Package, ENetPeer* _Peer ) {
 	//Log( "* Host_Send" );
+//	cNP_Chunk<>* Base = (cNP_Chunk<>*)Package->Get();
+//	Log( "* [%i]", Base->Header.Type );
+	
 	ENetPacket* Packet = enet_packet_create( Package->Get(), Package->Size(), 0 );
 	enet_peer_send( _Peer, 0, Packet );	// Channel 0 //
 }
@@ -121,9 +129,9 @@ void Host_Connect() {	// Clients Only //
 	Log( "* Host_Connect" );
 	
 	ENetAddress Address;
-//	enet_address_set_host( &Address, "127.0.0.1" );
+	enet_address_set_host( &Address, "127.0.0.1" );
 //	enet_address_set_host( &Address, "192.168.1.111" );
-	enet_address_set_host( &Address, "foagies.mooo.com" );
+//	enet_address_set_host( &Address, "foagies.mooo.com" );
 	Address.port = 10240;
 
 	Peer = enet_host_connect(
@@ -146,24 +154,27 @@ void Host_Poll( const int TimeInMS ) {		// Both //
 		switch ( Event.type ) {
 			case ENET_EVENT_TYPE_CONNECT: {
 				Log("* ENET_EVENT_TYPE_CONNECT");
-				Host_SendPing();
+				if ( !Server )
+					Host_SendPing();
 				break;
 			}
 	        case ENET_EVENT_TYPE_RECEIVE: {
 				Log("* ENET_EVENT_TYPE_RECEIVE");
 				
+				// TODO: Confirm that we're not outside the packet size //
 				cNP_Chunk<>* Base = (cNP_Chunk<>*)Event.packet->data;
-				while ( Base ) {
-					if ( Base->Header.Type == NP_PING ) {
+				cNP_Chunk<>* Chunk = Base;
+				while ( Chunk ) {
+					Log( "* [%i]", Chunk->Header.Type );
+					if ( Chunk->Header.Type == NP_PING ) {
 						Log( "** Ping" );
 						Host_SendPong( Event.peer );
 					}
-					else if ( Base->Header.Type == NP_PONG ) {
+					else if ( Chunk->Header.Type == NP_PONG ) {
 						Log( "** Pong" );
-						Host_SendPong( Event.peer );
 					}
 
-					Base = cNetPackage::Next( Base );
+					Chunk = cNetPackage::Next( Chunk );
 				}
 	            break;
 	        }

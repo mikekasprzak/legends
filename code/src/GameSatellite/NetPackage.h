@@ -117,7 +117,7 @@ public:
 		AddEnd();
 	}
 	inline void AddPong() {
-		AddChunk( NP_PING );
+		AddChunk( NP_PONG );
 		AddEnd();
 	}
 	
@@ -168,7 +168,7 @@ public:
 		if ( NextPos & 3 ) {
 			NextPos += 4 - (NextPos & 3);
 		}
-		Base += sizeof(cNP_Chunk<>) + NextPos;
+		Base = (cNP_Chunk<>*)((char*)Base + sizeof(cNP_Chunk<>) + NextPos);
 		return Base;
 	}
 };

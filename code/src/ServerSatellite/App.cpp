@@ -6,6 +6,7 @@
 #include <Util/safe_sprintf.h>
 
 #include "Text/Out.h"
+#include <Net/Net_Host.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -31,17 +32,22 @@ int cApp::operator()( ) {
 			
 	// Init //
 	WebServer_Start();
-	Server_Start();
+	//Server_Start();
+	Net::Host_Init();
+	Net::Host_StartServer();
+	
 	
 	// Do Stuff //
 	int TheChar;
 	while ( (TheChar = GetCh()) != 27 ) {
-		Server_Poll(50); // Time in MS //
+		Net::Host_Poll(50);
+		//Server_Poll(50); // Time in MS //
 		//Wait(50); // 20 times per second //
 	}
 		
 	// Cleanup //
-	Server_Stop();
+	//Server_Stop();
+	Net::Host_StopServer();
 	WebServer_Stop();
 
 	// Finished //
