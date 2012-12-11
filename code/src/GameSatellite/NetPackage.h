@@ -32,12 +32,13 @@ struct cNP_Header {
 	st32 Size;							// In Bytes //
 };
 // - ------------------------------------------------------------------------------------------ - //
+template< class Type = char >
 struct cNP_Chunk {
 	cNP_Header Header;
-	char Data[0];
+	Type Data[0];
 
 	inline const size_t Size() const {
-		return Header.Size;
+		return Header.Size / sizeof(Type);
 	}
 	inline const size_t SizeOf() const {
 		return Header.Size;				// Always in Bytes //
@@ -47,7 +48,7 @@ struct cNP_Chunk {
 // Receipts are confirmations that a reliable packet was recieved //
 struct cNP_ReceiptChunk {
 	cNP_Header Header;
-	unsigned short Data[0];				// UID //
+	unsigned short Data[0];				// UIDs //
 	
 	inline const size_t Size() const {
 		return Header.Size >> 1;		// We know the correct Data Size! //
@@ -79,7 +80,7 @@ public:
 			Write( (void*)&Dummy, 4 - (Data.Size() & 3) );
 		}
 		
-		cNP_Chunk* Base = (cNP_Chunk*)Data.PushBlockBack( sizeof(cNP_Chunk) );
+		cNP_Chunk<>* Base = (cNP_Chunk<>*)Data.PushBlockBack( sizeof(cNP_Chunk<>) );
 		Base->Header.Type = Type;
 
 		if ( Type & NP_RELIABLE ) {
@@ -93,7 +94,7 @@ public:
 	}
 	
 	inline void Write( const void* Src, const unsigned short _Size ) {
-		cNP_Chunk* Base = (cNP_Chunk*)Data.PushBlockBack( Src, _Size );
+		cNP_Chunk<>* Base = (cNP_Chunk<>*)Data.PushBlockBack( Src, _Size );
 		Base->Header.Size += _Size;
 	}
 
@@ -107,6 +108,14 @@ public:
 	inline void WriteS64( const s64 Value ) { Write( (void*)&Value, sizeof(Value) ); }
 	inline void WriteF32( const f32 Value ) { Write( (void*)&Value, sizeof(Value) ); }
 	inline void WriteF64( const f64 Value ) { Write( (void*)&Value, sizeof(Value) ); }
+	
+	// Takes an incoming NetPackage and generates a receipt //
+	inline void AddReceipt( cNetPackage* In ) {
+	}
+	
+	// Copies all the reliable chunks from a NetPackage (used to resend) //
+	inline void AddReliableChunks( cNetPackage* In ) {
+	}
 	
 	inline const st32 Size() const {
 		return Data.Size();
@@ -122,7 +131,7 @@ public:
 	inline char* Next( const char* Pos ) {
 		// TODO: Assert //
 
-		cNP_Chunk* Base = (cNP_Chunk*)Pos;
+		cNP_Chunk<>* Base = (cNP_Chunk<>*)Pos;
 		if ( Base->Header.Type == NP_EOF ) {
 			return 0;
 		}
@@ -131,7 +140,7 @@ public:
 		if ( NextPos & 3 ) {
 			NextPos += 4 - (NextPos & 3);
 		}
-		Base += sizeof(cNP_Chunk) + NextPos;
+		Base += sizeof(cNP_Chunk<>) + NextPos;
 		return (char*)Base;
 	}
 };
