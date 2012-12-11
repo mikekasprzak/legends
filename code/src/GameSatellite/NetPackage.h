@@ -14,13 +14,16 @@ enum {	// Package Types //
 	NP_RELIABLE = 0x8000,
 
 	NP_EOF = 0,							// Special code for no more chunks (Type=0 and Size=0) //
+	NP_PING = 1,						// Ping Message //
+	NP_PONG = 2,						// Ping Response //
+	NP_UNRELIABLE_MESSAGE = 3,			// Unreliable Chat Messages (Unused?) //
 	NP_RECEIPT = 0 | NP_RELIABLE,		// Special code for receipts (also reliable) //
-	NP_MESSAGE = 1 | NP_RELIABLE,		// Chat Messages //
+	NP_MESSAGE = 3 | NP_RELIABLE,		// Chat Messages //
 	
 	// TODO: File Payloads? //
 	
-	NP_BASE = 2,						// Base ID to use for new message codes //
-	NP_RELIABLE_BASE = 2 | NP_RELIABLE,	// Base ID to use for new reliable message codes //
+	NP_BASE = 8,						// Base ID to use for new message codes //
+	NP_RELIABLE_BASE = 8 | NP_RELIABLE,	// Base ID to use for new reliable message codes //
 };
 // - ------------------------------------------------------------------------------------------ - //
 struct cNP_Header {
@@ -114,6 +117,13 @@ public:
 	inline void WriteF32( const f32 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
 	inline void WriteF64( const f64 Value ) { Data.PushBlockBack( (void*)&Value, sizeof(Value) ); }
 	
+	
+	inline const st32 Size() const {
+		return Data.Size();
+	}
+	inline const st32 SizeOf() const {
+		return Data.SizeOf();
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 
