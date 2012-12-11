@@ -3,6 +3,7 @@
 #include <Util/safe_sprintf.h>
 
 #include "App.h"
+#include <Net/Net_Host.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -18,14 +19,18 @@ cApp::cApp() {
 	MyGeo->join();
 			
 	// Init //
-	Client_Start();
-	Client_Connect();
-
+//	Client_Start();
+//	Client_Connect();
+	Net::Host_Init();
+	Net::Host_StartClient();
+	Net::Host_Connect();
+//	Net::Host_SendPing();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
 	// Cleanup //
-	Client_Stop();
+	//Client_Stop();
+	Net::Host_StopClient();
 
 	delete_pNetAdapterInfo( Adapters );
 
@@ -33,6 +38,7 @@ cApp::~cApp() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
+	Net::Host_Poll();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {

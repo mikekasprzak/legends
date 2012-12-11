@@ -646,15 +646,21 @@ inline Type* front_GelArray( GelArray<Type>* p ) {
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushblockback_GelArray( GelArray<Type>** p, const st32 _Count ) {
-//	resize2_GelArray( p, (*p)->Size + _Count );
-	resize_GelArray( p, (*p)->Size + _Count );
+	if ( (*p) == 0 )
+		resize_GelArray( p, _Count );
+	else
+		resize_GelArray( p, (*p)->Size + _Count );
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
 inline void pushblockback_GelArray( GelArray<Type>** p, const void* Src, const st32 _Count ) {
 	st32 OldSize = (*p)->Size;
-//	resize2_GelArray( p, (*p)->Size + _Count );
-	resize_GelArray( p, (*p)->Size + _Count );
+	
+	if ( (*p) == 0 )
+		resize_GelArray( p, _Count );
+	else
+		resize_GelArray( p, (*p)->Size + _Count );
+	
 	copy_Data( Src, &((*p)->Data[ OldSize ]), sizeof( Type ) * _Count );
 } 
 // - ------------------------------------------------------------------------------------------ - //

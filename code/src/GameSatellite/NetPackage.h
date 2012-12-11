@@ -156,7 +156,7 @@ public:
 		return (cNP_Chunk<>*)(*Data)->Data;
 	}
 	
-	inline cNP_Chunk<>* Next( void* Pos ) {
+	inline static cNP_Chunk<>* Next( void* Pos ) {
 		// TODO: Assert //
 		cNP_Chunk<>* Base = (cNP_Chunk<>*)Pos;
 		if ( Base->Header.Type == NP_EOF ) {
