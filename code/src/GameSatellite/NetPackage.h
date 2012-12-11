@@ -9,16 +9,17 @@
 #include <string.h>
 #include <Core/GelArray.h>
 // - ------------------------------------------------------------------------------------------ - //
-enum {	// Package Types //
+enum {	// Package Chunk Types //
 	NP_UNRELIABLE = 0x0000,
 	NP_RELIABLE = 0x8000,
 
 	NP_EOF = 0,							// Special code for no more chunks (Type=0 and Size=0) //
-	NP_PING = 1,						// Ping Message //
-	NP_PONG = 2,						// Ping Response //
-	NP_UNRELIABLE_MESSAGE = 3,			// Unreliable Chat Messages (Unused?) //
-	NP_RECEIPT = 0 | NP_RELIABLE,		// Special code for receipts (also reliable) //
-	NP_MESSAGE = 3 | NP_RELIABLE,		// Chat Messages (TODO: Sender, Recipiant/Channel) //
+	NP_PING = 1,						// Ping Message (i.e. Unreliable UID) //
+	NP_PONG = 2,						// Ping Response (i.e. Unreliable Receipt) //
+	NP_UID = 1 | NP_RELIABLE,			// UID Chunk (also reliable) //
+	NP_RECEIPT = 2 | NP_RELIABLE,		// Receipt Chunk (also reliable) //
+	NP_UNRELIABLE_MESSAGE = 4,			// Unreliable Chat Messages (Unused?) //
+	NP_MESSAGE = 4 | NP_RELIABLE,		// Chat Messages (TODO: Sender, Recipiant/Channel) //
 	
 	// TODO: File Payloads? //
 	
@@ -28,8 +29,9 @@ enum {	// Package Types //
 // - ------------------------------------------------------------------------------------------ - //
 struct cNP_Header {
 	unsigned short Type;				// One of the above enums, or custom (NP_RELIABLE_BASE+value) //
-	unsigned short UID;					// Unique Packet ID (Just a local incrementing number) //
-	st32 Size;							// In Bytes //
+	unsigned short Size;				// In Bytes //
+//	unsigned short UID;					// Unique Packet ID (Just a local incrementing number) //
+//	st32 Size;							// In Bytes //
 };
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type = char >
@@ -63,11 +65,15 @@ struct cNP_ReceiptChunk {
 // A chunked data format that is built by Clients and Servers, then sent over some transport. //
 // NetPackage structures contain padding, and each chunk has an 8 byte header. //
 class cNetPackage {
-	static unsigned short _NextUID;
-	inline static const unsigned short NextUID() {
+//	static unsigned short _NextUID;
+//	inline static const unsigned short NextUID() {
+//		return _NextUID++;		// Thread Unsafe //
+//	}
+	static unsigned _NextUID;
+	inline static const unsigned NextUID() {
 		return _NextUID++;		// Thread Unsafe //
 	}
-	
+		
 	cGelArray<char> Data;
 public:
 	cNetPackage() {
@@ -83,12 +89,12 @@ public:
 		cNP_Chunk<>* Base = (cNP_Chunk<>*)Data.PushBlockBack( sizeof(cNP_Chunk<>) );
 		Base->Header.Type = Type;
 
-		if ( Type & NP_RELIABLE ) {
-			Base->Header.UID = NextUID();
-		}
-		else {
-			Base->Header.UID = 0;
-		}
+//		if ( Type & NP_RELIABLE ) {
+//			Base->Header.UID = NextUID();
+//		}
+//		else {
+//			Base->Header.UID = 0;
+//		}
 
 		Base->Header.Size = 0;
 	}
@@ -108,6 +114,27 @@ public:
 	inline void WriteS64( const s64 Value ) { Write( (void*)&Value, sizeof(Value) ); }
 	inline void WriteF32( const f32 Value ) { Write( (void*)&Value, sizeof(Value) ); }
 	inline void WriteF64( const f64 Value ) { Write( (void*)&Value, sizeof(Value) ); }
+
+	// Add a chunk that uniquely identifies this packet //
+	inline void AddUID() {
+		AddChunk( NP_UID );
+		WriteU32( NextUID() );
+	}
+	
+	// Add a chunk that signifies the ending of the packet //
+	inline void AddEnd() {
+		AddChunk( NP_EOF );
+	}
+	
+	// Populate with the necessary data to be a complete packet //
+	inline void AddPing() {
+		AddChunk( NP_PING );
+		AddEnd();
+	}
+	inline void AddPong() {
+		AddChunk( NP_PING );
+		AddEnd();
+	}
 	
 	// Takes an incoming NetPackage and generates a receipt //
 	inline void AddReceipt( cNetPackage* In ) {
@@ -116,7 +143,8 @@ public:
 	// Copies all the reliable chunks from a NetPackage (used to resend) //
 	inline void AddReliableChunks( cNetPackage* In ) {
 	}
-	
+
+public:
 	inline const st32 Size() const {
 		return Data.Size();
 	}
