@@ -3,7 +3,7 @@
 #include <Timer/Timer.h>
 
 #include "App.h"
-#include <Util/curses.h>
+#include <Util/util_curses.h>
 #include "Text/Out.h"
 // - ------------------------------------------------------------------------------------------ - //
 
