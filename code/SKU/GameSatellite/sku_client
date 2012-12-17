@@ -30,16 +30,13 @@ IGNORE_LIST			+=
 # Defines specific to this file #
 DEFINES				+=	PRODUCT_SATELLITE \
 						USES_GEL2 USES_GEL \
-						CURL_STATICLIB \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
-						USES_WGL
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	-lcrypto -lenet \
 						-levent \
 						-lwinmm -lIphlpapi -lPsapi \
 						src/External/XInput/lib/XInput.lib \
-						`curl-config --static-libs`
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
@@ -48,4 +45,5 @@ COPY_FILES			+=
 USES_SDL2		:=	true
 USES_OPENGL2	:=	true
 #USES_SDLMIXER	:=	true
+USES_CURL		:=	true
 # - ------------------------------------------------------------------------ - #

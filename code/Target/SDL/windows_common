@@ -16,6 +16,10 @@ endif
 # File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
 BINARY_SUFFIX		:=	.exe
 # - ------------------------------------------------------------------------ - #
+# Platform Specific Target Influencing Defines #
+USES_WINDOWS		:=	true
+USES_MINGW			:=	true
+# - ------------------------------------------------------------------------ - #
 
 
 # - ------------------------------------------------------------------------ - #
@@ -101,6 +105,9 @@ LIBRARIES			+=	src/External/Sixense/lib/win32/release_dll/sixense.lib \
 COPY_FILES			+=	src/External/Sixense/bin/win32/DeviceDLL.dll \
 						src/External/Sixense/bin/win32/release_dll/sixense.dll \
 # - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
 endif # USES_SIXENSE #
 # - ------------------------------------------------------------------------ - #
 
@@ -119,6 +126,9 @@ LIBRARIES			+=	src/External/Assimp/mingw32/libassimp.dll.a \
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	src/External/Assimp/mingw32/libassimp.dll \
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 endif # USES_ASSIMP #
 # - ------------------------------------------------------------------------ - #
@@ -142,7 +152,35 @@ LIBRARIES			+=	-lws2_32
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
 endif # USES_MONGOOSE #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_CURL
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_CURL CURL_STATICLIB
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	`curl-config --static-libs`
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_CURL #
 # - ------------------------------------------------------------------------ - #
 
 
@@ -163,6 +201,9 @@ LIBRARIES			+=	-lsetupapi
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 endif # USES_HIDAPI #
 # - ------------------------------------------------------------------------ - #
@@ -188,6 +229,9 @@ COPY_FILES			+=
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 endif # USES_DSONOISES #
 # - ------------------------------------------------------------------------ - #
