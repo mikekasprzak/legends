@@ -47,10 +47,9 @@ USES_ENET			:=	true
 USES_CJSON			:=	true
 USES_TINYTHREAD		:=	true
 # - ------------------------------------------------------------------------ - #
-# Game Specific Platform Specific Library Requesting Defines #
-# - ------------------------------------------------------------------------ - #
 ifdef WINDIR 		# Can't use USES_WINDOWS because not defined yet #
 # - ------------------------------------------------------------------------ - #
+# Game Specific Platform Specific Library Requesting Defines #
 USES_XINPUT			:=	true
 #USES_SIXENSE		:=	true
 #USES_HIDAPI		:=	true
