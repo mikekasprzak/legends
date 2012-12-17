@@ -4,10 +4,13 @@
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/MainServer \
 						src/GameSatellite \
-						src/GEL2 \
 						src/ServerSatellite/Util \
 						src/ServerSatellite/Text \
+						src/GEL2 \
 						src/GEL/Core \
+						src/GEL/Debug \
+						src/GEL/System \
+						src/GEL/Timer \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/ServerSatellite \
