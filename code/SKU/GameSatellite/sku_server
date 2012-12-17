@@ -37,6 +37,7 @@ DEFINES				+=	PRODUCT_SATELLITE \
 						USES_GEL2 USES_GEL \
 						CURL_STATICLIB \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
+						USES_CURSES
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	
@@ -45,5 +46,6 @@ LIBRARIES			+=
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
 # Game Specific Target Influencing Defines #
-REQUIRES_OPENGL2	:=	true
+USES_MONGOOSE		:=	true
+USES_CURSES			:=	true
 # - ------------------------------------------------------------------------ - #

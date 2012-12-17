@@ -6,6 +6,8 @@ CFLAGS				+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
 CPPFLAGS			+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
 LDFLAGS				+=	-L /usr/local/lib -L /usr/local/ssl/lib -static-libgcc -static-libstdc++ -static
 # - ------------------------------------------------------------------------ - #
+DEFINES				+=	USES_WINDOWS USES_MINGW
+# - ------------------------------------------------------------------------ - #
 # Release Build Only #
 ifdef NDEBUG
 LDFLAGS				+=	-mwindows
@@ -14,6 +16,74 @@ endif
 # File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
 BINARY_SUFFIX		:=	.exe
 # - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_SDL2
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/MainSDL
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_SDL2 USES_OPENGL2 \
+						NO_STDIO_REDIRECT \
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-lwinmm -lmingw32 -lSDL2.dll \
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	/usr/local/bin/SDL2.dll \
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+# The SKU file may say that the game requires OpenGL 2.0 Grade Hardware //
+ifdef USES_OPENGL2
+include Target/SDL/common_opengl2_windows
+else
+include Target/SDL/common_opengl_windows
+endif
+# - ------------------------------------------------------------------------ - #
+endif # USES_SDL2 #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_SDLMIXER
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_SDLMIXER
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-lSDL2_mixer.dll
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	/usr/local/bin/SDL2_mixer.dll \
+						/usr/local/bin/libvorbis-*.dll \
+						/usr/local/bin/libvorbisfile-*.dll \
+						/usr/local/bin/libogg-*.dll \
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_SDLMIXER #
+# - ------------------------------------------------------------------------ - #
+
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_SIXENSE
@@ -34,6 +104,7 @@ COPY_FILES			+=	src/External/Sixense/bin/win32/DeviceDLL.dll \
 endif # USES_SIXENSE #
 # - ------------------------------------------------------------------------ - #
 
+
 # - ------------------------------------------------------------------------ - #
 ifdef USES_ASSIMP
 # - ------------------------------------------------------------------------ - #
@@ -51,6 +122,7 @@ COPY_FILES			+=	src/External/Assimp/mingw32/libassimp.dll \
 # - ------------------------------------------------------------------------ - #
 endif # USES_ASSIMP #
 # - ------------------------------------------------------------------------ - #
+
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_MONGOOSE
@@ -73,6 +145,7 @@ COPY_FILES			+=
 endif # USES_MONGOOSE #
 # - ------------------------------------------------------------------------ - #
 
+
 # - ------------------------------------------------------------------------ - #
 ifdef USES_HIDAPI
 # - ------------------------------------------------------------------------ - #
@@ -93,6 +166,7 @@ COPY_FILES			+=
 # - ------------------------------------------------------------------------ - #
 endif # USES_HIDAPI #
 # - ------------------------------------------------------------------------ - #
+
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_DSONOISES

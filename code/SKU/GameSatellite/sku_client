@@ -45,5 +45,7 @@ LIBRARIES			+=	-lcrypto -lenet \
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
 # Game Specific Target Influencing Defines #
+USES_SDL2		:=	true
 USES_OPENGL2	:=	true
+#USES_SDLMIXER	:=	true
 # - ------------------------------------------------------------------------ - #

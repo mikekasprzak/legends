@@ -46,6 +46,9 @@ struct cNP_Chunk {
 };
 // - ------------------------------------------------------------------------------------------ - //
 
+// TODO: Make a version of this that the package format is actually JSON, and data can be
+//       encoded (and decoded) in Base64 format. Will make working with HTTP and JS easier.
+
 // - ------------------------------------------------------------------------------------------ - //
 // A chunked data format that is built by Clients and Servers, then sent over some transport. //
 // NetPackage structures contain padding, and each chunk has an 8 byte header. //
