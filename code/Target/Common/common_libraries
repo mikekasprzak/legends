@@ -1,4 +1,4 @@
-# NOTES: Somebody needs -ldl (dynamic library loading)
+# NOTES: Some linux library needs -ldl (dynamic library loading)
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_SDL2
