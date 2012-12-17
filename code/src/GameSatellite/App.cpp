@@ -5,6 +5,11 @@
 #include "App.h"
 #include <Net/Net_Host.h>
 // - ------------------------------------------------------------------------------------------ - //
+#ifdef PRODUCT_SERVER
+#include <Text/Out.h>
+#endif // PRODUCT_SERVER //
+// - ------------------------------------------------------------------------------------------ - //
+
 
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
@@ -18,6 +23,7 @@ cApp::cApp() {
 	// Wait for threads to finish //
 	MyGeo->join();
 			
+#ifdef PRODUCT_CLIENT
 	// Init //
 //	Client_Start();
 //	Client_Connect();
@@ -25,17 +31,24 @@ cApp::cApp() {
 	Net::Host_StartClient();
 	Net::Host_Connect();
 //	Net::Host_SendPing();
+#endif // PRODUCT_CLIENT //
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+#ifdef PRODUCT_CLIENT
 	// Cleanup //
 	//Client_Stop();
 	Net::Host_StopClient();
+#endif // PRODUCT_CLIENT //
 
 	delete_pNetAdapterInfo( Adapters );
 
 	delete( MyGeo );
 }
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef PRODUCT_CLIENT
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
 	Net::Host_Poll();
@@ -68,4 +81,37 @@ void cApp::Draw( Screen::cNative& Native ) {
     glEnd();
 }
 // - ------------------------------------------------------------------------------------------ - //
+#endif // PRODUCT_CLIENT //
+// - ------------------------------------------------------------------------------------------ - //
+#ifdef PRODUCT_SERVER
+// - ------------------------------------------------------------------------------------------ - //
+int cApp::operator()( ) {
+	// Wait for threads to finish //
+	MyGeo->join();
+			
+	// Init //
+	WebServer_Start();
+	//Server_Start();
+	Net::Host_Init();
+	Net::Host_StartServer();
+	
+	
+	// Do Stuff //
+	int TheChar;
+	while ( (TheChar = GetCh()) != 27 ) {
+		Net::Host_Poll(50);
+		//Server_Poll(50); // Time in MS //
+		//Wait(50); // 20 times per second //
+	}
+		
+	// Cleanup //
+	//Server_Stop();
+	Net::Host_StopServer();
+	WebServer_Stop();
 
+	// Finished //
+	return 0;
+}
+// - ------------------------------------------------------------------------------------------ - //
+#endif // PRODUCT_SERVER //
+// - ------------------------------------------------------------------------------------------ - //

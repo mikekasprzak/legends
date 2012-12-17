@@ -5,9 +5,8 @@
 SRC_FOLDERS			+=	src/MainServer \
 						src/GameSatellite \
 						src/GEL2 \
-						src/ServerSatellite/Net \
-						src/ServerSatellite/NetAdapter \
-						src/ServerSatellite/Sat \
+						src/ServerSatellite/Util \
+						src/ServerSatellite/Text \
 						src/GEL/Core \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
