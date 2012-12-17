@@ -8,16 +8,6 @@ SRC_FOLDERS			+=	src/GEL2 src/MainServer \
 						src/ServerSatellite/NetAdapter \
 						src/ServerSatellite/Sat \
 						src/GEL/Core \
-
-#						src/External/Squirrel \
-#						src/External/NVTriStrip \
-#						src/External/cJSON \
-#						src/External/TinyXML \
-#						src/External/PugiXML \
-#						src/External/STB/STB \
-#						src/External/AnimKit/Source \
-#						src/External/AnimKit/Dependencies/vectormath \
-#						src/External/AnimKit/Dependencies/Utils \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/ServerSatellite \

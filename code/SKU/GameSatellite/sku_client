@@ -32,8 +32,11 @@ DEFINES				+=	PRODUCT_SATELLITE PRODUCT_CLIENT \
 LIBRARIES			+=	-lcrypto \
 						-lIphlpapi \
 						-lPsapi \
-# -lIphlpapi = TCP/IP stuff, -lPsapi = Process Info (Memory Usage)
+						-lwinmm \
+# -lIphlpapi = TCP/IP stuff
+# -lPsapi = Process Info (Memory Usage)
 # -lcrypto = md5 hash and base64 encode/decode
+# -lwinmm = timegettime() (GEL::Timer)
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	

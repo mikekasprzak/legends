@@ -1,3 +1,5 @@
+# NOTES: Somebody needs -ldl (dynamic library loading)
+
 # - ------------------------------------------------------------------------ - #
 ifdef USES_SDL2
 # - ------------------------------------------------------------------------ - #
@@ -11,11 +13,11 @@ INCLUDE_FOLDERS		+=
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_SDL2 USES_OPENGL2 \
+DEFINES				+=	USES_SDL2 \
 						NO_STDIO_REDIRECT \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lwinmm -lmingw32 -lSDL2.dll \
+LIBRARIES			+=	-lSDL2.dll \
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	/usr/local/bin/SDL2.dll \
@@ -29,6 +31,10 @@ include Target/Common/common_opengl2
 else
 include Target/Common/common_opengl1
 endif
+# - ------------------------------------------------------------------------ - #
+# TODO: Use sdl2-config
+#CFLAGS				+=	$(shell sdl2-config --cflags)
+#CPPFLAGS			+=	$(shell sdl2-config --cflags)
 # - ------------------------------------------------------------------------ - #
 endif # USES_SDL2 #
 # - ------------------------------------------------------------------------ - #
@@ -71,10 +77,10 @@ endif # USES_SDLMIXER #
 ifdef USES_IRRKLANG
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/External/irrKlang/include
+SRC_FOLDERS			+=	
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
-INCLUDE_FOLDERS		+=	
+INCLUDE_FOLDERS		+=	src/External/irrKlang/include
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
@@ -92,6 +98,42 @@ COPY_FILES			+=	src/External/irrKlang/bin/win32-gcc/irrKlang.dll \
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 endif # USES_IRRKLANG #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_CURSES
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_CURSES
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+ifdef USES_WINDOWS
+INCLUDE_FOLDERS		+=	src/External/PDCurses/include
+LIBRARIES			+=	src/External/PDCurses/pdcurses.lib
+else # !USES_WINDOWS #
+# apt-get install ncurses-dev
+LIBRARIES			+=	-lncurses
+endif # USES_WINDOWS #
+# - ------------------------------------------------------------------------ - #
+endif # USES_CURSES #
 # - ------------------------------------------------------------------------ - #
 
 
@@ -115,6 +157,14 @@ COPY_FILES			+=
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+ifdef USES_WINDOWS
+else # USES_WINDOWS #
+ifdef USES_BSD
+LIBRARIES			+=	-lpthread
+else # USES_BSD #
+endif # USES_BSD #
+endif # USES_WINDOWS #
 # - ------------------------------------------------------------------------ - #
 endif # USES_TINYTHREAD #
 # - ------------------------------------------------------------------------ - #
@@ -142,6 +192,108 @@ COPY_FILES			+=
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 endif # USES_CJSON #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_TINYXML
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/TinyXML \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_TINYXML
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_TINYXML #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_SQUIRREL
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/Squirrel \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_SQUIRREL
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_SQUIRREL #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_NVTRISTRIP
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/NVTriStrip \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_NVTRISTRIP
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_NVTRISTRIP #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_ANIMKIT
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/AnimKit/Source \
+						src/External/AnimKit/Dependencies/vectormath \
+						src/External/AnimKit/Dependencies/Utils \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_ANIMKIT
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_ANIMKIT #
 # - ------------------------------------------------------------------------ - #
 
 
@@ -239,7 +391,7 @@ INCLUDE_FOLDERS		+=	src/External/ENet/include \
 DEFINES				+=	USES_ENET
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lenet
+LIBRARIES			+=	
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
@@ -248,7 +400,9 @@ COPY_FILES			+=
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
 ifdef USES_WINDOWS
-LIBRARIES			+=	-lws2_32 -lwinmm
+LIBRARIES			+=	-lenet -lws2_32 -lwinmm
+else # USES_WINDOWS #
+LIBRARIES			+=	/usr/local/lib/libenet.a
 endif # USES_WINDOWS #
 # - ------------------------------------------------------------------------ - #
 endif # USES_ENET #
