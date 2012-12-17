@@ -38,10 +38,21 @@ LIBRARIES			+=	-lcrypto \
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
+#ifdef USES_DESKTOP			# Disabled for now #
+# - ------------------------------------------------------------------------ - #
 # Game Specific Library Requesting Defines #
 USES_SDL2			:=	true
 USES_OPENGL2		:=	true
 #USES_SDLMIXER		:=	true
+# TODO: Consoles will need a NON SDL, GL, CURL, ENET way of building. 
+#   The Solution may be to extract USES_DESKTOP from makefile_windows, and make
+#   it in to some sort of Target Specific feature. I.e. Windows is a Desktop OS,
+#   The PS3 is a Console OS, and iOS is a Mobile OS. Console and Mobile might
+#   be considered the same (Ouya). XINPUT/SIXENSE/HIDAPI are DESKTOP protected.
+# - ------------------------------------------------------------------------ - #
+#endif # USES_DESKTOP #		# Disabled for now #
+# - ------------------------------------------------------------------------ - #
+# Game Specific Library Requesting Defines #
 USES_CURL			:=	true
 USES_ENET			:=	true
 USES_CJSON			:=	true

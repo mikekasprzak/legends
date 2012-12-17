@@ -24,8 +24,8 @@ USES_MINGW			:=	true		# Compiler Suite (For completeness) #
 
 
 # - ------------------------------------------------------------------------ - #
-include Target/SDL/common_libraries
+include Target/Common/common_libraries
 # - ------------------------------------------------------------------------ - #
 # Finally, include the standard makefile body #
-include Target/SDL/common_makefile
+include Target/Common/common_makefile
 # - ------------------------------------------------------------------------ - #

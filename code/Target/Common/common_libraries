@@ -25,9 +25,9 @@ OTHER_O_FILES		+=
 # - ------------------------------------------------------------------------ - #
 # The SKU file may say that the game requires OpenGL 2.0 Grade Hardware //
 ifdef USES_OPENGL2
-include Target/SDL/common_opengl2
+include Target/Common/common_opengl2
 else
-include Target/SDL/common_opengl1
+include Target/Common/common_opengl1
 endif
 # - ------------------------------------------------------------------------ - #
 endif # USES_SDL2 #
@@ -36,6 +36,7 @@ endif # USES_SDL2 #
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_SDLMIXER
+ifdef USES_SDL2
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	
@@ -61,6 +62,7 @@ COPY_FILES			+=	/usr/local/bin/SDL2_mixer.dll \
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
+endif # USES_SDL2 #
 endif # USES_SDLMIXER #
 # - ------------------------------------------------------------------------ - #
 
@@ -145,6 +147,7 @@ endif # USES_CJSON #
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_ASSIMP
+ifdef USES_WINDOWS
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	
@@ -164,6 +167,7 @@ COPY_FILES			+=	src/External/Assimp/mingw32/libassimp.dll \
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
+endif # USES_WINDOWS #
 endif # USES_ASSIMP #
 # - ------------------------------------------------------------------------ - #
 
