@@ -1,4 +1,6 @@
 # - ------------------------------------------------------------------------ - #
+# make other target=clean
+# - ------------------------------------------------------------------------ - #
 BUILD_MAKEFILE		:=	Target/makefile
 # - ------------------------------------------------------------------------ - #
 __PROJECT_FILE__	:=	Config/.project
@@ -30,8 +32,8 @@ run clean cleanmain info upload package install cache startcache:
 # - ------------------------------------------------------------------------ - #
 all: $(addprefix obj/,$(SKU_ALL_FILE))
 # - ------------------------------------------------------------------------ - #
-other: $(addprefix obj/,$(filter-out $(SKU_FILE),$(SKU_ALL_FILE)))
+other: $(addprefix obj/,$(filter-out $(notdir $(SKU_FILE)),$(SKU_ALL_FILE)))
 # - ------------------------------------------------------------------------ - #
 obj/%:
-	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS) SKU_FILE=SKU/$(PROJECT_FILE)/$*
+	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS) SKU_FILE=SKU/$(PROJECT_FILE)/$* $(TARGET) $(target)
 # - ------------------------------------------------------------------------ - #
