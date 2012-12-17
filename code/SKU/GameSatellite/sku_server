@@ -2,8 +2,9 @@
 # NOTE: Only reference files here suitable for GAME scope (no platform) #
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/GEL2 src/MainServer \
+SRC_FOLDERS			+=	src/MainServer \
 						src/GameSatellite \
+						src/GEL2 \
 						src/ServerSatellite/Net \
 						src/ServerSatellite/NetAdapter \
 						src/ServerSatellite/Sat \

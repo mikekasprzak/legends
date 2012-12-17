@@ -5,9 +5,6 @@
 SRC_FOLDERS			+=	src/MainClient \
 						src/GameSatellite \
 						src/GEL2 \
-						src/ServerSatellite/Net \
-						src/ServerSatellite/NetAdapter \
-						src/ServerSatellite/Sat \
 						src/GEL/Core \
 						src/GEL/Debug \
 						src/GEL/System \
@@ -16,8 +13,7 @@ SRC_FOLDERS			+=	src/MainClient \
 						src/GEL/Graphics/Texture \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
-INCLUDE_FOLDERS		+=	src/ServerSatellite \
-						src/GEL \
+INCLUDE_FOLDERS		+=	src/GEL \
 						src/External \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #

@@ -4,7 +4,7 @@
 ifdef USES_SDL2
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/MainSDL
+SRC_FOLDERS			+=	
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	
@@ -14,13 +14,12 @@ IGNORE_LIST			+=
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
 DEFINES				+=	USES_SDL2 \
-						NO_STDIO_REDIRECT \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lSDL2.dll \
+LIBRARIES			+=	
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
-COPY_FILES			+=	/usr/local/bin/SDL2.dll \
+COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
@@ -35,6 +34,16 @@ endif
 # TODO: Use sdl2-config
 #CFLAGS				+=	$(shell sdl2-config --cflags)
 #CPPFLAGS			+=	$(shell sdl2-config --cflags)
+# - ------------------------------------------------------------------------ - #
+ifdef USES_WINDOWS
+SRC_FOLDERS			+=	src/MainSDL
+DEFINES				+=	NO_STDIO_REDIRECT
+LIBRARIES			+=	-lSDL2.dll
+COPY_FILES			+=	/usr/local/bin/SDL2.dll
+else # USES_WINDOWS #
+LIBRARIES			+=	$(shell sdl2-config --libs)
+COPY_FILES			+=	/usr/local/lib/libSDL2-2.0.so.0
+endif # USES_WINDOWS #
 # - ------------------------------------------------------------------------ - #
 endif # USES_SDL2 #
 # - ------------------------------------------------------------------------ - #
@@ -57,16 +66,24 @@ IGNORE_LIST			+=
 DEFINES				+=	USES_SDLMIXER
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lSDL2_mixer.dll
+LIBRARIES			+=	
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
-COPY_FILES			+=	/usr/local/bin/SDL2_mixer.dll \
-						/usr/local/bin/libvorbis-*.dll \
-						/usr/local/bin/libvorbisfile-*.dll \
-						/usr/local/bin/libogg-*.dll \
+COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+ifdef USES_WINDOWS
+LIBRARIES			+=	-lSDL2_mixer.dll
+COPY_FILES			+=	/usr/local/bin/SDL2_mixer.dll \
+						/usr/local/bin/libvorbis-*.dll \
+						/usr/local/bin/libvorbisfile-*.dll \
+						/usr/local/bin/libogg-*.dll
+else # USES_WINDOWS #
+LIBRARIES			+=	-lSDL2_mixer
+COPY_FILES			+=	/usr/local/lib/libSDL2_mixer-1.2.so.0
+endif # USES_WINDOWS #
 # - ------------------------------------------------------------------------ - #
 endif # USES_SDL2 #
 endif # USES_SDLMIXER #
@@ -75,6 +92,7 @@ endif # USES_SDLMIXER #
 
 # - ------------------------------------------------------------------------ - #
 ifdef USES_IRRKLANG
+ifdef USES_WINDOWS
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	
@@ -97,6 +115,7 @@ COPY_FILES			+=	src/External/irrKlang/bin/win32-gcc/irrKlang.dll \
 # Other Object files you want to link against (i.e. an embedded Windows Icon) #
 OTHER_O_FILES		+=	
 # - ------------------------------------------------------------------------ - #
+endif # USES_WINDOWS #
 endif # USES_IRRKLANG #
 # - ------------------------------------------------------------------------ - #
 
@@ -127,11 +146,15 @@ OTHER_O_FILES		+=
 # - ------------------------------------------------------------------------ - #
 ifdef USES_WINDOWS
 INCLUDE_FOLDERS		+=	src/External/PDCurses/include
+DEFINES				+=	USES_PDCURSES
 LIBRARIES			+=	src/External/PDCurses/pdcurses.lib
+COPY_FILES			+=	src/External/PDCurses/pdcurses.dll
 else # !USES_WINDOWS #
-# apt-get install ncurses-dev
+DEFINES				+=	USES_NCURSES
 LIBRARIES			+=	-lncurses
 endif # USES_WINDOWS #
+# - ------------------------------------------------------------------------ - #
+# apt-get install ncurses-dev
 # - ------------------------------------------------------------------------ - #
 endif # USES_CURSES #
 # - ------------------------------------------------------------------------ - #
