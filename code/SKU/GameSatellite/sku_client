@@ -2,8 +2,9 @@
 # NOTE: Only reference files here suitable for GAME scope (no platform) #
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
-SRC_FOLDERS			+=	src/GEL2 src/MainClient \
+SRC_FOLDERS			+=	src/MainClient \
 						src/GameSatellite \
+						src/GEL2 \
 						src/ServerSatellite/Net \
 						src/ServerSatellite/NetAdapter \
 						src/ServerSatellite/Sat \
@@ -37,7 +38,7 @@ LIBRARIES			+=	-lcrypto \
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
-# Game Specific Target Influencing Defines #
+# Game Specific Library Requesting Defines #
 USES_SDL2			:=	true
 USES_OPENGL2		:=	true
 #USES_SDLMIXER		:=	true
@@ -45,5 +46,14 @@ USES_CURL			:=	true
 USES_ENET			:=	true
 USES_CJSON			:=	true
 USES_TINYTHREAD		:=	true
+# - ------------------------------------------------------------------------ - #
+# Game Specific Platform Specific Library Requesting Defines #
+# - ------------------------------------------------------------------------ - #
+ifdef USES_WINDOWS
+# - ------------------------------------------------------------------------ - #
 USES_XINPUT			:=	true
+#USES_SIXENSE		:=	true
+#USES_HIDAPI		:=	true
+# - ------------------------------------------------------------------------ - #
+endif # USES_WINDOWS #
 # - ------------------------------------------------------------------------ - #

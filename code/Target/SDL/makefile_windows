@@ -1,5 +1,29 @@
 # - ------------------------------------------------------------------------ - #
-include Target/SDL/windows_common
+CPUFLAGS			:=	-msse2 -mmmx -mfpmath=sse -ftree-vectorize
+# - ------------------------------------------------------------------------ - #
+# Compiler and Linker Flags (specific to this target) #
+CFLAGS				+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
+CPPFLAGS			+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
+LDFLAGS				+=	-L /usr/local/lib -L /usr/local/ssl/lib -static-libgcc -static-libstdc++ -static
+# - ------------------------------------------------------------------------ - #
+DEFINES				+=	USES_WINDOWS USES_MINGW
+# - ------------------------------------------------------------------------ - #
+# Release Build Only #
+ifdef NDEBUG
+LDFLAGS				+=	-mwindows
+endif
+# - ------------------------------------------------------------------------ - #
+# File extension for the Binary (.exe on Windows, .i686 .x86_64 on Linux) #
+BINARY_SUFFIX		:=	.exe
+# - ------------------------------------------------------------------------ - #
+# Platform Specific Target Influencing Defines #
+USES_WINDOWS		:=	true
+USES_MINGW			:=	true
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+include Target/SDL/common_libraries
 # - ------------------------------------------------------------------------ - #
 # Finally, include the standard makefile body #
 include Target/SDL/common_makefile
