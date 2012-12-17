@@ -4,10 +4,6 @@
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/GEL2 src/MainClient \
 						src/GameSatellite \
-						src/External/TinyThread \
-						src/External/ENet \
-						src/External/cJSON \
-						src/External/STB/STB \
 						src/ServerSatellite/Net \
 						src/ServerSatellite/NetAdapter \
 						src/ServerSatellite/Sat \
@@ -22,7 +18,6 @@ SRC_FOLDERS			+=	src/GEL2 src/MainClient \
 INCLUDE_FOLDERS		+=	src/ServerSatellite \
 						src/GEL \
 						src/External \
-						src/External/ENet/include \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
@@ -33,17 +28,22 @@ DEFINES				+=	PRODUCT_SATELLITE \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	-lcrypto -lenet \
-						-levent \
-						-lwinmm -lIphlpapi -lPsapi \
-						src/External/XInput/lib/XInput.lib \
+LIBRARIES			+=	-lcrypto \
+						-lIphlpapi \
+						-lPsapi \
+# -lIphlpapi = TCP/IP stuff, -lPsapi = Process Info (Memory Usage)
+# -lcrypto = md5 hash and base64 encode/decode
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
 # Game Specific Target Influencing Defines #
-USES_SDL2		:=	true
-USES_OPENGL2	:=	true
-#USES_SDLMIXER	:=	true
-USES_CURL		:=	true
+USES_SDL2			:=	true
+USES_OPENGL2		:=	true
+#USES_SDLMIXER		:=	true
+USES_CURL			:=	true
+USES_ENET			:=	true
+USES_CJSON			:=	true
+USES_TINYTHREAD		:=	true
+USES_XINPUT			:=	true
 # - ------------------------------------------------------------------------ - #
