@@ -4,12 +4,10 @@
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/MainServer \
 						src/GameSatellite \
-						src/ServerSatellite/Util \
-						src/ServerSatellite/Text \
 						src/GEL2 \
-						src/GEL/Core \
 						src/GEL/Debug \
-						src/GEL/System \
+						src/GEL/Core \
+						src/GEL/Math \
 						src/GEL/Timer \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
@@ -26,7 +24,9 @@ DEFINES				+=	PRODUCT_SATELLITE PRODUCT_SERVER \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
-LIBRARIES			+=	
+LIBRARIES			+=	-lIphlpapi \
+						-lPsapi \
+						-lwinmm \
 # - ------------------------------------------------------------------------ - #
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	

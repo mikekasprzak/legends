@@ -5,12 +5,11 @@
 SRC_FOLDERS			+=	src/MainClient \
 						src/GameSatellite \
 						src/GEL2 \
-						src/GEL/Core \
 						src/GEL/Debug \
+						src/GEL/Core \
+						src/GEL/Math \
 						src/GEL/System \
 						src/GEL/Timer \
-						src/GEL/External \
-						src/GEL/Graphics/Texture \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/GEL \
