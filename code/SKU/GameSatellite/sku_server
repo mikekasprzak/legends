@@ -4,10 +4,6 @@
 # Places to pull code and include files from #
 SRC_FOLDERS			+=	src/GEL2 src/MainServer \
 						src/GameSatellite \
-						src/External/TinyThread \
-						src/External/ENet \
-						src/External/cJSON \
-						src/External/STB/STB \
 						src/ServerSatellite/Net \
 						src/ServerSatellite/NetAdapter \
 						src/ServerSatellite/Sat \
@@ -27,17 +23,14 @@ SRC_FOLDERS			+=	src/GEL2 src/MainServer \
 INCLUDE_FOLDERS		+=	src/ServerSatellite \
 						src/GEL \
 						src/External \
-						src/External/ENet/include \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
 IGNORE_LIST			+=	
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	PRODUCT_SATELLITE \
+DEFINES				+=	PRODUCT_SATELLITE PRODUCT_SERVER \
 						USES_GEL2 USES_GEL \
-						CURL_STATICLIB \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
-						USES_CURSES
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #
 LIBRARIES			+=	
@@ -45,7 +38,11 @@ LIBRARIES			+=
 # Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
 COPY_FILES			+=	
 # - ------------------------------------------------------------------------ - #
-# Game Specific Target Influencing Defines #
-USES_MONGOOSE		:=	true
+# Game Specific Library Requesting Defines #
 USES_CURSES			:=	true
+USES_MONGOOSE		:=	true
+USES_CURL			:=	true
+USES_ENET			:=	true
+USES_CJSON			:=	true
+USES_TINYTHREAD		:=	true
 # - ------------------------------------------------------------------------ - #
