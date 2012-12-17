@@ -36,7 +36,7 @@ endif
 #CPPFLAGS			+=	$(shell sdl2-config --cflags)
 # - ------------------------------------------------------------------------ - #
 ifdef USES_WINDOWS
-SRC_FOLDERS			+=	src/MainSDL
+SRC_FOLDERS			+=	src/External/MainSDL
 DEFINES				+=	NO_STDIO_REDIRECT
 LIBRARIES			+=	-lSDL2.dll
 COPY_FILES			+=	/usr/local/bin/SDL2.dll
