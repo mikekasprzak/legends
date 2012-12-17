@@ -11,8 +11,7 @@ SRC_FOLDERS			+=	src/MainServer \
 						src/GEL/Timer \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
-INCLUDE_FOLDERS		+=	src/ServerSatellite \
-						src/GEL \
+INCLUDE_FOLDERS		+=	src/GEL \
 						src/External \
 # - ------------------------------------------------------------------------ - #
 # Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #

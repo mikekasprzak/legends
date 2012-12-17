@@ -1,5 +1,5 @@
 # - ------------------------------------------------------------------------ - #
-include Target/common_tools
+include Target/Common/common_tools
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
@@ -9,7 +9,7 @@ TARGET				:=	$(TARGET_DIR)/$(BINARY_NAME)$(BINARY_SUFFIX)
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
-# Compiler and Linker Flags (NOTE: Optimizations are in Target/common_tools) #
+# Compiler and Linker Flags (NOTE: Optimizations are in common_tools) #
 CFLAGS				+=	-fno-strict-aliasing
 # - ------------------------------------------------------------------------ - #
 CPPFLAGS			+=	--std=gnu++0x -fno-rtti -fno-strict-aliasing	\
