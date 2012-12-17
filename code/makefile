@@ -1,5 +1,5 @@
 # - ------------------------------------------------------------------------ - #
-BUILD_MAKEFILE		:=	Tools/makefile
+BUILD_MAKEFILE		:=	Target/makefile
 # - ------------------------------------------------------------------------ - #
 __PROJECT_FILE__	:=	Config/.project
 __SKU_ALL_FILE__	:=	Config/.sku_all

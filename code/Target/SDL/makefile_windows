@@ -6,7 +6,7 @@ CFLAGS				+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
 CPPFLAGS			+=	-I /usr/local/include -I /usr/local/ssl/include $(CPUFLAGS)
 LDFLAGS				+=	-L /usr/local/lib -L /usr/local/ssl/lib -static-libgcc -static-libstdc++ -static
 # - ------------------------------------------------------------------------ - #
-DEFINES				+=	USES_WINDOWS USES_MINGW
+DEFINES				+=	USES_WINDOWS USES_DESKTOP USES_MINGW
 # - ------------------------------------------------------------------------ - #
 # Release Build Only #
 ifdef NDEBUG
@@ -17,8 +17,9 @@ endif
 BINARY_SUFFIX		:=	.exe
 # - ------------------------------------------------------------------------ - #
 # Platform Specific Target Influencing Defines #
-USES_WINDOWS		:=	true
-USES_MINGW			:=	true
+USES_WINDOWS		:=	true		# OS #
+USES_DESKTOP		:=	true		# OS MODE #
+USES_MINGW			:=	true		# Compiler Suite (For completeness) #
 # - ------------------------------------------------------------------------ - #
 
 

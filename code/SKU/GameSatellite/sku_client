@@ -49,11 +49,11 @@ USES_TINYTHREAD		:=	true
 # - ------------------------------------------------------------------------ - #
 # Game Specific Platform Specific Library Requesting Defines #
 # - ------------------------------------------------------------------------ - #
-ifdef USES_WINDOWS
+ifdef WINDIR 		# Can't use USES_WINDOWS because not defined yet #
 # - ------------------------------------------------------------------------ - #
 USES_XINPUT			:=	true
 #USES_SIXENSE		:=	true
 #USES_HIDAPI		:=	true
 # - ------------------------------------------------------------------------ - #
-endif # USES_WINDOWS #
+endif # WINDIR #
 # - ------------------------------------------------------------------------ - #
