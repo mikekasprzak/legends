@@ -2,7 +2,8 @@
 #ifndef __BOAT_GAME_H__
 #define __BOAT_GAME_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Grid/Grid2D.h>
+#include <System/System.h>
+#include <Grid/Grid2D_Class.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace BOAT {
 // - ------------------------------------------------------------------------------------------ - //
@@ -23,16 +24,24 @@ public:
 // An 8x8 Region of the map. Everything else above and beyond the map itself. //
 class cRegion {
 public:
+	// Things //
+	
+	// Players //
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cMap {
 public:
 	typedef unsigned char tTile;
 
-	cGrid<tTile>		Tile;		// Must be separate from other data, because it's bytes //
-	cGrid<cTileInfo> 	TileInfo;
-	cGrid<cRegion>		Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
-	
+	cGrid2D<tTile>		Tile;		// Must be separate from other data, because it's bytes //
+	cGrid2D<cTileInfo> 	TileInfo;
+	cGrid2D<cRegion>	Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
+
+public:
+	cMap()
+	{	
+	}
+
 public:
 	const size_t GetWidth() {
 		return Tile.Width();
@@ -44,23 +53,29 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 class cGame {
 public:
-	tModTime BaseModTime;	// Base time added to the current time to get the 
+	tModTime BaseModTime;	// Base time added to the current time. Save this so 
 	cMap Map;
+	
+	// Current Player //
+	// Camera relative current player //
+	// Or instead, make a cGameClient? cGameViewer? cGameObserver? //
+	// Ya, the observer should be separate. A server doesn't need an observer. //
 
 public:
-	cGame : 
+	cGame() : 
 		BaseModTime( 0 )
 	{
 	}
 	
-public:
-	// If called regularly, prevent the game 
-//	inline void FixModTime() {
-//		static LastTime;
-//	}
+	void Step() {
+		
+	}
 	
+public:
+	
+	// This function is good for 34 years of uptime (4 changes per second). Ideally, call once per frame. //
 	inline tModTime GetModTime() const {
-		return BaseModTime + (tModTime)(System::GetTick() / (tick_t)(1000/4));
+		return BaseModTime + (tModTime)(System::GetTick() / (System::tick_t)(1000/4));
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -137,17 +137,19 @@ const char* DoubleTimeToShortString( const double DTime ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-const DWORD _GetTick() {
+// Fixed version of timeGetTime
+// - ------------------------------------------------------------------------------------------ - //
+inline const DWORD timeGetTime32() {
 	// WARNING: Wraps every 49 days! Time in MS since the computer started! //
 	return timeGetTime();
 }
 // - ------------------------------------------------------------------------------------------ - //
-// tick_t defined inside header //
+// tick_t defined inside header (System_Core_Win32.h) //
 // - ------------------------------------------------------------------------------------------ - //
-const tick_t GetTick() {
+const tick_t timeGetTime64() {
 	static tick_t TickBase = 0ULL;
-	static DWORD LastTick = _GetTick();
-	DWORD ThisTick = _GetTick();
+	static DWORD LastTick = timeGetTime32();
+	DWORD ThisTick = timeGetTime32();
 	if ( ThisTick < LastTick ) {
 		TickBase += 1ULL << 32;
 	}
@@ -155,20 +157,27 @@ const tick_t GetTick() {
 	return TickBase + (tick_t)ThisTick;
 }
 // - ------------------------------------------------------------------------------------------ - //
-// Returns Time Difference in 1000ths of a Second //
-const int GetTickDiff( const tick_t Start, const tick_t End ) {
-	return (int)(End - Start);
-}
-// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-tick_t FirstTick = 0ULL;
+extern tick_t FirstTick;
+tick_t FirstTick = 0ULL;	// The value of the very first tick, to give us better uptime figures //
 // - ------------------------------------------------------------------------------------------ - //
 void TimeInit() {
 	FirstTick = GetTick();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void TimeExit() {
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+const tick_t GetTick() {
+	return timeGetTime64() - FirstTick;
+}
+// - ------------------------------------------------------------------------------------------ - //
+// Returns Time Difference in 1000ths of a Second //
+const int GetTickDiff( const tick_t Start, const tick_t End ) {
+	return (int)(End - Start);
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //

@@ -23,6 +23,11 @@ const size_t GetMemoryUsage();
 // Timer Specific Features //
 void TimeInit();			// Called from Init() //
 void TimeExit();			// Called from Exit() //
+
+// 64bit Timer Code, figures in 1000ths of a Second //
+typedef unsigned long long		tick_t;
+const tick_t GetTick();
+const int GetTickDiff( const tick_t Start, const tick_t End );
 // - ------------------------------------------------------------------------------------------ - //
 // Graphics API Specific Features //
 void GraphicsAPIInit();		// Called from Init() //
@@ -34,7 +39,7 @@ extern int StencilBits;
 extern int MaxTextureSize;	
 
 enum eGPU {
-	GPU_NONE = 0,
+	GPU_NONE = 0,			// No GPU, or Not Applicable //
 	GPU_INTEL,				// GMA/GMA HD //
 	GPU_NVIDIA,				// GeForce/Quadro/Tegra //
 	GPU_ATI,				// Radeon/FireGL //
