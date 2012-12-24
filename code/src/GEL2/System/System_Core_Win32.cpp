@@ -171,16 +171,38 @@ const char* DoubleTimeToShortString( const double DTime ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+const DWORD _GetTick() {
+	// WARNING: Wraps every 49 days! Time in MS since the computer started! //
+	return timeGetTime();
+}
+// - ------------------------------------------------------------------------------------------ - //
 // tick_t defined inside header //
 // - ------------------------------------------------------------------------------------------ - //
 const tick_t GetTick() {
-	// WARNING: Wraps every 49 days! //
-	return timeGetTime();
+	static tick_t TickBase = 0ULL;
+	static DWORD LastTick = _GetTick();
+	DWORD ThisTick = _GetTick();
+	if ( ThisTick < LastTick ) {
+		TickBase += 1ULL << 32;
+	}
+	LastTick = ThisTick;
+	return TickBase + (tick_t)ThisTick;
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Returns Time Difference in 1000ths of a Second //
 const int GetTickDiff( const tick_t Start, const tick_t End ) {
 	return (int)(End - Start);
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+tick_t FirstTick = 0ULL;
+// - ------------------------------------------------------------------------------------------ - //
+void TimeInit() {
+	FirstTick = GetTick();
+}
+// - ------------------------------------------------------------------------------------------ - //
+void TimeExit() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //

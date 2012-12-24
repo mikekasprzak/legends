@@ -9,6 +9,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace System {
 // - ------------------------------------------------------------------------------------------ - //
+// Defined inside System_Core.h //
+//void TimeInit();
+//void TimeExit();
+// - ------------------------------------------------------------------------------------------ - //
 // NOTE: May not be whole integer numbers per tick. clock_t preferred for math. //
 const time_t GetTime();
 const char* GetTimeString();
@@ -28,12 +32,18 @@ const char* GetClockDiffShortString( const clock_t Start, const clock_t End );
 const char* DoubleTimeToString( const double DTime );
 const char* DoubleTimeToShortString( const double DTime );
 // - ------------------------------------------------------------------------------------------ - //
-typedef DWORD tick_t;	// Windows, so tick_t is a DWORD //
+// TODO: Move this to System_Core.h //
+typedef unsigned long long int tick_t;	// On Windows, not a DWORD. I fix the DWORD bug. //
 
 const tick_t GetTick();
 const int GetTickDiff( const tick_t Start, const tick_t End );
+
+inline const tick_t GetFirstTick() {
+	extern tick_t FirstTick;
+	return FirstTick;
+}
 // - ------------------------------------------------------------------------------------------ - //
-};
+}; // namespace System //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // USES_WINDOWS //
 // - ------------------------------------------------------------------------------------------ - //

@@ -11,6 +11,7 @@ extern Signal GainFocus;
 extern Signal LoseFocus;
 
 void Init();
+void Exit();				// NOTE: This doesn't need to be called //
 
 const char* GetUserName();
 const char* GetComputerName();
@@ -19,8 +20,13 @@ const char* GetEnv( const char* Var );
 
 const size_t GetMemoryUsage();
 // - ------------------------------------------------------------------------------------------ - //
+// Timer Specific Features //
+void TimeInit();			// Called from Init() //
+void TimeExit();			// Called from Exit() //
+// - ------------------------------------------------------------------------------------------ - //
 // Graphics API Specific Features //
 void GraphicsAPIInit();		// Called from Init() //
+void GraphicsAPIExit();		// Called from Exit() //
 
 // Set inside GraphicsAPIInit //
 extern int DepthBits;
