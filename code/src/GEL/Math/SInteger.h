@@ -1,8 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-// Integer //
+// Short Integer //
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Geometry_Integer_H__
-#define __Geometry_Integer_H__
+#ifndef __Geometry_SInteger_H__
+#define __Geometry_SInteger_H__
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Move Constructor (C++11), INT_MAX, MAX_VALUE (+), MIN_VALUE (-)
 // - ------------------------------------------------------------------------------------------ - //
@@ -19,67 +19,67 @@
 // This set is used for straight duplicate overloading of types, such as the float/Real wrapper //
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLEQUALS_OPERATOR( _OP_ ) \
-	inline const Integer& operator _OP_ ( const Integer& _Vs ) { \
+	inline const SInteger& operator _OP_ ( const SInteger& _Vs ) { \
 		Value _OP_ _Vs.Value; \
 		return *this; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLSYMBOLPREFIX_OPERATOR( _OP_ ) \
-	inline const Integer& operator _OP_ () { \
+	inline const SInteger& operator _OP_ () { \
 		_OP_ Value; \
 		return *this; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( _OP_ ) \
-	inline const Integer operator _OP_ ( int ) { \
+	inline const SInteger operator _OP_ ( int ) { \
 		return Value _OP_; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_TEST_OPERATOR( _OP_ ) \
-	inline const bool operator _OP_ ( const Integer& _Vs ) const { \
+	inline const bool operator _OP_ ( const SInteger& _Vs ) const { \
 		return Value _OP_ _Vs.Value; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOL_OPERATOR( _OP_ ) \
-	inline const Integer operator _OP_ ( const Integer& _Vs ) const { \
+	inline const SInteger operator _OP_ ( const SInteger& _Vs ) const { \
 		return Value _OP_ _Vs.Value; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_TYPEA_SYMBOL_B_OPERATOR( _TYPE_, _OP_ ) \
-	inline const _TYPE_ operator _OP_ ( const _TYPE_& A, const Integer& B ) { \
+	inline const _TYPE_ operator _OP_ ( const _TYPE_& A, const SInteger& B ) { \
 		return A _OP_ B.Value; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_A_SYMBOL_TYPEB_OPERATOR( _TYPE_, _OP_ ) \
-	inline const _TYPE_ operator _OP_ ( const Integer& A, const _TYPE_& B ) { \
+	inline const _TYPE_ operator _OP_ ( const SInteger& A, const _TYPE_& B ) { \
 		return A.Value _OP_ B; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_TEST_TYPEA_SYMBOL_B_OPERATOR( _TYPE_, _OP_ ) \
-	inline const bool operator _OP_ ( const _TYPE_& A, const Integer& B ) { \
+	inline const bool operator _OP_ ( const _TYPE_& A, const SInteger& B ) { \
 		return A _OP_ B.Value; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( _TYPE_, _OP_ ) \
-	inline const bool operator _OP_ ( const Integer& A, const _TYPE_& B ) { \
+	inline const bool operator _OP_ ( const SInteger& A, const _TYPE_& B ) { \
 		return A.Value _OP_ B; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-class Integer {
+class SInteger {
 public:
-	typedef int IntType;
+	typedef short IntType;
 	IntType Value;
 
 public:
-	inline Integer() :
+	inline SInteger() :
 		Value( 0 )
 	{
 	}
 
-	inline Integer( const IntType _Value ) :
+	inline SInteger( const IntType _Value ) :
 		Value( _Value )
 	{
 	}
@@ -174,8 +174,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
-	inline const Integer NormalizeRet() {
-		Integer Temp( *this );
+	inline const SInteger NormalizeRet() {
+		SInteger Temp( *this );
 		if ( Value > 0 )
 			Value = 1;
 		else if ( Value < 0 ) {
@@ -186,7 +186,7 @@ public:
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation of Normalize that only returns the normal //
-	inline const Integer Normal() const {
+	inline const SInteger Normal() const {
 		if ( Value > 0 )
 			return 1;
 		else if ( Value < 0 )
@@ -195,17 +195,17 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The length of a vector //
-	inline const Integer Magnitude() const {
+	inline const SInteger Magnitude() const {
 		return Abs();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The squared length of a vector //
-	inline const Integer MagnitudeSquared() const {
+	inline const SInteger MagnitudeSquared() const {
 		return Value * Value;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The sum of all absolute value parts //
-	inline const Integer Manhattan() const {
+	inline const SInteger Manhattan() const {
 		return Abs();
 	}
 
@@ -213,27 +213,27 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Limiting Functions: Min = take smallest.  Max = take biggest. //
 	// - -------------------------------------------------------------------------------------- - //
-	inline Integer Min( const Integer& _Vs ) const {
-		Integer Number = *this;
+	inline SInteger Min( const SInteger& _Vs ) const {
+		SInteger Number = *this;
 		if ( Number > _Vs )
 			return _Vs;
 		return Number;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Integer Max( const Integer& _Vs ) const {
-		Integer Number = *this;
+	inline SInteger Max( const SInteger& _Vs ) const {
+		SInteger Number = *this;
 		if ( Number < _Vs )
 			return _Vs;
 		return Number;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Integer& MinClamp( const Integer& _Vs ) {
+	inline SInteger& MinClamp( const SInteger& _Vs ) {
 		if ( *this > _Vs )
 			*this = _Vs;
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Integer& MaxClamp( const Integer& _Vs ) {
+	inline SInteger& MaxClamp( const SInteger& _Vs ) {
 		if ( *this < _Vs )
 			*this = _Vs;
 		return *this;
@@ -243,8 +243,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Range Testing: Inclusive Bottom and Top //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Integer Range( const Integer& _Min, const Integer& _Max ) const {
-		Integer Number = *this;
+	inline const SInteger Range( const SInteger& _Min, const SInteger& _Max ) const {
+		SInteger Number = *this;
 		// Min //
 		if ( Number < _Min )
 			return _Min;
@@ -254,7 +254,7 @@ public:
 		return Number;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Integer& RangeClamp( const Integer& _Min, const Integer& _Max ) {
+	inline SInteger& RangeClamp( const SInteger& _Min, const SInteger& _Max ) {
 		// Min //
 		if ( *this < _Min )
 			*this = _Min;
@@ -264,7 +264,7 @@ public:
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool InRange( const Integer& _Min, const Integer& _Max ) const {
+	inline const bool InRange( const SInteger& _Min, const SInteger& _Max ) const {
 		// Min //
 		if ( *this < _Min )
 			return false;
@@ -278,7 +278,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Specific Functions that apply to this type //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Integer Abs() const {
+	inline const SInteger Abs() const {
 		if ( Value < 0 )
 			return -Value;
 		else
@@ -286,7 +286,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Root //
-	inline const Integer Sqrt() const {
+	inline const SInteger Sqrt() const {
 		if ( !IsZero() )
 			return (int)sqrt( (float)Value );
 		else
@@ -294,7 +294,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Root //
-	inline const Integer Sqrt_() const {
+	inline const SInteger Sqrt_() const {
 		return (int)sqrt( (float)Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -304,12 +304,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
 	inline const bool IsZeroOrLess() const {
-		return Value < Integer::SmallestUnit;
+		return Value < SInteger::SmallestUnit;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool Is( const Integer& _Vs ) const {
+	inline const bool Is( const SInteger& _Vs ) const {
 		return Value == _Vs.Value;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -418,5 +418,5 @@ OVERLOAD_TEST_A_SYMBOL_TYPEB_OPERATOR( int, != );
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Geometry_Integer_H__ //
+#endif // __Geometry_SInteger_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -7,6 +7,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game_Player.h"
 // - ------------------------------------------------------------------------------------------ - //
+// A known limitation of this game: Replicate the entire world map on both client and server. //
+//   Thus Max Level Size Should be 4096x4096 == 16,777,216 * 5 == 83,886,080 (80 MB) //
+//   Well, at least for now anyway. One could eventually add a subsection feature. X,Y,W,H of the //
+//   real map that gets pushed around along with all the map data as you travel the world. //
+//   A full XYWH is stored with the map (0,0,W,H) to compare against. //
+// - ------------------------------------------------------------------------------------------ - //
 namespace BOAT {
 // - ------------------------------------------------------------------------------------------ - //
 typedef unsigned int tModTime;
