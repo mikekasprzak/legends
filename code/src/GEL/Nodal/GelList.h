@@ -26,17 +26,15 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 template< class T >
 class GelList {
-	typedef GelListNode<T>* tNode;
+	typedef GelListNode<T> tNode;
 	
-	GelListNode<T>* First;
-	GelListNode<T>* Last;
-	GelListNode<T> End;			// Not a Pointer. Actually Instanced. //
+	tNode* First;
+	tNode End;			// Not a Pointer. Actually Instanced. //
 	
 	size_t Count;
 public:
 	inline GelList() :
 		First( &End ),
-		Last( &End ),
 		Count( 0 )
 	{
 		End.Prev = &End;
@@ -44,7 +42,7 @@ public:
 	}
 	
 	inline ~GelList() {
-		tNode Node = Front();
+		tNode* Node = Front();
 		while ( Node != Back() ) {
 			Node = Node->Next;
 			delete Node->Prev;
@@ -53,7 +51,7 @@ public:
 	
 	void Logs() {
 		Log( "Front: %x  Back: %x  Size: %i", Front(), Back(), Size() );
-		tNode Node = Front();
+		tNode* Node = Front();
 		while ( Node != Back() ) {
 			Node = Node->Next;
 			Log( "* %x -- %i", Node->Prev, Node->Prev->Data );
@@ -66,23 +64,23 @@ public:
 	}
 	
 public:
-	inline GelListNode<T>* Front() {
+	inline tNode* Front() {
 		return First;
 	}
-	inline GelListNode<T>* Back() {
+	inline tNode* Back() {
 		return &End;
 	}
 
 	inline void PushFront( const T& _Data ) {
-		GelListNode<T>* Node = new GelListNode<T>( _Data );
+		tNode* Node = new tNode( _Data );
 		Node->Next = First;
 		Node->Prev = &End;
 		
 		First = Node;
 
 		// If the Last node is the End node (i.e. an empty list) //
-		if ( Last == &End ) {
-			Last = Node;
+		if ( End.Prev == &End ) {
+			End.Prev = Node;
 		}
 
 		Node->Prev->Next = Node;
@@ -92,11 +90,11 @@ public:
 	}
 	
 	inline void PushBack( const T& _Data ) {
-		GelListNode<T>* Node = new GelListNode<T>( _Data );
+		tNode* Node = new tNode( _Data );
 		Node->Next = &End;
-		Node->Prev = Last;
+		Node->Prev = End.Prev;
 		
-		Last = Node;
+		End.Prev = Node;
 		
 		// If the First node is the End node (i.e. an empty list) //
 		if ( First == &End ) {
@@ -110,18 +108,96 @@ public:
 	}
 	
 	inline const T PopFront() {
+		Warning( First == &End, "Empty List!" );
 		
+		T _Data = First->Data;
+		tNode* Node = First;
+		
+		Node->Prev->Next = Node->Next;
+		Node->Next->Prev = Node->Prev;
+		
+		First = Node->Next;
+		
+		// If the First node is the End (i.e. an empty list) //
+		if ( First == &End ) {
+			End.Prev = &End;
+		}
+		
+		delete Node;
+		Count--;
+		return _Data;
 	}
 	
 	inline const T PopBack() {
+		Warning( First == &End, "Empty List!" );
 		
+		T _Data = End.Prev->Data;
+		tNode* Node = End.Prev;
+				
+		Node->Prev->Next = Node->Next;
+		Node->Next->Prev = Node->Prev;
+		
+		End.Prev = Node->Prev;
+		
+		// If the Prior node is the End (i.e. an empty list) //
+		if ( End.Prev == &End ) {
+			First = &End;
+		}
+		
+		delete Node;
+		Count--;
+		return _Data;		
 	}
 	
-//	inline void Insert( ) {	
-//	}
-//	
-//	inline void Remove( ) {
-//	}
+	// DestNode should be part of this list //
+	inline void Insert( T _Data, tNode* DestNode ) {
+		tNode* Node = new tNode( _Data );
+		Insert( Node, DestNode );
+	}
+	
+	// Should not be used on 2 seperate lists (use Move instead) //
+	inline void Insert( tNode* SrcNode, tNode* DestNode ) {
+		SrcNode->Prev = DestNode->Prev;
+		SrcNode->Next = DestNode;
+		DestNode->Prev->Next = SrcNode;
+		DestNode->Prev = SrcNode;
+		
+		if ( First == DestNode ) {
+			First = SrcNode;
+		}
+		if ( DestNode == &End ) {
+			End.Prev = SrcNode;
+		}
+		
+		Count++;
+	}
+	
+	inline const T _Remove( tNode* Node ) {
+		Warning( Node == &End, "Cannot Remove End!" );
+		
+		Node->Prev->Next = Node->Next;
+		Node->Next->Prev = Node->Prev;
+		
+		if ( First == Node ) {
+			First = Node->Next;
+		}
+		if ( End.Prev == Node ) {
+			End.Prev = Node->Prev;
+		}	
+			
+		Count--;
+		return Node->Data;
+	}
+	inline const T Remove( tNode* Node ) {
+		T Ret = _Remove( Node );	
+		delete Node;
+		return Ret;
+	}
+	
+	inline void Move( tNode* SrcNode, GelList* Dest, tNode* DestNode ) {
+		_Remove( SrcNode );
+		Dest->Insert( SrcNode, DestNode );
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Library_Nodal_GelList_H__ //

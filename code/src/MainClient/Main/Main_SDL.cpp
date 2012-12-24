@@ -178,10 +178,25 @@ int main( int argc, char* argv[] ) {
 	
 	{
 		GelList<int> MyList;
+		MyList.Insert( 11, MyList.Front() );
+		MyList.Insert( 12, MyList.Front()->Next );
+		MyList.Insert( 10, MyList.Back() );
+		MyList.Insert( 11, MyList.Back() );
+//		MyList.Insert( 12, MyList.Back()->Prev );
+//		MyList.Insert( 15, MyList.Front() );
+		Log( "NOM: %i", MyList.Remove( MyList.Front()->Next ) );
+		
 		MyList.PushFront( 13 );
 		MyList.PushBack( 20 );
 		MyList.PushBack( 23 );
 		MyList.PushFront( 10 );
+//		Log( "NOM: %i", MyList.PopFront() );
+//		Log( "NOM: %i", MyList.PopFront() );
+		Log( "NOM: %i", MyList.PopBack() );
+		Log( "NOM: %i", MyList.PopBack() );
+		Log( "NOM: %i", MyList.PopBack() );
+		Log( "NOM: %i", MyList.PopBack() );
+//		MyList.PushBack( 55 );
 		MyList.Logs();
 	}
 
