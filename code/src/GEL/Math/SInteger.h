@@ -4,7 +4,7 @@
 #ifndef __Geometry_SInteger_H__
 #define __Geometry_SInteger_H__
 // - ------------------------------------------------------------------------------------------ - //
-// TODO: Move Constructor (C++11), INT_MAX, MAX_VALUE (+), MIN_VALUE (-)
+// TODO: Make this behave as just a storage type. All operations are on Integers.
 // - ------------------------------------------------------------------------------------------ - //
 #include <math.h>
 #ifndef _WIN32_WCE

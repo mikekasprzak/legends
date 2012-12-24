@@ -3,13 +3,13 @@
 #define __BOAT_GAME_PLAYER_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/SVector.h>
-#include <Math/IVector.h>
+//#include <Math/IVector.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace BOAT {
 // - ------------------------------------------------------------------------------------------ - //
 class cPlayer {
 public:
-	IVector2D Pos;
+	SVector2D Pos;
 
 public:
 	cPlayer()
@@ -18,11 +18,6 @@ public:
 
 	cPlayer( const int x, const int y ) :
 		Pos( x, y )
-	{
-	}
-
-	cPlayer( const IVector2D& _Pos ) :
-		Pos( _Pos )
 	{
 	}
 	
