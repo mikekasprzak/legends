@@ -1,9 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BOAT_GAME_H__
-#define __BOAT_GAME_H__
+#ifndef __BOAT_GAME_SPHERE_H__
+#define __BOAT_GAME_SPHERE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/System.h>
 #include <Grid/Grid2D_Class.h>
+// - ------------------------------------------------------------------------------------------ - //
+#include "Game_Player.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace BOAT {
 // - ------------------------------------------------------------------------------------------ - //
@@ -51,7 +53,7 @@ public:
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-class cGame {
+class cSphere {
 public:
 	tModTime BaseModTime;	// Base time added to the current time. Save this, so you have the age of the world. //
 	cMap Map;
@@ -62,13 +64,18 @@ public:
 	// Ya, the observer should be separate. A server doesn't need an observer. //
 
 public:
-	cGame() : 
+	cSphere() : 
 		BaseModTime( 0 )
 	{
 	}
 	
+	// Server Only //
 	void Step() {
+		tModTime ModTime = GetModTime();
 		
+		// Do Stuff //
+		
+		// For all Players //
 	}
 	
 public:
@@ -81,5 +88,5 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace BOAT //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BOAT_GAME_H__ //
+#endif // __BOAT_GAMESPHERE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
