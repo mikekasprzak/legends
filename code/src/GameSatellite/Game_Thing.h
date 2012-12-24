@@ -36,6 +36,8 @@ public:
 	inline const size_t GetRegionPosY() const {
 		return Pos.y & 7; // mod 8 //
 	}
+
+	const size_t GetRegionIndex( const class cMap* Map );
 	
 };
 // - ------------------------------------------------------------------------------------------ - //

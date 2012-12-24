@@ -37,6 +37,8 @@ public:
 		return Pos.y & 7; // mod 8 //
 	}
 	
+	const size_t GetRegionIndex( const class cMap* Map );
+	
 };
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace BOAT //
