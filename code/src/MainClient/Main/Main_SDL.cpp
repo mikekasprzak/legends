@@ -196,8 +196,14 @@ int main( int argc, char* argv[] ) {
 		Log( "NOM: %i", MyList.PopBack() );
 		Log( "NOM: %i", MyList.PopBack() );
 		Log( "NOM: %i", MyList.PopBack() );
-//		MyList.PushBack( 55 );
+		MyList.PushBack( 55 );
+		
+		GelList<int> List2;
+		MyList.Move( MyList.Front()->Next, &List2, List2.Front() );
+		MyList.Move( MyList.Back()->Prev, &List2, List2.Back() );
+
 		MyList.Logs();
+		List2.Logs();
 	}
 
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );

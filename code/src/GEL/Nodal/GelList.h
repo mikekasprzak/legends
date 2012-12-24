@@ -108,7 +108,7 @@ public:
 	}
 	
 	inline const T PopFront() {
-		Warning( First == &End, "Empty List!" );
+		Assert( First == &End, "Empty List!" );
 		
 		T _Data = First->Data;
 		tNode* Node = First;
@@ -129,7 +129,7 @@ public:
 	}
 	
 	inline const T PopBack() {
-		Warning( First == &End, "Empty List!" );
+		Assert( First == &End, "Empty List!" );
 		
 		T _Data = End.Prev->Data;
 		tNode* Node = End.Prev;
@@ -173,7 +173,7 @@ public:
 	}
 	
 	inline const T _Remove( tNode* Node ) {
-		Warning( Node == &End, "Cannot Remove End!" );
+		Assert( Node == &End, "Cannot Remove End!" );
 		
 		Node->Prev->Next = Node->Next;
 		Node->Next->Prev = Node->Prev;
@@ -195,6 +195,7 @@ public:
 	}
 	
 	inline void Move( tNode* SrcNode, GelList* Dest, tNode* DestNode ) {
+		Assert( SrcNode == &End, "Cannot Move End!" );
 		_Remove( SrcNode );
 		Dest->Insert( SrcNode, DestNode );
 	}
