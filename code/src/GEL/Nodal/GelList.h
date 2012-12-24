@@ -108,6 +108,20 @@ public:
 		
 		Count++;
 	}
+	
+	inline const T PopFront() {
+		
+	}
+	
+	inline const T PopBack() {
+		
+	}
+	
+//	inline void Insert( ) {	
+//	}
+//	
+//	inline void Remove( ) {
+//	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Library_Nodal_GelList_H__ //
