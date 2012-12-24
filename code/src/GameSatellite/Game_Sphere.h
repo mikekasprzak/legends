@@ -33,23 +33,22 @@ public:
 // An 8x8 Region of the map. Everything else above and beyond the map itself. //
 class cRegion {
 public:
-	tModTime ModTime;		// Also has a ModTime //
+	tModTime ModTime;			// Also has a ModTime //
 	
-	// Things //
-	
-	// Players //
+	GelList<cThing> Thing;
+	GelList<cPlayer> Player;
 
 public:
-	inline bool HasActive() {
-		return HasActivePlayer() || HasActiveThing();
+	inline bool IsActive() {
+		return HasPlayer() || HasThing();
 	}
 	
-	bool HasActivePlayer() {
-		return false;	
+	bool HasPlayer() {
+		return Player.Size() > 0;	
 	}
 	
-	bool HasActiveThing() {
-		return false;
+	bool HasThing() {
+		return Thing.Size() > 0;
 	}
 
 public:
