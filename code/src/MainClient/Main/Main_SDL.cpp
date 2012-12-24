@@ -166,7 +166,7 @@ void int_func( int Signal ) {
 	exit(1);
 }
 // - ------------------------------------------------------------------------------------------ - //
-
+#include <Nodal/GelList.h>
 // - ------------------------------------------------------------------------------------------ - //
 int main( int argc, char* argv[] ) {
 	LogInit();
@@ -175,6 +175,15 @@ int main( int argc, char* argv[] ) {
 	signal( SIGINT, int_func );
 	
 	// *** //
+	
+	{
+		GelList<int> MyList;
+		MyList.PushFront( 13 );
+		MyList.PushBack( 20 );
+		MyList.PushBack( 23 );
+		MyList.PushFront( 10 );
+		MyList.Logs();
+	}
 
 	Log( "-=======- GEL2 Application Started -- SDL2 Branch -- SKU: %s -=======-", PRODUCT_SKU );
 	Log( "GEL (C) Copyright 2008-2013 Mike Kasprzak and Sykhronics Entertainment" );
