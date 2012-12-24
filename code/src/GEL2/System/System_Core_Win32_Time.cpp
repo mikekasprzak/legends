@@ -4,6 +4,7 @@
 #include <windows.h>	// timeGetTime //
 #include <time.h>		// time, time_t //
 // - ------------------------------------------------------------------------------------------ - //
+#include "System_Core.h"
 #include "System_Core_Win32.h"
 #include <Util/safe_sprintf.h>
 // - ------------------------------------------------------------------------------------------ - //
