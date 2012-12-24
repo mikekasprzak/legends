@@ -53,7 +53,7 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 class cGame {
 public:
-	tModTime BaseModTime;	// Base time added to the current time. Save this so 
+	tModTime BaseModTime;	// Base time added to the current time. Save this, so you have the age of the world. //
 	cMap Map;
 	
 	// Current Player //
