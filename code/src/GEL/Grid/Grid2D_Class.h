@@ -11,7 +11,7 @@ template< class tType = int >
 class cGrid2D {
 	// - -------------------------------------------------------------------------------------- - //
 	// Dimensions //
-	size_t w, h;
+	size_t _w, _h;
 	
 	// Data Array //
 	tType* Data;
@@ -19,47 +19,47 @@ class cGrid2D {
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline cGrid2D() :
-		w( 0 ),
-		h( 0 ),
+		_w( 0 ),
+		_h( 0 ),
 		Data( 0 )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const size_t _w, const size_t _h ) :
-		w( _w ),
-		h( _h ),
+	inline cGrid2D( const size_t w, const size_t h ) :
+		_w( w ),
+		_h( h ),
 		Data( new tType[w*h] )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const size_t _w, const size_t _h, const tType& Type ) :
-		w( _w ),
-		h( _h ),
+	inline cGrid2D( const size_t w, const size_t h, const tType& Type ) :
+		_w( w ),
+		_h( h ),
 		Data( new tType[w*h] )
 	{
 		Fill(Type);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const cGrid2D<tType>& Copy ) :
-		w( Copy.w ),
-		h( Copy.h ),
-		Data( new tType[w*h] )
+	inline cGrid2D( const cGrid2D<tType>& Orig ) :
+		_w( Orig.w ),
+		_h( Orig.h ),
+		Data( new tType[Size()] )
 	{
-		for ( size_t idx = w*h; idx--; ) {
-			Data[ idx ] = Copy.Data[ idx ];
+		for ( size_t idx = Size(); idx--; ) {
+			Data[ idx ] = Orig.Data[ idx ];
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D<tType>& operator = (const cGrid2D<tType>& Copy) {
-		if ( this != &Copy ) {
+	inline cGrid2D<tType>& operator = (const cGrid2D<tType>& Orig) {
+		if ( this != &Orig ) {
 			// If we just happen to be the same total size //
-			if ( Copy.Size() == Size() ) {
-				w = Copy.w;
-				h = Copy.h;
+			if ( Orig.Size() == Size() ) {
+				_w = Orig._w;
+				_h = Orig._h;
 
 				// Copy our data and don't delete it //
-				for ( size_t idx = w*h; idx--; ) {
-					Data[ idx ] = Copy.Data[ idx ];
+				for ( size_t idx = Size(); idx--; ) {
+					Data[ idx ] = Orig.Data[ idx ];
 				}				
 			}
 			// If different size, or no size //
@@ -68,13 +68,13 @@ public:
 				if ( Data )
 					delete [] Data;
 				
-				w = Copy.w;
-				h = Copy.h;
+				_w = Orig._w;
+				_h = Orig._h;
 				
 				// Create and copy the data //
-				Data = new tType[ w*h ];
-				for ( size_t idx = w*h; idx--; ) {
-					Data[ idx ] = Copy.Data[ idx ];
+				Data = new tType[ Size() ];
+				for ( size_t idx = Size(); idx--; ) {
+					Data[ idx ] = Orig.Data[ idx ];
 				}
 			}
 		}
@@ -92,23 +92,23 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int Width() const {
-		return w;
+		return _w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int Height() const {
-		return h;
+		return _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int HalfWidth() const {
-		return w >> 1;
+		return _w >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int HalfHeight() const {
-		return h >> 1;
+		return _h >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
-		return w * h;
+		return _w * _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	static inline void Fill( tType* Dest, const size_t Size, const tType& Value = tType() ) {
@@ -954,7 +954,7 @@ public:
 		int DestStartX;
 
 		// Center the X //
-		if ( NewWidth > w ) {
+		if ( NewWidth > Width() ) {
 			SrcStartX = 0;
 			DestStartX = (NewWidth - Width()) >> 1;
 		}
@@ -968,7 +968,7 @@ public:
 		int DestStartY;
 
 		// Center the Y //
-		if ( NewHeight > h ) {
+		if ( NewHeight > Height() ) {
 			SrcStartY = 0;
 			DestStartY = (NewHeight - Height()) >> 1;
 		}
@@ -979,8 +979,8 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		w = NewWidth;
-		h = NewHeight;
+		_w = NewWidth;
+		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void ResizeAlign( const size_t NewWidth, const size_t NewHeight, const int XAlign, const int YAlign, const tType& InitValue = tType() ) {
@@ -990,7 +990,7 @@ public:
 		// Align the X Axis //
 		if ( XAlign == 0 ) {
 			// Center the X //
-			if ( NewWidth > w ) {
+			if ( NewWidth > Width() ) {
 				SrcStartX = 0;
 				DestStartX = (NewWidth - Width()) >> 1;
 			}
@@ -1006,7 +1006,7 @@ public:
 		}
 		else if ( XAlign > 0 ) {
 			// Right Align the Positions //
-			if ( NewWidth > w ) {
+			if ( NewWidth > Width() ) {
 				SrcStartX = 0;
 				DestStartX = (NewWidth - Width());
 			}
@@ -1023,7 +1023,7 @@ public:
 		// Align the Y Axis //
 		if ( YAlign == 0 ) {
 			// Center the Y //
-			if ( NewHeight > h ) {
+			if ( NewHeight > Height() ) {
 				SrcStartY = 0;
 				DestStartY = (NewHeight - Height()) >> 1;
 			}
@@ -1039,7 +1039,7 @@ public:
 		}
 		else if ( YAlign > 0 ) {
 			// Right Align the Positions //
-			if ( NewHeight > h ) {
+			if ( NewHeight > Height() ) {
 				SrcStartY = 0;
 				DestStartY = (NewHeight - Height());
 			}
@@ -1051,8 +1051,8 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		w = NewWidth;
-		h = NewHeight;
+		_w = NewWidth;
+		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1066,7 +1066,7 @@ public:
 		int DestStart;
 		
 		// Center the Positions //
-		if ( NewWidth > w ) {
+		if ( NewWidth > Width() ) {
 			SrcStart = 0;
 			DestStart = (NewWidth - Width()) >> 1;
 		}
@@ -1076,8 +1076,8 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
-		w = NewWidth;
+		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
+		_w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidthLeft( const size_t NewWidth, const tType& InitValue = tType() ) {
@@ -1090,8 +1090,8 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
-		w = NewWidth;
+		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
+		_w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidthRight( const size_t NewWidth, const tType& InitValue = tType() ) {
@@ -1099,7 +1099,7 @@ public:
 		int DestStart;
 		
 		// Right Align the Positions //
-		if ( NewWidth > w ) {
+		if ( NewWidth > Width() ) {
 			SrcStart = 0;
 			DestStart = (NewWidth - Width());
 		}
@@ -1109,8 +1109,8 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
-		w = NewWidth;
+		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
+		_w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -1125,7 +1125,7 @@ public:
 		int DestStart;
 		
 		// Center the Positions //
-		if ( NewHeight > h ) {
+		if ( NewHeight > Height() ) {
 			SrcStart = 0;
 			DestStart = (NewHeight - Height()) >> 1;
 		}
@@ -1135,8 +1135,8 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		h = NewHeight;
+		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
+		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetHeightTop( const size_t NewHeight, const tType& InitValue = tType() ) {
@@ -1149,8 +1149,8 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		h = NewHeight;
+		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
+		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetHeightBottom( const size_t NewHeight, const tType& InitValue = tType() ) {
@@ -1158,7 +1158,7 @@ public:
 		int DestStart;
 		
 		// Right Align the Positions //
-		if ( NewHeight > h ) {
+		if ( NewHeight > Height() ) {
 			SrcStart = 0;
 			DestStart = (NewHeight - Height());
 		}
@@ -1168,8 +1168,8 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		h = NewHeight;
+		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
+		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 public:
@@ -2113,9 +2113,9 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Exchange the passed value with the tile, returning the value of the tile //
-	inline const tType Swap( int Index, const tType& Value ) {
-		tType Temp = operator[](Index);
-		operator[](Index) = Value;
+	inline const tType Swap( int _Index, const tType& Value ) {
+		tType Temp = operator[](_Index);
+		operator[](_Index) = Value;
 		
 		return Temp;
 	}
@@ -2213,7 +2213,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline void DropDistance( const int OffsetX = 0, const int OffsetY = 1 ) {
+	inline void DoDropDistance( const int OffsetX = 0, const int OffsetY = 1 ) {
 		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
 
 		// The offsets determine our sweeping order, so these are our sweeping order control //
@@ -2331,7 +2331,7 @@ public:
 		return Clip(x,y) == 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool CanIDrop( const int Index, const int OffsetX, const int OffsetY ) const {
+	inline const bool CanIDrop( const int _Index, const int OffsetX, const int OffsetY ) const {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
 
@@ -2339,25 +2339,25 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetY < 0 ) {
-			x = Index;
+			x = _Index;
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = Index;
+			x = _Index;
 			y = 0;
 		}
 		
 		return CanISet(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline tType& Edge( const int Index, const int OffsetX, const int OffsetY ) {
+	inline tType& Edge( const int _Index, const int OffsetX, const int OffsetY ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
 
@@ -2365,25 +2365,25 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetY < 0 ) {
-			x = Index;
+			x = _Index;
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = Index;
+			x = _Index;
 			y = 0;
 		}
 		
 		return Clip(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline tType& EdgeDistance( const int Index, const int OffsetX, const int OffsetY ) {
+	inline tType& EdgeDistance( const int _Index, const int OffsetX, const int OffsetY ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
 
@@ -2391,18 +2391,18 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = ClipY(Index);
+			y = ClipY(_Index);
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = ClipY(Index);
+			y = ClipY(_Index);
 		}
 		else if ( OffsetY < 0 ) {
-			x = ClipX(Index);
+			x = ClipX(_Index);
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = ClipX(Index);
+			x = ClipX(_Index);
 			y = 0;
 		}
 		
@@ -2465,7 +2465,7 @@ public:
 		return IndexClip(x + (OffsetX*Distance), y + (OffsetY*Distance));
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline bool AddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+	inline bool AddDrop( const int _Index, const int OffsetX, const int OffsetY, const tType& Value ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
 
@@ -2473,18 +2473,18 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = Index;
+			y = _Index;
 		}
 		else if ( OffsetY < 0 ) {
-			x = Index;
+			x = _Index;
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = Index;
+			x = _Index;
 			y = 0;
 		}
 		
@@ -2496,7 +2496,7 @@ public:
 		return false;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline bool AddDropDistance( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+	inline bool AddDropDistance( const int _Index, const int OffsetX, const int OffsetY, const tType& Value ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
 
@@ -2504,18 +2504,18 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = ClipY(Index);
+			y = ClipY(_Index);
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = ClipY(Index);
+			y = ClipY(_Index);
 		}
 		else if ( OffsetY < 0 ) {
-			x = ClipX(Index);
+			x = ClipX(_Index);
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = ClipX(Index);
+			x = ClipX(_Index);
 			y = 0;
 		}
 		
@@ -2530,15 +2530,15 @@ public:
 		return false;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline bool AddRockfordDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+	inline bool AddRockfordDrop( const int _Index, const int OffsetX, const int OffsetY, const tType& Value ) {
 		// TODO: The fall part will technically pick the wrong way on the bottom and right //
 		
 		// Desired Tile //
-		if ( !AddDrop( Index, OffsetX, OffsetY, Value ) ) {
+		if ( !AddDrop( _Index, OffsetX, OffsetY, Value ) ) {
 			// Tile to the Left //
-			if ( !AddDrop( Index-1, OffsetX, OffsetY, Value ) ) {
+			if ( !AddDrop( _Index-1, OffsetX, OffsetY, Value ) ) {
 				// Tile to the Right //
-				return AddDrop( Index-1, OffsetX, OffsetY, Value );
+				return AddDrop( _Index-1, OffsetX, OffsetY, Value );
 			}
 		}
 		return true;
