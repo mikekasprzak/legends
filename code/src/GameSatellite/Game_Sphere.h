@@ -26,9 +26,29 @@ public:
 // An 8x8 Region of the map. Everything else above and beyond the map itself. //
 class cRegion {
 public:
+	tModTime ModTime;		// Also has a ModTime //
+	
 	// Things //
 	
 	// Players //
+
+public:
+	inline bool HasActive() {
+		return HasActivePlayer() || HasActiveThing();
+	}
+	
+	bool HasActivePlayer() {
+		return false;	
+	}
+	
+	bool HasActiveThing() {
+		return false;
+	}
+
+public:
+	void Step() {
+		
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cMap {
@@ -42,6 +62,16 @@ public:
 public:
 	cMap()
 	{	
+	}
+	
+	cMap( const size_t Width, const size_t Height ) :
+		Tile( Width, Height ),
+		TileInfo( Width, Height ),
+		Region( Width/8, Height/8 )
+	{
+		ELog( (Width & 7) != 0, "Bad Width %i (%i)", Width, Width & 7 );
+		ELog( (Height & 7) != 0, "Bad Height %i (%i)", Height, Height & 7 );
+		
 	}
 
 public:
@@ -71,7 +101,7 @@ public:
 	
 	// Server Only //
 	void Step() {
-		tModTime ModTime = GetModTime();
+		//tModTime ModTime = GetModTime();
 		
 		// Do Stuff //
 		
