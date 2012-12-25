@@ -7,7 +7,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelFileInfo.h>
 #include <Core/GelDirectory.h>
-#include <Util/String/String.h>
+#include <Util/String/String.h>		// TODO: Promote from Util //
+
+#include <Util/ThreadLocal.h>
+#include <Util/safe_sprintf.h>
 // - ------------------------------------------------------------------------------------------ - //
 // Up here, so this isn't considered part of the namespace //
 extern char AppBaseDir[];
@@ -78,6 +81,47 @@ void AddDirectory( const char* Directory ) {
 	delete_GelDirectory( Dir );
 	
 	Log( "- Asset Directory added." );
+}
+
+// - -------------------------------------------------------------------------------------- - //
+const SearchHandle FindHandle( const char* FileName ) {
+	// Search the map for the specific pattern //
+	std::map<std::string, SearchHandle>::iterator SearchIterator = AssetLookup.find( FileName );
+	Log( "+ Searching for %s", FileName );
+	
+	// If it was found, return the Id //
+	if ( SearchIterator != AssetLookup.end() ) {
+		Log( "- %s found in lookup cache!", FileName );
+		return SearchIterator->second;
+	}
+
+	// Linear pattern matching search (if it contains the pattern, instead of exact match) //
+	for ( size_t idx = 0; idx < AssetInfo.size(); idx++ ) {
+		// Linear test strings if they contain the pattern passed //
+		if ( AssetInfo[idx].FileName.find( FileName ) != std::string::npos ) {
+			Log( "- Found %s!", FileName );
+			return idx;
+		}
+	}
+	Log( "- %s NOT FOUND!!", FileName );
+	
+	// Otherwise, no file was found.  Return the dummy Id (0). //
+	return 0;
+}
+// - ------------------------------------------------------------------------------------------ - //
+const cAssetInfo& GetHandle( const SearchHandle Handle ) {
+	// TODO: Asserts
+	return AssetInfo[ Handle ];
+}
+// - ------------------------------------------------------------------------------------------ - //
+const char* Find( const char* FileName ) {
+	static threadlocal char Text[4096];
+	
+	const cAssetInfo& Info = GetHandle( FindHandle( FileName ) );
+	
+	safe_sprintf( Text, sizeof(Text), "%s%s", FilePrefix.c_str(), Info.FileName.c_str() );
+	
+	return Text;
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Search //
