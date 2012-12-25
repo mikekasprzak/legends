@@ -17,11 +17,38 @@ extern char AppBaseDir[];
 // - ------------------------------------------------------------------------------------------ - //
 namespace Search {
 // - ------------------------------------------------------------------------------------------ - //
+class cAssetInfo {
+public:
+	std::string FileName;
+	GelFileInfo FileInfo;
+	eAssetClass Type;					// Based on FileName only //
+
+//	DataBlock* UnProcessed;
+//
+//	union {
+//		GelTexture* Texture;
+//		cPMEFile* Mesh;
+//		DataBlock* Data;
+//	};
+public:
+	inline cAssetInfo() {	
+	}
+	
+	inline cAssetInfo( const char* _FileName ) :
+		FileName( _FileName ),
+		FileInfo( _FileName )
+	{
+		// TODO: Lookup the Type 
+	}
+};
+// - ------------------------------------------------------------------------------------------ - //
 std::string FilePrefix;	
 std::vector< cAssetInfo > AssetInfo;
 std::map< std::string, SearchHandle > AssetLookup;
 // - ------------------------------------------------------------------------------------------ - //
-void Init( const char* BaseDirectory ) {		
+void Init( const char* BaseDirectory ) {
+	atexit( Exit );
+	
 	// If an empty string (i.e. first character is terminator) //
 	if ( BaseDirectory[0] == 0 )
 		FilePrefix = AppBaseDir;

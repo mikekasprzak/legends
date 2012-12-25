@@ -1,5 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
+#include <Search/Search.h>
 #include <Util/safe_sprintf.h>
 
 #include "App.h"
@@ -13,6 +14,8 @@
 
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
+	Search::AddDirectory( "Content/" );
+	
 	MyGeo = new TFunctor<SatGeoData>();	// Start Thread //
 	
 	Adapters = new_pNetAdapterInfo();

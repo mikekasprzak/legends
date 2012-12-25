@@ -10,21 +10,25 @@
 #include <Core/Data.h>
 // -------------------------------------------------------------------------- //
 struct GelFileInfo {
+	int Err;				// Error code returned by stat //
+	
 	// NOTE: struct keyword because STUPID C library has both a function and a type called stat //
 	struct stat Status;
 
 public:
-	inline GelFileInfo() {
+	inline GelFileInfo() :
+		Err( -1 )
+	{
 		//Clear();
 	}
 	
 	inline GelFileInfo( const char* InFile ) {
-		stat( InFile, &Status );
+		Err = stat( InFile, &Status );
 	}
 
 public:
 	inline const bool Exists() const {
-		return Status.st_mode != 0;
+		return Err == 0;// Status.st_mode != 0;
 	}
 	
 	inline const bool IsDirectory() const {
