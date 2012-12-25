@@ -6,9 +6,6 @@ namespace System {
 Signal GainFocus;
 Signal LoseFocus;
 
-int DepthBits = 0;
-int StencilBits = 0;
-int MaxTextureSize = 0;
 eGPU GPUVendor = GPU_NONE;
 // - ------------------------------------------------------------------------------------------ - //
 

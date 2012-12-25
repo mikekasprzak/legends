@@ -15,6 +15,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace System {
 // - ------------------------------------------------------------------------------------------ - //
+int DepthBits = 0;
+int StencilBits = 0;
+int MaxTextureSize = 0;
+// - ------------------------------------------------------------------------------------------ - //
 void GraphicsInit() {
 	#ifdef USES_WGL
 	{
@@ -97,7 +101,7 @@ void GraphicsInit() {
 		System::GPUVendor = System::GPU_INTEL;
 #ifndef PRODUCT_NO_INTEL_FIX
 		if ( System::MaxTextureSize == 2048 ) {
-			Log( "* Limiting textures to 1024x1024 (was %i)", System::MaxTextureSize );
+			Log( "* Limiting textures to 1024x1024 (was %i) -- GMA Fix", System::MaxTextureSize );
 			System::MaxTextureSize = 1024;
 		}
 #endif // PRODUCT_NO_INTEL_FIX //
