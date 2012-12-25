@@ -5,6 +5,8 @@
 #include <System/System.h>
 #include <Nodal/GelList.h>
 #include <Grid/Grid2D_Class.h>
+#include <Search/Search.h>
+#include <Texture/Texture.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game_Player.h"
 // - ------------------------------------------------------------------------------------------ - //

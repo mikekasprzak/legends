@@ -20,6 +20,9 @@ STBTexture new_STBTexture( const void* Data, const size_t Size );	// Process an 
 void delete_STBTexture( STBTexture& Image );						// Delete an STBTexture
 
 NativeHandle upload_STBTexture( STBTexture& Texture );				// Load an STBTexture in to VRAM
+
+// template<class T=int>
+// toGrid2D_STBTexture
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //

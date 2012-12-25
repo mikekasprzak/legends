@@ -45,8 +45,7 @@ inline void populate_GelDirectory( GelDirectory* p, const char* SearchDirectory,
 		cat_String( Data->d_name, CurrentFile );
 
 		// Get the status of the file //
-		GelFileInfo DIRStatus;
-		DIRStatus.Test( CurrentFile );
+		GelFileInfo DIRStatus( CurrentFile );
 
 		VVLog("> Populated: %s\n", CurrentFile );
 
@@ -111,8 +110,7 @@ inline const bool haschanged_GelDirectory( const GelDirectory* p, const size_t I
 	cat_String( index_GelDirectory(p,Index), CurrentFile );
 
 	// Get the status of the file //
-	GelFileInfo FileStatus;
-	FileStatus.Test( CurrentFile );
+	GelFileInfo FileStatus( CurrentFile );
 	
 	// Compare the modified time //
 	return FileStatus.Status.st_mtime != info_GelDirectory(p,Index).Status.st_mtime;
