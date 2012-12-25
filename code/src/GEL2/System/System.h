@@ -13,6 +13,7 @@
 #include "System_Graphics_OpenGL.h"
 #include "System_Graphics_Direct3D11.h"
 #include "System_Graphics_Stage3D.h"
+#include "System_Graphics_Curses.h"
 #include "System_Graphics_Stub.h"
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL_SYSTEM_H__ //

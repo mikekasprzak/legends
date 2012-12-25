@@ -51,6 +51,7 @@ USES_OPENGL2		:=	true
 #endif # USES_DESKTOP #		# Disabled for now #
 # - ------------------------------------------------------------------------ - #
 # Game Specific Library Requesting Defines #
+USES_STB_IMAGE		:=	true
 USES_CURL			:=	true
 USES_ENET			:=	true
 USES_CJSON			:=	true
