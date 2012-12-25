@@ -10,11 +10,28 @@
 #include <Text/Out.h>
 #endif // PRODUCT_SERVER //
 // - ------------------------------------------------------------------------------------------ - //
-
+using namespace Texture;
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
+	
+	{
+		const char* File = Search::Find( "Sprites" );
+		
+		DataBlock* Data = new_read_DataBlock( File );
+		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
+		delete_DataBlock( Data );
+		
+		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+		
+		NativeHandle Handle = upload_STBTexture( Tex );
+		// TODO: Use and/or dispose of Texture //
+		
+		delete_STBTexture( Tex );
+	}
+	
 	
 	MyGeo = new TFunctor<SatGeoData>();	// Start Thread //
 	

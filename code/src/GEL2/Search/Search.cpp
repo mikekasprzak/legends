@@ -114,11 +114,11 @@ void AddDirectory( const char* Directory ) {
 const SearchHandle FindHandle( const char* FileName ) {
 	// Search the map for the specific pattern //
 	std::map<std::string, SearchHandle>::iterator SearchIterator = AssetLookup.find( FileName );
-	Log( "+ Searching for %s", FileName );
+	VLog( "* Searching for %s...", FileName );
 	
 	// If it was found, return the Id //
 	if ( SearchIterator != AssetLookup.end() ) {
-		Log( "- %s found in lookup cache!", FileName );
+		VLog( "* %s found in lookup cache!", FileName );
 		return SearchIterator->second;
 	}
 
@@ -126,11 +126,11 @@ const SearchHandle FindHandle( const char* FileName ) {
 	for ( size_t idx = 0; idx < AssetInfo.size(); idx++ ) {
 		// Linear test strings if they contain the pattern passed //
 		if ( AssetInfo[idx].FileName.find( FileName ) != std::string::npos ) {
-			Log( "- Found %s!", FileName );
+			VLog( "* Found %s!", FileName );
 			return idx;
 		}
 	}
-	Log( "- %s NOT FOUND!!", FileName );
+	Log( "* %s NOT FOUND!!", FileName );
 	
 	// Otherwise, no file was found.  Return the dummy Id (0). //
 	return 0;

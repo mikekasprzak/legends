@@ -16,10 +16,14 @@ struct STBTexture {
 // - ------------------------------------------------------------------------------------------ - //
 const bool is_STBTexture( const void* Data, const size_t Size );	// Is unprocessed Data an STBTexture?
 
-STBTexture new_STBTexture( const void* Data, const size_t Size );	// Process an STBTexture
-void delete_STBTexture( STBTexture& Image );						// Delete an STBTexture
+// Read the STB data in to an STBTexture Structure //
+STBTexture new_STBTexture( const void* Data, const size_t Size );
+void delete_STBTexture( STBTexture& Image );
 
-NativeHandle upload_STBTexture( STBTexture& Texture );				// Load an STBTexture in to VRAM
+// Load an STBTexture in to VRAM //
+NativeHandle upload_STBTexture( STBTexture& Texture );
+// NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
+//   the STBTexture type, before deleting the STBTexture (i.e. Texture.Width, etc) //
 
 // template<class T=int>
 // toGrid2D_STBTexture
