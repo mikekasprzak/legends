@@ -70,13 +70,14 @@ public:
 	{	
 	}
 	
+	// Must be multiples of 8 //
 	cMap( const size_t Width, const size_t Height ) :
 		Tile( Width, Height ),
 		TileInfo( Width, Height ),
 		Region( Width >> 3, Height >> 3 )	// div 8 //
 	{
-		ELog( (Width & 7) != 0, "Bad Width %i (%i)", Width, Width & 7 );		// mod 8 //
-		ELog( (Height & 7) != 0, "Bad Height %i (%i)", Height, Height & 7 );	// mod 8 //
+		Warning( (Width & 7) != 0, "Bad Width %i (%i)", Width, Width & 7 );		// mod 8 //
+		Warning( (Height & 7) != 0, "Bad Height %i (%i)", Height, Height & 7 );	// mod 8 //
 		
 	}
 
