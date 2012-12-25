@@ -29,14 +29,9 @@ typedef unsigned long long		tick_t;
 const tick_t GetTick();
 const int GetTickDiff( const tick_t Start, const tick_t End );
 // - ------------------------------------------------------------------------------------------ - //
-// Graphics API Specific Features //
-void GraphicsAPIInit();		// Called from Init() //
-void GraphicsAPIExit();		// Called from Exit() //
-
-// Set inside GraphicsAPIInit //
-extern int DepthBits;
-extern int StencilBits;
-extern int MaxTextureSize;	
+// Graphics Specific Features //
+void GraphicsInit();		// Called from Init() //
+void GraphicsExit();		// Called from Exit() //
 
 enum eGPU {
 	GPU_NONE = 0,			// No GPU, or Not Applicable //

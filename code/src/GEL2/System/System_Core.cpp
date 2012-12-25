@@ -26,8 +26,6 @@ void DummyLose(void*) {
 // - ------------------------------------------------------------------------------------------ - //
 void Init() {
 	atexit( Exit ) ;
-
-	TimeInit();
 	
 #ifndef ndebug
 	// Debug Builds Only, an extra signal function call that logs focus gained and lost //
@@ -35,11 +33,13 @@ void Init() {
 	LoseFocus.Connect( DummyLose );
 #endif // ndebug //
 
-	GraphicsAPIInit();
+	TimeInit();
+	GraphicsInit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void Exit() {
-	// *shrug* do something //
+	GraphicsExit();
+	TimeExit();
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //

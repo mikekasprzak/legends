@@ -1,8 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL_SYSTEM_OPENGL_H__
-#define __GEL_SYSTEM_OPENGL_H__
+#ifndef __GEL_SYSTEM_CORE_COMMON_H__
+#define __GEL_SYSTEM_CORE_COMMON_H__
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
+// Things that are mostly the same across multiple platforms, yet I'd rather implement once with
+//   #ifdef's instead of writing per-platform implementations. This is what common is for.
 // - ------------------------------------------------------------------------------------------ - //
 namespace System {
 // - ------------------------------------------------------------------------------------------ - //
@@ -10,7 +11,7 @@ namespace System {
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace System //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
+#endif // USES_CORE_STUB //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL_SYSTEM_OPENGL_H__ //
+#endif // __GEL_SYSTEM_CORE_COMMON_H__ //
 // - ------------------------------------------------------------------------------------------ - //
