@@ -21,7 +21,8 @@ const bool is_STBTexture( const void* Data, const size_t Size );	// Is unprocess
 STBTexture new_STBTexture( const void* Data, const size_t Size );
 void delete_STBTexture( STBTexture& Image );
 
-TextureHandle upload_STBTexture( STBTexture& Texture );				// Load an STBTexture in to VRAM //
+// Load an STBTexture in to VRAM //
+TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlpha = true );
 // NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
 //   the STBTexture type, before deleting the STBTexture (i.e. Texture.Width, etc) //
 // - ------------------------------------------------------------------------------------------ - //

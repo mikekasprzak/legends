@@ -1,6 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
+// TODO: Make the Alpha Premultiply optional... or better yet, figure out if it should be. //
+// - ------------------------------------------------------------------------------------------ - //
 #include <API/API_OpenGL2.h>
 #include <Debug/GelDebug.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -11,7 +13,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle upload_STBTexture( STBTexture& Texture ) { //, GelTexture::GelTexture_Detail* Detail ) {
+TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlpha ) {
 	// Texture ID we'll be returning //
 //	TextureHandle TextureID;
 
@@ -88,7 +90,7 @@ TextureHandle upload_STBTexture( STBTexture& Texture ) { //, GelTexture::GelText
 	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, MipMapCount );
 	
 	// Premultiply the Alpha, but only if it has alpha //
-	if ( Texture.Info == 4 ) {
+	if ( PreMultiplyAlpha && (Texture.Info == 4) ) {
 		VLog("* Premultiplying Alpha...");
 		for ( int texHeight = 0; texHeight < Texture.Height; texHeight++ ) {
 			for ( int texWidth = 0; texWidth < Texture.Width; texWidth++ ) {
