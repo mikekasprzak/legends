@@ -1,20 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_NATIVEHANDLE_CURSES_H__
-#define __GEL2_TEXTURE_NATIVEHANDLE_CURSES_H__
+#ifndef __GEL2_TEXTURE_TEXTUREHANDLE_CURSES_H__
+#define __GEL2_TEXTURE_TEXTUREHANDLE_CURSES_H__
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_CURSES)
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int		NativeHandle;
+typedef unsigned int		TextureHandle;
 // - ------------------------------------------------------------------------------------------ - //
-inline NativeHandle new_NativeHandle() { return 0; }
-inline void delete_NativeHandle( NativeHandle Handle ) { }
-inline void bind_NativeHandle( NativeHandle Handle ) { }
+inline TextureHandle new_TextureHandle() { return 0; }
+inline void delete_TextureHandle( TextureHandle Handle ) { }
+inline void bind_TextureHandle( TextureHandle Handle ) { }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_CURSES) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_NATIVEHANDLE_CURSES_H__ //
+#endif // __GEL2_TEXTURE_TEXTUREHANDLE_CURSES_H__ //
 // - ------------------------------------------------------------------------------------------ - //

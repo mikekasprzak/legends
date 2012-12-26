@@ -7,21 +7,21 @@
 #include "Texture_STB.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/System.h>
-#include <Texture/NativeHandle.h>
+#include <Texture/TextureHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-NativeHandle upload_STBTexture( STBTexture& Texture ) { //, GelTexture::GelTexture_Detail* Detail ) {
+TextureHandle upload_STBTexture( STBTexture& Texture ) { //, GelTexture::GelTexture_Detail* Detail ) {
 	// Texture ID we'll be returning //
-//	NativeHandle TextureID;
+//	TextureHandle TextureID;
 
 	Log("+ Loading Texture (STB Loader)..." );
 
 	VLog("* Allocating GL Texture ID..." );
 	// Generate a GL Texture //
 	//glGenTextures( 1, (GLuint*)&TextureID );
-	NativeHandle TextureID = new_NativeHandle();
-	bind_NativeHandle( TextureID );
+	TextureHandle TextureID = new_TextureHandle();
+	bind_TextureHandle( TextureID );
 //	VVLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );	
 //	glBindTexture( GL_TEXTURE_2D, TextureID );
 //	VLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );

@@ -3,7 +3,7 @@
 #define __GEL2_TEXTURE_TEXTURE_STB_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
-#include <Texture/NativeHandle.h>
+#include <Texture/TextureHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
@@ -20,7 +20,7 @@ const bool is_STBTexture( const void* Data, const size_t Size );	// Is unprocess
 STBTexture new_STBTexture( const void* Data, const size_t Size );
 void delete_STBTexture( STBTexture& Image );
 
-NativeHandle upload_STBTexture( STBTexture& Texture );				// Load an STBTexture in to VRAM //
+TextureHandle upload_STBTexture( STBTexture& Texture );				// Load an STBTexture in to VRAM //
 // NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
 //   the STBTexture type, before deleting the STBTexture (i.e. Texture.Width, etc) //
 // - ------------------------------------------------------------------------------------------ - //

@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // Complete set of libraries for reading and using Texture data //
 // - ------------------------------------------------------------------------------------------ - //
-#include "NativeHandle.h"
+#include "TextureHandle.h"
 
 #include "Texture_STB.h"
 #include "Texture_PVR3.h"

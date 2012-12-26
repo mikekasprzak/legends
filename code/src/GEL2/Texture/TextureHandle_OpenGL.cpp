@@ -3,21 +3,21 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <API/API_OpenGL2.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Texture/NativeHandle.h>
+#include <Texture/TextureHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-NativeHandle new_NativeHandle() {
-	NativeHandle Handle;
+TextureHandle new_TextureHandle() {
+	TextureHandle Handle;
 	glGenTextures( 1, &Handle );
 	return Handle;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void delete_NativeHandle( NativeHandle Handle ) {
+void delete_TextureHandle( TextureHandle Handle ) {
 	glDeleteTextures( 1, (const GLuint*)&Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void bind_NativeHandle( NativeHandle Handle ) {
+void bind_TextureHandle( TextureHandle Handle ) {
 	glBindTexture( GL_TEXTURE_2D, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //

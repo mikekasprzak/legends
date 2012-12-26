@@ -26,13 +26,13 @@ cApp::cApp() {
 		
 		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
 		
-		NativeHandle Handle = upload_STBTexture( Tex );
+		TextureHandle Handle = upload_STBTexture( Tex );
 		// TODO: Use and/or dispose of Texture //
 		
 		delete_STBTexture( Tex );
 		
 		// Kill Texture //
-		delete_NativeHandle( Handle );
+		delete_TextureHandle( Handle );
 	}
 	
 	

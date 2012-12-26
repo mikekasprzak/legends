@@ -1,20 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__
-#define __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__
+#ifndef __GEL2_TEXTURE_TEXTUREHANDLE_STUB_H__
+#define __GEL2_TEXTURE_TEXTUREHANDLE_STUB_H__
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_STUB_GRAPHICS)
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int		NativeHandle;
+typedef unsigned int		TextureHandle;
 // - ------------------------------------------------------------------------------------------ - //
-inline NativeHandle new_NativeHandle() { return 0; }
-inline void delete_NativeHandle( NativeHandle Handle ) { }
-inline void bind_NativeHandle( NativeHandle Handle ) { }
+inline TextureHandle new_TextureHandle() { return 0; }
+inline void delete_TextureHandle( TextureHandle Handle ) { }
+inline void bind_TextureHandle( TextureHandle Handle ) { }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_STUB_GRAPHICS) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__ //
+#endif // __GEL2_TEXTURE_TEXTUREHANDLE_STUB_H__ //
 // - ------------------------------------------------------------------------------------------ - //

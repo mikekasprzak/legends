@@ -6,7 +6,7 @@
 #pragma warning (disable : 4200) // Nonstandard Extension: Zero Sized Array in Struct/Union
 #endif // _MSC_VER //
 // - ------------------------------------------------------------------------------------------ - //
-#include <Texture/NativeHandle.h>
+#include <Texture/TextureHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
@@ -60,7 +60,7 @@ inline const bool is_PVR3Texture( const void* Data, const size_t = 0 ) {
 PVR3Texture* new_PVR3Texture( const void* Data, const size_t Size );
 void delete_PVR3Texture( PVR3Texture* Image );
 
-extern NativeHandle upload_PVR3Texture( PVR3Texture* Texture );	// Load a PVR3Texture in to VRAM //
+extern TextureHandle upload_PVR3Texture( PVR3Texture* Texture );	// Load a PVR3Texture in to VRAM //
 // NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
 //   the PVR3Texture type, before deleting the PVR3Texture (i.e. Texture.Width, etc) //
 // - ------------------------------------------------------------------------------------------ - //

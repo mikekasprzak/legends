@@ -1,12 +1,12 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_NATIVEHANDLE_H__
-#define __GEL2_TEXTURE_NATIVEHANDLE_H__
+#ifndef __GEL2_TEXTURE_TEXTUREHANDLE_H__
+#define __GEL2_TEXTURE_TEXTUREHANDLE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "NativeHandle_OpenGL.h"
-//#include "NativeHandle_Direct3D11.h"
-//#include "NativeHandle_Stage3D.h"
-#include "NativeHandle_Curses.h"
-#include "NativeHandle_Stub.h"
+#include "TextureHandle_OpenGL.h"
+//#include "TextureHandle_Direct3D11.h"
+//#include "TextureHandle_Stage3D.h"
+#include "TextureHandle_Curses.h"
+#include "TextureHandle_Stub.h"
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_NATIVEHANDLE_H__ //
+#endif // __GEL2_TEXTURE_TEXTUREHANDLE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

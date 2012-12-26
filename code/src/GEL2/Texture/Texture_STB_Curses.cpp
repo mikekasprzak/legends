@@ -2,11 +2,11 @@
 #if defined(USES_CURSES)
 // - ------------------------------------------------------------------------------------------ - //
 #include "Texture_STB.h"
-#include <Texture/NativeHandle.h>
+#include <Texture/TextureHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-NativeHandle upload_STBTexture( STBTexture& Texture ) {
+TextureHandle upload_STBTexture( STBTexture& Texture ) {
 	return 0;
 }
 // - ------------------------------------------------------------------------------------------ - //

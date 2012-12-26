@@ -1,21 +1,21 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_NATIVEHANDLE_OPENGL_H__
-#define __GEL2_TEXTURE_NATIVEHANDLE_OPENGL_H__
+#ifndef __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__
+#define __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int		NativeHandle;
+typedef unsigned int		TextureHandle;
 // - ------------------------------------------------------------------------------------------ - //
-NativeHandle new_NativeHandle();
-void delete_NativeHandle( NativeHandle Handle );
+TextureHandle new_TextureHandle();
+void delete_TextureHandle( TextureHandle Handle );
 
-void bind_NativeHandle( NativeHandle Handle );
+void bind_TextureHandle( TextureHandle Handle );
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_NATIVEHANDLE_OPENGL_H__ //
+#endif // __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__ //
 // - ------------------------------------------------------------------------------------------ - //
