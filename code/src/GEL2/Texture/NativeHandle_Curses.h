@@ -8,6 +8,10 @@ namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
 typedef unsigned int		NativeHandle;
 // - ------------------------------------------------------------------------------------------ - //
+inline NativeHandle new_NativeHandle() { return 0; }
+inline void delete_NativeHandle( NativeHandle Handle ) { }
+inline void bind_NativeHandle( NativeHandle Handle ) { }
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_CURSES) //

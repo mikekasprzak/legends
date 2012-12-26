@@ -1,20 +1,27 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__
-#define __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__
+#if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
-#if defined(USES_STUB_GRAPHICS)
+#include <API/API_OpenGL2.h>
+// - ------------------------------------------------------------------------------------------ - //
+#include <Texture/NativeHandle.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int		NativeHandle;
+NativeHandle new_NativeHandle() {
+	NativeHandle Handle;
+	glGenTextures( 1, &Handle );
+	return Handle;
+}
 // - ------------------------------------------------------------------------------------------ - //
-inline NativeHandle new_NativeHandle() { return 0; }
-inline void delete_NativeHandle( NativeHandle Handle ) { }
-inline void bind_NativeHandle( NativeHandle Handle ) { }
+void delete_NativeHandle( NativeHandle Handle ) {
+	glDeleteTextures( 1, (const GLuint*)&Handle );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void bind_NativeHandle( NativeHandle Handle ) {
+	glBindTexture( GL_TEXTURE_2D, Handle );
+}
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // defined(USES_STUB_GRAPHICS) //
-// - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_NATIVEHANDLE_STUB_H__ //
+#endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //

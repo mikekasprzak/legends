@@ -13,20 +13,22 @@ namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
 NativeHandle upload_STBTexture( STBTexture& Texture ) { //, GelTexture::GelTexture_Detail* Detail ) {
 	// Texture ID we'll be returning //
-	NativeHandle TextureID;
+//	NativeHandle TextureID;
 
 	Log("+ Loading Texture (STB Loader)..." );
 
 	VLog("* Allocating GL Texture ID..." );
 	// Generate a GL Texture //
-	glGenTextures( 1, (GLuint*)&TextureID );
+	//glGenTextures( 1, (GLuint*)&TextureID );
+	NativeHandle TextureID = new_NativeHandle();
+	bind_NativeHandle( TextureID );
 //	VVLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );	
-	glBindTexture( GL_TEXTURE_2D, TextureID );
+//	glBindTexture( GL_TEXTURE_2D, TextureID );
 //	VLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );
 	
-	if ( glGetError() != GL_NO_ERROR ) {
-		ELog( "Texture Bind Failed!" );
-	}
+//	if ( glGetError() != GL_NO_ERROR ) {
+//		ELog( "Texture Bind Failed!" );
+//	}
 	
 //	if ( !glIsTexture(TextureID) ) {
 //		ELog( "IsTexture Failed!" );	

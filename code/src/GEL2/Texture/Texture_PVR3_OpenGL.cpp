@@ -13,20 +13,22 @@ namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
 NativeHandle upload_PVR3Texture( PVR3Texture* Texture ) {
 	// Texture ID we'll be returning //
-	unsigned int TextureID;
+//	unsigned int TextureID;
 
 	Log("+ Loading Texture (PVR3 Loader)..." );
 
 	VLog("* Allocating GL Texture ID..." );
 
 	// Generate a GL Texture //
-	glGenTextures( 1, (GLuint*)&TextureID );
-	glBindTexture( GL_TEXTURE_2D, TextureID );
+//	glGenTextures( 1, (GLuint*)&TextureID );
+	NativeHandle TextureID = new_NativeHandle();
+	bind_NativeHandle( TextureID );
+//	glBindTexture( GL_TEXTURE_2D, TextureID );
 //	VLog("* GL Texture ID: %i (IsTexture: %i)", TextureID, glIsTexture(TextureID) );
 	
-	if ( glGetError() != GL_NO_ERROR ) {
-		ELog( "Texture Bind Failed!" );
-	}
+//	if ( glGetError() != GL_NO_ERROR ) {
+//		ELog( "Texture Bind Failed!" );
+//	}
 	
 //	if ( !glIsTexture(TextureID) ) {
 //		ELog( "IsTexture Failed!" );	

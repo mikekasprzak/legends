@@ -30,6 +30,9 @@ cApp::cApp() {
 		// TODO: Use and/or dispose of Texture //
 		
 		delete_STBTexture( Tex );
+		
+		// Kill Texture //
+		delete_NativeHandle( Handle );
 	}
 	
 	

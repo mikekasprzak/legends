@@ -8,6 +8,11 @@ namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
 typedef unsigned int		NativeHandle;
 // - ------------------------------------------------------------------------------------------ - //
+NativeHandle new_NativeHandle();
+void delete_NativeHandle( NativeHandle Handle );
+
+void bind_NativeHandle( NativeHandle Handle );
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
