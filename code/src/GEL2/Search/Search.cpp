@@ -1,4 +1,11 @@
 // - ------------------------------------------------------------------------------------------ - //
+// TODO: Don't just add one version of a file to AssetLookup, but one per directory. It is just
+//   an Index, so it wont be too too expensive, just an extra entry per file per subdirectory.
+//   The total files in the content file system don't tend to be that many, so lets say about
+//   ~100 bytes per file more (on average). PROTIP: Set the content folder to limit redundants.
+//   Also, be sure to discard any attempts to add a symbol that already exists. FIFO.
+//   Content/Art, Content/Scripts, etc. Do all these explicitly, so to disregard "Tools"
+// - ------------------------------------------------------------------------------------------ - //
 #include <map>
 #include <vector>
 #include <string>
