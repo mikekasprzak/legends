@@ -1,0 +1,45 @@
+{
+	"File"		: "UberShader.glsl",
+	"Shaders"	: {
+		"Flat" : {
+			"Define" : [
+				"SHADE_FLAT"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		},
+
+		"Color" : {
+			"Define" : [
+				"SHADE_COLOR",
+				"SHADE_MOMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		}
+	}
+}
