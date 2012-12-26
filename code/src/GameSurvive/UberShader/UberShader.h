@@ -105,7 +105,8 @@ public:
 		glDrawArrays( Mode, 0, PolyCount );	
 	}
 
-	inline void DrawElements( const int Mode, const unsigned short* Index, const size_t IndexCount ) {
+	// PolyCount unused here with OpenGL //
+	inline void DrawElements( const int Mode, const size_t /*PolyCount*/, const unsigned short* Index, const size_t IndexCount ) {
 		glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );
 	}
 
