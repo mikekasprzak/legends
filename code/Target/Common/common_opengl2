@@ -2,7 +2,23 @@
 # NOTE: Only reference files here suitable for OPENGL scope (no game/platform) #
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_GLEE USES_FBO
+DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_FBO
+# - ------------------------------------------------------------------------ - #
+# Force these settings on #
+USES_GLEE			:=	true
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
+ifdef USES_GLEE
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/GEL/External/GLEE
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_GLEE
+# - ------------------------------------------------------------------------ - #
+endif # USES_GLEE #
 # - ------------------------------------------------------------------------ - #
 
 

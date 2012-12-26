@@ -1,6 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/Log.h>
 #include <Search/Search.h>
+#include <Shader/Shader.h>
 #include <Util/safe_sprintf.h>
 
 #include "App.h"
