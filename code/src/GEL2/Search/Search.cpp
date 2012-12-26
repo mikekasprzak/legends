@@ -147,8 +147,8 @@ const cAssetInfo& GetHandle( const SearchHandle Handle ) {
 	return AssetInfo[ Handle ];
 }
 // - ------------------------------------------------------------------------------------------ - //
-const char* Find( const char* FileName ) {
-	// TODO: If threadlocal unsupported, use a mutex, and add a direct verison (_Find) w/o. //
+const char* Search( const char* FileName ) {
+	// TODO: If threadlocal unsupported, use a mutex, and add a direct verison (_Search) w/o. //
 	static threadlocal char Text[4096];
 	
 	const cAssetInfo& Info = GetHandle( FindHandle( FileName ) );

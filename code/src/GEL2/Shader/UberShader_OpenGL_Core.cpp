@@ -4,9 +4,12 @@
 #include "UberShader.h"
 // - ------------------------------------------------------------------------------------------ - //
 #include <Debug/GelDebug.h>
-#include <Core/DataBlock.h>
 #include <System/System.h>
+#include <Search/Search.h>
 
+#include <Util/String/String.h>
+
+#include <Core/DataBlock.h>
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Shader {
@@ -165,6 +168,22 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 cUberShader::cUberShader( const char* InFile ) :
 	CurrentShader( 0 )
 {
+	ProcessShader( InFile );
+}
+// - ------------------------------------------------------------------------------------------ - //
+cUberShader::cUberShader( const char* JSONFile, const char* GLSLFile ) :
+	CurrentShader( 0 )
+{
+	ProcessShader( JSONFile, GLSLFile );
+}
+// - ------------------------------------------------------------------------------------------ - //
+cUberShader::cUberShader( const char* JSONData, const size_t JSONSize, const char* GLSLData, const size_t GLSLSize ) :
+	CurrentShader( 0 )
+{
+	ProcessShader( JSONData, JSONSize, GLSLData, GLSLSize );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::ProcessShader( const char* InFile ) {
 //	ShaderLookup.clear();
 
 	Log( "+ Loading UberShader Permutations File..." );
@@ -184,92 +203,22 @@ cUberShader::cUberShader( const char* InFile ) :
 		VLog( "* Loadinng Shader Sources..." );
 		VLog( "* File: %s", ShaderFile->valuestring );
 		
-		// HACK: Until I feel like doing this a better way //
-		//extern char AppBaseDir[]; 
-		// TODO: Make this use Search::Find
-		std::string Prefix = System::BaseDir;
+		std::string ShaderSourceFile = std::string(String::DirectorySlash( InFile )) + ShaderFile->valuestring;
+		VLog( "* FilePath: %s", ShaderSourceFile.c_str() );
 
-		DataBlock* ShaderSource = new_read_nullterminate_DataBlock( std::string( Prefix + ShaderFile->valuestring ).c_str() );
+		DataBlock* ShaderSource = new_read_nullterminate_DataBlock( ShaderSourceFile.c_str() );
 		
 		if ( ShaderSource ) {
 			VLog( "* Shader Source Loaded (%i bytes).", ShaderSource->Size );
 			
-			cJSON* ShaderList = cJSON_GetObjectItem( root, "Shaders" );
-			
-			VLog( "* %s", ShaderList->string );
-			
-			cJSON* ShaderObj = ShaderList->child;
-			while ( ShaderObj != 0 ) {
-				VLog( "* * %s", ShaderObj->string );
-				
-				std::string DefineList;
-				
-				cJSON* Define = cJSON_GetObjectItem( ShaderObj, "Define" );
-				if ( Define ) {
-					cJSON* Obj = Define->child;
-					while ( Obj != 0 ) {
-						VLog("* * * #DEFINE %s", Obj->valuestring );
-						
-						DefineList += DefineSymbol( Obj->valuestring );
-						
-						// Next Define //
-						Obj = Obj->next;
-					}
-				}
-				else {
-					Log( "! UberShader: Error, \"Define\" section not found in %s!", ShaderObj->string );
-				}
+			ProcessShader( root, ShaderSource->Data );
 
-				bool HasGeometryShader = false;
-#ifdef USES_GEOMETRY_SHADER
-				// Section "Geometry": true, under the shader name //
-				cJSON* Geometry = cJSON_GetObjectItem( ShaderObj, "Geometry" );
-				if ( Geometry ) {
-					if ( Geometry->type == cJSON_True ) {
-						HasGeometryShader = true;
-					}
-				}
-#endif // USES_GEOMETRY_SHADER //
-
-				bool HasTessellationShader = false;
-#ifdef USES_TESSELLATION_SHADER
-				// Section "Tessellation": true, under the shader name //
-				cJSON* Tessellation = cJSON_GetObjectItem( ShaderObj, "Tessellation" );
-				if ( Tessellation ) {
-					if ( Tessellation->type == cJSON_True ) {
-						HasTessellationShader = true;
-					}
-				}
-#endif // USES_TESSELLATION_SHADER //
-
-				// Build the Shader //
-				cUberShader_Shader Program = BuildShader( DefineList.c_str(), ShaderSource->Data, HasGeometryShader, HasTessellationShader );
-				// Assign Attributes //
-				cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
-				if ( Attribute ) {
-					AssignShaderAttributes( Program, Attribute );
-				}
-				else {
-					Log( "! UberShader: Error, \"Attribute\" section not found in %s!", ShaderObj->string );
-				}				
-				// Link the shader for use //
-				LinkShader( Program );
-				
-				// Add Program to the UberShader //
-				ShaderLookup[ ShaderObj->string ] = Shader.size();
-				Shader.push_back( Program );
-				
-				// Next Shader //
-				ShaderObj = ShaderObj->next;
-			}
-			
 			delete_DataBlock( ShaderSource );
 			VLog( "* Done with Shader Sources" );
 		}
 		else {
 			Log( "! UberShader: Error loading Shader Sources!" );
 		}
-		
 		
 		cJSON_Delete( root );
 		VLog( "* Done JSON Data" );
@@ -279,7 +228,154 @@ cUberShader::cUberShader( const char* InFile ) :
 	glUseProgram( 0 );
 
 	delete_DataBlock( File );
-	Log( "- Done with UberShader Permutations File." );
+	Log( "- Done with UberShader Permutations File." );	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::ProcessShader( const char* JSONFile, const char* GLSLFile ) {
+//	ShaderLookup.clear();
+
+	Log( "+ Loading UberShader Permutations File..." );
+	Log( "* File: %s", JSONFile );
+	DataBlock* File = new_read_nullterminate_DataBlock( JSONFile );
+	
+	VLog( "* Parsing JSON Data (%i bytes)...", File->Size );
+	
+	cJSON* root = cJSON_Parse( File->Data );
+
+	if ( root == 0 ) {
+		Log( "! UberShader: Error parsing JSON data!" );
+	}
+	else {
+		VLog( "* Loadinng Shader Sources (Explicit)..." );
+		VLog( "* File: %s", GLSLFile );
+
+		DataBlock* ShaderSource = new_read_nullterminate_DataBlock( GLSLFile );
+		
+		if ( ShaderSource ) {
+			VLog( "* Shader Source Loaded (%i bytes).", ShaderSource->Size );
+			
+			ProcessShader( root, ShaderSource->Data );
+
+			delete_DataBlock( ShaderSource );
+			VLog( "* Done with Shader Sources" );
+		}
+		else {
+			Log( "! UberShader: Error loading Shader Sources!" );
+		}
+		
+		cJSON_Delete( root );
+		VLog( "* Done JSON Data" );
+	}
+	
+	// Clear Shader Usage //
+	glUseProgram( 0 );
+
+	delete_DataBlock( File );
+	Log( "- Done with UberShader Permutations File." );	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::ProcessShader( const char* JSONData, const size_t JSONSize, const char* GLSLData, const size_t GLSLSize ) {
+//	ShaderLookup.clear();
+
+	Log( "+ Loading UberShader Permutations File (Embedded)..." );	
+	VLog( "* Parsing JSON Data (%i bytes)...", JSONSize );
+	
+	cJSON* root = cJSON_Parse( JSONData );
+
+	if ( root == 0 ) {
+		Log( "! UberShader: Error parsing JSON data!" );
+	}
+	else {
+		VLog( "* Loadinng Shader Sources (Embedded)..." );
+		
+		if ( GLSLData ) {
+			VLog( "* Shader Source Loaded (%i bytes).", GLSLSize );
+			
+			ProcessShader( root, GLSLData );
+		}
+		else {
+			Log( "! UberShader: Error loading Shader Sources!" );
+		}
+		
+		cJSON_Delete( root );
+		VLog( "* Done JSON Data" );
+	}
+	
+	// Clear Shader Usage //
+	glUseProgram( 0 );
+
+	Log( "- Done with UberShader Permutations File." );	
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
+	cJSON* ShaderList = cJSON_GetObjectItem( root, "Shaders" );
+	
+	VLog( "* %s", ShaderList->string );
+	
+	cJSON* ShaderObj = ShaderList->child;
+	while ( ShaderObj != 0 ) {
+		VLog( "* * %s", ShaderObj->string );
+		
+		std::string DefineList;
+		
+		cJSON* Define = cJSON_GetObjectItem( ShaderObj, "Define" );
+		if ( Define ) {
+			cJSON* Obj = Define->child;
+			while ( Obj != 0 ) {
+				VLog("* * * #DEFINE %s", Obj->valuestring );
+				
+				DefineList += DefineSymbol( Obj->valuestring );
+				
+				// Next Define //
+				Obj = Obj->next;
+			}
+		}
+		else {
+			Log( "! UberShader: Error, \"Define\" section not found in %s!", ShaderObj->string );
+		}
+
+		bool HasGeometryShader = false;
+#ifdef USES_GEOMETRY_SHADER
+		// Section "Geometry": true, under the shader name //
+		cJSON* Geometry = cJSON_GetObjectItem( ShaderObj, "Geometry" );
+		if ( Geometry ) {
+			if ( Geometry->type == cJSON_True ) {
+				HasGeometryShader = true;
+			}
+		}
+#endif // USES_GEOMETRY_SHADER //
+
+		bool HasTessellationShader = false;
+#ifdef USES_TESSELLATION_SHADER
+		// Section "Tessellation": true, under the shader name //
+		cJSON* Tessellation = cJSON_GetObjectItem( ShaderObj, "Tessellation" );
+		if ( Tessellation ) {
+			if ( Tessellation->type == cJSON_True ) {
+				HasTessellationShader = true;
+			}
+		}
+#endif // USES_TESSELLATION_SHADER //
+
+		// Build the Shader //
+		cUberShader_Shader Program = BuildShader( DefineList.c_str(), ShaderSource, HasGeometryShader, HasTessellationShader );
+		// Assign Attributes //
+		cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
+		if ( Attribute ) {
+			AssignShaderAttributes( Program, Attribute );
+		}
+		else {
+			Log( "! UberShader: Error, \"Attribute\" section not found in %s!", ShaderObj->string );
+		}				
+		// Link the shader for use //
+		LinkShader( Program );
+		
+		// Add Program to the UberShader //
+		ShaderLookup[ ShaderObj->string ] = Shader.size();
+		Shader.push_back( Program );
+		
+		// Next Shader //
+		ShaderObj = ShaderObj->next;
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::~cUberShader() {
@@ -309,7 +405,7 @@ void cUberShader::Bind( const ShaderHandle Index ) {
 	glUseProgram( Shader[Index].Program );
 
 	// Skipping Zero, since I never disable zero //	
-	for ( int idx = 1; idx < Shader[Index].Attributes.size(); idx++ ) {
+	for ( size_t idx = 1; idx < Shader[Index].Attributes.size(); idx++ ) {
 		if ( Shader[Index].Attributes[idx] > 0 ) {
 			glEnableVertexAttribArray( Shader[Index].Attributes[idx] );
 		}

@@ -12,6 +12,9 @@
 #include <Graphics/GelColor.h>
 #include <Graphics/GelUV.h>
 
+#include <Core/DataBlock.h>
+#include <cJSON.h>
+
 #include <Math/Matrix.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Shader {
@@ -60,7 +63,14 @@ public:
 	cUberShader_Shader* CurrentShader;
 public:
 	cUberShader( const char* InFile );
+	cUberShader( const char* JSONFile, const char* GLSLFile );
+	cUberShader( const char* JSONData, const size_t JSONSize, const char* GLSLData, const size_t GLSLSize );
 	~cUberShader();
+
+	void ProcessShader( const char* InFile );
+	void ProcessShader( const char* JSONFile, const char* GLSLFile );
+	void ProcessShader( const char* JSONData, const size_t JSONSize, const char* GLSLData, const size_t GLSLSize );
+	void ProcessShader( cJSON* root, const char* ShaderSource );
 	
 	ShaderHandle Find( const char* ShaderName );
 	void Bind( const ShaderHandle Index );
@@ -101,6 +111,7 @@ public:
 		AttribPointer( Index, 2, GL_UVType, GL_FALSE, sizeof(VertType), (const float*)Ptr );
 	}
 
+	// GL Code //
 	inline void AttribPointer( const GLuint Index, const GLint Size, const GLenum Type, const GLboolean Normalized, const GLsizei Stride, const void* Ptr ) {
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}

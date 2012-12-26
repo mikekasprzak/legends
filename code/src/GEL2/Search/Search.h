@@ -23,7 +23,7 @@ enum eAssetClass {
 void Init( const char* BaseDirectory = "" );
 void Exit();										// No need to call //
 void AddDirectory( const char* Directory );
-const char* Find( const char* FileName );
+const char* Search( const char* FileName );
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Search //
 // - ------------------------------------------------------------------------------------------ - //

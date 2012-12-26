@@ -19,7 +19,7 @@ cApp::cApp() {
 	Search::AddDirectory( "Content/" );
 	
 	{
-		const char* File = Search::Find( "Sprites" );
+		const char* File = Search::Search( "Sprites" );
 		
 		DataBlock* Data = new_read_DataBlock( File );
 		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
@@ -34,6 +34,10 @@ cApp::cApp() {
 		
 		// Kill Texture //
 		delete_TextureHandle( Handle );
+	}
+	
+	{
+		Shader::cUberShader Uber( Search::Search("/gl/UberShader.json") );
 	}
 	
 	
