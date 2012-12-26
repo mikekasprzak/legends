@@ -2,7 +2,7 @@
 # NOTE: Only reference files here suitable for OPENGL scope (no game/platform) #
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
-DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_FBO
+DEFINES				+=	USES_OPENGL USES_OPENGL2 USES_FBO USES_SHADERS
 # - ------------------------------------------------------------------------ - #
 # Force these settings on #
 USES_GLEE			:=	true
