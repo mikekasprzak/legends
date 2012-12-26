@@ -12,8 +12,7 @@
 #include <Util/ThreadLocal.h>
 #include <Util/safe_sprintf.h>
 // - ------------------------------------------------------------------------------------------ - //
-// Up here, so this isn't considered part of the namespace //
-extern char AppBaseDir[];
+#include <System/System.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Search {
 // - ------------------------------------------------------------------------------------------ - //
@@ -51,9 +50,9 @@ void Init( const char* BaseDirectory ) {
 	
 	// If an empty string (i.e. first character is terminator) //
 	if ( BaseDirectory[0] == 0 )
-		FilePrefix = AppBaseDir;
+		FilePrefix = System::BaseDir;
 	else
-		FilePrefix = std::string( AppBaseDir ) + BaseDirectory;
+		FilePrefix = std::string( System::BaseDir ) + BaseDirectory;
 
 	// Store the prefix (without trailing slash.  Slash will be part of search strings) //
 

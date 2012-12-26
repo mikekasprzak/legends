@@ -32,6 +32,7 @@ COPY_FILES			+=
 # - ------------------------------------------------------------------------ - #
 # Game Specific Library Requesting Defines #
 USES_CURSES			:=	true
+USES_STB_IMAGE		:=	true
 USES_MONGOOSE		:=	true
 USES_CURL			:=	true
 USES_ENET			:=	true

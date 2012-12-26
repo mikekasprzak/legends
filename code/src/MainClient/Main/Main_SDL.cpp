@@ -25,11 +25,11 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/Path.h>
 
-extern char AppBaseDir[];
-char AppBaseDir[2048];
-
-extern char AppSaveDir[];
-char AppSaveDir[2048] = "";
+//extern char AppBaseDir[];
+//char AppBaseDir[2048];
+//
+//extern char AppSaveDir[];
+//char AppSaveDir[2048] = "";
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Rename this. ArgInit? SystemInit? Only non arg is the PID
 void ArgInit( int argc, char* argv[] ) {
@@ -54,7 +54,7 @@ void ArgInit( int argc, char* argv[] ) {
 		bool DetermineContentPath = true;
 		if ( argc > 2 ) {
 			if ( strcmp( argv[1], "-DIR" ) == 0 ) {
-				strcpy( AppBaseDir, argv[2] );
+				strcpy( System::BaseDir, argv[2] );
 				DetermineContentPath = false;
 			}
 		}
@@ -62,19 +62,19 @@ void ArgInit( int argc, char* argv[] ) {
 		bool DetermineSavePath = true;
 		if ( argc > 4 ) {
 			if ( strcmp( argv[3], "-SAVE" ) == 0 ) {
-				strcpy( AppSaveDir, argv[4] );
+				strcpy( System::SaveDir, argv[4] );
 				DetermineSavePath = false;
 			}
 		}
 		
 		if ( DetermineContentPath )
-			gelGetContentPath( AppBaseDir, sizeof(AppBaseDir) );
+			gelGetContentPath( System::BaseDir, sizeof(System::BaseDir) );
 
 		if ( DetermineSavePath )
-			gelGetStoragePath( AppSaveDir, sizeof(AppSaveDir) );
+			gelGetStoragePath( System::SaveDir, sizeof(System::SaveDir) );
 		
-		Log( "Base Directory: %s", AppBaseDir );
-		Log( "Save Directory: %s", AppSaveDir );
+		Log( "Base Directory: %s", System::BaseDir );
+		Log( "Save Directory: %s", System::SaveDir );
 		Log( "" );
 	}
 }
