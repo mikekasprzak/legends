@@ -4,8 +4,8 @@
 #ifndef __Library_GELCore_Data_Core_H__
 #define __Library_GELCore_Data_Core_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <string.h>
-#include <stdio.h>
+#include <Style/GelTypes.h>
+#include <stdio.h>				// FILE*, fopen, ftell, etc //
 
 // - ------------------------------------------------------------------------------------------ - //
 // NOTE: This code could "technically" be made in to a general purpose reader/writer for all //

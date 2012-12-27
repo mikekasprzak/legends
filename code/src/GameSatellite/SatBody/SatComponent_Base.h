@@ -2,7 +2,7 @@
 #ifndef __SATBODY_COMPONENT_BASE_H__
 #define __SATBODY_COMPONENT_BASE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Style/GelStyle.h>
+#include <Style/Style.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace SatComponent {
 enum {

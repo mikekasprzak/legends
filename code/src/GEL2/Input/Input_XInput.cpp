@@ -7,7 +7,7 @@
 #include <XInput/XInput.h>
 #include "Input.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Style/Style.h>
 #include <System/System.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Input {

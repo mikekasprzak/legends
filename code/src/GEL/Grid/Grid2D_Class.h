@@ -2,7 +2,6 @@
 #ifndef __Grid_Grid2D_Class_H__
 #define __Grid_Grid2D_Class_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <stdio.h>
 #include <math.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)

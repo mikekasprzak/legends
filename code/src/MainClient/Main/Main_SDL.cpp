@@ -4,8 +4,7 @@
 #include <API/API_SDL2.h>
 #include <API/API_OpenGL2.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
-#include <Core/GelError.h>
+#include <Style/Style.h>
 #include <Timer/Timer.h>
 #include <DrMinGW/DrMinGW.h>
 // - ------------------------------------------------------------------------------------------ - //

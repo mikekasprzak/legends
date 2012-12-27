@@ -10,7 +10,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <new>
 
-#include <Style/Style.h>
+#include <Style/Log.h>
 #include "DataBlock_Core.h"
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Insertion code, Alignment resizing (min, max), searching, sorting  //

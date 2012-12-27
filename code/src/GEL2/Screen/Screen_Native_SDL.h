@@ -7,9 +7,8 @@
 #include <API/API_SDL2.h>
 #include <API/API_OpenGL2.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include <Core/GelError.h>
+#include <Style/Style.h>
 #include <Core/GelArray.h>
-#include <Debug/Log.h>
 #include <Main/Main_Product.h>
 // - ------------------------------------------------------------------------------------------ - //
 namespace Screen {

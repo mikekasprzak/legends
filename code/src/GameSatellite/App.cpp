@@ -36,9 +36,11 @@ cApp::cApp() {
 		delete_TextureHandle( Handle );
 	}
 	
+	#ifdef USES_SHADERS
 	{
 		Shader::cUberShader Uber( Search::Search("/gl/UberShader.json") );
 	}
+	#endif // USES_SHADERS //
 	
 	
 	MyGeo = new TFunctor<SatGeoData>();	// Start Thread //

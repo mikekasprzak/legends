@@ -2,7 +2,7 @@
 #ifndef __SATBODY_COMPONENT_PLANAR_H__
 #define __SATBODY_COMPONENT_PLANAR_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Style/GelStyle.h>
+#include <Style/Style.h>
 #include <Core/GelArray.h>
 #include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //

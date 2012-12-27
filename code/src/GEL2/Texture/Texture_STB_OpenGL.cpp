@@ -4,7 +4,7 @@
 // TODO: Make the Alpha Premultiply optional... or better yet, figure out if it should be. //
 // - ------------------------------------------------------------------------------------------ - //
 #include <API/API_OpenGL2.h>
-#include <Debug/GelDebug.h>
+#include <Style/Style.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Texture_STB.h"
 // - ------------------------------------------------------------------------------------------ - //
