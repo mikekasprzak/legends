@@ -1,0 +1,86 @@
+{
+	"File"		: "DefaultShader.glsl",
+	"Shaders"	: {
+		"Flat" : {
+			"Define" : [
+				"SHADER_FLAT"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		},
+
+		"Color" : {
+			"Define" : [
+				"SHADER_COLOR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		},
+		
+		"Texture" : {
+			"Define" : [
+				"SHADER_FLAT",
+				"SHADER_TEXTURE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		},
+		
+		"ColorTexture" : {
+			"Define" : [
+				"SHADER_COLOR",
+				"SHADER_TEXTURE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		}		
+	}
+}
