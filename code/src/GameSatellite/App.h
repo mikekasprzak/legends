@@ -2,8 +2,7 @@
 #ifndef __SAT_APP_H__
 #define __SAT_APP_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
-#include <Util/safe_sprintf.h>
+#include <Style/Style.h>
 
 #include <Net/Net.h>
 #include <Net/NetGet.h>
@@ -13,7 +12,6 @@
 #include <enet/enet.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Sat/SatGeoData.h>
-#include <Util/Functor.h>
 
 #include <Screen/Screen.h>
 // - ------------------------------------------------------------------------------------------ - //

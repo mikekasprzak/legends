@@ -2,7 +2,7 @@
 #ifndef __SATBODY_COMPONENT_MESH_H__
 #define __SATBODY_COMPONENT_MESH_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Core/GelTypes.h>
+#include <Style/GelStyle.h>
 #include <Core/GelArray.h>
 #include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //

@@ -1,9 +1,17 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_STYLE_GELSTYLE_H__
-#define __GEL2_STYLE_GELSTYLE_H__
+#ifndef __GEL2_STYLE_STYLE_H__
+#define __GEL2_STYLE_STYLE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "GelTypes.h"		// st32, st64, u16, f32 //
+
+#include "return_if.h"
+#include "threadlocal.h"
+#include "safe_sprintf.h"
+
+#include "Functor.h"
+#include "Signal.h"
+
 #include <Debug/Log.h>
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_STYLE_GELSTYLE_H__ //
+#endif // __GEL2_STYLE_STYLE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
