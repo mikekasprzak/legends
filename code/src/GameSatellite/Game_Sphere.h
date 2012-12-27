@@ -3,7 +3,7 @@
 #define __BOAT_GAME_SPHERE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/System.h>
-#include <Nodal/GelList.h>
+#include <Node/GelList.h>
 #include <Grid/Grid2D_Class.h>
 #include <Search/Search.h>
 #include <Texture/Texture.h>

@@ -19,7 +19,7 @@ cApp::cApp() {
 	Search::AddDirectory( "Content/" );
 	
 	{
-		const char* File = Search::Search( "Sprites" );
+		const char* File = Search::Search( "Tiles" );
 		
 		DataBlock* Data = new_read_DataBlock( File );
 		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
@@ -29,6 +29,17 @@ cApp::cApp() {
 		
 		TextureHandle Handle = upload_STBTexture( Tex );
 		// TODO: Use and/or dispose of Texture //
+		
+		delete_STBTexture( Tex );
+		
+		File = Search::Search( "Tiles_Info" );
+		Data = new_read_DataBlock( File );
+		Tex = new_STBTexture( Data->Data, Data->Size );
+		delete_DataBlock( Data );
+		
+		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+		
+		
 		
 		delete_STBTexture( Tex );
 		
