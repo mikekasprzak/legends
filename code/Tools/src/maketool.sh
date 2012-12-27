@@ -28,8 +28,8 @@ fi
 fi
 
 # src, GEL and gel, since some file systems don't support upper case dirs #
-INCLUDES="-I../../src -I../../src/GEL -I../../src/gel"
+INCLUDES="-I../../src -I../../src/GEL -I../../src/GEL2"
 
-g++ $INCLUDES "$1"/"$1".cpp -O3 -o "$EXE"
+g++ $INCLUDES "$1"/"$1".cpp ../../src/GEL2/Style/*.cpp -O3 -o "$EXE" -static -s
 
 exit $?
