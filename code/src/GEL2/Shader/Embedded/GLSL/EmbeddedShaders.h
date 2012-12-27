@@ -4,11 +4,10 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
-#include <Style/Style.h>
-extern char		DefaultShader_json[];
-extern size_t	DefaultShader_json_Size;
-extern char		DefaultShader_glsl[];
-extern size_t	DefaultShader_glsl_Size;
+extern const char		DefaultShader_json[];
+extern const unsigned	DefaultShader_json_Size;
+extern const char		DefaultShader_glsl[];
+extern const unsigned	DefaultShader_glsl_Size;
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
