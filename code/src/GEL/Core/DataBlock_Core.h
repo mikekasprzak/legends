@@ -8,7 +8,7 @@
 #pragma warning (disable : 4200) // Zero sized array member //
 #endif // _MSC_VER
 // - ------------------------------------------------------------------------------------------ - //
-#include "GelTypes.h"
+#include <Style/GelStyle.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <string.h>
 #include <stdio.h>
