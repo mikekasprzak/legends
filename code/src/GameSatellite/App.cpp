@@ -53,7 +53,7 @@ cApp::cApp() {
 	#ifdef USES_SHADERS
 	{
 //		Shader::cUberShader Uber( Search::Search("/gl/UberShader.json") );
-		Shader::cUberShader Uber( "src/GEL2/Shader/Embedded/GLSL/DefaultShader.json" );
+//		Shader::cUberShader Uber( "src/GEL2/Shader/Embedded/GLSL/DefaultShader.json" );
 	}
 	#endif // USES_SHADERS //
 	
