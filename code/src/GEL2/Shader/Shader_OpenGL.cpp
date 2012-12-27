@@ -2,7 +2,7 @@
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
 #include "Shader.h"
-//#include "Embedded/GLSL/EmbeddedShaders.h"
+#include "Embedded/GLSL/EmbeddedShaders.h"	// DefaultShader_json, etc //
 // - ------------------------------------------------------------------------------------------ - //
 namespace Shader {
 // - ------------------------------------------------------------------------------------------ - //
