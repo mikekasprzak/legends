@@ -6,6 +6,11 @@
 #include <math.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
+//   Rename Resize to Canvas and/or Clip. 
+//   Make Resize do scaling, providing scaling algorithm choices. Pixel, Bilinear.
+//   Make SetWidth make more sense (i.e. what SetW does).
+//   Do Dimensions really need to be size_t's? st32's maybe. 65535x65535 is > 4 GB,
+//   that said you may want a tall skinny grid, so st32 is preferable to st16.
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType = int >
 class cGrid2D {
