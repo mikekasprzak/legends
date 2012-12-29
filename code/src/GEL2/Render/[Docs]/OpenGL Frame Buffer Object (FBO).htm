@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<title>OpenGL Frame Buffer Object (FBO)</title>
+
+<meta charset="utf-8" />
+<meta name="description" content="OpenGL Framebuffer object (FBO) for render-to-texture and offscreen rendering" />
+<meta name="keywords" content="framebuffer, frame buffer, fbo, render to texture, offscreen" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Song Ho Ahn" />
+<meta name="generator" content="editplus" />
+<meta name="robots" content="index,follow" />
+
+<!-- favicon -->
+<link rel="icon" type="image/vnd.microsoft.icon" href="http://www.songho.ca/favicon.ico" />
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" media="screen" href="files/screen.css" />
+<link rel="stylesheet" type="text/css" media="print" href="files/print.css" />
+
+<!-- Javascript -->
+<script type="text/javascript" src="files/songho.js"></script>
+
+</head>
+
+
+<body>
+<div id="leftblock">
+<div class="innerblock">
+
+
+<!-- nav -->
+<div style="clear:both; font-size:80%">
+<a href="http://www.songho.ca/opengl/index.html">&larr;Back</a>
+</div>
+
+
+<h1>OpenGL Frame Buffer Object (FBO)</h1>
+
+<p>
+<b>Related Topics:</b> <a href="./gl_pbo.html">Pixel Buffer Object (PBO)</a>
+<br />
+<b>Download:</b> <a href="files/fbo.zip">fbo.zip</a>, <a href="files/fboDepth.zip">fboDepth.zip</a>, <a href="files/fboStencil.zip">fboStencil.zip</a>
+</p>
+
+<ul>
+	<li><a href="#overview">Overview</a></li>
+	<li><a href="#create">Creating FBO</a></li>
+	<li><a href="#renderbuffer">Renderbuffer Object</a></li>
+	<li><a href="#check">Checking FBO Status</a></li>
+	<li><a href="#example">Example: Render To Texture</a></li>
+</ul>
+
+<p style="color:#666;">
+<strong>Update:</strong> Since Framebuffer object extension is promoted as a core feature of OpenGL version 3.0, the suffix "EXT" is removed from the interface.
+</p>
+
+<h3 id="overview">Overview</h3>
+<p>
+In <a href="./gl_pipeline.html">OpenGL rendering pipeline</a>, the geometry data and textures are transformed and passed several tests, and then finally rendered onto a screen as 2D pixels. The final rendering destination of the OpenGL pipeline is called <em>framebuffer</em>. Framebuffer is a collection of 2D arrays or storages utilized by OpenGL; colour buffers, depth buffer, stencil buffer and accumulation buffer. By default, OpenGL uses the framebuffer as a rendering destination that is created and managed entirely by the window system. This default framebuffer is called <em>window-system-provided</em> framebuffer.
+</p>
+<p>
+The OpenGL extension, <strong>GL_ARB_framebuffer_object</strong> provides an interface to create additional non-displayable framebuffer objects (FBO). This framebuffer is called <em>application-created</em> framebuffer in order to distinguish from the default <em>window-system-provided</em> framebuffer. By using framebuffer object (FBO), an OpenGL application can redirect the rendering output to the <em>application-created</em> framebuffer object (FBO) other than the traditional <em>window-system-provided</em> framebuffer. And, it is fully controlled by OpenGL.
+</p>
+<p>
+Similar to <em>window-system-provided</em> framebuffer, a FBO contains a collection of rendering destinations; color, depth and stencil buffer. <em>(Note that accumulation buffer is not defined in FBO.)</em> These logical buffers in a FBO are called <em>framebuffer-attachable images</em>, which are 2D arrays of pixels that can be attached to a framebuffer object.
+</p>
+<p>
+There are two types of framebuffer-attachable images; texture images and renderbuffer images. If an image of a texture object is attached to a framebuffer, OpenGL performs <em>"render to texture"</em>. And if an image of a renderbuffer object is attached to a framebuffer, then OpenGL performs <em>"offscreen rendering"</em>.
+</p>
+<p>
+By the way, <a href="#renderbuffer">renderbuffer object</a> is a new type of storage object defined in GL_ARB_framebuffer_object extension. It is used as a rendering destination for a single 2D image during rendering process.
+</p>
+<div style="float:right; text-align:center">
+<img src="files/gl_fbo01.png" width="380" height="278" alt="OpenGL Frame Buffer Object (FBO)" />
+<br />
+<span class="caption">Connectivity between FBO, texture and Renderbuffer</span>
+</div>
+<p>
+The following diagram shows the connectivity among the framebuffer object, texture object and renderbuffer object. Multiple texture objects or renderbuffer objects can be attached to a framebuffer object through the attachment points.
+</p>
+<p>
+There are multiple color attachment points (GL_COLOR_ATTACHMENT0,..., GL_COLOR_ATTACHMENT<em>n</em>), one depth attachment point (GL_DEPTH_ATTACHMENT), and one stencil attachment point (GL_STENCIL_ATTACHMENT) in a framebuffer object. The number of color attachment points is implementation dependent, but each FBO must have at least one color attachement point. You can query the maximum number of color attachement points with GL_MAX_COLOR_ATTACHMENTS, which are supported by a graphics card. The reason that a FBO has multiple color attachement points is to allow to render the color buffer to multiple destinations at the same time. This <em>"multiple render targets"</em> (MRT) can be accomplished by <strong>GL_ARB_draw_buffers</strong> extension. Notice that the framebuffer object itself does not have any image storage(array) in it, but, it has only multiple attachment points.
+</p>
+<p>
+Framebuffer object (FBO) provides an efficient switching mechanism; detach the previous framebuffer-attachable image from a FBO, and attach a new framebuffer-attachable image to the FBO. Switching framebuffer-attachable images is much faster than switching between FBOs. FBO provides <strong>glFramebufferTexture2D()</strong> to switch 2D texture objects, and <strong>glFramebufferRenderbuffer()</strong> to switch renderbuffer objects.
+</p>
+
+<h3 id="create">Creating Frame Buffer Object (FBO)</h3>
+<p>
+Creating framebuffer objects is similar to generating <a href="./gl_vbo.html">vertex buffer objects (VBO)</a>.
+</p>
+<h4>glGenFramebuffers()</h4>
+<pre><code class="codeblock" style="margin-left:30px;">void glGenFramebuffers(GLsizei n, GLuint* ids)
+void glDeleteFramebuffers(GLsizei n, const GLuint* ids)
+</code></pre>
+<p style="margin-left:30px">
+glGenFramebuffers() requires 2 parameters; the first one is the number of framebuffers to create, and the second parameter is the pointer to a GLuint variable or an array to store a single ID or multiple IDs. It returns the IDs of unused framebuffer objects. ID 0 means the default framebuffer, which is the window-system-provided framebuffer.
+<br />
+And, FBO may be deleted by calling <strong>glDeleteFramebuffers()</strong> when it is not used anymore.
+</p>
+<h4>glBindFramebuffer()</h4>
+<p style="margin-left:30px">
+Once a FBO is created, it has to be bound before using it.
+</p>
+<code class="codeblock" style="margin-left:30px;">
+void glBindFramebuffer(GLenum target, GLuint id)
+</code>
+<p style="margin-left:30px">
+The first parameter, target, should be GL_FRAMEBUFFER, and the second parameter is the ID of a framebuffer object. Once a FBO is bound, all OpenGL operations affect onto the current bound framebuffer object. The object ID 0 is reserved for the default window-system provided framebuffer. Therefore, in order to unbind the current framebuffer (FBO), use ID 0 in glBindFramebuffer().
+</p>
+
+<h3 id="renderbuffer">Renderbuffer Object</h3>
+<p>
+In addition, renderbuffer object is newly introduced for offscreen rendering. It allows to render a scene directly to a renderbuffer object, instead of rendering to a texture object. Renderbuffer is simply a data storage object containing a single image of a renderable internal format. It is used to store OpenGL logical buffers that do not have corresponding texture format, such as stencil or depth buffer.
+</p>
+<h4>glGenRenderbuffers()</h4>
+<pre><code class="codeblock" style="margin-left:30px;">void glGenRenderbuffers(GLsizei n, GLuint* ids)
+void glDeleteRenderbuffers(GLsizei n, const Gluint* ids)
+</code></pre>
+<p style="margin-left:30px">
+Once a renderbuffer is created, it returns non-zero positive integer. ID 0 is reserved for OpenGL.
+</p>
+
+<h4>glBindRenderbuffer()</h4>
+<code class="codeblock" style="margin-left:30px;">
+void glBindRenderbuffer(GLenum target, GLuint id)
+</code>
+<p style="margin-left:30px">
+Same as other OpenGL objects, you have to bind the current renderbuffer object before referencing it. The target parameter should be GL_RENDERBUFFER for renderbuffer object.
+</p>
+<h4>glRenderbufferStorage()</h4>
+<pre><code class="codeblock" style="margin-left:30px;">void glRenderbufferStorage(GLenum  target,
+                           GLenum  internalFormat,
+                           GLsizei width,
+                           GLsizei height)
+</code></pre>
+<p style="margin-left:30px">
+When a renderbuffer object is created, it does not have any data storage, so we have to allocate a memory space for it. This can be done by using glRenderbufferStorage(). The first parameter must be GL_RENDERBUFFER. The second parameter would be color-renderable (GL_RGB, GL_RGBA, etc.), depth-renderable (GL_DEPTH_COMPONENT), or stencil-renderable formats (GL_STENCIL_INDEX). The width and height are the dimension of the renderbuffer image in pixels.
+</p>
+<p style="margin-left:30px">
+The width and height should be less than GL_MAX_RENDERBUFFER_SIZE, otherwise, it generates GL_INVALID_VALUE error.
+</p>
+
+<h4>glGetRenderbufferParameteriv()</h4>
+<pre><code class="codeblock" style="margin-left:30px;">void glGetRenderbufferParameteriv(GLenum target,
+                                  GLenum param,
+                                  GLint* value)
+</code></pre>
+<p style="margin-left:30px">
+You also get various parameters of the currently bound renderbuffer object. <em>target</em> should be GL_RENDERBUFFER, and the second parameter is the name of parameter. The last is the pointer to an integer variable to store the returned value. The available names of the renderbuffer parameters are;
+</p>
+<pre><code class="codeblock" style="margin-left:30px;">
+GL_RENDERBUFFER_WIDTH
+GL_RENDERBUFFER_HEIGHT
+GL_RENDERBUFFER_INTERNAL_FORMAT
+GL_RENDERBUFFER_RED_SIZE
+GL_RENDERBUFFER_GREEN_SIZE
+GL_RENDERBUFFER_BLUE_SIZE
+GL_RENDERBUFFER_ALPHA_SIZE
+GL_RENDERBUFFER_DEPTH_SIZE
+GL_RENDERBUFFER_STENCIL_SIZE
+
+</code></pre>
+
+<h3 id="attach">Attaching images to FBO</h3>
+<p>
+FBO itself does not have any image storage(buffer) in it. Instead, we must attach framebuffer-attachable images (texture or renderbuffer objects) to the FBO. This mechanism allows that FBO quickly switch (detach and attach) the framebuffer-attachable images in a FBO. It is much faster to switch framebuffer-attachable images than to switch between FBOs. And, it saves unnecessary data copies and memory consumption. For example, a texture can be attached to multiple FBOs, and its image storage can be shared by multiple FBOs.
+</p>
+
+<h4>Attaching a 2D texture image to FBO</h4>
+<pre><code class="codeblock" style="margin-left:30px;">glFramebufferTexture2D(GLenum target,
+                       GLenum attachmentPoint,
+                       GLenum textureTarget,
+                       GLuint textureId,
+                       GLint  level)
+</code></pre>
+<p style="margin-left:30px">
+glFramebufferTexture2D() is to attach a 2D texture image to a FBO. The first parameter must be GL_FRAMEBUFFER, and the second parameter is the attachment point where to connect the texture image. A FBO has multiple color attachment points (GL_COLOR_ATTACHMENT0, ..., GL_COLOR_ATTACHMENT<em>n</em>),  GL_DEPTH_ATTACHMENT, and GL_STENCIL_ATTACHMENT. The third parameter, <em>"textureTarget"</em> is GL_TEXTURE_2D in most cases. The fourth parameter is the identifier of the texture object. The last parameter is the mipmap level of the texture to be attached.
+</p>
+<p style="margin-left:30px">
+If the <em>textureId</em> parameter is set to 0, then, the texture image will be detached from the FBO. If a texture object is deleted while it is still attached to a FBO, then, the texture image will be automatically detached from the currently bound FBO. However, if it is attached to multiple FBOs and deleted, then it will be detached from only the bound FBO, but will not be detached from any other un-bound FBOs.
+</p>
+
+<h4>Attaching a Renderbuffer image to FBO</h4>
+<pre><code class="codeblock" style="margin-left:30px;">void glFramebufferRenderbuffer(GLenum target,
+                               GLenum attachmentPoint,
+                               GLenum renderbufferTarget,
+                               GLuint renderbufferId)
+</code></pre>
+<p style="margin-left:30px">
+A renderbuffer image can be attached by calling glFramebufferRenderbuffer(). The first and second parameters are same as glFramebufferTexture2D(). The third parameter must be GL_RENDERBUFFER, and the last parameter is the ID of the renderbuffer object.
+</p>
+<p style="margin-left:30px">
+If <em>renderbufferId</em> parameter is set to 0, the renderbuffer image will be detached from the attachment point in the FBO. If a renderbuffer object is deleted while it is still attached in a FBO, then it will be automatically detached from the bound FBO. However, it will not be detached from any other non-bound FBOs. 
+</p>
+
+<h3 id="check">Checking FBO Status</h3>
+<p>
+Once attachable images (textures and renderbuffers) are attached to a FBO and before performing FBO operation, you must validate if the FBO status is complete or incomplete by using <strong>glCheckFramebufferStatus()</strong>. If the FBO is not complete, then any drawing and reading command (glBegin(), glCopyTexImage2D(), etc) will be failed.
+</p>
+<code class="codeblock">
+GLenum glCheckFramebufferStatus(GLenum target)
+</code>
+<p>
+glCheckFramebufferStatus() validates all its attached images and framebuffer parameters on the currently bound FBO. And, this function cannot be called within glBegin()/glEnd() pair. The target parameter should be GL_FRAMEBUFFER. It returns non-zero value after checking the FBO. If all requirements and rules are satisfied, then it returns <strong>GL_FRAMEBUFFER_COMPLETE</strong>. Otherwise, it returns a relevant error value, which tells what rule is violated.
+</p>
+<p>
+The rules of FBO completeness are:
+</p>
+<ul>
+	<li style="margin-bottom:1em">The width and height of framebuffer-attachable image must be not zero.</li>
+	<li style="margin-bottom:1em">If an image is attached to a color attachment point, then the image must have a color-renderable internal format. <span style="color:#666; font-size:80%">(GL_RGBA, GL_DEPTH_COMPONENT, GL_LUMINANCE, etc)</span></li>
+	<li style="margin-bottom:1em">If an image is attached to GL_DEPTH_ATTACHMENT, then the image must have a depth-renderable internal format. <span style="color:#666; font-size:80%">(GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT24, etc)</span></li>
+	<li style="margin-bottom:1em">If an image is attached to GL_STENCIL_ATTACHMENT, then the image must have a stencil-renderable internal format. <span style="color:#666; font-size:80%">(GL_STENCIL_INDEX, GL_STENCIL_INDEX8, etc)</span></li>
+	<li style="margin-bottom:1em">FBO must have at least one image attached.</li>
+	<li style="margin-bottom:1em">All images attached a FBO must have the same width and height.</li>
+	<li style="margin-bottom:1em">All images attached the color attachment points must have the same internal format.</li>
+</ul>
+<p>
+Note that even though all of the above conditions are satisfied, your OpenGL driver may not support some combinations of internal formats and parameters. If a particular implementation is not supported by OpenGL driver, then glCheckFramebufferStatus() returns GL_FRAMEBUFFER_UNSUPPORTED.
+</p>
+<p>
+The <a href="files/fbo.zip">sample code</a> provides some utility functions to report the information of the current FBO; printFramebufferInfo() and checkFramebufferStatus().
+</p>
+
+<h3 id="example">Example: Render To Texture</h3>
+<p>
+<img src="files/gl_fbo02.png" width="358" height="352" alt="OpenGL FBO Example: Render To Texture" />
+<img src="files/gl_fbo03.png" width="358" height="352" alt="OpenGL FBO Example: Depth Buffer" />
+</p>
+<p>
+Download the source and binary: <a href="files/fbo.zip">fbo.zip</a>
+<br />
+<strong>Extras:</strong>
+<br />
+- Rendering to the depth buffer only: <a href="files/fboDepth.zip">fboDepth.zip</a>
+<br />
+- Rendering the outlines of an object using stencil buffer: <a href="files/fboStencil.zip">fboStencil.zip</a>
+</p>
+<p>
+Sometimes, you need to generate dynamic textures on the fly. The most common examples are generating mirroring/reflection effects, dynamic cube/environment maps and shadow maps. Dynamic texturing can be accomplished by rendering the scene to a texture. A traditional way of render-to-texture is to draw a scene to the framebuffer as normal, and then copy the framebuffer image to a texture by using glCopyTexSubImage2D().
+</p>
+<p>
+Using FBO, we can render a scene directly onto a texture, so we don't have to use the window-system-provided framebuffer at all. Further more, we can eliminate an additional data copy (from framebuffer to texture).
+</p>
+<p>
+This demo program performs <em>render to texture</em> operation with/without FBO, and compares the performance difference. Other than performance gain, there is another advantage of using FBO. If the texture resolution is larger than the size of the rendering window in traditional render-to-texture mode (without FBO), then the area out of the window region will be clipped. However, FBO does not suffer from this clipping problem. You can create a framebuffer-renderable image larger than the display window.
+</p>
+<p>
+The following codes is to setup a FBO and framebuffer-attachable images before the rendering loop is started. Note that not only a texture image is attached to the FBO, but also, a renderbuffer image is  attached to the depth attachment point of the FBO. We do not actually use this depth buffer, however, the FBO itself needs it for depth test. If we don't attach this depth renderable image to the FBO, then the rendering output will be corrupted because of missing depth test. If stencil test is also required during FBO rendering, then additional renderbuffer image should be attached to GL_STENCIL_ATTACHMENT.
+</p>
+<pre><code class="codeblock">
+...
+<span class="comment">// create a texture object</span>
+GLuint textureId;
+glGenTextures(1, &amp;textureId);
+glBindTexture(GL_TEXTURE_2D, textureId);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); <span class="comment">// automatic mipmap</span>
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
+             GL_RGBA, GL_UNSIGNED_BYTE, 0);
+glBindTexture(GL_TEXTURE_2D, 0);
+
+<span class="comment">// create a renderbuffer object to store depth info</span>
+GLuint rboId;
+glGenRenderbuffers(1, &amp;rboId);
+glBindRenderbuffer(GL_RENDERBUFFER, rboId);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                      TEXTURE_WIDTH, TEXTURE_HEIGHT);
+glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+<span class="comment">// create a framebuffer object</span>
+GLuint fboId;
+glGenFramebuffers(1, &amp;fboId);
+glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+
+<span class="comment">// attach the texture to FBO color attachment point</span>
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                       GL_TEXTURE_2D, textureId, 0);
+
+<span class="comment">// attach the renderbuffer to depth attachment point</span>
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                          GL_RENDERBUFFER, rboId);
+
+<span class="comment">// check FBO status</span>
+GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+if(status != GL_FRAMEBUFFER_COMPLETE)
+    fboUsed = false;
+
+<span class="comment">// switch back to window-system-provided framebuffer</span>
+glBindFramebuffer(GL_FRAMEBUFFER, 0);
+...
+
+</code></pre>
+
+<p>
+The rendering procedure of render-to-texture is almost same as normal drawing. We only need to switch the rendering destination from the window-system-provided to the non-displayable, application-created framebuffer (FBO).
+</p>
+<pre><code class="codeblock">
+...
+<span class="comment">// set rendering destination to FBO</span>
+glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+
+<span class="comment">// clear buffers</span>
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+<span class="comment">// draw a scene to a texture directly</span>
+draw();
+
+<span class="comment">// unbind FBO</span>
+glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+<span class="comment">// trigger mipmaps generation explicitly
+// NOTE: If GL_GENERATE_MIPMAP is set to GL_TRUE, then glCopyTexSubImage2D()
+// triggers mipmap generation automatically. However, the texture attached
+// onto a FBO should generate mipmaps manually via glGenerateMipmap().</span>
+glBindTexture(GL_TEXTURE_2D, textureId);
+glGenerateMipmap(GL_TEXTURE_2D);
+glBindTexture(GL_TEXTURE_2D, 0);
+...
+
+</code></pre>
+
+<p>
+Note that <strong>glGenerateMipmap()</strong> is also included as part of FBO extension in order to generate mipmaps explicitly after modifying the base level texture image. If <strong>GL_GENERATE_MIPMAP</strong> is set to GL_TRUE, then glTex{Sub}Image2D() and glCopyTex{Sub}Image2D() trigger automatic mipmap generation (in OpenGL version 1.4 or greater). However, FBO operation does not generate its mipmaps automatically when the base level texture is modified because FBO does not call glCopyTex{Sub}Image2D() to modify the texture. Therefore, glGenerateMipmap() must be explicitly called for mipmap generation.
+</p>
+<p>
+If you need to a post processing of the texture, it is possible to combine with <a href="./gl_pbo.html">Pixel Buffer Object (PBO)</a> to modify the texture efficiently.
+</p>
+
+<!-- footer -->
+<div id="footer">
+<div style="float:left">
+&copy;&nbsp;2008-2012 <a href="mailto:song.ahn@gmail.com">Song Ho Ahn (<span lang="ko">안성호</span>)</a>
+</div>
+<div style="float:right">
+<img src="../files/html5_gray32.png" width="32" height="32" alt="HTML5 Logo" />
+</div>
+<div style="float:right">
+<a href="http://validator.w3.org/check?uri=referer"><img src="../files/I_heart_validator.png" width="80" height="15" alt="HTML Validator" /></a>
+</div>
+</div>
+
+<!-- nav -->
+<div style="clear:both; font-size:80%">
+<a href="http://www.songho.ca/opengl/index.html">&larr;Back</a>
+</div>
+
+
+</div>
+</div> <!-- END OF LEFTBLOCK -->
+
+
+<!-- right content block ============================================ -->
+<div id="rightblock">
+<div class="innerblock">
+
+<div>
+&nbsp;
+</div>
+
+</div>
+</div>
+<!-- END OF RIGHT BLOCK ============================================= -->
+
+
+</body>
+</html>
