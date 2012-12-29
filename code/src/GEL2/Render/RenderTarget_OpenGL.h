@@ -219,6 +219,7 @@ public:
 	inline static void UnBind( ) {
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
 		
+		// NOTE: This will cause a compile error, until ActualScreen::Width is updated //
 		glViewport( 
 			0,
 			0, 
