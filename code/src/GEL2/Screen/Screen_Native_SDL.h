@@ -93,7 +93,7 @@ public:
 		return GEL_OK;
 	}
 	
-	inline GelError UpdateViewport( const bool /*FullScreen*/ ) const {
+	inline GelError UpdateViewport() const {
 		glViewport( 0, 0, Bounds.w, Bounds.h );
 		
 		return GEL_OK;
@@ -149,7 +149,7 @@ public:
 		
 		return_if( MakeCurrent() );
 		
-		return_if( UpdateViewport( FullScreen ) );
+		return_if( UpdateViewport() );
 		
 		return GEL_OK;
 	}
@@ -292,7 +292,7 @@ inline int GetIndexByWindowID( const Uint32 WindowID ) {
 inline GelError Update( const int Index ) {
 	return_if( Native[Index].UpdateBounds() );
 	return_if( Native[Index].MakeCurrent() );
-	return_if( Native[Index].UpdateViewport( FullScreen ) );
+	return_if( Native[Index].UpdateViewport() );
 	return GEL_OK;
 }
 // - ------------------------------------------------------------------------------------------ - //

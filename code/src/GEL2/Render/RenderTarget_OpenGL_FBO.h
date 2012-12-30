@@ -53,7 +53,8 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
 #include <Style/Style.h>
-#include <Graphics/Graphics.h>
+#include <Screen/Screen.h>
+//#include <Graphics/Graphics.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "RenderTarget_OpenGL_FBO_GLDefines.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -221,16 +222,13 @@ public:
 			);	
 	}
 		
-	inline static void UnBind( ) {
+	inline static void _UnBind( ) {
 		gels_BindFramebuffer( GELS_FRAMEBUFFER, 0 );
+	}
 		
-		// NOTE: This will cause a compile error, until ActualScreen::Width is updated //
-		glViewport( 
-			0,
-			0, 
-			ActualScreen::Width, 
-			ActualScreen::Height
-			);
+	inline static void UnBind( ) {
+		_UnBind();
+		Screen::Native[0].UpdateViewport();		// Reset glViewport to the whole Native Screen //
 	}
 	
 	inline void BindAsTexture( const size_t Index = 0 ) const { 
@@ -244,8 +242,11 @@ public:
 //#ifdef USES_MRT // Multiple Render Targets //
 // - ------------------------------------------------------------------------------------------ - //
 // Synonym for the static UnBind member of RenderTarget //
+inline void _UnBind() {
+	cRenderTarget::_UnBind();
+}
 inline void UnBind() {
-	cRenderBuffer::UnBind();
+	cRenderTarget::UnBind();
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Render //
