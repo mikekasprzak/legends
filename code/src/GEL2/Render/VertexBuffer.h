@@ -56,5 +56,7 @@
 // 4. GL_DYNAMIC_DRAW (with glMapBuffer) and D3D11_USAGE_DYNAMIC (with Map/Unmap)
 // 
 // Number 3 is a GL only feature, that *may* improve speed in exotic cases.
-// Number 4 is only available in GL on the desktop.
+// Number 4 is only available in GL on the desktop. Available with GL_WRITE_ONLY_OES
+//   with the OES_mapbuffer OpenGL ES Extension.
+//   http://www.khronos.org/registry/gles/extensions/OES/OES_mapbuffer.txt
 // D3D11_USAGE_STAGING is complicated and its benefits are exotic
