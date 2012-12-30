@@ -4,7 +4,8 @@
 //   The total files in the content file system don't tend to be that many, so lets say about
 //   ~100 bytes per file more (on average). PROTIP: Set the content folder to limit redundants.
 //   Also, be sure to discard any attempts to add a symbol that already exists. FIFO.
-//   Content/Art, Content/Scripts, etc. Do all these explicitly, so to disregard "Tools"
+//   Content/Art, Content/Scripts, etc. Do all these explicitly, so to disregard "Tools".
+//   Do extensions too. I just found a conflict 'DefaultShader.json' and 'DefaultShader.glsl'.
 // - ------------------------------------------------------------------------------------------ - //
 #include <map>
 #include <vector>
