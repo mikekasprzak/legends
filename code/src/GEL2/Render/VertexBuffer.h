@@ -45,6 +45,8 @@
 //    &strides,          //array of stride values, one for each buffer
 //    &offsets );        //array of offset values, one for each buffer
 
+// VBO Creation returns a ID3D11Buffer type. More complex than an ID. Usually a pointer to one.
+
 // ***** //
 
 // Equivalents
