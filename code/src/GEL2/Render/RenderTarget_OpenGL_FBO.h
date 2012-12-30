@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_RENDER_RENDERTARGET_OPENGL_H__
-#define __GEL2_RENDER_RENDERTARGET_OPENGL_H__
+#ifndef __GEL2_RENDER_RENDERTARGET_OPENGL_FBO_H__
+#define __GEL2_RENDER_RENDERTARGET_OPENGL_FBO_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Usage:
 //   Number of Textures determines how many FBOs are created. If Multiple Render Targets (MRT) is
@@ -55,7 +55,7 @@
 #include <Style/Style.h>
 #include <Graphics/Graphics.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "RenderTarget_OpenGL_GLDefines.h"
+#include "RenderTarget_OpenGL_FBO_GLDefines.h"
 // - ------------------------------------------------------------------------------------------ - //
 namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
@@ -254,5 +254,5 @@ inline void UnBind() {
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_RENDER_RENDERTARGET_OPENGL_H__ //
+#endif // __GEL2_RENDER_RENDERTARGET_OPENGL_FBO_H__ //
 // - ------------------------------------------------------------------------------------------ - //
