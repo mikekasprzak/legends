@@ -10,6 +10,11 @@
 //   FBOs. Otherwise, it's expected that you will create an equal number of Depth and Stencil
 //   buffers as the number of textures. If using MRTs, you should use no more than 1 of each.
 // - ------------------------------------------------------------------------------------------ - //
+// Shader Usage:
+//   Typically gl_FragColor is the data you write, but when using MRTs you use gl_FragData[i],
+//   where "i" is the index in GL_COLOR_ATTACHMENTi (i.e. 0, 1, 2). gl_FragData[0] is a synonym
+//   for GL_COLOR_ATTACHMENT0.
+// - ------------------------------------------------------------------------------------------ - //
 // TIP: I may want to use a non Renderbuffer for Depth (i.e. a texture). //
 //	If I do, it means I could use samplers in the shader for reading the data. //
 // - ------------------------------------------------------------------------------------------ - //
