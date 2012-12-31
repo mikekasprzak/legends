@@ -1,22 +1,22 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__
-#define __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__
+#ifndef __GEL2_RENDER_INDEXHANDLE_OPENGL_H__
+#define __GEL2_RENDER_INDEXHANDLE_OPENGL_H__
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
-namespace Texture {
+namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
-typedef unsigned int		TextureHandle;
+typedef unsigned int		IndexHandle;
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle new_TextureHandle();
-void delete_TextureHandle( TextureHandle Handle );
+IndexHandle new_IndexHandle();
+void delete_IndexHandle( IndexHandle Handle );
 
-void bind_TextureHandle( TextureHandle Handle );
-void unbind_TextureHandle( TextureHandle = 0 );
+void bind_IndexHandle( IndexHandle Handle );
+void unbind_IndexHandle( IndexHandle = 0 );	// TODO: Remove this argument, once unbind confirmed
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace Texture //
+}; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_TEXTURE_TEXTUREHANDLE_OPENGL_H__ //
+#endif // __GEL2_RENDER_INDEXHANDLE_OPENGL_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -3,30 +3,29 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <API/API_OpenGL2.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "TextureHandle_OpenGL.h"
+#include "IndexHandle.h"
 // - ------------------------------------------------------------------------------------------ - //
-namespace Texture {
+namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle new_TextureHandle() {
-	TextureHandle Handle;
-	glGenTextures( 1, &Handle );
+IndexHandle new_IndexHandle() {
+	IndexHandle Handle;
+	glGenBuffers( 1, &Handle );
 	return Handle;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void delete_TextureHandle( TextureHandle Handle ) {
-	glDeleteTextures( 1, (const GLuint*)&Handle );
+void delete_IndexHandle( IndexHandle Handle ) {
+	glDeleteBuffers( 1, (const GLuint*)&Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void bind_TextureHandle( TextureHandle Handle ) {
-	glBindTexture( GL_TEXTURE_2D, Handle );
+void bind_IndexHandle( IndexHandle Handle ) {
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-// Rarely Used. Alternatively, just bund another texture //
-void unbind_TextureHandle( TextureHandle ) {
-	glBindTexture( GL_TEXTURE_2D, 0 );
+void unbind_IndexHandle( IndexHandle ) {
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace Texture //
+}; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //

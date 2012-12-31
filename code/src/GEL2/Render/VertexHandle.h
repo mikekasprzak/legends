@@ -1,12 +1,12 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_RENDER_H__
-#define __GEL2_RENDER_H__
+#ifndef __GEL2_RENDER_VERTEXHANDLE_H__
+#define __GEL2_RENDER_VERTEXHANDLE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "VertexHandle.h"
-#include "IndexHandle.h"
-
-#include "RenderTarget_OpenGL_FBO.h"	
-//#include "RenderTarget_OpenGL_PBuffer.h"	// PBuffers do some of the same things, but legacy
+#include "VertexHandle_OpenGL.h"
+//#include "VertexHandle_Direct3D11.h"
+//#include "VertexHandle_Stage3D.h"
+//#include "VertexHandle_Curses.h"
+//#include "VertexHandle_Stub.h"
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_RENDER_H__ //
+#endif // __GEL2_RENDER_VERTEXHANDLE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

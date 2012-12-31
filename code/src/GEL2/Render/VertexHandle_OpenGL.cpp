@@ -3,30 +3,29 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <API/API_OpenGL2.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "TextureHandle_OpenGL.h"
+#include "VertexHandle.h"
 // - ------------------------------------------------------------------------------------------ - //
-namespace Texture {
+namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle new_TextureHandle() {
-	TextureHandle Handle;
-	glGenTextures( 1, &Handle );
+VertexHandle new_VertexHandle() {
+	VertexHandle Handle;
+	glGenBuffers( 1, &Handle );
 	return Handle;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void delete_TextureHandle( TextureHandle Handle ) {
-	glDeleteTextures( 1, (const GLuint*)&Handle );
+void delete_VertexHandle( VertexHandle Handle ) {
+	glDeleteBuffers( 1, (const GLuint*)&Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void bind_TextureHandle( TextureHandle Handle ) {
-	glBindTexture( GL_TEXTURE_2D, Handle );
+void bind_VertexHandle( VertexHandle Handle ) {
+	glBindBuffer( GL_ARRAY_BUFFER, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-// Rarely Used. Alternatively, just bund another texture //
-void unbind_TextureHandle( TextureHandle ) {
-	glBindTexture( GL_TEXTURE_2D, 0 );
+void unbind_VertexHandle( VertexHandle ) {
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace Texture //
+}; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
