@@ -12,9 +12,9 @@ void Init() {
 	atexit( Exit );
 
 	// Use Files //	
-//	Default = new cUberShader( "src/GEL2/Shader/Embedded/GLSL/DefaultShader.json" );
+	Default = new cUberShader( "src/GEL2/Shader/Embedded/GLSL/DefaultShader.json" );
 	// Use Embedded //
-	Default = new cUberShader( DefaultShader_json, DefaultShader_json_Size, DefaultShader_glsl, DefaultShader_glsl_Size );
+//	Default = new cUberShader( DefaultShader_json, DefaultShader_json_Size, DefaultShader_glsl, DefaultShader_glsl_Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void Exit() {

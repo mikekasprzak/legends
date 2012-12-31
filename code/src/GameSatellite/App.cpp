@@ -101,7 +101,32 @@ void cApp::Step( ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {
-	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
+	glClearColor( 0.3, 0, 0, 1 );
+	glClear( GL_COLOR_BUFFER_BIT );
+	
+	float Verts[] = {
+		-1,-1,
+		-1,+1,
+		+1,-1,
+		+1,+1
+	};
+	
+	Matrix4x4 ViewMatrix;
+	ViewMatrix(0,0) = 1.0f/(8.0f);
+	ViewMatrix(1,1) = 1.0f/(8.0f * Native.GetAspectRatio());
+	ViewMatrix(2,2) = 1.0f;
+	ViewMatrix(3,2) = 1.0f;
+	
+	glEnableVertexAttribArray( 0 );	
+	
+	static Shader::ShaderHandle FlatShader = Shader::Default->Find( "Flat" );
+	Shader::Default->Bind( FlatShader );
+	Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+	Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+	Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+	Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+	
+/*	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );
 	glLoadIdentity();
 	
 	float NewSize = 320.0f * Native.GetAspectRatio();
@@ -124,7 +149,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 		glColor3f(1.0f,1.0f,1.0f); glVertex2f(x+90.0f, y+90.0f);
 		glColor3f(0.0f,1.0f,0.0f); glVertex2f(x+90.0f, y-90.0f);
 		glColor3f(0.0f,0.0f,1.0f); glVertex2f(x-90.0f, y-90.0f);
-    glEnd();
+    glEnd();*/
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // PRODUCT_CLIENT //
