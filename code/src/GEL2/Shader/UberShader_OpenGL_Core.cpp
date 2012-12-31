@@ -13,6 +13,11 @@
 #include <Core/DataBlock.h>
 #include <cJSON.h>
 // - ------------------------------------------------------------------------------------------ - //
+// TODO: Add support to the JSON file to load multiple files containing code (thus allowing me
+//   to have seperate files for the Vertex and Fragment shaders, if I wanted).
+// Consider making CurrentShader a static member of the class, so that there is only 1 current
+//   accross all instances of the cUberShader class.
+// - ------------------------------------------------------------------------------------------ - //
 namespace Shader {
 // - ------------------------------------------------------------------------------------------ - //
 inline std::string DefineSymbol( const char* InStr ) {
@@ -67,6 +72,9 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 //	VersionString = "#version 100\n";
 #endif // USES_OPENGL_ES2 //
 
+#ifdef USES_TESSELLATION_SHADERS
+	VersionString = "#version 400\n";
+#else // USES_TESSELLATION_SHADERS //
 #ifdef USES_GEOMETRY_SHADERS
 #ifdef USES_ARB_GEOMETRY_SHADERS
 	VersionString = "#version 120\n#extension GL_EXT_geometry_shader4 : enable\n";
@@ -74,9 +82,6 @@ inline cUberShader_Shader BuildShader( const char* Defines, const char* ShaderSo
 	VersionString = "#version 150\n";
 #endif // USES_ARB_GEOMETRY_SHADERS //
 #endif // USES_GEOMETRY_SHADERS //
-
-#ifdef USES_TESSELLATION_SHADERS
-	VersionString = "#version 400\n";
 #endif // USES_TESSELLATION_SHADERS //
 	
 	ProgramCode = VersionString;
