@@ -10,7 +10,9 @@
 #ifdef VERTEX_SHADER
 // - ------------------------------------------------------------------------------------------ - //
 // Color Scalar can be optimized away by the "Normalize" feature of attrib //
+#ifdef COLOR_SCALAR
 const float ColorScalar = 1.0/255.0;
+#endif COLOR_SCALAR
 
 uniform lowp vec4 GlobalColor;
 uniform mat4 ViewMatrix;
@@ -36,11 +38,19 @@ void main() {
 		v_TexCoord = TexCoord * UVScalar;
 	#endif // SHADER_TEXTURE //
 	
-	#ifdef SHADER_FLAT
-		v_Color = ColorScalar * GlobalColor;
-	#else // !SHADER_FLAT //
-		v_Color = VertexColor * ColorScalar * GlobalColor;
-	#endif // SHADER_FLAT //
+	#ifdef COLOR_SCALAR
+		#ifdef SHADER_FLAT
+			v_Color = ColorScalar * GlobalColor;
+		#else // !SHADER_FLAT //
+			v_Color = VertexColor * ColorScalar * GlobalColor;
+		#endif // SHADER_FLAT //
+	#else // COLOR_SCALAR //
+		#ifdef SHADER_FLAT
+			v_Color = GlobalColor;
+		#else // !SHADER_FLAT //
+			v_Color = VertexColor * GlobalColor;
+		#endif // SHADER_FLAT //
+	#endif // COLOR_SCALAR //
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // VERTEX_SHADER //
