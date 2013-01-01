@@ -11,7 +11,7 @@ typedef unsigned int		TextureHandle;
 TextureHandle new_TextureHandle();
 void delete_TextureHandle( TextureHandle Handle );
 
-void bind_TextureHandle( TextureHandle Handle );
+void bind_TextureHandle( TextureHandle Handle, const int Index = 0 );
 void unbind_TextureHandle( TextureHandle = 0 );
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //

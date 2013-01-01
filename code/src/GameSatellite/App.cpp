@@ -13,8 +13,9 @@
 #endif // PRODUCT_SERVER //
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Texture;
+using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
-
+TextureHandle Texas;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -28,8 +29,7 @@ cApp::cApp() {
 		
 		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
 		
-		TextureHandle Handle = upload_STBTexture( Tex );
-		// TODO: Use and/or dispose of Texture //
+		Texas = upload_STBTexture( Tex );
 		
 		delete_STBTexture( Tex );
 		
@@ -46,9 +46,6 @@ cApp::cApp() {
 		Log( "%i, %i (%x %x -- %x %x)", Byter.Width(), Byter.Height(), (int)Byter(0,0),(int)Byter(12,0),(int)Byter(0,12),(int)Byter(12,12) );
 		
 		delete_STBTexture( Tex );
-		
-		// Kill Texture //
-		delete_TextureHandle( Handle );
 	}
 	
 	#ifdef USES_SHADERS
@@ -81,6 +78,9 @@ cApp::cApp() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+	// Kill Texture //
+	delete_TextureHandle( Texas );
+
 #ifdef PRODUCT_CLIENT
 	// Cleanup //
 	//Client_Stop();
@@ -108,22 +108,31 @@ void cApp::Draw( Screen::cNative& Native ) {
 		-1,-1,
 		-1,+1,
 		+1,-1,
-		+1,+1
+		+1,+1,
+	};
+
+	UVType UVs[] = {
+		UV_ZERO,UV_ZERO,
+		UV_ZERO,UV_ONE,
+		UV_ONE,	UV_ZERO,
+		UV_ONE,	UV_ONE,
 	};
 	
-	Matrix4x4 ViewMatrix;
-	ViewMatrix(0,0) = 1.0f/(8.0f);
-	ViewMatrix(1,1) = 1.0f/(8.0f * Native.GetAspectRatio());
-	ViewMatrix(2,2) = 1.0f;
-	ViewMatrix(3,2) = 1.0f;
+	Matrix4x4 ViewMatrix = Matrix4x4::Identity;
+	ViewMatrix(0,0) = 1.0f/(2.0f);
+	ViewMatrix(1,1) = 1.0f/(2.0f * Native.GetAspectRatio());
 	
-	glEnableVertexAttribArray( 0 );	
+	glEnableVertexAttribArray( 0 );
 	
-	static Shader::ShaderHandle FlatShader = Shader::Default->Find( "Flat" );
-	Shader::Default->Bind( FlatShader );
+	static Shader::ShaderHandle MyShader = Shader::Default->Find( "Texture" );
+	Shader::Default->Bind( MyShader );
 	Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 	Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+	Texture::bind_TextureHandle( Texas, 0 );
+	Shader::Default->BindUniform1i( "TexImage0", 0 );
 	Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+	Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+	//Shader::Default->AttribPointer( 2, 2, GL_BYTE, false, sizeof(char)*4, UVs );
 	Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
 	
 /*	glMatrixMode( GL_PROJECTION | GL_MODELVIEW );

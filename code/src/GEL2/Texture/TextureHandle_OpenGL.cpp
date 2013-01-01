@@ -17,7 +17,8 @@ void delete_TextureHandle( TextureHandle Handle ) {
 	glDeleteTextures( 1, (const GLuint*)&Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void bind_TextureHandle( TextureHandle Handle ) {
+void bind_TextureHandle( TextureHandle Handle, const int Index ) {
+	glActiveTexture( GL_TEXTURE0 + Index );
 	glBindTexture( GL_TEXTURE_2D, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
