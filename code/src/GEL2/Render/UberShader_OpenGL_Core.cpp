@@ -18,7 +18,7 @@
 // Consider making CurrentShader a static member of the class, so that there is only 1 current
 //   accross all instances of the cUberShader class.
 // - ------------------------------------------------------------------------------------------ - //
-namespace Shader {
+namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
 inline std::string DefineSymbol( const char* InStr ) {
 	return std::string("#define ") + std::string(InStr) + std::string("\n");
@@ -439,7 +439,7 @@ ShaderHandle cUberShader::Find( const char* ShaderName ) {
 	return 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace Shader //
+}; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //

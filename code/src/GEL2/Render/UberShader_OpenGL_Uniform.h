@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
-namespace Shader {
+namespace Render {
 // - ------------------------------------------------------------------------------------------ - //
 int cUberShader::BindUniform1i( const char* Name, const int v0 ) {
 	GLint Location = glGetUniformLocation( CurrentShader->Program, Name );
@@ -198,7 +198,7 @@ int cUberShader::BindUniformSColor( const char* Name, const GelSColor Color ) {
 	return Location;
 }
 // - ------------------------------------------------------------------------------------------ - //
-}; // namespace Shader //
+}; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //

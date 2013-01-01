@@ -8,6 +8,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "UV.h"
 #include <Texture/Texture.h>
+#include <Search/Search.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <Graphics/Allocator/Allocator.h>
 #include <Graphics/Allocator/Vector3DAllocator.h>
@@ -140,14 +141,14 @@ public:
 //				Vert.Size()
 //				);
 			
-			Shader::Default->Bind( Shader::TextureShader );
-			Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-			Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+			Default->Bind( TextureShader );
+			Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+			Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 			Texture::Bind( TexturePage[Tex], 0 );
-			Shader::Default->BindUniform1i( "TexImage0", 0 );
-			Shader::Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(const Vector3D), Vert.Get() );
-			Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UV.Get() );
-			Shader::Default->DrawArrays( GL_TRIANGLES, Vert.Size() );
+			Default->BindUniform1i( "TexImage0", 0 );
+			Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(const Vector3D), Vert.Get() );
+			Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UV.Get() );
+			Default->DrawArrays( GL_TRIANGLES, Vert.Size() );
 			
 			if ( Length == CharsDrawn )
 				break;

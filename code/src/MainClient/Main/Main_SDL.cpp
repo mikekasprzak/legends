@@ -19,7 +19,7 @@
 #include <System/System.h>
 #include <Screen/Screen.h>
 #include <Search/Search.h>
-#include <Shader/Shader.h>
+#include <Render/Render.h>
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -250,7 +250,7 @@ int main( int argc, char* argv[] ) {
 	System::Init();
 	Input::Init();
 	Search::Init();
-	Shader::Init();
+	Render::Init();
 	
 	// **** //
 
