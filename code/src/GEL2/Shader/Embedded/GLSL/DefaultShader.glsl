@@ -3,6 +3,8 @@
 	precision highp float;
 #else // !GL_ES //
 	#define lowp
+	#define mediump
+	#define highp
 #endif // GL_ES //
 // - ------------------------------------------------------------------------------------------ - //
 

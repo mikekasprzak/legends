@@ -73,7 +73,7 @@ public:
 	void ProcessShader( cJSON* root, const char* ShaderSource );
 	
 	ShaderHandle Find( const char* ShaderName );
-	void Bind( const ShaderHandle Index );
+	void Bind( const ShaderHandle Index = 0 );
 
 	template<class VertType>
 	inline void VectorAttribPointer( GLuint Index, const VertType* Ptr ) {

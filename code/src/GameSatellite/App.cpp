@@ -5,6 +5,8 @@
 #include <Shader/Shader.h>
 #include <Render/Render.h>
 
+#include <Graphics/Native/OpenGL/GELS_Blending.h>
+
 #include "App.h"
 #include <Net/Net_Host.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -19,6 +21,9 @@ TextureHandle Texas;
 cFont* Font;
 cRenderTarget* RT_Main;
 cRenderTarget* RT_Blur[2];
+
+Shader::cUberShader* PPShader;
+Shader::cUberShader* BlurShader;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -56,6 +61,9 @@ cApp::cApp() {
 	RT_Main = new cRenderTarget( Screen::Native[0].GetWidth(), Screen::Native[0].GetHeight(), 1,0,0 );
 	RT_Blur[0] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
 	RT_Blur[1] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
+		
+	PPShader = new Shader::cUberShader( Search::Search("PPEdgeBlend.json") );
+	BlurShader = new Shader::cUberShader( Search::Search("PostProcess.json") );
 	
 	#ifdef USES_SHADERS
 	{
@@ -89,6 +97,9 @@ cApp::cApp() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+	delete BlurShader;
+	delete PPShader;
+	
 	delete RT_Blur[0];
 	delete RT_Blur[1];
 	delete RT_Main;
@@ -164,8 +175,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix = Matrix;		
 
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = (12*16)*3;
-		LocalMatrix(1,1) = (12*16)*3;
+		LocalMatrix(0,0) = (12*16)*2;
+		LocalMatrix(1,1) = (12*16)*2;
 			
 		ViewMatrix *= LocalMatrix;
 	
@@ -184,24 +195,24 @@ void cApp::Draw( Screen::cNative& Native ) {
 	// Blur Pass //
 	{
 		RT_Blur[0]->Bind();
-		Shader::Default->Bind( Shader::TextureShader );
-		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		BlurShader->Bind( 0 );
+		//BlurShader->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Main->BindAsTexture();
-		Shader::Default->BindUniform1i( "TexImage0", 0 );
-		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
-		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+		BlurShader->BindUniform1i( "TexImage0", 0 );
+		BlurShader->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		BlurShader->DrawArrays( GL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->Bind();
-		Shader::Default->Bind( Shader::TextureShader );
-		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		BlurShader->Bind( 1 );
+		//BlurShader->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Blur[0]->BindAsTexture();
-		Shader::Default->BindUniform1i( "TexImage0", 0 );
-		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
-		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+		BlurShader->BindUniform1i( "TexImage0", 0 );
+		BlurShader->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		BlurShader->DrawArrays( GL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->UnBind();
 	}
@@ -211,12 +222,32 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Shader::Default->Bind( Shader::TextureShader );
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
-		//RT_Main->BindAsTexture();
-		RT_Blur[1]->BindAsTexture();
+		RT_Main->BindAsTexture();
+		//RT_Blur[1]->BindAsTexture();
 		Shader::Default->BindUniform1i( "TexImage0", 0 );
 		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
 		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+
+		gels_EnableAlphaBlending();
+		{
+			Shader::cUberShader* Sh = PPShader;
+			PPShader->Bind();
+			
+//			Shader::cUberShader* Sh = Shader::Default;
+//			Shader::Default->Bind( Shader::TextureShader );
+	
+			Sh->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+			Sh->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+			Sh->BindUniform2f( "AspectScalar", 1.0f / Native.GetAspectRatio(), 1.0f );
+			//RT_Main->BindAsTexture();
+			RT_Blur[1]->BindAsTexture();
+			Sh->BindUniform1i( "TexImage0", 0 );
+			Sh->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+			Sh->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+			Sh->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+		}		
+		gels_DisableBlending();
 	}
 	
 	// Draw Text //
@@ -229,7 +260,9 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 		ViewMatrix *= LocalMatrix;
 
-		Font->printf( Vector3D(100,50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
+		gels_EnablePremultipliedAlphaBlending();
+		Font->printf( Vector3D(-100,-50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
+		gels_DisableBlending();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
