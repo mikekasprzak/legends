@@ -29,7 +29,7 @@ cApp::cApp() {
 		
 		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
 		
-		Texas = upload_STBTexture( Tex );
+		Texas = upload_STBTexture( Tex, false );
 		
 		delete_STBTexture( Tex );
 		
@@ -101,8 +101,8 @@ void cApp::Step( ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {
-	glClearColor( 0.3, 0, 0, 1 );
-	glClear( GL_COLOR_BUFFER_BIT );
+//	glClearColor( 0.3, 0, 0, 1 );
+//	glClear( GL_COLOR_BUFFER_BIT );
 
 	static Shader::ShaderHandle NoiseShader = Shader::Default->Find( "Noise" );
 	static Shader::ShaderHandle TextureShader = Shader::Default->Find( "Texture" );
@@ -124,11 +124,9 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 	// Clear BG with Noise //	
 	{
-		Matrix4x4 ViewMatrix = Matrix4x4::Identity;
-	
 		Shader::Default->Bind( NoiseShader );
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB(96,96,96) );
-		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		static float SeedHack = 0;
 		SeedHack += 0.01f;
 		if ( SeedHack > 1.0f )
@@ -142,13 +140,19 @@ void cApp::Draw( Screen::cNative& Native ) {
 	// Draw Something //
 	{
 		Matrix4x4 ViewMatrix = Matrix4x4::Identity;
-		ViewMatrix(0,0) = 1.0f/(2.0f);
-		ViewMatrix(1,1) = 1.0f/(2.0f * Native.GetAspectRatio());		
+		ViewMatrix(0,0) = 1.0f / (float)Native.GetWidth();//1.0f/(2.0f);
+		ViewMatrix(1,1) = 1.0f / (float)Native.GetHeight();//1.0f/(2.0f * Native.GetAspectRatio());
+		
+		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
+		LocalMatrix(0,0) = (12*16)*3;
+		LocalMatrix(1,1) = (12*16)*3;
+			
+		ViewMatrix *= LocalMatrix;
 	
 		Shader::Default->Bind( TextureShader );
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
-		Texture::bind_TextureHandle( Texas, 0 );
+		Texture::Bind( Texas, 0 );
 		Shader::Default->BindUniform1i( "TexImage0", 0 );
 		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
 		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );

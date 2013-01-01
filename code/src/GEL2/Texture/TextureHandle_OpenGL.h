@@ -14,6 +14,10 @@ void delete_TextureHandle( TextureHandle Handle );
 void bind_TextureHandle( TextureHandle Handle, const int Index = 0 );
 void unbind_TextureHandle( TextureHandle = 0 );
 // - ------------------------------------------------------------------------------------------ - //
+inline void Bind( TextureHandle Handle, const int Index = 0 ) {
+	bind_TextureHandle( Handle, Index );
+}
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //

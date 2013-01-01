@@ -13,7 +13,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlpha ) {
+TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const bool PreMultiplyAlpha ) {
 	// Texture ID we'll be returning //
 //	TextureHandle TextureID;
 
@@ -88,14 +88,28 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlph
 	int OmittedTexture = 0;
 	
 	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, MipMapCount );
+
+	unsigned char* Pixels = new unsigned char[ Texture.Width * Texture.Height * Texture.Info ];
+	unsigned char* Orig = (unsigned char*)(&Texture.Data[0]);
+
+	// Flip the Image Data (Since OpenGL Textures are upside down) //
+	{
+		unsigned LineWidth = Texture.Width * Texture.Info;
+		unsigned CurrentPos = 0;
+		
+		for ( unsigned idx = Texture.Height; idx--; ) {
+			copy_Data( Orig + (idx*LineWidth), Pixels + CurrentPos, LineWidth );
+			CurrentPos += LineWidth;
+		}
+	}
 	
 	// Premultiply the Alpha, but only if it has alpha //
 	if ( PreMultiplyAlpha && (Texture.Info == 4) ) {
 		VLog("* Premultiplying Alpha...");
+		unsigned int* Data = (unsigned int*)Pixels;//(&Texture.Data[0]);
 		for ( int texHeight = 0; texHeight < Texture.Height; texHeight++ ) {
 			for ( int texWidth = 0; texWidth < Texture.Width; texWidth++ ) {
 				register int Index = (texHeight * (int)Texture.Width) + texWidth;
-				unsigned int* Data = (unsigned int*)(&Texture.Data[0]);
 				int R = (Data[ Index ] >> 0) & 0xff;
 				int G = (Data[ Index ] >> 8) & 0xff;
 				int B = (Data[ Index ] >> 16) & 0xff;
@@ -108,7 +122,7 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlph
 				Data[ Index ] = (R << 0) | (G << 8) | (B << 16) | (A << 24);
 			}
 		}
-	}
+	}	
 	
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < MipMapCount+1; MipMap++ ) {
@@ -127,7 +141,7 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlph
 			OmittedTexture++;
 		}
 		else {
-			// Bilinear Filtering + Mipmaps //
+			// Bilinear Filtering + Mipmaps (Never Used) //
 //			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 //			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -135,12 +149,19 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool PreMultiplyAlph
 //			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 //			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			// Bilinear //
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			if ( Smooth ) {
+				// Bilinear //
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			}
+			else {
+				// Nearest Neighbour //
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
 
 			// Load the Mipmap Texture //
-			glTexImage2D(GL_TEXTURE_2D, MipMap-OmittedTexture, InternalFormat, Width, Height, 0, ReadFormat, RGBFormat, &Texture.Data[SizeOffset]);
+			glTexImage2D(GL_TEXTURE_2D, MipMap-OmittedTexture, InternalFormat, Width, Height, 0, ReadFormat, RGBFormat, Pixels );// &Texture.Data[SizeOffset]);
 			
 			GLenum Err = glGetError();
 			if ( Err != GL_NO_ERROR ) {
