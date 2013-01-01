@@ -1,6 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_RENDER_FONT_H__
-#define __GEL2_RENDER_FONT_H__
+#ifndef __GEL2_RENDER_FONT_OPENGL_H__
+#define __GEL2_RENDER_FONT_OPENGL_H__
+// - ------------------------------------------------------------------------------------------ - //
+#if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
 #include <Style/Style.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -158,12 +160,11 @@ public:
 	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, length_String( Text ), Pos, Scalar, Align );
 	}
-	
 	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, Pos.ToVector3D(), Scalar, Align );
 	}
 	
-	inline void printf( const Vector3D& Pos, const Real Scalar, const int Align, const char* Text, ... ) {
+	inline void printf( const Vector3D& Pos, const Real Scalar, const int Align = GEL_ALIGN_DEFAULT, const char* Text, ... ) {
 		char StrBuff[2048];
 		
 		{
@@ -181,5 +182,7 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_RENDER_FONT_H__ //
+#endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
+// - ------------------------------------------------------------------------------------------ - //
+#endif // __GEL2_RENDER_FONT_OPENGL_H__ //
 // - ------------------------------------------------------------------------------------------ - //

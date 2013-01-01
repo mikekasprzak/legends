@@ -18,8 +18,6 @@ ShaderHandle Noise1BitShader;
 ShaderHandle ColorNoise1BitShader;
 // - ------------------------------------------------------------------------------------------ - //
 void InitShader() {
-	atexit( ExitShader );
-
 	// Use Files //	
 	Default = new cUberShader( "src/GEL2/Render/Embedded/GLSL/DefaultShader.json" );
 	// Use Embedded //
