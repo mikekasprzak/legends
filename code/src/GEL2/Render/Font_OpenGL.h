@@ -53,7 +53,7 @@ public:
 		delete_BMFont( Font );
 	}
 	
-	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
+	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const GelAlign Align = GEL_ALIGN_DEFAULT ) {
 		size_t CharsDrawn = 0;
 		
 		int ScaleW = common_BMFont( Font )->ScaleW;
@@ -157,14 +157,14 @@ public:
 		}
 	}
 	
-	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const GelAlign Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, length_String( Text ), Pos, Scalar, Align );
 	}
-	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const GelAlign Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, Pos.ToVector3D(), Scalar, Align );
 	}
 	
-	inline void printf( const Vector3D& Pos, const Real Scalar, const int Align = GEL_ALIGN_DEFAULT, const char* Text, ... ) {
+	inline void printf( const Vector3D& Pos, const Real Scalar, const GelAlign Align, const char* Text, ... ) {
 		char StrBuff[2048];
 		
 		{
