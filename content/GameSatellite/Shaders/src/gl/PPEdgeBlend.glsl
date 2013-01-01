@@ -36,11 +36,13 @@ uniform vec2 AspectScalar;
 varying vec2 var_TexCoord;
 
 const vec2 Center = vec2(0.5,0.5);
-const float RadialOffset = 0.0;//-0.25;
+const float RadialOffset = -0.25;
 
 void main() {	
 	float Alpha = length( (Center - var_TexCoord) * AspectScalar );
-	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb - Alpha, RadialOffset + Alpha * 3.0);
+	float Dark = min(1.0, (1.45-Alpha));
+//	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb - Alpha, RadialOffset + Alpha * 0.5);
+	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb * Dark, RadialOffset + Alpha * 1.5);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
