@@ -1,0 +1,20 @@
+{
+	"File"		: "Content/Scripts/glsl/TexTwoBlend.glsl",
+	"Shaders"	: {
+		"TexTwoBlend" : {
+			"Define" : [
+				"DUMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		}
+	}
+}

@@ -1,25 +1,27 @@
+#ifdef GL_ES
+precision highp float;
+#else // GL_ES //
+#define lowp
+#define mediump
+#define highp
+#endif // GL_ES //
+
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef VERTEX_SHADER
 // - ------------------------------------------------------------------------------------------ - //
-// Color Scalar can be optimized away by the "Normalize" feature of attrib //
-const float ColorScalar = 1.0/255.0;
 const float UVScalar = 1.0/1024.0;
 
-uniform vec4 GlobalColor;
-uniform sampler2D TexImage0;
 uniform mat4 ViewMatrix;
-
-varying vec2 v_TexCoord;
-varying vec4 v_Color;
 
 attribute vec4 VertexPos;
 attribute vec2 TexCoord;
-attribute vec4 VertexColor;
+
+varying vec2 var_TexCoord;
+
 
 void main() {
 	gl_Position = ViewMatrix * VertexPos;
-	v_TexCoord = TexCoord * UVScalar;
-	v_Color = VertexColor * ColorScalar * GlobalColor;
+	var_TexCoord = TexCoord * UVScalar;
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // VERTEX_SHADER //
@@ -29,22 +31,17 @@ void main() {
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef FRAGMENT_SHADER
 // - ------------------------------------------------------------------------------------------ - //
-uniform vec4 GlobalColor;
 uniform sampler2D TexImage0;
+uniform vec2 AspectScalar;
+varying vec2 var_TexCoord;
 
-varying vec2 v_TexCoord;
-varying vec4 v_Color;
+const vec2 Center = vec2(0.5,0.5);
+const float RadialOffset = 0.0;//-0.25;
 
-void main() {
-	gl_FragColor = v_Color * texture2D(TexImage0, v_TexCoord.xy);
+void main() {	
+	float Alpha = length( (Center - var_TexCoord) * AspectScalar );
+	gl_FragColor = vec4(texture2D(TexImage0, var_TexCoord.xy).rgb - Alpha, RadialOffset + Alpha * 3.0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 #endif // FRAGMENT_SHADER //
-// - ------------------------------------------------------------------------------------------ - //
-
-
-// - ------------------------------------------------------------------------------------------ - //
-#ifdef GEOMETRY_SHADER //
-// - ------------------------------------------------------------------------------------------ - //
-#endif // GEOMETRY_SHADER //
 // - ------------------------------------------------------------------------------------------ - //
