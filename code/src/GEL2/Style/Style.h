@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "GelTypes.h"		// st32, st64, u16, f32 //
 #include "GelError.h"		// GelError, GEL_OK, GEL_ERROR //
+#include "GelConstants.h"	// GEL_ALIGN_CENTER, etc //
 
 #include "return_if.h"		// return_if( condition ) //
 #include "threadlocal.h"	// threadlocal (__thread) //

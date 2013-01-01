@@ -17,6 +17,7 @@ using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 TextureHandle Texas;
 cFont* Font;
+//cRenderTarget
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -176,7 +177,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 		ViewMatrix *= LocalMatrix;
 
-		Font->printf( Vector3D(100,50,0), 8.0f, cFont::ALIGN_DEFAULT, "Hey Dude" );
+		Font->printf( Vector3D(100,50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

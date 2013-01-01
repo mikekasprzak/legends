@@ -9,11 +9,9 @@
 #include "UV.h"
 #include <Texture/Texture.h>
 // - ------------------------------------------------------------------------------------------ - //
-//#include <AssetPool/AssetPool.h>
 #include <Graphics/Allocator/Allocator.h>
 #include <Graphics/Allocator/Vector3DAllocator.h>
 #include <Graphics/Allocator/UVAllocator.h>
-//#include <Graphics/GraphicsDraw.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
 #include <stdio.h>
@@ -55,24 +53,7 @@ public:
 		delete_BMFont( Font );
 	}
 	
-	enum {
-		ALIGN_LEFT = 		0x1 << 0,
-		ALIGN_HCENTER =		0x2 << 0,
-		ALIGN_RIGHT = 		0x3 << 0,
-		
-		ALIGN_TOP =	 		0x1 << 2,
-		ALIGN_VCENTER =		0x2 << 2,
-		ALIGN_BOTTOM = 		0x3 << 2,
-		ALIGN_BASELINE =	0x4 << 2,
-
-		ALIGN_CENTER = ALIGN_HCENTER | ALIGN_VCENTER,
-		ALIGN_DEFAULT = ALIGN_HCENTER | ALIGN_BASELINE,
-		
-		ALIGN_HBITS = 		0x3 << 0,
-		ALIGN_VBITS =		0x7 << 2,
-	};
-	
-	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
+	void DrawText( const char* Text, const size_t Length, Vector3D Pos, Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
 		size_t CharsDrawn = 0;
 		
 		int ScaleW = common_BMFont( Font )->ScaleW;
@@ -89,20 +70,20 @@ public:
 		BMFont_Chars** Glyph = glyph_BMFont( Font );
 				
 		// Alignment //
-		if ( (Align & ALIGN_HBITS) == ALIGN_HCENTER ) {
+		if ( (Align & GEL_ALIGN_FONT_HBITS) == GEL_ALIGN_CENTER ) {
 			Pos.x -= (Width>>1) * Scalar * ScaleW_R_F;
 		}
-		else if ( (Align & ALIGN_HBITS) == ALIGN_RIGHT ) {
+		else if ( (Align & GEL_ALIGN_FONT_HBITS) == GEL_ALIGN_RIGHT ) {
 			Pos.x -= Width * Scalar * ScaleW_R_F;
 		}
 		
-		if ( (Align & ALIGN_VBITS) == ALIGN_VCENTER ) {
+		if ( (Align & GEL_ALIGN_FONT_VBITS) == GEL_ALIGN_MIDDLE ) {
 			Pos.y -= (Height>>1) * Scalar * ScaleH_R_F;
 		}
-		else if ( (Align & ALIGN_VBITS) == ALIGN_TOP ) {
+		else if ( (Align & GEL_ALIGN_FONT_VBITS) == GEL_ALIGN_TOP ) {
 			Pos.y -= Height * Scalar * ScaleH_R_F;
 		}
-		else if ( (Align & ALIGN_VBITS) == ALIGN_BASELINE ) {
+		else if ( (Align & GEL_ALIGN_FONT_VBITS) == GEL_ALIGN_BASELINE ) {
 			Pos.y -= BaseLine * Scalar * ScaleH_R_F;
 		}
 
@@ -178,11 +159,11 @@ public:
 		}
 	}
 	
-	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector3D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, length_String( Text ), Pos, Scalar, Align );
 	}
 	
-	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = ALIGN_DEFAULT ) {
+	inline void DrawText( const char* Text, const Vector2D& Pos, const Real Scalar = Real::One, const int Align = GEL_ALIGN_DEFAULT ) {
 		DrawText( Text, Pos.ToVector3D(), Scalar, Align );
 	}
 	

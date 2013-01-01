@@ -3,7 +3,6 @@
 #define __GEL2_RENDER_FONT_BMFONT_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Style/Style.h>
-#include <Core/GelConstants.h>
 
 #include <Core/Data.h>
 #include <Core/DataBlock.h>
