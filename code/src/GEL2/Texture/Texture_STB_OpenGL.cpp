@@ -93,6 +93,7 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 	unsigned char* Orig = (unsigned char*)(&Texture.Data[0]);
 
 	if ( Flip ) {
+		VLog("* Flipping Image...");
 		Pixels = new unsigned char[ Texture.Width * Texture.Height * Texture.Info ];
 		
 		// Flip the Image Data (Since OpenGL Textures are upside down) //
@@ -157,12 +158,12 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 //			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 			if ( Smooth ) {
-				// Bilinear //
+				VLog("* Bilinear Filtering...");
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
 			else {
-				// Nearest Neighbour //
+				VLog("* No Filtering (Nearest Neighbor)...");
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			}

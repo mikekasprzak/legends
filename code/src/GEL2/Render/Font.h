@@ -145,8 +145,8 @@ public:
 			Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 			Texture::Bind( TexturePage[Tex], 0 );
 			Shader::Default->BindUniform1i( "TexImage0", 0 );
-			Shader::Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(const Vector3D), (const Vector3D*)Vert.Get() );
-			Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, (UVType*)UV.Get() );
+			Shader::Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(const Vector3D), Vert.Get() );
+			Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UV.Get() );
 			Shader::Default->DrawArrays( GL_TRIANGLES, Vert.Size() );
 			
 			if ( Length == CharsDrawn )
