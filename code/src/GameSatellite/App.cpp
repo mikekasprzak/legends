@@ -17,7 +17,8 @@ using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 TextureHandle Texas;
 cFont* Font;
-//cRenderTarget
+cRenderTarget* RT_Main;
+cRenderTarget* RT_Blur[2];
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -51,6 +52,10 @@ cApp::cApp() {
 	}
 	
 	Font = new cFont( Search::Search( "C64Pro.fnt" ) );
+		
+	RT_Main = new cRenderTarget( Screen::Native[0].GetWidth(), Screen::Native[0].GetHeight(), 1,0,0 );
+	RT_Blur[0] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
+	RT_Blur[1] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
 	
 	#ifdef USES_SHADERS
 	{
@@ -78,10 +83,16 @@ cApp::cApp() {
 	Net::Host_StartClient();
 	Net::Host_Connect();
 //	Net::Host_SendPing();
+
+	glEnableVertexAttribArray( 0 );
 #endif // PRODUCT_CLIENT //
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+	delete RT_Blur[0];
+	delete RT_Blur[1];
+	delete RT_Main;
+	
 	delete Font;
 	
 	// Kill Texture //
@@ -110,7 +121,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 //	glClearColor( 0.3, 0, 0, 1 );
 //	glClear( GL_COLOR_BUFFER_BIT );
 
-	glEnableVertexAttribArray( 0 );
 	
 	static float Verts[] = {
 		-1,-1,
@@ -125,6 +135,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 		UV_ONE,	UV_ZERO,
 		UV_ONE,	UV_ONE,
 	};
+
+	// ******* //
+
+	RT_Main->Bind();
 
 	// Clear BG with Noise //	
 	{
@@ -159,6 +173,46 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 		Texture::Bind( Texas, 0 );
+		Shader::Default->BindUniform1i( "TexImage0", 0 );
+		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+	}
+	
+	RT_Main->UnBind();
+	
+	// Blur Pass //
+	{
+		RT_Blur[0]->Bind();
+		Shader::Default->Bind( Shader::TextureShader );
+		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		RT_Main->BindAsTexture();
+		Shader::Default->BindUniform1i( "TexImage0", 0 );
+		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+
+		RT_Blur[1]->Bind();
+		Shader::Default->Bind( Shader::TextureShader );
+		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		RT_Blur[0]->BindAsTexture();
+		Shader::Default->BindUniform1i( "TexImage0", 0 );
+		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
+		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+
+		RT_Blur[1]->UnBind();
+	}
+	
+	// Draw Buffer to Screen //
+	{
+		Shader::Default->Bind( Shader::TextureShader );
+		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
+		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		//RT_Main->BindAsTexture();
+		RT_Blur[1]->BindAsTexture();
 		Shader::Default->BindUniform1i( "TexImage0", 0 );
 		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
 		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
