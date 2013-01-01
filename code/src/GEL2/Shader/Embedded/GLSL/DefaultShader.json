@@ -3,7 +3,8 @@
 	"Shaders"	: {
 		"Flat" : {
 			"Define" : [
-				"SHADER_FLAT"
+				"SHADER_FLAT",
+				"SHADER_NONE"
 			],
 			"Attribute" : [
 				{
@@ -23,7 +24,8 @@
 
 		"Color" : {
 			"Define" : [
-				"SHADER_COLOR"
+				"SHADER_COLOR",
+				"SHADER_NONE"
 			],
 			"Attribute" : [
 				{
@@ -81,6 +83,48 @@
 					"Name" : "VertexColor"
 				}
 			]
-		}		
+		},
+
+		"Noise" : {
+			"Define" : [
+				"SHADER_FLAT",
+				"SHADER_NOISE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		},
+
+		"ColorNoise" : {
+			"Define" : [
+				"SHADER_COLOR",
+				"SHADER_NOISE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		}			
 	}
 }

@@ -124,12 +124,18 @@ void cApp::Draw( Screen::cNative& Native ) {
 	
 	glEnableVertexAttribArray( 0 );
 	
-	static Shader::ShaderHandle MyShader = Shader::Default->Find( "Texture" );
+	static Shader::ShaderHandle MyShader = Shader::Default->Find( "Noise" );
+//	static Shader::ShaderHandle MyShader = Shader::Default->Find( "Texture" );
 	Shader::Default->Bind( MyShader );
 	Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 	Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 	Texture::bind_TextureHandle( Texas, 0 );
 	Shader::Default->BindUniform1i( "TexImage0", 0 );
+	static float SeedHack = 0;
+	SeedHack += 0.01f;
+	if ( SeedHack > 1.0f )
+		SeedHack = 0.0f;
+	Shader::Default->BindUniform1f( "Seed", SeedHack );
 	Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
 	Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 	//Shader::Default->AttribPointer( 2, 2, GL_BYTE, false, sizeof(char)*4, UVs );
