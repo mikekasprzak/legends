@@ -5,8 +5,6 @@
 #include <Shader/Shader.h>
 #include <Render/Render.h>
 
-#include <Graphics/Native/OpenGL/GELS_Blending.h>
-
 #include "App.h"
 #include <Net/Net_Host.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -229,7 +227,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
 
-		gels_EnableAlphaBlending();
+		Render::EnableAlphaBlending();
 		{
 			Shader::cUberShader* Sh = PPShader;
 			PPShader->Bind();
@@ -247,7 +245,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 			Sh->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 			Sh->DrawArrays( GL_TRIANGLE_STRIP, 4 );
 		}		
-		gels_DisableBlending();
+		Render::DisableBlending();
 	}
 	
 	// Draw Text //
@@ -260,9 +258,9 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 		ViewMatrix *= LocalMatrix;
 
-		gels_EnablePremultipliedAlphaBlending();
+		Render::EnablePremultipliedAlphaBlending();
 		Font->printf( Vector3D(-100,-50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
-		gels_DisableBlending();
+		Render::DisableBlending();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

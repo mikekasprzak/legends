@@ -7,6 +7,7 @@
 #include "VertexHandle.h"
 #include "IndexHandle.h"
 #include "RenderTarget.h"
+#include "Blending.h"
 
 #include "Font.h"
 // - ------------------------------------------------------------------------------------------ - //
