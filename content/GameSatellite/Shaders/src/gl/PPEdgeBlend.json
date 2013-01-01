@@ -1,5 +1,5 @@
 {
-	"File"		: "Content/Scripts/glsl/PPEdgeBlend.glsl",
+	"File"		: "PPEdgeBlend.glsl",
 	"Shaders"	: {
 		"VingetteBlend" : {
 			"Define" : [

@@ -1,5 +1,5 @@
 {
-	"File"		: "Content/Scripts/glsl/PostProcess.glsl",
+	"File"		: "PostProcess.glsl",
 	"Shaders"	: {
 		"HBlur" : {
 			"Define" : [

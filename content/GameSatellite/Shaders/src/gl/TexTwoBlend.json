@@ -1,5 +1,5 @@
 {
-	"File"		: "Content/Scripts/glsl/TexTwoBlend.glsl",
+	"File"		: "TexTwoBlend.glsl",
 	"Shaders"	: {
 		"TexTwoBlend" : {
 			"Define" : [
