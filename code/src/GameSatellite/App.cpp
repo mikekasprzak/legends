@@ -16,6 +16,7 @@ using namespace Texture;
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 TextureHandle Texas;
+cFont* Font;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -48,6 +49,8 @@ cApp::cApp() {
 		delete_STBTexture( Tex );
 	}
 	
+	Font = new cFont( Search::Search( "C64Pro.fnt" ) );
+	
 	#ifdef USES_SHADERS
 	{
 //		Shader::cUberShader Uber( Search::Search("/gl/UberShader.json") );
@@ -78,6 +81,8 @@ cApp::cApp() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+	delete Font;
+	
 	// Kill Texture //
 	delete_TextureHandle( Texas );
 
@@ -137,12 +142,14 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );		
 	}
 	
+	Matrix4x4 Matrix = Matrix4x4::Identity;
+	Matrix(0,0) = 1.0f / (float)Native.GetWidth();//1.0f/(2.0f);
+	Matrix(1,1) = 1.0f / (float)Native.GetHeight();//1.0f/(2.0f * Native.GetAspectRatio());
+	
 	// Draw Something //
 	{
-		Matrix4x4 ViewMatrix = Matrix4x4::Identity;
-		ViewMatrix(0,0) = 1.0f / (float)Native.GetWidth();//1.0f/(2.0f);
-		ViewMatrix(1,1) = 1.0f / (float)Native.GetHeight();//1.0f/(2.0f * Native.GetAspectRatio());
-		
+		ViewMatrix = Matrix;		
+
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
 		LocalMatrix(0,0) = (12*16)*3;
 		LocalMatrix(1,1) = (12*16)*3;
@@ -157,6 +164,19 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Shader::Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
 		Shader::Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Shader::Default->DrawArrays( GL_TRIANGLE_STRIP, 4 );
+	}
+	
+	// Draw Text //
+	{
+		ViewMatrix = Matrix;
+
+		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
+		LocalMatrix(0,0) = (4)*2;
+		LocalMatrix(1,1) = (4)*2;
+
+		ViewMatrix *= LocalMatrix;
+
+		Font->printf( Vector3D(100,50,0), 8.0f, cFont::ALIGN_DEFAULT, "Hey Dude" );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

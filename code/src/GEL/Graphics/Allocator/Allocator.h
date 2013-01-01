@@ -2,7 +2,7 @@
 #ifndef __Allocator_H__
 #define __Allocator_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/Log.h>
+#include <Style/Style.h>
 #include <Core/DataArray.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Promote this to a variant of StaticArray in the Data Library. //

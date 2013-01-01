@@ -13,7 +13,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 namespace Texture {
 // - ------------------------------------------------------------------------------------------ - //
-TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const bool PreMultiplyAlpha ) {
+TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const bool Flip, const bool PreMultiplyAlpha ) {
 	// Texture ID we'll be returning //
 //	TextureHandle TextureID;
 
@@ -89,11 +89,13 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 	
 	VLog("* Details: %ix%i, Textures (Mipmaps): %i+1", Width, Height, MipMapCount );
 
-	unsigned char* Pixels = new unsigned char[ Texture.Width * Texture.Height * Texture.Info ];
+	unsigned char* Pixels = 0;
 	unsigned char* Orig = (unsigned char*)(&Texture.Data[0]);
 
-	// Flip the Image Data (Since OpenGL Textures are upside down) //
-	{
+	if ( Flip ) {
+		Pixels = new unsigned char[ Texture.Width * Texture.Height * Texture.Info ];
+		
+		// Flip the Image Data (Since OpenGL Textures are upside down) //
 		unsigned LineWidth = Texture.Width * Texture.Info;
 		unsigned CurrentPos = 0;
 		
@@ -101,6 +103,11 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 			copy_Data( Orig + (idx*LineWidth), Pixels + CurrentPos, LineWidth );
 			CurrentPos += LineWidth;
 		}
+	}
+	else {
+		// Don't flip the Image Data (for some reason) //
+		//copy_Data( Orig, Pixels, Texture.Width*Texture.Height*Texture.Info );
+		Pixels = Orig;
 	}
 	
 	// Premultiply the Alpha, but only if it has alpha //
@@ -122,7 +129,7 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 				Data[ Index ] = (R << 0) | (G << 8) | (B << 16) | (A << 24);
 			}
 		}
-	}	
+	}
 	
 	// Load the MipMaps (Mipmap count don't include the original texture) //
 	for ( int MipMap = 0; MipMap < MipMapCount+1; MipMap++ ) {
@@ -173,6 +180,10 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth, const b
 		SizeOffset += ChunkSize;
 		Width >>= 1;
 		Height >>= 1;
+	}
+	
+	if ( Pixels != Orig ) {
+		delete [] Pixels;
 	}
 	
 	Log("- %i Texture levels loaded.", MipMapCount+1 );
