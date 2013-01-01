@@ -10,14 +10,6 @@
 				{
 					"Index" : 0,
 					"Name" : "VertexPos"
-				},
-				{
-					"Index" : 1,
-					"Name" : "TexCoord"
-				},
-				{
-					"Index" : 2,
-					"Name" : "VertexColor"
 				}
 			]
 		},
@@ -31,10 +23,6 @@
 				{
 					"Index" : 0,
 					"Name" : "VertexPos"
-				},
-				{
-					"Index" : 1,
-					"Name" : "TexCoord"
 				},
 				{
 					"Index" : 2,
@@ -56,10 +44,6 @@
 				{
 					"Index" : 1,
 					"Name" : "TexCoord"
-				},
-				{
-					"Index" : 2,
-					"Name" : "VertexColor"
 				}
 			]
 		},
@@ -98,10 +82,6 @@
 				{
 					"Index" : 1,
 					"Name" : "TexCoord"
-				},
-				{
-					"Index" : 2,
-					"Name" : "VertexColor"
 				}
 			]
 		},
@@ -125,6 +105,47 @@
 					"Name" : "VertexColor"
 				}
 			]
-		}			
+		},
+
+
+		"Noise1Bit" : {
+			"Define" : [
+				"SHADER_FLAT",
+				"SHADER_NOISE",
+				"SHADER_NOISE_1BIT"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				}
+			]
+		},
+
+		"ColorNoise1Bit" : {
+			"Define" : [
+				"SHADER_COLOR",
+				"SHADER_NOISE",
+				"SHADER_NOISE_1BIT"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos"
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord"
+				},
+				{
+					"Index" : 2,
+					"Name" : "VertexColor"
+				}
+			]
+		}
 	}
 }

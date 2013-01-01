@@ -72,7 +72,12 @@ varying lowp vec4 v_Color;
 
 void main() {
 	#ifdef SHADER_NOISE
-		gl_FragColor = v_Color * vec4( vec3( rand(vec2(v_TexCoord.s+2.34*Seed,v_TexCoord.t+3.14*Seed)) ), 1.0 );
+		float Random = rand(vec2(v_TexCoord.s+2.34*Seed,v_TexCoord.t+3.14*Seed));
+		#ifdef SHADER_NOISE_1BIT
+			gl_FragColor = v_Color * vec4( vec3( round(Random) ), 1.0 );
+		#else // SHADER_NOISE_1BIT //
+			gl_FragColor = v_Color * vec4( vec3( Random ), 1.0 );
+		#endif // SHADER_NOISE_1BIT //
 	#endif // SHADER_NOISE //
 			
 	#ifdef SHADER_TEXTURE
