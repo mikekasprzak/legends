@@ -25,7 +25,15 @@ Shader::cUberShader* BlurShader;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
+
+	MyGeo = new TFunctor<SatGeoData>();	// Start Thread //
 	
+	Adapters = new_pNetAdapterInfo();
+	Adapter = get_primary_pNetAdapterInfo( Adapters );
+	
+	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
+	
+#ifdef PRODUCT_CLIENT
 	{
 		const char* File = Search::Search( "Tiles" );
 		
@@ -55,33 +63,20 @@ cApp::cApp() {
 	}
 	
 	Font = new cFont( Search::Search( "C64Pro.fnt" ) );
-		
-	RT_Main = new cRenderTarget( Screen::Native[0].GetWidth(), Screen::Native[0].GetHeight(), 1,0,0 );
-	RT_Blur[0] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
-	RT_Blur[1] = new cRenderTarget( Screen::Native[0].GetWidth()>>2, Screen::Native[0].GetHeight()>>2, 1,0,0 );
+
+	// TODO: On some sort of resize event, trigger a delete and recreation of the RenderTargets.		
+	int Width = Screen::Native[0].GetWidth();
+	int Height = Screen::Native[0].GetHeight();
+//	int Width = Screen::Native[0].GetActualWidth();
+//	int Height = Screen::Native[0].GetActualHeight();
+
+	RT_Main = new cRenderTarget( Width, Height, 1,0,0 );
+	RT_Blur[0] = new cRenderTarget( Width>>2, Height>>2, 1,0,0 );
+	RT_Blur[1] = new cRenderTarget( Width>>2, Height>>2, 1,0,0 );
 		
 	PPShader = new Shader::cUberShader( Search::Search("PPEdgeBlend.json") );
 	BlurShader = new Shader::cUberShader( Search::Search("PostProcess.json") );
-	
-	#ifdef USES_SHADERS
-	{
-//		Shader::cUberShader Uber( Search::Search("/gl/UberShader.json") );
-//		Shader::cUberShader Uber( "src/GEL2/Shader/Embedded/GLSL/DefaultShader.json" );
-	}
-	#endif // USES_SHADERS //
-	
-	
-	MyGeo = new TFunctor<SatGeoData>();	// Start Thread //
-	
-	Adapters = new_pNetAdapterInfo();
-	Adapter = get_primary_pNetAdapterInfo( Adapters );
-	
-	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
-
-	// Wait for threads to finish //
-	MyGeo->join();
-			
-#ifdef PRODUCT_CLIENT
+				
 	// Init //
 //	Client_Start();
 //	Client_Connect();
@@ -92,9 +87,14 @@ cApp::cApp() {
 
 	glEnableVertexAttribArray( 0 );
 #endif // PRODUCT_CLIENT //
+
+	// Wait for threads to finish //
+	MyGeo->join();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
+#ifdef PRODUCT_CLIENT
+	// Cleanup //
 	delete BlurShader;
 	delete PPShader;
 	
@@ -104,12 +104,8 @@ cApp::~cApp() {
 	
 	delete Font;
 	
-	// Kill Texture //
 	delete_TextureHandle( Texas );
 
-#ifdef PRODUCT_CLIENT
-	// Cleanup //
-	//Client_Stop();
 	Net::Host_StopClient();
 #endif // PRODUCT_CLIENT //
 
@@ -173,8 +169,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix = Matrix;		
 
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = (12*16)*2;
-		LocalMatrix(1,1) = (12*16)*2;
+		LocalMatrix(0,0) = (12*16)*3;
+		LocalMatrix(1,1) = (12*16)*3;
 			
 		ViewMatrix *= LocalMatrix;
 	

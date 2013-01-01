@@ -48,6 +48,24 @@ public:
 	inline const float GetAspectRatio() const {
 		return (float)Bounds.h / (float)Bounds.w;
 	}
+
+
+	inline const int GetActualWidth() const {
+		return DisplayBounds.w;
+	}
+	inline const int GetActualHeight() const {
+		return DisplayBounds.h;
+	}
+	inline const int GetActualX() const {
+		return DisplayBounds.x;
+	}
+	inline const int GetActualY() const {
+		return DisplayBounds.y;
+	}
+	
+	inline const float GetActualAspectRatio() const {
+		return (float)DisplayBounds.h / (float)DisplayBounds.w;
+	}
 	
 	// TODO: Some sort of "IsAvailable" //
 
