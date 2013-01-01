@@ -110,8 +110,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 //	glClearColor( 0.3, 0, 0, 1 );
 //	glClear( GL_COLOR_BUFFER_BIT );
 
-	static Shader::ShaderHandle NoiseShader = Shader::Default->Find( "Noise" );
-	static Shader::ShaderHandle TextureShader = Shader::Default->Find( "Texture" );
 	glEnableVertexAttribArray( 0 );
 	
 	static float Verts[] = {
@@ -130,7 +128,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 	// Clear BG with Noise //	
 	{
-		Shader::Default->Bind( NoiseShader );
+		Shader::Default->Bind( Shader::NoiseShader );
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB(96,96,96) );
 		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		static float SeedHack = 0;
@@ -157,7 +155,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 			
 		ViewMatrix *= LocalMatrix;
 	
-		Shader::Default->Bind( TextureShader );
+		Shader::Default->Bind( Shader::TextureShader );
 		Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 		Texture::Bind( Texas, 0 );

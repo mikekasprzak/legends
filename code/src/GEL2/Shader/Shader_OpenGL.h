@@ -13,6 +13,15 @@ void Exit();
 // - ------------------------------------------------------------------------------------------ - //
 extern cUberShader* Default;
 // - ------------------------------------------------------------------------------------------ - //
+extern ShaderHandle FlatShader;
+extern ShaderHandle ColorShader;
+extern ShaderHandle TextureShader;
+extern ShaderHandle ColorTextureShader;
+extern ShaderHandle NoiseShader;
+extern ShaderHandle ColorNoiseShader;
+extern ShaderHandle Noise1BitShader;
+extern ShaderHandle ColorNoise1BitShader;
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Shader //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //

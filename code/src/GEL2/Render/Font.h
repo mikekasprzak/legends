@@ -40,9 +40,6 @@ public:
 			TexturePage.push_back( Texture::upload_STBTexture( Tex, false, false ) );
 				
 			Texture::delete_STBTexture( Tex );
-			
-//			Texture.push_back( AssetPool::Load( String::NoExtensions(Font->PageName->Data[idx]).c_str() ) );
-//			Texture.push_back( AssetPool::Load( Font->PageName->Data[idx] ) );
 		}
 	}
 	
@@ -142,10 +139,8 @@ public:
 //				(GelUV*)UV.Get(),
 //				Vert.Size()
 //				);
-
-			static Shader::ShaderHandle TextureShader = Shader::Default->Find( "Texture" );
 			
-			Shader::Default->Bind( TextureShader );
+			Shader::Default->Bind( Shader::TextureShader );
 			Shader::Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 			Shader::Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 			Texture::Bind( TexturePage[Tex], 0 );
