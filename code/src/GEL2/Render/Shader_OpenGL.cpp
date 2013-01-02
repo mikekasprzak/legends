@@ -19,9 +19,9 @@ ShaderHandle ColorNoise1BitShader;
 // - ------------------------------------------------------------------------------------------ - //
 void InitShader() {
 	// Use Files //	
-	Default = new cUberShader( "src/GEL2/Render/Embedded/GLSL/DefaultShader.json" );
+//	Default = new cUberShader( "src/GEL2/Render/Embedded/GLSL/DefaultShader.json" );
 	// Use Embedded //
-//	Default = new cUberShader( DefaultShader_json, DefaultShader_json_Size, DefaultShader_glsl, DefaultShader_glsl_Size );
+	Default = new cUberShader( DefaultShader_json, DefaultShader_json_Size, DefaultShader_glsl, DefaultShader_glsl_Size );
 
 	// Find all the shaders //
 	FlatShader = Default->Find( "Flat" );
