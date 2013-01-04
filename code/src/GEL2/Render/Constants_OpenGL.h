@@ -25,10 +25,10 @@
 #define GEL_ZERO								GL_ZERO
 #define GEL_REPLACE								GL_REPLACE
 #define GEL_INVERT								GL_INVERT
-#define GEL_INCR								GL_INCR			// Saturate //
-#define GEL_DECR								GL_DECR			// Saturate //
-#define GEL_INCRWRAP							GL_INCR_WRAP	// GL 1.4+, ES 2.0 and DX Only //
-#define GEL_DECRWRAP							GL_DECR_WRAP	// GL 1.4+, ES 2.0 and DX Only //
+#define GEL_INCR								GL_INCR				// Saturate //
+#define GEL_DECR								GL_DECR				// Saturate //
+#define GEL_INCRWRAP							GL_INCR_WRAP		// GL 1.4+, ES 2.0 and D3D //
+#define GEL_DECRWRAP							GL_DECR_WRAP		// GL 1.4+, ES 2.0 and D3D //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -37,10 +37,16 @@
 #define GEL_POINTS								GL_POINTS
 #define GEL_LINES								GL_LINES
 #define GEL_LINE_STRIP							GL_LINE_STRIP
-#define GEL_LINE_LOOP							GL_LINE_LOOP
 #define GEL_TRIANGLES							GL_TRIANGLES
 #define GEL_TRIANGLE_STRIP						GL_TRIANGLE_STRIP
-#define GEL_TRIANGLE_FAN						GL_TRIANGLE_FAN
+
+#define GEL_LINE_LOOP							GL_LINE_LOOP		// GL Only //
+#define GEL_TRIANGLE_FAN						GL_TRIANGLE_FAN		// GL Only //
+
+#define GEL_LINES_ADJ							GL_LINES			// D3D Only (Stub) //
+#define GEL_LINE_STRIP_ADJ						GL_LINE_STRIP		// D3D Only (Stub) //
+#define GEL_TRIANGLES_ADJ						GL_TRIANGLES		// D3D Only (Stub) //
+#define GEL_TRIANGLE_STRIP_ADJ					GL_TRIANGLE_STRIP	// D3D Only (Stub) //
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
