@@ -94,7 +94,11 @@
 //   calculate the stride size. Also, definitions will need to be looked up in a table-like
 //   structure. DXGI_FORMAT_R8G8B8A8_UNORM is 8bit color data. DXGI_FORMAT_R32G32_FLOAT is
 //   Vector2D pair. So it's a little wonky yes (not as clean as GL's GL_FLOAT and 2 of 'em).
-
+// Oh! Actually! Global Stride and Offset *IS* important.
+//   In cases where I want to use a single shader, one designed not to require interleaved data,
+//   but when I *DO* have interleaved data, THEN the the Global Stride and Offset are useful.
+//   Solution: default to "0,0". If non zero values specified, then use them instead of internal
+//   values. Done. Score. I win.
 
 // After doing some looking, it seems OpenGL ES 3.0 fully supports all these constructs, including
 //   GL Instanced Arrays, which is found in OpenGL 3.3. So ya, my claim that GL ES is the "best of"
