@@ -3,6 +3,7 @@
 #define __GEL2_RENDER_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "UV.h"
+#include "Constants.h"
 #include "ViewMatrix.h"
 #include "VertexHandle.h"
 #include "IndexHandle.h"
