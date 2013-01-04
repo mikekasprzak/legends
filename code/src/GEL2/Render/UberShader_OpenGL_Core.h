@@ -76,7 +76,10 @@ public:
 			return Sizes[Type] * Count;
 		}
 	};
+
+	// a vector of vectors beacuse you sometimes want to pack data together in a single Attribute //
 	std::vector< std::vector<cAttribInfo> > AttribInfo;
+
 	inline size_t GetAttribSize( const size_t Index ) {
 		size_t Size = 0;
 		for ( size_t idx = 0; idx < AttribInfo[Index].size(); idx++ ) {

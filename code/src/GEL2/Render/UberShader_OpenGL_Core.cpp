@@ -216,6 +216,11 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 			else if ( strcmp( Type, "UVType" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
 			}
+			else if ( strcmp( Type, "pad" ) == 0 ) {
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_NONE;
+			}
+			
+			
 			
 			VLog( "* * * Info: %s (id: %i) x%i -- %i bytes", 
 				Type, 
