@@ -9,11 +9,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		},
@@ -26,11 +30,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		},
@@ -43,11 +51,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		},
@@ -60,11 +72,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		},
@@ -76,11 +92,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		},
@@ -92,11 +112,15 @@
 			"Attribute" : [
 				{
 					"Index" : 0,
-					"Name" : "VertexPos"
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
 				},
 				{
 					"Index" : 1,
-					"Name" : "TexCoord"
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
 				}
 			]
 		}
