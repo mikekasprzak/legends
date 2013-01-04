@@ -32,6 +32,39 @@
 // EDIT: Maybe not, because VAO's use VBO's, which may not exist yet by JSON time.
 
 
+// D3D is only ever this complex, if all data is created. //
+//
+//	UINT stride = sizeof(cInputVertexPositionTexColor);
+//	UINT offset = 0;
+//
+//	Renderer->m_d3dContext->IASetVertexBuffers( 0, 1, _vertexBuffer.GetAddressOf(), &stride, &offset );
+//	Renderer->m_d3dContext->IASetIndexBuffer( _indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
+//
+//	Renderer->m_d3dContext->IASetPrimitiveTopology( (D3D11_PRIMITIVE_TOPOLOGY)Mode );
+//
+//	Renderer->m_d3dContext->DrawIndexed( IndexCount, 0, 0 );
+//
+// One Vertex Buffer Set per Vertex Buffer. One Index Buffer Set. I suppos the only thing missing is the
+//   binding of textures.
+
+// That said...
+//
+//	Renderer->m_d3dContext->IASetInputLayout( Renderer->TexturedColorsShader_inputLayout.Get() );
+//	Renderer->m_d3dContext->VSSetShader( Renderer->TexturedColorsShader_vertexShader.Get(), nullptr, 0 );
+//	Renderer->m_d3dContext->VSSetConstantBuffers( 0, 1, Renderer->Common_constantBuffer.GetAddressOf() );
+//	Renderer->m_d3dContext->PSSetShader( Renderer->TexturedColorsShader_pixelShader.Get(), nullptr, 0 );
+//	Renderer->m_d3dContext->PSSetSamplers( 0, 1, Renderer->TexturedColorsShader_samplerState.GetAddressOf() );
+//
+// This needs to be set before the Draw call to load the shader.
+//
+//	Renderer->m_d3dContext->PSSetShaderResources( 0, 1, TextureInfo[ Texture ].D3DTextureView.GetAddressOf() );
+//
+// And this is how the texture is specified. (glBindTexture)
+//
+// A texture is (after BS loading) described by both a ID3D11Texture2D* and a ID3D11ShaderResourceView*.
+// The Texture3D is the data, and the View is what is used to bind it to a shader.
+
+
 // After doing some looking, it seems OpenGL ES 3.0 fully supports all these constructs, including
 //   GL Instanced Arrays, which is found in OpenGL 3.3. So ya, my claim that GL ES is the "best of"
 //   OpenGL is very much true.
