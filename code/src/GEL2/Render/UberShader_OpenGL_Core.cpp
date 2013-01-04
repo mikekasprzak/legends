@@ -150,7 +150,7 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 		int Index = cJSON_GetObjectItem( Attrib, "Index" )->valueint;
 		char* Name = cJSON_GetObjectItem( Attrib, "Name" )->valuestring;
 				
-		VLog( "* * * Attribute: %i %s", 
+		VLog( "* * Attribute: %i %s", 
 			Index, 
 			Name
 			);
@@ -221,7 +221,6 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 			}
 			
 			
-			
 			VLog( "* * * Info: %s (id: %i) x%i -- %i bytes", 
 				Type, 
 				Attr->Type,
@@ -239,12 +238,10 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 		for ( size_t idx = 0; idx < Program.AttribInfo.size(); idx++ ) {
 			size_t Size = Program.GetAttribSize( idx );
 			TotalSize += Size;
-			VLog( "* * Attribute Input Slot %i: %i bytes", idx, Size );
+			VLog( "* Attribute Input Slot %i: %i bytes", idx, Size );
 		}
-		VLog( "* * Total Attribute Size: %i bytes (Data per vertex)", TotalSize );
+		VLog( "* Total Attribute Size: %i bytes (Data per vertex)", TotalSize );
 	}
-
-	VLog( "* All Attributes bound to Program" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :
@@ -396,7 +393,7 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 	
 	cJSON* ShaderObj = ShaderList->child;
 	while ( ShaderObj != 0 ) {
-		VLog( "* * %s", ShaderObj->string );
+		VLog( "+ Begin Program \"%s\"", ShaderObj->string );
 		
 		std::string DefineList;
 		
@@ -404,7 +401,7 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		if ( Define ) {
 			cJSON* Obj = Define->child;
 			while ( Obj != 0 ) {
-				VLog("* * * #DEFINE %s", Obj->valuestring );
+				VLog("* * #DEFINE %s", Obj->valuestring );
 				
 				DefineList += DefineSymbol( Obj->valuestring );
 				
@@ -443,7 +440,9 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		// Assign Attributes //
 		cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
 		if ( Attribute ) {
+			VLog( "+ Binding Attributes to Program..." );
 			AssignShaderAttributes( Program, Attribute );
+			VLog( "- Attributes bound to Program." );
 		}
 		else {
 			Log( "! UberShader: Error, \"Attribute\" section not found in %s!", ShaderObj->string );
@@ -454,6 +453,8 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		// Add Program to the UberShader //
 		ShaderLookup[ ShaderObj->string ] = Shader.size();
 		Shader.push_back( Program );
+		
+		VLog( "- Program \"%s\"Finished.", ShaderObj->string );
 		
 		// Next Shader //
 		ShaderObj = ShaderObj->next;
