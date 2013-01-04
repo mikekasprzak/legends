@@ -37,6 +37,45 @@ public:
 	
 	std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
 	// Remember, Attributes when disabled use a single value across all //
+	
+	struct cAttribInfo {
+		enum {
+			AI_NONE = 0,
+			
+			AI_FLOAT = 1,
+			AI_DOUBLE = 2,
+			AI_HFLOAT = 3,	// Half Float //
+			//AI_?? = 4,
+			
+			AI_UCHAR = 5,
+			AI_CHAR = 6,
+			AI_USHORT = 7,
+			AI_SHORT = 8,
+			AI_UINT = 9,
+			AI_INT = 10,
+			AI_UINT64 = 11,
+			AI_INT64 = 12,
+		};
+		
+		int Type;
+		int Count;
+		
+		inline size_t GetSize() {
+			static size_t Sizes[] = {
+				0,
+				
+				4,8,
+				2,0,
+				
+				1,1,
+				2,2,
+				4,4,
+				8,8,
+			};
+			return Sizes[Type] * Count;
+		}
+	};
+	std::vector<cAttribInfo> AttribInfo;
 
 public:		
 	cUberShader_Shader() :

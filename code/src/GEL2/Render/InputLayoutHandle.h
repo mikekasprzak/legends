@@ -100,6 +100,7 @@
 //   Solution: default to "0,0". If non zero values specified, then use them instead of internal
 //   values. Done. Score. I win.
 
+
 // After doing some looking, it seems OpenGL ES 3.0 fully supports all these constructs, including
 //   GL Instanced Arrays, which is found in OpenGL 3.3. So ya, my claim that GL ES is the "best of"
 //   OpenGL is very much true.
