@@ -171,60 +171,75 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 			if ( (size_t)Index >= Program.AttribInfo.size() ) {
 				Program.AttribInfo.resize( Index+1 ); // Index 5 is only available if Size is 6 //
 			}
+			
+			cUberShader_Shader::cAttribInfo* Attr = 0;
+			Program.AttribInfo[Index].push_back( cUberShader_Shader::cAttribInfo() );
+			Attr = &(Program.AttribInfo[Index].back());
 
 			// Store the Count //
-			Program.AttribInfo[Index].Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
+			Attr->Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
 
 			// NOTE: Unsigned's should come first, because of pattern matching //
 			char* Type = cJSON_GetObjectItem( Attrib, "Type" )->valuestring;
 			if ( strcmp( Type, "float" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_FLOAT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_FLOAT;
 			}
 			else if ( strcmp( Type, "double" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_DOUBLE;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_DOUBLE;
 			}
 			else if ( strcmp( Type, "uchar" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_UCHAR;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UCHAR;
 			}
 			else if ( strcmp( Type, "char" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_CHAR;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_CHAR;
 			}
 			else if ( strcmp( Type, "ushort" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_USHORT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_USHORT;
 			}
 			else if ( strcmp( Type, "short" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
 			}
 			else if ( strcmp( Type, "uint" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_UINT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UINT;
 			}
 			else if ( strcmp( Type, "int" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_INT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_INT;
 			}
 			else if ( strcmp( Type, "uint64" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_UINT64;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UINT64;
 			}
 			else if ( strcmp( Type, "int64" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_INT64;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_INT64;
 			}
 
 			// Special Names //
 			else if ( strcmp( Type, "UVType" ) == 0 ) {
-				Program.AttribInfo[Index].Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
 			}
 			
 			VLog( "* * * Info: %s (id: %i) x%i -- %i bytes", 
 				Type, 
-				Program.AttribInfo[Index].Type,
-				Program.AttribInfo[Index].Count,
-				Program.AttribInfo[Index].GetSize()
+				Attr->Type,
+				Attr->Count,
+				Attr->GetSize()
 				);
 		}
 		
 		// Next Attribute //
 		Attrib = Attrib->next;
 	}
-	VLog( "* Attributes bound to Program" );
+
+	{
+		size_t TotalSize = 0;
+		for ( size_t idx = 0; idx < Program.AttribInfo.size(); idx++ ) {
+			size_t Size = Program.GetAttribSize( idx );
+			TotalSize += Size;
+			VLog( "* * Attribute Input Slot %i: %i bytes", idx, Size );
+		}
+		VLog( "* * Total Attribute Size: %i bytes (Data per vertex)", TotalSize );
+	}
+
+	VLog( "* All Attributes bound to Program" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :

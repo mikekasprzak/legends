@@ -87,8 +87,6 @@ cApp::cApp() {
 	Net::Host_StartClient();
 	Net::Host_Connect();
 //	Net::Host_SendPing();
-
-	glEnableVertexAttribArray( 0 );
 #endif // PRODUCT_CLIENT //
 
 	// Wait for threads to finish //

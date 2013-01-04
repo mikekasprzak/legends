@@ -41,7 +41,7 @@ public:
 	
 	struct cAttribInfo {
 		enum {
-			AI_NONE = 0,
+			AI_NONE = 0,	// Used for Padding Bytes //
 			
 			AI_FLOAT = 1,
 			AI_DOUBLE = 2,
@@ -63,7 +63,7 @@ public:
 		
 		inline size_t GetSize() {
 			static size_t Sizes[] = {
-				0,
+				1,		// Used for Padding Bytes //
 				
 				4,8,
 				2,0,
@@ -76,7 +76,14 @@ public:
 			return Sizes[Type] * Count;
 		}
 	};
-	std::vector<cAttribInfo> AttribInfo;
+	std::vector< std::vector<cAttribInfo> > AttribInfo;
+	inline size_t GetAttribSize( const size_t Index ) {
+		size_t Size = 0;
+		for ( size_t idx = 0; idx < AttribInfo[Index].size(); idx++ ) {
+			Size += AttribInfo[Index][idx].GetSize();
+		}
+		return Size;
+	}
 
 public:		
 	cUberShader_Shader() :

@@ -32,6 +32,10 @@ void InitShader() {
 	ColorNoiseShader = Default->Find( "ColorNoise" );
 	Noise1BitShader = Default->Find( "Noise1Bit" );
 	ColorNoise1BitShader = Default->Find( "ColorNoise1Bit" );
+	
+	// Enable this here, since all shaders will always require Attrib 0 to be enabled //
+	//glEnableVertexAttribArray( 0 );
+	cUberShader::EnableAttrib( 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void ExitShader() {
