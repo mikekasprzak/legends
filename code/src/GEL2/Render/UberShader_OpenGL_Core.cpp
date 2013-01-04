@@ -462,6 +462,19 @@ cUberShader::~cUberShader() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cUberShader::EnableAttrib( const int Index ) {
+	glEnableVertexAttribArray( Index );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::DisableAttrib( const int Index ) {
+	glDisableVertexAttribArray( Index );
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cUberShader::_Bind( const ShaderHandle Index ) {
+	CurrentShader = &Shader[Index];
+	glUseProgram( Shader[Index].Program );
+}
+// - ------------------------------------------------------------------------------------------ - //
 void cUberShader::Bind( const ShaderHandle Index ) {
 	CurrentShader = &Shader[Index];
 	glUseProgram( Shader[Index].Program );

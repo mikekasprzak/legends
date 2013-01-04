@@ -35,6 +35,7 @@ public:
 
 	GLuint Program;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	
+	// Attribute Indexes. Used mainly for compiling the shader. //
 	std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
 	// Remember, Attributes when disabled use a single value across all //
 	
@@ -113,6 +114,10 @@ public:
 	
 	ShaderHandle Find( const char* ShaderName );
 	void Bind( const ShaderHandle Index = 0 );
+
+	void _Bind( const ShaderHandle Index = 0 );			// Doesn't Enable Attributes //
+	static void EnableAttrib( const int Index = 0 );
+	static void DisableAttrib( const int Index = 0 );
 
 	template<class VertType>
 	inline void VectorAttribPointer( GLuint Index, const VertType* Ptr ) {
