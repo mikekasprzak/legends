@@ -16,9 +16,11 @@
 //   the last 2 lines though (AttribArray AttribPointer). This functionality is similar to how data
 //   is asigned in D3D.
 //		const D3D11_INPUT_ELEMENT_DESC vertexDesc[] = 
-//		{
+//		{	// First 0 is indexes in to Matrices (0-3), 2nd 0 is which input slot (multiple VBO's). One layout for all //
 //			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//		};
+//			{ "TEXCOORD", 0, DXGI_FORMAT_R16G16_SINT, 0, D3D11_APPEND_ALIGNED_ELEMENT,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//			{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, D3D11_APPEND_ALIGNED_ELEMENT,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//		};	// http://msdn.microsoft.com/en-us/library/windows/desktop/ff476180%28v=vs.85%29.aspx
 // OpenGL breaks this up in to 2 parts. The names and slot numbers are defined during compile. //
 //		glBindAttribLocation( Program, 0, "POSITION" );
 // Then the types and data pointers are specified upon use //
@@ -63,6 +65,35 @@
 //
 // A texture is (after BS loading) described by both a ID3D11Texture2D* and a ID3D11ShaderResourceView*.
 // The Texture3D is the data, and the View is what is used to bind it to a shader.
+
+
+// Hmm.
+// Regrettably, D3D InputLayouts are not exactly the same as Vertex Array Objects. VAO's are actually
+//   a more higher lever structure, that combines multiple VBOs and the idea of the Input Layout in
+//   to one. Input Layouts, like most other D3D structures, are the complete state data of attributes.
+//   Again, part of the information is compiled in to shader in OpenGL, and the rest needs to be
+//   specified using glAttribPointer calls. In D3D's case, this data is already made available (Input
+//   layout), and you simply need to specify the base address pointer. Thus, the D3D solution may
+//   actually be the superior solution, but only if GL blocks. GL may not actually block. In that case
+//   the performance loss of GL having to specify each Attrib Pointer plus all its data may be
+//   insignificant.
+// So on that note, yes InputLayouts should probably be defined in advance (as D3D has no choice).
+//   But that said, the OpenGL implentation should always be several calls to glAttribPointer,
+//   which also means that a shader program stores attrib data in an indexable fashion (which it
+//   already does), and the AttribPointer call should follow the syntax of IASetVertexBuffers.
+//   Of note, Stride and Offset are part of IASetVertexBuffers, so the only new data attached to
+//   the attribute definition is the size of the individual attribute parts... oh shit, and they
+//   have internal stride as well.
+// After some digging, it seems yes the Input Layout is: Type, Count (elements) and stride size.
+//   The stride part of IASetVertexBuffers should almost always be fixed to the whole vertex size.
+//   I suppose it's there since D3D does not check it's internal types to know how much to space
+//   out its own data. Okay, good to know. This data can be determined as part of the Attribs.
+// Okay! How to implement.
+//   Simply add more options to the Attrib part of the JSON file. Then provide a simpler
+//   function for glAttribPointer, just the data pointer and slot. In D3D's case, we can
+//   calculate the stride size. Also, definitions will need to be looked up in a table-like
+//   structure. DXGI_FORMAT_R8G8B8A8_UNORM is 8bit color data. DXGI_FORMAT_R32G32_FLOAT is
+//   Vector2D pair. So it's a little wonky yes (not as clean as GL's GL_FLOAT and 2 of 'em).
 
 
 // After doing some looking, it seems OpenGL ES 3.0 fully supports all these constructs, including
