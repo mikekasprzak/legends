@@ -73,7 +73,6 @@ public:
 		int Count;
 		
 		cAttrib() :
-			Index(-1),			// No Index (i.e. Never Bound, Padding) //
 			Group(-1),			// No Group (i.e. Not part of a Vertex Array Object) //
 			Type(AI_NONE),
 			Count(0)

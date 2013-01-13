@@ -145,6 +145,7 @@ inline void LinkShader( const cUberShader_Shader& Program ) {
 inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribute ) {
 	cJSON* Attrib = Attribute->child;
 	
+	// OpenGL requires an Index and a Name. Other Data is Optional //
 	while ( Attrib ) {
 		// NOTE: Crash Imminent here (non-existing object) //
 		int Index = cJSON_GetObjectItem( Attrib, "Index" )->valueint;
@@ -155,10 +156,10 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 			Index = -Index;
 		}
 				
-		VLog( "* * Attribute: %i %s -- %s", 
+		VLog( "* * Attribute: %i %s%s", 
 			Index, 
 			Name,
-			(OrigIndex != Index) ? "Disabled (-1)" : ""
+			(OrigIndex != Index) ? " -- Disabled (-1)" : ""
 			);
 			
 		glBindAttribLocation( 
@@ -177,10 +178,18 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 		// NOTE: A negative explicitly disables requested Attribute //
 		Attr->Index = OrigIndex;				
 
-		if ( cJSON_GetObjectItem( Attrib, "Type" ) ) {
-			// Store the Count //
-			Attr->Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
+		// If there's a group specified, store it //
+		if ( cJSON_GetObjectItem( Attrib, "Group" ) ) {
+			Attr->Group = cJSON_GetObjectItem( Attrib, "Group" )->valueint;
+		}
 
+		// If there's a Count, store it //
+		if ( cJSON_GetObjectItem( Attrib, "Count" ) ) {
+			Attr->Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
+		}
+
+		// If there's a Type, decypher it //
+		if ( cJSON_GetObjectItem( Attrib, "Type" ) ) {
 			// NOTE: Unsigned's should come first, because of pattern matching //
 			char* Type = cJSON_GetObjectItem( Attrib, "Type" )->valuestring;
 			if ( strcmp( Type, "float" ) == 0 ) {
