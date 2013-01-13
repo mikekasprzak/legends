@@ -41,6 +41,7 @@ COPY_FILES			+=
 # Game Specific Library Requesting Defines #
 USES_SDL2			:=	true
 USES_OPENGL2		:=	true
+USES_OPENGL3		:=	true
 #USES_SDLMIXER		:=	true
 # TODO: Consoles will need a NON SDL, GL, CURL, ENET way of building. 
 #   The Solution may be to extract USES_DESKTOP from makefile_windows, and make

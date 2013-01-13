@@ -1,0 +1,9 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for OPENGL scope (no game/platform) #
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_OPENGLES USES_OPENGLES2 USES_OPENGLES3 USES_FBO USES_SHADERS
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-lEGL -lGLESv3
+# - ------------------------------------------------------------------------ - #

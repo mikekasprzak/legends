@@ -145,6 +145,14 @@ void GraphicsInit() {
 	#endif // USES_OPENGL2 //
 		Log( "GL_MAX_VERTEX_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 128])", Dummy );
 
+
+	#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+	// http://www.opengl.org/wiki/Uniform_Buffer_Object
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_VERTEX_UNIFORM_BLOCKS, (GLint*)&Dummy );
+	Log( "GL_MAX_VERTEX_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Vertex Shader. [Minimum 12])", Dummy );
+	#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
+
 	Dummy = 0;
 	glGetIntegerv( GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, (GLint*)&Dummy );
 	Log( "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS: %i    (Max number of TUs accessable from Vertex Shaders. [Minimum 0])", Dummy );
@@ -162,11 +170,21 @@ void GraphicsInit() {
 	#endif // USES_OPENGL2 //
 		Log( "GL_MAX_FRAGMENT_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 16])", Dummy );
 
+	#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+	// http://www.opengl.org/wiki/Uniform_Buffer_Object
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_BLOCKS, (GLint*)&Dummy );
+	Log( "GL_MAX_FRAGMENT_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Fragment Shader. [Minimum 12])", Dummy );
+	#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
+
 	Dummy = 0;
 	glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&Dummy );
 	Log( "GL_MAX_TEXTURE_IMAGE_UNITS: %i    (Max number of TUs accessable from Fragment Shaders. [Minimum 8])", Dummy );
 
 	Log( "" );
+	
+	// TODO: Detect PowerVR based Intel GPUs //
+	// TODO: Detect CPUs //
 
 	// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
 	// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //
@@ -183,10 +201,6 @@ void GraphicsInit() {
 	else if ( find_String( "Imagination", OpenGLVendor ) || find_String( "PowerVR", OpenGLRenderer ) ) {
 		Log( "* Found PowerVR (Imagination Technology) GPU..." );
 		System::GPUVendor = System::GPU_POWERVR;
-	}
-	else if ( find_String( "Vivante", OpenGLVendor ) || find_String( "GC8", OpenGLRenderer ) ) {
-		Log( "* Found Vivante GPU..." );
-		System::GPUVendor = System::GPU_VIVANTE;
 	}
 	else if ( find_String( "ARM", OpenGLVendor ) || find_String( "Mali", OpenGLRenderer ) ) {
 		Log( "* Found ARM GPU..." );
@@ -208,8 +222,30 @@ void GraphicsInit() {
 		Log( "* Found Qualcomm GPU..." );
 		System::GPUVendor = System::GPU_QUALCOMM;
 	}
+	else if ( find_String( "Vivante", OpenGLVendor ) || find_String( "GC", OpenGLRenderer ) ) {
+		Log( "* Found Vivante GPU..." );
+		System::GPUVendor = System::GPU_VIVANTE;
+	}
+	else if ( find_String( "Hisilicon", OpenGLVendor ) || find_String( "Immersion", OpenGLRenderer ) ) {
+		Log( "* Found HiSilicon Technologies (Huawei) GPU..." );
+		System::GPUVendor = System::GPU_HISILICON;
+	}
+	else if ( find_String( "Broadcom", OpenGLVendor ) || find_String( "VideoCore", OpenGLRenderer ) ) {
+		Log( "* Found Broadcom GPU..." );
+		System::GPUVendor = System::GPU_BROADCOM;
+	}
+	else if ( find_String( "ZiiLABS", OpenGLVendor ) || find_String( "ZMS", OpenGLRenderer ) ) {
+		Log( "* Found ZiiLABS GPU..." );
+		System::GPUVendor = System::GPU_ZIILABS;
+	}
+	else if ( find_String( "Advanced", OpenGLVendor ) || find_String( "S", OpenGLRenderer ) ) {
+		// Last, because their company name and GPU names are too generic (S5 Multicore) //
+		Log( "* Found Advanced Graphics Corporation GPU..." );
+		System::GPUVendor = System::GPU_AGC;
+	}
 	else {
 		Log( "* Warning! Unknown GPU Vendor! (%s - %s)", OpenGLVendor, OpenGLRenderer );
+		System::GPUVendor = System::GPU_UNKNOWN;
 	}
 	
 	Log( "" );

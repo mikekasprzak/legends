@@ -27,9 +27,11 @@ OTHER_O_FILES		+=
 # The SKU file may say that the game requires OpenGL 2.0 Grade Hardware //
 ifdef USES_OPENGL2
 include Target/Common/common_opengl2
-else
+else # USES_OPENGL2 #
 include Target/Common/common_opengl1
-endif
+endif # USES_OPENGL2 #
+# - ------------------------------------------------------------------------ - #
+# NOTE: OpenGL 3 and 4 are the same includes as OpenGL 2, just extra defines #
 # - ------------------------------------------------------------------------ - #
 # TODO: Use sdl2-config
 #CFLAGS				+=	$(shell sdl2-config --cflags)

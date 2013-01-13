@@ -38,14 +38,20 @@ void GraphicsExit();				// Called from Exit() //
 
 enum eGPU {
 	GPU_NONE = 0,					// No GPU, or Not Applicable //
+	GPU_UNKNOWN,
+	
 	GPU_INTEL,						// GMA/GMA HD //
 	GPU_NVIDIA,						// GeForce/Quadro/Tegra //
 	GPU_ATI,						// Radeon/FireGL //
 	GPU_AMD = GPU_ATI,				// Radeon/FireGL //
 	GPU_POWERVR,					// PowerVR/IMG //
 	GPU_QUALCOMM,					// Adreno //
-	GPU_ARM, 						// MALI //
+	GPU_ARM, 						// Mali //
 	GPU_VIVANTE,					// GC //
+	GPU_HISILICON,					// Immersion //
+	GPU_BROADCOM,					// VideoCore //
+	GPU_ZIILABS,					// ZMS //
+	GPU_AGC,						// S //
 };
 
 extern eGPU GPUVendor;
