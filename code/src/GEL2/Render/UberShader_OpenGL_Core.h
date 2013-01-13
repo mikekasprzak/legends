@@ -35,10 +35,7 @@ public:
 
 	GLuint Program;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	
-	// Attribute Indexes. Used mainly for compiling the shader. //
-	//std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
-	// Remember, Attributes when disabled use a single value across all //
-	
+		
 	struct cAttrib {
 		enum {
 			AI_NONE = 0,
@@ -65,17 +62,27 @@ public:
 			AI_FLOAT,		// Float (32bit) //
 			AI_DOUBLE,		// Double (64bit) //
 
+			// Legacy //
+			AI_FIXED,		// 32bit Fixed Point (16:16)
+			
+			// Extended GL Types //
+			AI_UINT_10_10_10_2,	// 10bit x,y,z, 2bit w (unsigned) //
+			AI_INT_10_10_10_2,	// 10bit x,y,z, 2bit w (signed) //
 		};
 		
 		int Index;
 		int Group;
 		int Type;
 		int Count;
+		GLenum GLType;
+		int Stride;
 		
 		cAttrib() :
 			Group(-1),			// No Group (i.e. Not part of a Vertex Array Object) //
 			Type(AI_NONE),
-			Count(0)
+			Count(0),
+			GLType(0),
+			Stride(0)
 		{
 		}
 		
@@ -94,11 +101,19 @@ public:
 
 				1,2,	// QFLOAT, HFLOAT //
 				4,8,	// float, double //
-
+				
+				// Legacy //
+				4,		// Fixed //
+				
+				// Extended GL Types //
+				1,1,	// packed INT_10_10_10_2 types (TODO: Check if sizes correct. Is either 4 or 1) //
 			};
 			return Sizes[Type] * Count;
 		}
 	};
+
+	// OLD NOTE: Attribute Indexes are used mainly for compiling the shader. //
+	// Positive non-zero enable, negative to disable (i.e. use same value constantly) //
 
 	std::vector< cAttrib > Attrib;
 
@@ -110,6 +125,14 @@ public:
 			}
 		}
 		return Size;
+	}
+	
+	inline size_t GetTotalAttribSize() {
+		size_t TotalSize = 0;
+		for ( size_t idx = 0; idx < Attrib.size(); idx++ ) {
+			TotalSize += Attrib[idx].GetSize();
+		}
+		return TotalSize;		
 	}
 
 public:		
@@ -153,6 +176,7 @@ public:
 	static void EnableAttrib( const int Index = 0 );
 	static void DisableAttrib( const int Index = 0 );
 
+
 	template<class VertType>
 	inline void VectorAttribPointer( GLuint Index, const VertType* Ptr ) {
 		if ( sizeof(VertType) / sizeof(Real) > 4 ) {
@@ -189,15 +213,27 @@ public:
 		AttribPointer( Index, 2, GL_UVType, GL_FALSE, sizeof(VertType), (const float*)Ptr );
 	}
 
-	// GL Code //
+	// **** GL Code **** //
+
+	// GL Hardcoding //
 	inline void AttribPointer( const GLuint Index, const GLint Size, const GLenum Type, const GLboolean Normalized, const GLsizei Stride, const void* Ptr ) {
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}
+	
+	// 
+	inline void Attrib( const GLuint Index, const void* Ptr ) {
+		const GLint Size = CurrentShader->Attrib[Index].Count;
+		const GLenum Type = CurrentShader->Attrib[Index].GLType;
+		const GLboolean Normalized = false;
+		GLsizei Stride = CurrentShader->Attrib[Index].Stride;
 
+		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
+	}
+	
+	// GL Drawing Code //
 	inline void DrawArrays( const int Mode, const size_t PolyCount ) {
 		glDrawArrays( Mode, 0, PolyCount );	
 	}
-
 	// PolyCount unused here with OpenGL //
 	inline void DrawElements( const int Mode, const size_t /*PolyCount*/, const unsigned short* Index, const size_t IndexCount ) {
 		glDrawElements( Mode, IndexCount, GL_UNSIGNED_SHORT, (const unsigned short*)Index );

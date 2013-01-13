@@ -183,55 +183,89 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 			Attr->Group = cJSON_GetObjectItem( Attrib, "Group" )->valueint;
 		}
 
+		// If there's a hardcoded Stride specified, store it //
+		if ( cJSON_GetObjectItem( Attrib, "Stride" ) ) {
+			Attr->Stride = cJSON_GetObjectItem( Attrib, "Stride" )->valueint;
+		}
+
 		// If there's a Count, store it //
 		if ( cJSON_GetObjectItem( Attrib, "Count" ) ) {
 			Attr->Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
 		}
 
 		// If there's a Type, decypher it //
-		if ( cJSON_GetObjectItem( Attrib, "Type" ) ) {
+		if ( cJSON_GetObjectItem( Attrib, "Type" ) ) {			
 			// NOTE: Unsigned's should come first, because of pattern matching //
 			char* Type = cJSON_GetObjectItem( Attrib, "Type" )->valuestring;
 			if ( strcmp( Type, "float" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_FLOAT;
-			}
-			else if ( strcmp( Type, "double" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttrib::AI_DOUBLE;
+				Attr->GLType = GL_FLOAT;
 			}
 			else if ( strcmp( Type, "hfloat" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_HFLOAT;
+				Attr->GLType = GL_HALF_FLOAT;
+			}
+			else if ( strcmp( Type, "fixed" ) == 0 ) {
+				// Legacy //
+				Attr->Type = cUberShader_Shader::cAttrib::AI_FIXED;
+				Attr->GLType = GL_FIXED;
 			}
 			else if ( strcmp( Type, "uchar" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_UCHAR;
+				Attr->GLType = GL_UNSIGNED_BYTE;
 			}
 			else if ( strcmp( Type, "char" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_CHAR;
+				Attr->GLType = GL_BYTE;
 			}
 			else if ( strcmp( Type, "ushort" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_USHORT;
+				Attr->GLType = GL_UNSIGNED_SHORT;
 			}
 			else if ( strcmp( Type, "short" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_SHORT;
+				Attr->GLType = GL_SHORT;
 			}
-			else if ( strcmp( Type, "uint" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttrib::AI_UINT;
-			}
-			else if ( strcmp( Type, "int" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttrib::AI_INT;
-			}
-			else if ( strcmp( Type, "uint64" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttrib::AI_UINT64;
-			}
-			else if ( strcmp( Type, "int64" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttrib::AI_INT64;
-			}
+			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+				else if ( strcmp( Type, "double" ) == 0 ) {
+					Attr->Type = cUberShader_Shader::cAttrib::AI_DOUBLE;
+					Attr->GLType = GL_DOUBLE;
+				}
+				else if ( strcmp( Type, "uint" ) == 0 ) {
+					Attr->Type = cUberShader_Shader::cAttrib::AI_UINT;
+					Attr->GLType = GL_UNSIGNED_INT;
+				}
+				else if ( strcmp( Type, "int" ) == 0 ) {
+					Attr->Type = cUberShader_Shader::cAttrib::AI_INT;
+					Attr->GLType = GL_INT;
+				}
+				
+				// Bitwise breakdown of formats like GL_INT_2_10_10_10_REV (GL3+) //
+				// http://sugarpot.sakura.ne.jp/yuno/?OpenGL%E3%83%94%E3%82%AF%E3%82%BB%E3%83%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%83%E3%83%88
+				// NOTE: Other types like GL_SHORT_4_4_4_4 are Texture Only //
+
+				else if ( strcmp( Type, "uint_10_10_10_2" ) == 0 ) {
+					Attr->Type = cUberShader_Shader::cAttrib::AI_UINT_10_10_10_2;
+					Attr->GLType = GL_UNSIGNED_INT_2_10_10_10_REV;	// Reversed format //
+				}
+				else if ( strcmp( Type, "int_10_10_10_2" ) == 0 ) {
+					Attr->Type = cUberShader_Shader::cAttrib::AI_INT_10_10_10_2;
+					Attr->GLType = GL_INT_2_10_10_10_REV; // Reversed Format //
+				}
+			#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3)
 
 			// Special Names //
 			else if ( strcmp( Type, "UVType" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_SHORT;
+				Attr->GLType = GL_SHORT;
 			}
 			else if ( strcmp( Type, "pad" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttrib::AI_PAD;
+			}
+			
+			// Errors //
+			else {
+				Log( "! Unknown or Unsupported Attribute Type (%s)", Type );
 			}
 			
 			
@@ -246,16 +280,32 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 		// Next Attribute //
 		Attrib = Attrib->next;
 	}
-
+	
+	// Calculade Strides //
 	{
-		size_t TotalSize = 0;
-		for ( size_t idx = 0; idx < Program.Attrib.size(); idx++ ) {
-			size_t Size = Program.Attrib[idx].GetSize();
-			TotalSize += Size;
-			VLog( "* Attribute Input Slot %i: %i bytes", idx, Size );
+		for ( st32 idx = 0; idx < Program.Attrib.size(); idx++ ) {
+			// If a Stride is currently not set //
+			if ( Program.Attrib[idx].Stride == 0 ) {
+				// If the Attribute has no group //
+				if ( Program.Attrib[idx].Group != -1 ) {
+					st32 TotalSize = 0;
+					for ( st32 idx2 = 0; idx2 < Program.Attrib.size(); idx2++ ) {
+						TotalSize += Program.Attrib[idx].GetSize();
+					}
+					Program.Attrib[idx].Stride = TotalSize;
+				}
+				else {
+					// No Group, so it's only as big as it is //
+					Program.Attrib[idx].Stride = Program.Attrib[idx].GetSize();
+				}
+			}
+			
+			VLog( "* * %i Stride: %i", idx, Program.Attrib[idx].Stride );
 		}
-		VLog( "* Total Attribute Size: %i bytes (Data per vertex)", TotalSize );
 	}
+
+	// Log the Total Size //
+	VLog( "* Total Attribute Size: %i bytes (Data per vertex)", Program.GetTotalAttribSize() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :
