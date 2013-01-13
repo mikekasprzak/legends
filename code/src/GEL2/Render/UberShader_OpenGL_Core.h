@@ -36,10 +36,10 @@ public:
 	GLuint Program;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	
 	// Attribute Indexes. Used mainly for compiling the shader. //
-	std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
+	//std::vector<int> Attributes;	// Positive non-zero enable, negative to disable //
 	// Remember, Attributes when disabled use a single value across all //
 	
-	struct cAttribInfo {
+	struct cAttrib {
 		enum {
 			AI_NONE = 0,
 			
@@ -67,8 +67,18 @@ public:
 
 		};
 		
+		int Index;
+		int Group;
 		int Type;
 		int Count;
+		
+		cAttrib() :
+			Index(-1),			// No Index (i.e. Never Bound, Padding) //
+			Group(-1),			// No Group (i.e. Not part of a Vertex Array Object) //
+			Type(AI_NONE),
+			Count(0)
+		{
+		}
 		
 		inline st32 GetSize() {
 			static st32 Sizes[] = {
@@ -91,13 +101,14 @@ public:
 		}
 	};
 
-	// a vector of vectors beacuse you sometimes want to pack data together in a single Attribute //
-	std::vector< std::vector<cAttribInfo> > AttribInfo;
+	std::vector< cAttrib > Attrib;
 
-	inline size_t GetAttribSize( const size_t Index ) {
+	inline size_t GetAttribGroupSize( const int Group ) {
 		size_t Size = 0;
-		for ( size_t idx = 0; idx < AttribInfo[Index].size(); idx++ ) {
-			Size += AttribInfo[Index][idx].GetSize();
+		for ( size_t idx = 0; idx < Attrib.size(); idx++ ) {
+			if ( Attrib[idx].Group == Group ) {
+				Size += Attrib[idx].GetSize();
+			}
 		}
 		return Size;
 	}

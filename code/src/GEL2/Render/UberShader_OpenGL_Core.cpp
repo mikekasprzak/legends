@@ -142,85 +142,87 @@ inline void LinkShader( const cUberShader_Shader& Program ) {
 	VLog( "* Program Linked. Done." );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribute ) {
+inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribute ) {
 	cJSON* Attrib = Attribute->child;
 	
 	while ( Attrib ) {
 		// NOTE: Crash Imminent here (non-existing object) //
 		int Index = cJSON_GetObjectItem( Attrib, "Index" )->valueint;
 		char* Name = cJSON_GetObjectItem( Attrib, "Name" )->valuestring;
+		int OrigIndex = Index;
+			
+		if ( Index < 0 ) {
+			Index = -Index;
+		}
 				
-		VLog( "* * Attribute: %i %s", 
+		VLog( "* * Attribute: %i %s -- %s", 
 			Index, 
-			Name
+			Name,
+			(OrigIndex != Index) ? "Disabled (-1)" : ""
 			);
-
+			
 		glBindAttribLocation( 
 			Program.Program, 
 			Index, 
 			Name
 			);
+
+		if ( (size_t)Index >= Program.Attrib.size() ) {
+			Program.Attrib.resize( Index+1 ); // Index 5 is only available if Size is 6 //
+		}
+
+		cUberShader_Shader::cAttrib* Attr = &(Program.Attrib.back());
 		
 		// Store a copy of all attributes, so they can be enabled correctly //
-		Program.Attributes.push_back( Index );
-		
-		// TODO: store negatives when explicit disabled requested //
+		// NOTE: A negative explicitly disables requested Attribute //
+		Attr->Index = OrigIndex;				
 
 		if ( cJSON_GetObjectItem( Attrib, "Type" ) ) {
-			// Resize the Data, automatically padding //
-			if ( (size_t)Index >= Program.AttribInfo.size() ) {
-				Program.AttribInfo.resize( Index+1 ); // Index 5 is only available if Size is 6 //
-			}
-			
-			cUberShader_Shader::cAttribInfo* Attr = 0;
-			Program.AttribInfo[Index].push_back( cUberShader_Shader::cAttribInfo() );
-			Attr = &(Program.AttribInfo[Index].back());
-
 			// Store the Count //
 			Attr->Count = cJSON_GetObjectItem( Attrib, "Count" )->valueint;
 
 			// NOTE: Unsigned's should come first, because of pattern matching //
 			char* Type = cJSON_GetObjectItem( Attrib, "Type" )->valuestring;
 			if ( strcmp( Type, "float" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_FLOAT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_FLOAT;
 			}
 			else if ( strcmp( Type, "double" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_DOUBLE;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_DOUBLE;
 			}
 			else if ( strcmp( Type, "hfloat" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_HFLOAT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_HFLOAT;
 			}
 			else if ( strcmp( Type, "uchar" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UCHAR;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_UCHAR;
 			}
 			else if ( strcmp( Type, "char" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_CHAR;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_CHAR;
 			}
 			else if ( strcmp( Type, "ushort" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_USHORT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_USHORT;
 			}
 			else if ( strcmp( Type, "short" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_SHORT;
 			}
 			else if ( strcmp( Type, "uint" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UINT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_UINT;
 			}
 			else if ( strcmp( Type, "int" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_INT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_INT;
 			}
 			else if ( strcmp( Type, "uint64" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UINT64;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_UINT64;
 			}
 			else if ( strcmp( Type, "int64" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_INT64;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_INT64;
 			}
 
 			// Special Names //
 			else if ( strcmp( Type, "UVType" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_SHORT;
 			}
 			else if ( strcmp( Type, "pad" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_PAD;
+				Attr->Type = cUberShader_Shader::cAttrib::AI_PAD;
 			}
 			
 			
@@ -238,8 +240,8 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 
 	{
 		size_t TotalSize = 0;
-		for ( size_t idx = 0; idx < Program.AttribInfo.size(); idx++ ) {
-			size_t Size = Program.GetAttribSize( idx );
+		for ( size_t idx = 0; idx < Program.Attrib.size(); idx++ ) {
+			size_t Size = Program.Attrib[idx].GetSize();
 			TotalSize += Size;
 			VLog( "* Attribute Input Slot %i: %i bytes", idx, Size );
 		}
@@ -444,7 +446,7 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		cJSON* Attribute = cJSON_GetObjectItem( ShaderObj, "Attribute" );
 		if ( Attribute ) {
 			VLog( "+ Binding Attributes to Program..." );
-			AssignShaderAttributes( Program, Attribute );
+			_AssignShaderAttributes( Program, Attribute );
 			VLog( "- Attributes bound to Program." );
 		}
 		else {
@@ -504,12 +506,12 @@ void cUberShader::Bind( const ShaderHandle Index ) {
 	glUseProgram( Shader[Index].Program );
 
 	// Skipping Zero, since I never disable zero //	
-	for ( size_t idx = 1; idx < Shader[Index].Attributes.size(); idx++ ) {
-		if ( Shader[Index].Attributes[idx] > 0 ) {
-			glEnableVertexAttribArray( Shader[Index].Attributes[idx] );
+	for ( size_t idx = 1; idx < Shader[Index].Attrib.size(); idx++ ) {
+		if ( Shader[Index].Attrib[idx].Index >= 0 ) {
+			glEnableVertexAttribArray( Shader[Index].Attrib[idx].Index );
 		}
 		else {
-			glDisableVertexAttribArray( -Shader[Index].Attributes[idx] );
+			glDisableVertexAttribArray( -(Shader[Index].Attrib[idx].Index) );
 		}
 	}
 }
