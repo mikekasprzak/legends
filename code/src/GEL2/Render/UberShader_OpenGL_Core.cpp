@@ -187,6 +187,9 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 			else if ( strcmp( Type, "double" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttribInfo::AI_DOUBLE;
 			}
+			else if ( strcmp( Type, "hfloat" ) == 0 ) {
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_HFLOAT;
+			}
 			else if ( strcmp( Type, "uchar" ) == 0 ) {
 				Attr->Type = cUberShader_Shader::cAttribInfo::AI_UCHAR;
 			}
@@ -217,7 +220,7 @@ inline void AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribut
 				Attr->Type = cUberShader_Shader::cAttribInfo::AI_SHORT;
 			}
 			else if ( strcmp( Type, "pad" ) == 0 ) {
-				Attr->Type = cUberShader_Shader::cAttribInfo::AI_NONE;
+				Attr->Type = cUberShader_Shader::cAttribInfo::AI_PAD;
 			}
 			
 			

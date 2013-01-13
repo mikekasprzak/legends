@@ -80,6 +80,8 @@ void GraphicsInit() {
 #endif // USES_OPENGLES2 //
 	Log( "OpenGL Extensions:\n%s", OpenGLExtensions );
 	Log( "" );
+	
+	int Dummy;	// Dummy Value for things we don't want to remember //
 
 	// GL Environment Settings //
 	glGetIntegerv( GL_DEPTH_BITS, (GLint*)&DepthBits );
@@ -87,12 +89,84 @@ void GraphicsInit() {
 
 	glGetIntegerv( GL_STENCIL_BITS, (GLint*)&StencilBits );
 	Log( "GL_STENCIL_BITS: %i", StencilBits );
+	
+	Log( "" );
+
+	{
+		int Dummy2[2];
+		Dummy2[0] = 0;
+		Dummy2[1] = 0;
+		glGetIntegerv( GL_MAX_VIEWPORT_DIMS, (GLint*)Dummy2 );
+		Log( "GL_MAX_VIEWPORT_DIMS: %i, %i", Dummy2[0], Dummy2[1] );
+	}
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_RENDERBUFFER_SIZE, (GLint*)&Dummy );
+	Log( "GL_MAX_RENDERBUFFER_SIZE: %i", Dummy );
 
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*)&System::MaxTextureSize );
 	Log( "GL_MAX_TEXTURE_SIZE: %i", System::MaxTextureSize );
-		
-	// TODO: Log more data. http://www.opengl.org/sdk/docs/man/xhtml/glGet.xml
 
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_CUBE_MAP_TEXTURE_SIZE, (GLint*)&Dummy );
+	Log( "GL_MAX_CUBE_MAP_TEXTURE_SIZE: %i", Dummy );
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, (GLint*)&Dummy );
+	Log( "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: %i", Dummy );
+		
+	Log( "" );
+	Log( "TERMS: Attributes are Vertex Streams. Varyings are interpolated values from VS to FS. Uniforms are global variables/constants." );
+
+	// TODO: Log more data. http://www.opengl.org/sdk/docs/man/xhtml/glGet.xml	
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, (GLint*)&Dummy );
+	Log( "GL_MAX_VERTEX_ATTRIBS: %i    (Max number of generic 4 component Vertex Attributes. [Minimum 8])", Dummy );
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_VARYING_VECTORS, (GLint*)&Dummy );
+	#ifdef USES_OPENGL2
+	if ( Dummy == 0 ) {
+		glGetIntegerv( GL_MAX_VARYING_COMPONENTS, (GLint*)&Dummy );
+		Log( "GL_MAX_VARYING_COMPONENTS: %i [%i]    (Max number of interpolated fp values. [Minimum 8])", Dummy, Dummy / 4 );
+	}
+	else
+	#endif // USES_OPENGL2 //
+		Log( "GL_MAX_VARYING_VECTORS: %i    (Max number of 4 element interpolated fp values. [Minimum 8])", Dummy );
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_VERTEX_UNIFORM_VECTORS, (GLint*)&Dummy );
+	#ifdef USES_OPENGL2
+	if ( Dummy == 0 ) {
+		glGetIntegerv( GL_MAX_VERTEX_UNIFORM_COMPONENTS, (GLint*)&Dummy );
+		Log( "GL_MAX_VERTEX_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 128])", Dummy, Dummy / 4 );
+	}
+	else 
+	#endif // USES_OPENGL2 //
+		Log( "GL_MAX_VERTEX_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 128])", Dummy );
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, (GLint*)&Dummy );
+	Log( "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS: %i    (Max number of TUs accessable from Vertex Shaders. [Minimum 0])", Dummy );
+
+	Log( "" );
+	
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_VECTORS, (GLint*)&Dummy );
+	#ifdef USES_OPENGL2
+	if ( Dummy == 0 ) {
+		glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, (GLint*)&Dummy );
+		Log( "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 16])", Dummy, Dummy / 4 );
+	}
+	else
+	#endif // USES_OPENGL2 //
+		Log( "GL_MAX_FRAGMENT_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 16])", Dummy );
+
+	Dummy = 0;
+	glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&Dummy );
+	Log( "GL_MAX_TEXTURE_IMAGE_UNITS: %i    (Max number of TUs accessable from Fragment Shaders. [Minimum 8])", Dummy );
+
+	Log( "" );
 
 	// Check both the Vendor and the Renderer, since Intel subcontracted the Linux driver to Tungsten. //
 	// Intel GMA 950's have only enough texture cache for 1024x1024 textures, so making that the limit //

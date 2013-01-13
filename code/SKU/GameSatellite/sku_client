@@ -20,7 +20,7 @@ IGNORE_LIST			+=
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
 DEFINES				+=	PRODUCT_SATELLITE PRODUCT_CLIENT \
-						USES_GEL2 USES_GEL \
+						USES_GEL2 USES_GEL USES_GPU \
 						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
 # - ------------------------------------------------------------------------ - #
 # Libraries specific to this file (full include path or -l) #

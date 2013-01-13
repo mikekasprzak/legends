@@ -41,37 +41,51 @@ public:
 	
 	struct cAttribInfo {
 		enum {
-			AI_NONE = 0,	// Used for Padding Bytes //
+			AI_NONE = 0,
 			
-			AI_FLOAT = 1,
-			AI_DOUBLE = 2,
-			AI_HFLOAT = 3,	// Half Float //
-			//AI_?? = 4,
+			AI_PAD = 1,		// Used for Padding Bytes //
 			
-			AI_UCHAR = 5,
-			AI_CHAR = 6,
-			AI_USHORT = 7,
-			AI_SHORT = 8,
-			AI_UINT = 9,
-			AI_INT = 10,
-			AI_UINT64 = 11,
-			AI_INT64 = 12,
+			AI_UCHAR = 2,	// 2 //
+			AI_CHAR,
+			AI_USHORT,		// 4 //
+			AI_SHORT,
+			AI_UINT,		// 6 //
+			AI_INT,
+			AI_UINT64,		// 8 //
+			AI_INT64,
+			AI_UINT128,		// 10 //
+			AI_INT128,
+			AI_UINT256,		// 12 //
+			AI_INT256,
+			AI_UINT512,		// 14 //
+			AI_INT512,
+
+			AI_QFLOAT = 16,	// Quarter Float (8bit) //
+			AI_HFLOAT,		// Half Float (16bit) //
+			AI_FLOAT,		// Float (32bit) //
+			AI_DOUBLE,		// Double (64bit) //
+
 		};
 		
 		int Type;
 		int Count;
 		
-		inline size_t GetSize() {
-			static size_t Sizes[] = {
-				1,		// Used for Padding Bytes //
-				
-				4,8,
-				2,0,
-				
-				1,1,
-				2,2,
-				4,4,
-				8,8,
+		inline st32 GetSize() {
+			static st32 Sizes[] = {
+				0,		// AI_NONE //
+				1,		// AI_PAD //
+								
+				1,1,	// char //
+				2,2,	// short //
+				4,4,	// int //
+				8,8,	// int64 //
+				16,16,	// int128 //
+				32,32,	// int256 //
+				64,64,	// int512 //
+
+				1,2,	// QFLOAT, HFLOAT //
+				4,8,	// float, double //
+
 			};
 			return Sizes[Type] * Count;
 		}
