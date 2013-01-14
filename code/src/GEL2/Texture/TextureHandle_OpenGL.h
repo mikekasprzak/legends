@@ -16,8 +16,8 @@ void delete_TextureHandle( TextureHandle Handle );
 void bind_TextureHandle( TextureHandle Handle, const st32 TextureUnit = 0 );
 void unbind_TextureHandle( TextureHandle = 0, const st32 TextureUnit = 0 );
 // - ------------------------------------------------------------------------------------------ - //
-inline void Bind( TextureHandle Handle, const int Index = 0 ) {
-	bind_TextureHandle( Handle, Index );
+inline void Bind( TextureHandle Handle, const st32 TextureUnit = 0 ) {
+	bind_TextureHandle( Handle, TextureUnit );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
