@@ -18,6 +18,32 @@
 					"Type" : "UVType",
 					"Count" : 2
 				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				},
+				{
+					"Index" : 3,
+					"Name" : "AspectScalar",
+					"Type" : "float",
+					"Count" : 2
+				}
 			]
 		}
 	}
