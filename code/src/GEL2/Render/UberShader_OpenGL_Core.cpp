@@ -271,7 +271,7 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 			}
 			
 			
-			VLog( "* * * Info: %s (id: %i) x%i -- %i bytes", 
+			VLog( "* * * Info: %s (Type: %i) x%i -- %i bytes", 
 				Type, 
 				Attr->Type,
 				Attr->Count,
@@ -314,6 +314,118 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 	// Log the Total Size //
 	VLog( "* Total Attribute Size: %i bytes (Data per vertex)", Program.GetTotalAttribSize() );
 }
+// - ------------------------------------------------------------------------------------------ - //
+inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms ) {
+	cJSON* Uniform = Uniforms->child;
+	
+	while ( Uniform ) {
+		int Index;
+		if ( cJSON_GetObjectItem( Uniform, "Index" ) ) {
+			Index = cJSON_GetObjectItem( Uniform, "Index" )->valueint;
+		}
+		else {
+			Index = Program.Uniform.size();
+		}
+		
+		const char* Name = cJSON_GetObjectItem( Uniform, "Name" )->valuestring;
+		GLint Location = glGetUniformLocation( Program.Program, Name );
+
+		VLog( "* * Uniform: %i %s -- %i", 
+			Index, 
+			Name,
+			Location
+			);
+		
+		// If we need to create more room to fit this Uniform, do it //
+		if ( (size_t)Index >= Program.Uniform.size() ) {
+			Program.Uniform.resize( Index+1 ); // Index 5 is only available if Size is 6 //
+		}
+
+		cUberShader_Shader::cUniform* Uni = &(Program.Uniform.back());
+
+		Uni->UniformLocation = Location;
+
+		// If there's a Count, store it //
+		if ( cJSON_GetObjectItem( Uniform, "Count" ) ) {
+			Uni->Count = cJSON_GetObjectItem( Uniform, "Count" )->valueint;
+		}
+
+		// If there's a Type, decypher it //
+		if ( cJSON_GetObjectItem( Uniform, "Type" ) ) {			
+			// NOTE: Unsigned's should come first, because of pattern matching //
+			char* Type = cJSON_GetObjectItem( Uniform, "Type" )->valuestring;
+			if ( strcmp( Type, "float" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_FLOAT;
+			}
+
+			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+				else if ( strcmp( Type, "uint" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_UINT;
+				}
+			#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //			
+			
+			else if ( strcmp( Type, "int" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_INT;
+			}
+
+			// These first, because mat4 is a valid name otherwise //
+			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+				else if ( strcmp( Type, "mat2x3" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT2x3;
+				}
+				else if ( strcmp( Type, "mat3x2" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT3x2;
+				}
+				else if ( strcmp( Type, "mat2x4" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT2x4;
+				}
+				else if ( strcmp( Type, "mat4x2" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT4x2;
+				}
+				else if ( strcmp( Type, "mat3x4" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT3x4;
+				}
+				else if ( strcmp( Type, "mat4x3" ) == 0 ) {
+					Uni->Type = cUberShader_Shader::cUniform::UI_MAT4x3;
+				}
+			#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
+
+			// These after, because mat4 is a valid name //
+			else if ( (strcmp( Type, "mat2" ) == 0) || strcmp( Type, "mat2x2" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_MAT2x2;
+			}
+			else if ( (strcmp( Type, "mat3" ) == 0) || strcmp( Type, "mat3x3" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_MAT3x3;
+			}
+			else if ( (strcmp( Type, "mat4" ) == 0) || strcmp( Type, "mat4x4" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_MAT4x4;
+			}
+
+			// Special Names //
+			else if ( strcmp( Type, "pad" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_PAD;
+			}
+						
+			// Errors //
+			else {
+				Log( "! Unknown or Unsupported Uniform Type (%s)", Type );
+				
+			}
+
+			VLog( "* * * Info: %s (Type: %i) x%i -- %i bytes", 
+				Type, 
+				Uni->Type,
+				Uni->Count,
+				Uni->GetSize()
+				);
+		}
+
+		// Next Uniform //
+		Uniform = Uniform->next;
+	}
+	VLog( "* Total Uniforms Size: %i bytes (Global/Constant Data)", Program.GetTotalUniformSize() );
+}
+
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :
 	CurrentShader( 0 )
@@ -517,9 +629,21 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		}
 		else {
 			Log( "! UberShader: Error, \"Attribute\" section not found in %s!", ShaderObj->string );
-		}				
+		}
+
 		// Link the shader for use //
 		LinkShader( Program );
+
+		// Lookup Uniforms //
+		cJSON* Uniforms = cJSON_GetObjectItem( ShaderObj, "Uniform" );
+		if ( Uniforms ) {
+			VLog( "+ Collecting List of Uniforms..." );
+			_AssignShaderUniforms( Program, Uniforms );
+			VLog( "- Uniform List Collected." );
+		}
+		else {
+			Log( "! UberShader: Error, \"Uniform\" section not found in %s!", ShaderObj->string );
+		}
 		
 		// Add Program to the UberShader //
 		ShaderLookup[ ShaderObj->string ] = Shader.size();

@@ -23,6 +23,7 @@ typedef size_t ShaderHandle;
 // - ------------------------------------------------------------------------------------------ - //
 class cUberShader_Shader {
 public:
+	// Program Parts //
 	GLuint Vertex;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	GLuint Fragment;		// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 
@@ -35,7 +36,8 @@ public:
 
 	GLuint Program;			// GL 2.0+ and GLSL 1.1+ -- Code: #version 110 -- GLES 2.0+ //
 	
-		
+public:
+	// Attributes //
 	struct cAttrib {
 		enum {
 			AI_NONE = 0,
@@ -68,8 +70,6 @@ public:
 			// Extended GL Types //
 			AI_UINT_10_10_10_2,	// 10bit x,y,z, 2bit w (unsigned) //
 			AI_INT_10_10_10_2,	// 10bit x,y,z, 2bit w (signed) //
-			
-			
 			
 			// *** //
 			AI_MAX			// Number of AI types //
@@ -143,9 +143,100 @@ public:
 		for ( size_t idx = 0; idx < Attrib.size(); idx++ ) {
 			TotalSize += Attrib[idx].GetSize();
 		}
-		return TotalSize;		
+		return TotalSize;
 	}
 
+public:
+	// Uniforms //
+	struct cUniform {
+		enum {
+			UI_NONE = 0,
+			
+			UI_PAD = 1,		// Used for Padding Bytes //
+			
+			UI_UCHAR = 2,	// 2 //
+			UI_CHAR,
+			UI_USHORT,		// 4 //
+			UI_SHORT,
+			UI_UINT,		// 6 //
+			UI_INT,
+			UI_UINT64,		// 8 //
+			UI_INT64,
+			UI_UINT128,		// 10 //
+			UI_INT128,
+			UI_UINT256,		// 12 //
+			UI_INT256,
+			UI_UINT512,		// 14 //
+			UI_INT512,
+
+			UI_QFLOAT = 16,	// Quarter Float (8bit) //
+			UI_HFLOAT,		// Half Float (16bit) //
+			UI_FLOAT,		// Float (32bit) //
+			UI_DOUBLE,		// Double (64bit) //
+			
+			UI_MAT2x2,		// Matrix //
+			UI_MAT3x3,
+			UI_MAT4x4,
+
+			UI_MAT2x3,		// Odd Matrices (GL3 and ES3) //
+			UI_MAT3x2,
+			UI_MAT2x4,
+			UI_MAT4x2,
+			UI_MAT3x4,
+			UI_MAT4x3,
+		};					
+
+		int UniformLocation;	// glGetUniformLocation( Program, "Name" ) //
+		int Type;
+		int Count;
+		int Offset;				// Offset in to the block of memory //
+
+		cUniform() :
+			Type(UI_NONE),
+			Count(0),
+			Offset(0)
+		{
+		}
+
+		inline st32 GetSize() {
+			static st32 Sizes[] = {
+				0,				// NONE //
+				1,				// PAD //
+								
+				1,1,			// char //
+				2,2,			// short //
+				4,4,			// int //
+				8,8,			// int64 //
+				16,16,			// int128 //
+				32,32,			// int256 //
+				64,64,			// int512 //
+
+				1,2,			// QFLOAT, HFLOAT //
+				4,8,			// float, double //
+				
+				4*2*2, 			// 2x2 //
+				4*3*3, 			// 3x3 //
+				4*4*4, 			// 4x4 //
+
+				4*2*3,4*3*2,	// 2x3,3x2 //
+				4*2*4,4*4*2,	// 2x4,4x2 //
+				4*3*4,4*4*3,	// 3x4,4x3 //
+			};
+			return Sizes[Type] * Count;
+		}
+	};
+
+	std::vector< cUniform > Uniform;
+	char* UniformData;					// Once we know the size, a pointer to the allocated memory //
+
+	inline size_t GetTotalUniformSize() {
+		size_t TotalSize = 0;
+		for ( size_t idx = 0; idx < Uniform.size(); idx++ ) {
+			TotalSize += Uniform[idx].GetSize();
+		}
+		return TotalSize;
+	}
+	
 public:		
 	cUberShader_Shader() :
 		Vertex( 0 ),
