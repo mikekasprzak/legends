@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_SHADER_UBERSHADER_OPENGL_UNIFORM_H__
-#define __GEL2_SHADER_UBERSHADER_OPENGL_UNIFORM_H__
+#ifndef __GEL2_SHADER_UBERSHADER_OPENGL_BINDUNIFORM_H__
+#define __GEL2_SHADER_UBERSHADER_OPENGL_BINDUNIFORM_H__
 // - ------------------------------------------------------------------------------------------ - //
 #if defined(USES_OPENGL2) || defined(USES_OPENGLES2)
 // - ------------------------------------------------------------------------------------------ - //
@@ -202,5 +202,5 @@ int cUberShader::BindUniformSColor( const char* Name, const GelSColor Color ) {
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_SHADER_UBERSHADER_OPENGL_UNIFORM_H__ //
+#endif // __GEL2_SHADER_UBERSHADER_OPENGL_BINDUNIFORM_H__ //
 // - ------------------------------------------------------------------------------------------ - //

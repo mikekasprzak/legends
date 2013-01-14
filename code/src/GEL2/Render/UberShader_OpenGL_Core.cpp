@@ -330,7 +330,7 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 		const char* Name = cJSON_GetObjectItem( Uniform, "Name" )->valuestring;
 		GLint Location = glGetUniformLocation( Program.Program, Name );
 
-		VLog( "* * Uniform: %i %s -- %i", 
+		VLog( "* * Uniform: %i %s [0x%x]", 
 			Index, 
 			Name,
 			Location
@@ -362,6 +362,18 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 			if ( strcmp( Type, "float" ) == 0 ) {
 				Uni->Type = cUberShader_Shader::cUniform::UI_FLOAT;
 			}
+			else if ( strcmp( Type, "float2" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_FLOAT2;
+			}
+			else if ( strcmp( Type, "float3" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_FLOAT3;
+			}
+			else if ( strcmp( Type, "float4" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_FLOAT4;
+			}
+			else if ( strcmp( Type, "color" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_COLOR;
+			}
 
 			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
 				else if ( strcmp( Type, "uint" ) == 0 ) {
@@ -371,6 +383,15 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 			
 			else if ( strcmp( Type, "int" ) == 0 ) {
 				Uni->Type = cUberShader_Shader::cUniform::UI_INT;
+			}
+			else if ( strcmp( Type, "int2" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_INT2;
+			}
+			else if ( strcmp( Type, "int3" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_INT3;
+			}
+			else if ( strcmp( Type, "int4" ) == 0 ) {
+				Uni->Type = cUberShader_Shader::cUniform::UI_INT4;
 			}
 
 			// These first, because mat4 is a valid name otherwise //

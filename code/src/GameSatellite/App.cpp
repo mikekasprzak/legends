@@ -149,13 +149,14 @@ void cApp::Draw( Screen::cNative& Native ) {
 	// Clear BG with Noise //	
 	{
 		Default->Bind( NoiseShader );
-		Default->BindUniformColor( "GlobalColor", GEL_RGB(96,96,96) );
-		Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		Default->UniformMatrix4x4( 0, Matrix4x4::Identity );
+		Default->UniformColor( 1, GEL_RGB(96,96,96) ); // GlobalColor //
 		static float SeedHack = 0;
 		SeedHack += 0.01f;
 		if ( SeedHack > 1.0f )
 			SeedHack = 0.0f;
-		Default->BindUniform1f( "Seed", SeedHack );
+		Default->Uniform1f( 3, SeedHack ); // Seed //
+		Default->BindUniforms();
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );		
@@ -176,10 +177,11 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix *= LocalMatrix;
 	
 		Default->Bind( TextureShader );
-		Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+		Default->UniformMatrix4x4( 0, ViewMatrix );
+		Default->UniformColor( 1, GEL_RGB_RED ); // GlobalColor //
+		Default->Uniform1i( 2, 0 );	// TexImage0 //
+		Default->BindUniforms();
 		Texture::Bind( Texas, 0 );
-		Default->BindUniform1i( "TexImage0", 0 );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
@@ -191,20 +193,20 @@ void cApp::Draw( Screen::cNative& Native ) {
 	{
 		RT_Blur[0]->Bind();
 		BlurShader->Bind( 0 );
-		//BlurShader->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		BlurShader->UniformMatrix4x4( 0, Matrix4x4::Identity );
+		BlurShader->Uniform1i( 2, 0 ); // TexImage0 //
+		BlurShader->BindUniforms();
 		RT_Main->BindAsTexture();
-		BlurShader->BindUniform1i( "TexImage0", 0 );
 		BlurShader->Attrib( 0, Verts );
 		BlurShader->Attrib( 1, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->Bind();
 		BlurShader->Bind( 1 );
-		//BlurShader->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		BlurShader->UniformMatrix4x4( 0, Matrix4x4::Identity );
+		BlurShader->Uniform1i( 2, 0 ); // TexImage0 //
+		BlurShader->BindUniforms();
 		RT_Blur[0]->BindAsTexture();
-		BlurShader->BindUniform1i( "TexImage0", 0 );
 		BlurShader->Attrib( 0, Verts );
 		BlurShader->Attrib( 1, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
@@ -215,11 +217,11 @@ void cApp::Draw( Screen::cNative& Native ) {
 	// Draw Buffer to Screen //
 	{
 		Default->Bind( TextureShader );
-		Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-		Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
+		Default->UniformMatrix4x4( 0, Matrix4x4::Identity );
+		Default->UniformColor( 1, GEL_RGB(255,255,0) ); // GlobalColor //
+		Default->Uniform1i( 2, 0 ); // TexImage0 //
+		Default->BindUniforms();
 		RT_Main->BindAsTexture();
-		//RT_Blur[1]->BindAsTexture();
-		Default->BindUniform1i( "TexImage0", 0 );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
@@ -232,12 +234,12 @@ void cApp::Draw( Screen::cNative& Native ) {
 //			cUberShader* Sh = Default;
 //			Default->Bind( TextureShader );
 	
-			Sh->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-			Sh->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
-			Sh->BindUniform2f( "AspectScalar", 1.0f / Native.GetAspectRatio(), 1.0f );
-			//RT_Main->BindAsTexture();
+			Sh->UniformMatrix4x4( 0, Matrix4x4::Identity );
+			Sh->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
+			Sh->Uniform1i( 2, 0 ); // TexImage0 //
+			Sh->Uniform2f( 3, 1.0f / Native.GetAspectRatio(), 1.0f ); // AspectScalar //
+			Sh->BindUniforms();
 			RT_Blur[1]->BindAsTexture();
-			Sh->BindUniform1i( "TexImage0", 0 );
 			Sh->Attrib( 0, Verts );
 			Sh->Attrib( 1, UVs );
 			Sh->DrawArrays( GEL_TRIANGLE_STRIP, 4 );

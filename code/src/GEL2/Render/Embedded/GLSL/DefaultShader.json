@@ -24,8 +24,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				}
 			]
 		},
@@ -59,8 +59,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				}
 			]
 		},
@@ -94,8 +94,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 2,
@@ -141,8 +141,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 2,
@@ -182,8 +182,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 3,
@@ -229,8 +229,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 3,
@@ -272,8 +272,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 3,
@@ -320,8 +320,8 @@
 				{
 					"Index" : 1,
 					"Name" : "GlobalColor",
-					"Type" : "float",
-					"Count" : 4
+					"Type" : "color",
+					"Count" : 1
 				},
 				{
 					"Index" : 3,

@@ -184,6 +184,16 @@ public:
 			UI_MAT4x2,
 			UI_MAT3x4,
 			UI_MAT4x3,
+			
+			UI_COLOR,		// Color //
+
+			UI_FLOAT2,
+			UI_FLOAT3,
+			UI_FLOAT4,
+			
+			UI_INT2,
+			UI_INT3,
+			UI_INT4,
 		};					
 
 		int UniformLocation;	// glGetUniformLocation( Program, "Name" ) //
@@ -221,6 +231,16 @@ public:
 				4*2*3,4*3*2,	// 2x3,3x2 //
 				4*2*4,4*4*2,	// 2x4,4x2 //
 				4*3*4,4*4*3,	// 3x4,4x3 //
+				
+				4*4,			// Color (4 floats) //
+				
+				4*2,			// Float2 //
+				4*3,
+				4*4,
+
+				4*2,			// Int2 //
+				4*3,
+				4*4,
 			};
 			return Sizes[Type] * Count;
 		}
@@ -235,6 +255,59 @@ public:
 			TotalSize += Uniform[idx].GetSize();
 		}
 		return TotalSize;
+	}
+	
+	inline void BindUniforms() {
+		for ( size_t idx = 0; idx < Uniform.size(); idx++ ) {
+//			Log( "%i -- %i (%i) [0x%x] -> 0x%x", idx, Uniform[idx].Offset, Uniform[idx].Count, Uniform[idx].UniformLocation, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			if ( Uniform[idx].Type == cUniform::UI_FLOAT ) {
+				glUniform1fv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_FLOAT2 ) {
+				glUniform2fv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_FLOAT3 ) {
+				glUniform3fv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_FLOAT4 ) {
+				glUniform4fv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_COLOR ) {
+				glUniform4fv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_INT ) {
+				glUniform1iv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLint*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_INT2 ) {
+				glUniform2iv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLint*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_INT3 ) {
+				glUniform3iv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLint*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_INT4 ) {
+				glUniform4iv( Uniform[idx].UniformLocation, Uniform[idx].Count, (GLint*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_MAT2x2 ) {
+				glUniformMatrix2fv( Uniform[idx].UniformLocation, Uniform[idx].Count, GL_FALSE, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_MAT3x3 ) {
+				glUniformMatrix3fv( Uniform[idx].UniformLocation, Uniform[idx].Count, GL_FALSE, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_MAT4x4 ) {
+				glUniformMatrix4fv( Uniform[idx].UniformLocation, Uniform[idx].Count, GL_FALSE, (GLfloat*)&(UniformData->Data[ Uniform[idx].Offset ]) );
+			}
+
+			else if ( Uniform[idx].Type == cUniform::UI_PAD ) {
+				// Do Nothing (Padding) //
+			}
+			else if ( Uniform[idx].Type == cUniform::UI_NONE ) {
+				// Do Nothing (Padding) //
+			}
+			
+			else {
+				Log( "! Error! Unknown or Unsupported Uniform Data Type (%i)", Uniform[idx].Type );
+			}
+		}
 	}
 	
 public:		
@@ -367,6 +440,42 @@ public:
 	}
 
 public:
+	inline void Uniform1i( const st32 Index, const int v0 );
+	inline void Uniform2i( const st32 Index, const int v0, const int v1 );
+	inline void Uniform3i( const st32 Index, const int v0, const int v1, const int v2 );
+	inline void Uniform4i( const st32 Index, const int v0, const int v1, const int v2, const int v3 );
+
+	inline void Uniform1f( const st32 Index, const float v0 );
+	inline void Uniform2f( const st32 Index, const float v0, const float v1 );
+	inline void Uniform3f( const st32 Index, const float v0, const float v1, const float v2 );
+	inline void Uniform4f( const st32 Index, const float v0, const float v1, const float v2, const float v3 );
+
+	inline void Uniform1iv( const st32 Index, const int* v, const st32 Count );
+	inline void Uniform2iv( const st32 Index, const int* v, const st32 Count );
+	inline void Uniform3iv( const st32 Index, const int* v, const st32 Count );
+	inline void Uniform4iv( const st32 Index, const int* v, const st32 Count );
+
+	inline void Uniform1fv( const st32 Index, const float* v, const st32 Count );
+	inline void Uniform2fv( const st32 Index, const float* v, const st32 Count );
+	inline void Uniform3fv( const st32 Index, const float* v, const st32 Count );
+	inline void Uniform4fv( const st32 Index, const float* v, const st32 Count );
+
+	inline void UniformMatrix2x2( const st32 Index, const Matrix2x2& v );
+	inline void UniformMatrix3x3( const st32 Index, const Matrix3x3& v );
+	inline void UniformMatrix4x4( const st32 Index, const Matrix4x4& v );
+	inline void UniformMatrix2fv( const st32 Index, const float* v, const size_t Count );
+	inline void UniformMatrix3fv( const st32 Index, const float* v, const size_t Count );
+	inline void UniformMatrix4fv( const st32 Index, const float* v, const size_t Count );
+
+	inline void UniformColor( const st32 Index, const GelColor Color );
+	inline void UniformSColor( const st32 Index, const GelSColor Color );
+	
+	inline void BindUniforms() {
+		CurrentShader->BindUniforms();
+	}
+
+public:
+	// Legacy //
 	inline int BindUniform1i( const char* Name, const int v0 );
 	inline int BindUniform2i( const char* Name, const int v0, const int v1 );
 	inline int BindUniform3i( const char* Name, const int v0, const int v1, const int v2 );
@@ -390,7 +499,6 @@ public:
 	inline int BindUniformMatrix2x2( const char* Name, const Matrix2x2& Matrix );
 	inline int BindUniformMatrix3x3( const char* Name, const Matrix3x3& Matrix );
 	inline int BindUniformMatrix4x4( const char* Name, const Matrix4x4& Matrix );
-
 	inline int BindUniformMatrix2fv( const char* Name, const float* Matrix, const size_t Count );
 	inline int BindUniformMatrix3fv( const char* Name, const float* Matrix, const size_t Count );
 	inline int BindUniformMatrix4fv( const char* Name, const float* Matrix, const size_t Count );
