@@ -150,8 +150,6 @@ public:
 			Default->BindUniform1i( "TexImage0", 0 );
 			Default->Attrib( 0, Vert.Get() );
 			Default->Attrib( 1, UV.Get() );
-//			Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(const Vector3D), Vert.Get() );
-//			Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UV.Get() );
 			Default->DrawArrays( GL_TRIANGLES, Vert.Size() );
 			
 			if ( Length == CharsDrawn )

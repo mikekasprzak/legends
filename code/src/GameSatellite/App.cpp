@@ -158,8 +158,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Default->BindUniform1f( "Seed", SeedHack );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
-//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );		
 	}
 	
@@ -184,8 +182,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Default->BindUniform1i( "TexImage0", 0 );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
-//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 	}
 	
@@ -199,10 +195,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Main->BindAsTexture();
 		BlurShader->BindUniform1i( "TexImage0", 0 );
-		Default->Attrib( 0, Verts );
-		Default->Attrib( 1, UVs );
-//		BlurShader->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		BlurShader->Attrib( 0, Verts );
+		BlurShader->Attrib( 1, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->Bind();
@@ -211,10 +205,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Blur[0]->BindAsTexture();
 		BlurShader->BindUniform1i( "TexImage0", 0 );
-		Default->Attrib( 0, Verts );
-		Default->Attrib( 1, UVs );
-//		BlurShader->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		BlurShader->Attrib( 0, Verts );
+		BlurShader->Attrib( 1, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->UnBind();
@@ -222,7 +214,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 	
 	// Draw Buffer to Screen //
 	{
-//Log("Hog");
 		Default->Bind( TextureShader );
 		Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
@@ -231,8 +222,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Default->BindUniform1i( "TexImage0", 0 );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
-//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		Render::EnableAlphaBlending();
@@ -251,8 +240,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 			Sh->BindUniform1i( "TexImage0", 0 );
 			Sh->Attrib( 0, Verts );
 			Sh->Attrib( 1, UVs );
-//			Sh->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
-//			Sh->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 			Sh->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		}		
 		Render::DisableBlending();
