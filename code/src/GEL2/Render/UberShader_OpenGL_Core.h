@@ -194,7 +194,7 @@ public:
 		cUniform() :
 			Type(UI_NONE),
 			Count(0),
-			Offset(0)
+			Offset(-1)
 		{
 		}
 

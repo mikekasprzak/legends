@@ -13,6 +13,20 @@
 					"Type" : "float",
 					"Count" : 3
 				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				}
 			]
 		},
 
@@ -32,6 +46,20 @@
 					"Index" : 2,
 					"Name" : "VertexColor",
 					"Type" : "uchar",
+					"Count" : 4
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
 					"Count" : 4
 				}
 			]
@@ -102,6 +130,26 @@
 					"Type" : "uchar",
 					"Count" : 4
 				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
 			]
 		},
 
@@ -122,6 +170,26 @@
 					"Name" : "TexCoord",
 					"Type" : "UVType",
 					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 3,
+					"Name" : "Seed",
+					"Type" : "float",
+					"Count" : 1
 				}
 			]
 		},
@@ -150,6 +218,26 @@
 					"Type" : "uchar",
 					"Count" : 4
 				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 3,
+					"Name" : "Seed",
+					"Type" : "float",
+					"Count" : 1
+				}
 			]
 		},
 
@@ -172,6 +260,26 @@
 					"Name" : "TexCoord",
 					"Type" : "UVType",
 					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 3,
+					"Name" : "Seed",
+					"Type" : "float",
+					"Count" : 1
 				}
 			]
 		},
@@ -200,6 +308,26 @@
 					"Name" : "VertexColor",
 					"Type" : "uchar",
 					"Count" : 4
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "float",
+					"Count" : 4
+				},
+				{
+					"Index" : 3,
+					"Name" : "Seed",
+					"Type" : "float",
+					"Count" : 1
 				}
 			]
 		}

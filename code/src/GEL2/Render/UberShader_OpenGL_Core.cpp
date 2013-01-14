@@ -297,7 +297,7 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 				if ( Program.Attrib[idx].Group != -1 ) {
 					st32 TotalSize = 0;
 					for ( st32 idx2 = 0; idx2 < Program.Attrib.size(); idx2++ ) {
-						TotalSize += Program.Attrib[idx].GetSize();
+						TotalSize += Program.Attrib[idx2].GetSize();
 					}
 					Program.Attrib[idx].Stride = TotalSize;
 				}
@@ -348,6 +348,11 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 		// If there's a Count, store it //
 		if ( cJSON_GetObjectItem( Uniform, "Count" ) ) {
 			Uni->Count = cJSON_GetObjectItem( Uniform, "Count" )->valueint;
+		}
+
+		// If there's a hardcoded Offset specified, store it //
+		if ( cJSON_GetObjectItem( Uniform, "Offset" ) ) {
+			Uni->Offset = cJSON_GetObjectItem( Uniform, "Offset" )->valueint;
 		}
 
 		// If there's a Type, decypher it //
@@ -423,9 +428,29 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 		// Next Uniform //
 		Uniform = Uniform->next;
 	}
-	VLog( "* Total Uniforms Size: %i bytes (Global/Constant Data)", Program.GetTotalUniformSize() );
+	
+	// Calculade Offsets //
+	{
+		for ( st32 idx = 0; idx < Program.Uniform.size(); idx++ ) {
+			// If an Offset is currently not set //
+			if ( Program.Uniform[idx].Offset == -1 ) {
+				st32 Step = 0;
+				for ( st32 idx2 = 0; idx2 < idx; idx2++ ) {
+					Step += Program.Uniform[idx2].GetSize();
+				}
+				Program.Uniform[idx].Offset = Step;
+			}
+			
+			VLog( "* * %i Offset: %i", idx, Program.Uniform[idx].Offset );
+		}
+	}
+	
+	// Log the Total Size //
+	VLog( "* Total Uniforms Size: %i bytes (Globals/Constant Data)", Program.GetTotalUniformSize() );
+	
+	// TODO: Allocate Space //
+	
 }
-
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :
 	CurrentShader( 0 )
