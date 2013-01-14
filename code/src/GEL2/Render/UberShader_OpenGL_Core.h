@@ -68,12 +68,22 @@ public:
 			// Extended GL Types //
 			AI_UINT_10_10_10_2,	// 10bit x,y,z, 2bit w (unsigned) //
 			AI_INT_10_10_10_2,	// 10bit x,y,z, 2bit w (signed) //
+			
+			
+			
+			// *** //
+			AI_MAX			// Number of AI types //
+		};
+		
+		enum {
+			FL_NORMALIZE = 0x1,
 		};
 		
 		int Index;
 		int Group;
 		int Type;
 		int Count;
+		int Flags;
 		GLenum GLType;
 		int Stride;
 		
@@ -81,6 +91,7 @@ public:
 			Group(-1),			// No Group (i.e. Not part of a Vertex Array Object) //
 			Type(AI_NONE),
 			Count(0),
+			Flags(0),
 			GLType(0),
 			Stride(0)
 		{
@@ -217,15 +228,19 @@ public:
 
 	// GL Hardcoding //
 	inline void AttribPointer( const GLuint Index, const GLint Size, const GLenum Type, const GLboolean Normalized, const GLsizei Stride, const void* Ptr ) {
+//		Log( "%i %i %i %i %i", Index, Size, Type, Normalized, Stride );
+
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}
 	
 	// 
 	inline void Attrib( const GLuint Index, const void* Ptr ) {
-		const GLint Size = CurrentShader->Attrib[Index].Count;
+		const GLint Size = CurrentShader->Attrib[Index].Count;	// Can be GL_BGRA, but not in GL ES //
 		const GLenum Type = CurrentShader->Attrib[Index].GLType;
-		const GLboolean Normalized = false;
-		GLsizei Stride = CurrentShader->Attrib[Index].Stride;
+		const GLboolean Normalized = CurrentShader->Attrib[Index].Flags & cUberShader_Shader::cAttrib::FL_NORMALIZE;
+		const GLsizei Stride = CurrentShader->Attrib[Index].Stride;
+		
+//		Log( "%i %i %i %i %i", Index, Size, Type, Normalized, Stride );
 
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}

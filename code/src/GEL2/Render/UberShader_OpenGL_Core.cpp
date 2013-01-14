@@ -277,6 +277,11 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 				);
 		}
 		
+		// Flags //
+		if ( cJSON_GetObjectItem( Attrib, "Normalize" ) ) {
+			Attr->Flags |= cJSON_GetObjectItem( Attrib, "Normalize" )->valueint ? cUberShader_Shader::cAttrib::FL_NORMALIZE : 0;
+		}
+		
 		// Next Attribute //
 		Attrib = Attrib->next;
 	}
@@ -300,7 +305,7 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 				}
 			}
 			
-			VLog( "* * %i Stride: %i", idx, Program.Attrib[idx].Stride );
+			VLog( "* * %i Stride: %i  Flags: %i", idx, Program.Attrib[idx].Stride, Program.Attrib[idx].Flags );
 		}
 	}
 

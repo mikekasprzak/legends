@@ -129,10 +129,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 
 	
 	static float Verts[] = {
-		-1,-1,
-		-1,+1,
-		+1,-1,
-		+1,+1,
+		-1,-1,0,
+		-1,+1,0,
+		+1,-1,0,
+		+1,+1,0,
 	};
 
 	static UVType UVs[] = {
@@ -156,8 +156,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 		if ( SeedHack > 1.0f )
 			SeedHack = 0.0f;
 		Default->BindUniform1f( "Seed", SeedHack );
-		Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Default->Attrib( 0, Verts );
+		Default->Attrib( 1, UVs );
+//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );		
 	}
 	
@@ -180,8 +182,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
 		Texture::Bind( Texas, 0 );
 		Default->BindUniform1i( "TexImage0", 0 );
-		Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Default->Attrib( 0, Verts );
+		Default->Attrib( 1, UVs );
+//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 	}
 	
@@ -195,8 +199,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Main->BindAsTexture();
 		BlurShader->BindUniform1i( "TexImage0", 0 );
-		BlurShader->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Default->Attrib( 0, Verts );
+		Default->Attrib( 1, UVs );
+//		BlurShader->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->Bind();
@@ -205,8 +211,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 		BlurShader->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Blur[0]->BindAsTexture();
 		BlurShader->BindUniform1i( "TexImage0", 0 );
-		BlurShader->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Default->Attrib( 0, Verts );
+		Default->Attrib( 1, UVs );
+//		BlurShader->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//		BlurShader->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		BlurShader->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		RT_Blur[1]->UnBind();
@@ -214,14 +222,17 @@ void cApp::Draw( Screen::cNative& Native ) {
 	
 	// Draw Buffer to Screen //
 	{
+//Log("Hog");
 		Default->Bind( TextureShader );
 		Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
 		Default->BindUniformMatrix4x4( "ViewMatrix", Matrix4x4::Identity );
 		RT_Main->BindAsTexture();
 		//RT_Blur[1]->BindAsTexture();
 		Default->BindUniform1i( "TexImage0", 0 );
-		Default->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+		Default->Attrib( 0, Verts );
+		Default->Attrib( 1, UVs );
+//		Default->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//		Default->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
 		Render::EnableAlphaBlending();
@@ -238,8 +249,10 @@ void cApp::Draw( Screen::cNative& Native ) {
 			//RT_Main->BindAsTexture();
 			RT_Blur[1]->BindAsTexture();
 			Sh->BindUniform1i( "TexImage0", 0 );
-			Sh->AttribPointer( 0, 2, GL_FLOAT, false, sizeof(float)*2, Verts );
-			Sh->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
+			Sh->Attrib( 0, Verts );
+			Sh->Attrib( 1, UVs );
+//			Sh->AttribPointer( 0, 3, GL_FLOAT, false, sizeof(float)*3, Verts );
+//			Sh->AttribPointer( 1, 2, GL_UVType, false, sizeof(UVType)*2, UVs );
 			Sh->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		}		
 		Render::DisableBlending();
