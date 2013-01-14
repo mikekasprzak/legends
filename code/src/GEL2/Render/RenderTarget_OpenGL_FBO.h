@@ -119,9 +119,10 @@ public:
 			gels_BindRenderbuffer( GELS_RENDERBUFFER, 0 ); // Unbind //			
 		}
 
-
 		// Number of Textures //
 		Texture.resize( _Textures );
+		// Set the first Texture Unit //
+		glActiveTexture( GL_TEXTURE0 );
 		// Generate Texture IDs //
 		glGenTextures( Texture.size(), &Texture[0] );
 
@@ -231,7 +232,8 @@ public:
 		Screen::Native[0].UpdateViewport();		// Reset glViewport to the whole Native Screen //
 	}
 	
-	inline void BindAsTexture( const size_t Index = 0 ) const { 
+	inline void BindAsTexture( const st32 Index = 0, const st32 TextureUnit = 0 ) const {
+		glActiveTexture( GL_TEXTURE0 + TextureUnit );
 		glBindTexture( GL_TEXTURE_2D, Texture[Index] );
 	}
 };

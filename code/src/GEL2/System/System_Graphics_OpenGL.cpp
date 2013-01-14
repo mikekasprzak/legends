@@ -135,31 +135,31 @@ void GraphicsInit() {
 	Dummy = 0;
 	glGetIntegerv( GL_MAX_VARYING_VECTORS, (GLint*)&Dummy );
 	#ifdef USES_OPENGL2
-	if ( Dummy == 0 ) {
-		glGetIntegerv( GL_MAX_VARYING_COMPONENTS, (GLint*)&Dummy );
-		Log( "GL_MAX_VARYING_COMPONENTS: %i [%i]    (Max number of interpolated fp values. [Minimum 8])", Dummy, Dummy / 4 );
-	}
-	else
+		if ( Dummy == 0 ) {
+			glGetIntegerv( GL_MAX_VARYING_COMPONENTS, (GLint*)&Dummy );
+			Log( "GL_MAX_VARYING_COMPONENTS: %i [%i]    (Max number of interpolated fp values. [Minimum 8])", Dummy, Dummy / 4 );
+		}
+		else
 	#endif // USES_OPENGL2 //
-		Log( "GL_MAX_VARYING_VECTORS: %i    (Max number of 4 element interpolated fp values. [Minimum 8])", Dummy );
+			Log( "GL_MAX_VARYING_VECTORS: %i    (Max number of 4 element interpolated fp values. [Minimum 8])", Dummy );
 
 	Dummy = 0;
 	glGetIntegerv( GL_MAX_VERTEX_UNIFORM_VECTORS, (GLint*)&Dummy );
 	#ifdef USES_OPENGL2
-	if ( Dummy == 0 ) {
-		glGetIntegerv( GL_MAX_VERTEX_UNIFORM_COMPONENTS, (GLint*)&Dummy );
-		Log( "GL_MAX_VERTEX_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 128])", Dummy, Dummy / 4 );
-	}
-	else 
+		if ( Dummy == 0 ) {
+			glGetIntegerv( GL_MAX_VERTEX_UNIFORM_COMPONENTS, (GLint*)&Dummy );
+			Log( "GL_MAX_VERTEX_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 128])", Dummy, Dummy / 4 );
+		}
+		else 
 	#endif // USES_OPENGL2 //
-		Log( "GL_MAX_VERTEX_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 128])", Dummy );
+			Log( "GL_MAX_VERTEX_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 128])", Dummy );
 
 
 	#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
-	// http://www.opengl.org/wiki/Uniform_Buffer_Object
-	Dummy = 0;
-	glGetIntegerv( GL_MAX_VERTEX_UNIFORM_BLOCKS, (GLint*)&Dummy );
-	Log( "GL_MAX_VERTEX_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Vertex Shader. [Minimum 12])", Dummy );
+		// http://www.opengl.org/wiki/Uniform_Buffer_Object
+		Dummy = 0;
+		glGetIntegerv( GL_MAX_VERTEX_UNIFORM_BLOCKS, (GLint*)&Dummy );
+		Log( "GL_MAX_VERTEX_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Vertex Shader. [Minimum 12])", Dummy );
 	#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
 
 	Dummy = 0;
@@ -171,19 +171,19 @@ void GraphicsInit() {
 	Dummy = 0;
 	glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_VECTORS, (GLint*)&Dummy );
 	#ifdef USES_OPENGL2
-	if ( Dummy == 0 ) {
-		glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, (GLint*)&Dummy );
-		Log( "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 16])", Dummy, Dummy / 4 );
-	}
-	else
+		if ( Dummy == 0 ) {
+			glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, (GLint*)&Dummy );
+			Log( "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS: %i [%i]    (Max number of fp, int, bool values. [Minimum 16])", Dummy, Dummy / 4 );
+		}
+		else
 	#endif // USES_OPENGL2 //
-		Log( "GL_MAX_FRAGMENT_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 16])", Dummy );
+			Log( "GL_MAX_FRAGMENT_UNIFORM_VECTORS: %i    (Max number of 4 element fp, int, bool values. [Minimum 16])", Dummy );
 
 	#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
-	// http://www.opengl.org/wiki/Uniform_Buffer_Object
-	Dummy = 0;
-	glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_BLOCKS, (GLint*)&Dummy );
-	Log( "GL_MAX_FRAGMENT_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Fragment Shader. [Minimum 12])", Dummy );
+		// http://www.opengl.org/wiki/Uniform_Buffer_Object
+		Dummy = 0;
+		glGetIntegerv( GL_MAX_FRAGMENT_UNIFORM_BLOCKS, (GLint*)&Dummy );
+		Log( "GL_MAX_FRAGMENT_UNIFORM_BLOCKS: %i    (Max number of Uniform Blocks per Fragment Shader. [Minimum 12])", Dummy );
 	#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
 
 	Dummy = 0;

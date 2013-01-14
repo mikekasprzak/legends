@@ -17,13 +17,14 @@ void delete_TextureHandle( TextureHandle Handle ) {
 	glDeleteTextures( 1, (const GLuint*)&Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void bind_TextureHandle( TextureHandle Handle, const int Index ) {
-	glActiveTexture( GL_TEXTURE0 + Index );
+void bind_TextureHandle( TextureHandle Handle, const st32 TextureUnit ) {
+	glActiveTexture( GL_TEXTURE0 + TextureUnit );
 	glBindTexture( GL_TEXTURE_2D, Handle );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Rarely Used. Alternatively, just bund another texture //
-void unbind_TextureHandle( TextureHandle ) {
+void unbind_TextureHandle( TextureHandle, const st32 TextureUnit ) {
+	glActiveTexture( GL_TEXTURE0 + TextureUnit );
 	glBindTexture( GL_TEXTURE_2D, 0 );
 }
 // - ------------------------------------------------------------------------------------------ - //
