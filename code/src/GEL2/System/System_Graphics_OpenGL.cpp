@@ -81,6 +81,15 @@ void GraphicsInit() {
 	Log( "OpenGL Extensions:\n%s", OpenGLExtensions );
 	Log( "" );
 	
+	if ( find_String( "GL_ARB_half_float_vertex", OpenGLExtensions ) || find_String( "GL_OES_vertex_half_float", OpenGLExtensions ) ) {
+		Log( "* Half Float Extension Available!" );
+	}
+	else {
+		Log( "! WARNING! Half Float Extension Unavailable!" );
+	}
+
+	Log( "" );
+	
 	int Dummy;	// Dummy Value for things we don't want to remember //
 
 	// GL Environment Settings //
@@ -205,6 +214,8 @@ void GraphicsInit() {
 	else if ( find_String( "ARM", OpenGLVendor ) || find_String( "Mali", OpenGLRenderer ) ) {
 		Log( "* Found ARM GPU..." );
 		System::GPUVendor = System::GPU_ARM;
+		if_Log( find_String( "200", OpenGLRenderer ), "! Warning! Mali 200 devices do not support GL_OES_VERTEX_HALF_FLOAT" );
+		if_Log( find_String( "400", OpenGLRenderer ), "! Warning! Mali 400 devices do not support GL_OES_VERTEX_HALF_FLOAT" );
 	}
 	else if ( find_String( "NVIDIA", OpenGLVendor ) || find_String( "NVIDIA", OpenGLRenderer ) ) {
 		Log( "* Found NVIDIA GPU..." );
@@ -237,6 +248,7 @@ void GraphicsInit() {
 	else if ( find_String( "ZiiLABS", OpenGLVendor ) || find_String( "ZMS", OpenGLRenderer ) ) {
 		Log( "* Found ZiiLABS GPU..." );
 		System::GPUVendor = System::GPU_ZIILABS;
+		Log( "! Warning! ZiiLABS devices do not support GL_OES_VERTEX_HALF_FLOAT" );
 	}
 	else if ( find_String( "Advanced", OpenGLVendor ) || find_String( "S", OpenGLRenderer ) ) {
 		// Last, because their company name and GPU names are too generic (S5 Multicore) //

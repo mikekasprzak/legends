@@ -226,11 +226,13 @@ inline void _AssignShaderAttributes( cUberShader_Shader& Program, cJSON* Attribu
 				Attr->Type = cUberShader_Shader::cAttrib::AI_SHORT;
 				Attr->GLType = GL_SHORT;
 			}
-			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+			#if defined(USES_OPENGL3)
 				else if ( strcmp( Type, "double" ) == 0 ) {
 					Attr->Type = cUberShader_Shader::cAttrib::AI_DOUBLE;
 					Attr->GLType = GL_DOUBLE;
 				}
+			#endif // defined(USES_OPENGL3) //
+			#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
 				else if ( strcmp( Type, "uint" ) == 0 ) {
 					Attr->Type = cUberShader_Shader::cAttrib::AI_UINT;
 					Attr->GLType = GL_UNSIGNED_INT;

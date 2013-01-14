@@ -228,23 +228,41 @@ public:
 
 	// GL Hardcoding //
 	inline void AttribPointer( const GLuint Index, const GLint Size, const GLenum Type, const GLboolean Normalized, const GLsizei Stride, const void* Ptr ) {
-//		Log( "%i %i %i %i %i", Index, Size, Type, Normalized, Stride );
-
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}
 	
-	// 
+	// Float Data Pointers (on GPUs that support native Float Data... which is all of them) //
 	inline void Attrib( const GLuint Index, const void* Ptr ) {
 		const GLint Size = CurrentShader->Attrib[Index].Count;	// Can be GL_BGRA, but not in GL ES //
 		const GLenum Type = CurrentShader->Attrib[Index].GLType;
 		const GLboolean Normalized = CurrentShader->Attrib[Index].Flags & cUberShader_Shader::cAttrib::FL_NORMALIZE;
 		const GLsizei Stride = CurrentShader->Attrib[Index].Stride;
-		
-//		Log( "%i %i %i %i %i", Index, Size, Type, Normalized, Stride );
 
 		glVertexAttribPointer( Index, Size, Type, Normalized, Stride, Ptr );
 	}
-	
+
+#if defined(USES_OPENGL3) || defined(USES_OPENGLES3)
+	// Integer Data Pointers (on GPUs that support native Integer Data, vs just Int2Float conversions) //
+	inline void IntAttrib( const GLuint Index, const void* Ptr ) {
+		const GLint Size = CurrentShader->Attrib[Index].Count;	// Can be GL_BGRA, but not in GL ES //
+		const GLenum Type = CurrentShader->Attrib[Index].GLType;
+		const GLsizei Stride = CurrentShader->Attrib[Index].Stride;
+
+		glVertexAttribIPointer( Index, Size, Type, Stride, Ptr );
+	}
+#endif // defined(USES_OPENGL3) || defined(USES_OPENGLES3) //
+
+#if defined(USES_OPENGL4) || defined(USES_OPENGLES4)
+	// Double Data Pointers (on GPUs that support native Double Data, vs just Double2Float conversions) //
+	inline void DoubleAttrib( const GLuint Index, const void* Ptr ) {
+		const GLint Size = CurrentShader->Attrib[Index].Count;	// Can be GL_BGRA, but not in GL ES //
+		const GLenum Type = CurrentShader->Attrib[Index].GLType;
+		const GLsizei Stride = CurrentShader->Attrib[Index].Stride;
+
+		glVertexAttribLPointer( Index, Size, Type, Stride, Ptr );
+	}
+#endif // defined(USES_OPENGL4) || defined(USES_OPENGLES4) //
+
 	// GL Drawing Code //
 	inline void DrawArrays( const int Mode, const size_t PolyCount ) {
 		glDrawArrays( Mode, 0, PolyCount );	
