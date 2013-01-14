@@ -144,10 +144,11 @@ public:
 //				);
 			
 			Default->Bind( TextureShader );
-			Default->BindUniformColor( "GlobalColor", GEL_RGB_WHITE );
-			Default->BindUniformMatrix4x4( "ViewMatrix", ViewMatrix );
+			Default->UniformMatrix4x4( 0, ViewMatrix );
+			Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
+			Default->Uniform1i( 2, 0 ); // "TexImage0" //
+			Default->BindUniforms();
 			Texture::Bind( TexturePage[Tex], 0 );
-			Default->BindUniform1i( "TexImage0", 0 );
 			Default->Attrib( 0, Vert.Get() );
 			Default->Attrib( 1, UV.Get() );
 			Default->DrawArrays( GL_TRIANGLES, Vert.Size() );
