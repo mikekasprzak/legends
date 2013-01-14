@@ -449,7 +449,7 @@ inline void _AssignShaderUniforms( cUberShader_Shader& Program, cJSON* Uniforms 
 	VLog( "* Total Uniforms Size: %i bytes (Globals/Constant Data)", Program.GetTotalUniformSize() );
 	
 	// TODO: Allocate Space //
-	
+	Program.UniformData = new_DataBlock( Program.GetTotalUniformSize() );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cUberShader::cUberShader( const char* InFile ) :
@@ -699,7 +699,10 @@ cUberShader::~cUberShader() {
 #ifdef USES_TESSELLATION_SHADER
 		if ( Shader[idx].Tessellation )
 			glDeleteShader( Shader[idx].Tessellation );
-#endif // USES_TESSELLATION_SHADER //		
+#endif // USES_TESSELLATION_SHADER //
+
+		if ( Shader[idx].UniformData )
+			delete_DataBlock( Shader[idx].UniformData );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

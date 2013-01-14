@@ -227,7 +227,7 @@ public:
 	};
 
 	std::vector< cUniform > Uniform;
-	char* UniformData;					// Once we know the size, a pointer to the allocated memory //
+	DataBlock* UniformData;				// Once we know the size, a pointer to the allocated memory //
 
 	inline size_t GetTotalUniformSize() {
 		size_t TotalSize = 0;
@@ -247,9 +247,12 @@ public:
 #ifdef USES_TESSELLATION_SHADERS
 		Tessellation( 0 ),
 #endif // USES_TESSELLATION_SHADERS //
-		Program( 0 )
+		Program( 0 ),
+		UniformData( 0 )
 	{
 	}
+	
+	// No Destructor! //
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cUberShader {
