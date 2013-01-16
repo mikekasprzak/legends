@@ -116,14 +116,16 @@ public:
 		Map( 32, 32 )
 	{
 		cGrid2D<float> Plasma = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+//		Plasma._EqualizeData();
+//		Plasma.ClipData();
 		
 		for ( size_t y = 0; y < Plasma.Height(); y++ ) {
 			for ( size_t x = 0; x < Plasma.Width(); x++ ) {
 				int Val = (int)(255.0f * Plasma(x,y));
-				if ( Val > 255 )
-					Val = 255;
-				if ( Val < 0 )
-					Val = 0;
+//				if ( Val > 255 )
+//					Val = 255;
+//				if ( Val < 0 )
+//					Val = 0;
 				Map.Tile(x,y) = Val;
 //				_Log( "%x,", (int)(255.0f * Plasma(x,y)) );
 //				_Log( "%f,", Plasma(x,y) );

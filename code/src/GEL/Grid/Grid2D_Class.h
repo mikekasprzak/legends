@@ -10,6 +10,8 @@
 //   Make SetWidth make more sense (i.e. what SetW does).
 //   Do Dimensions really need to be size_t's? st32's maybe. 65535x65535 is > 4 GB,
 //   that said you may want a tall skinny grid, so st32 is preferable to st16.
+
+// TODO: Rename all functions that change the data to "ActionData". 
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType = int >
 class cGrid2D {
@@ -2554,6 +2556,127 @@ public:
 			}
 		}
 		return true;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType GetLowest() const {
+		tType Value;
+		if ( Size() ) {
+			Value = Data[0];
+			for ( size_t idx = 1; idx < Size(); idx++ ) {
+				if ( Data[idx] < Value ) {
+					Value = Data[idx];
+				}
+			}
+		}
+		return Value;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType GetHighest() const {
+		tType Value;
+		if ( Size() ) {
+			Value = Data[0];
+			for ( size_t idx = 1; idx < Size(); idx++ ) {
+				if ( Data[idx] > Value ) {
+					Value = Data[idx];
+				}
+			}
+		}
+		return Value;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const ABSet<tType> GetRange() const {
+		ABSet<tType> Value;
+		if ( Size() ) {
+			Value.a = Data[0];
+			Value.b = Data[0];
+			for ( size_t idx = 1; idx < Size(); idx++ ) {
+				if ( Data[idx] < Value.a ) {
+					Value.a = Data[idx];
+				}
+				else if ( Data[idx] > Value.b ) {
+					Value.b = Data[idx];
+				}
+			}
+		}
+		return Value;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Uses Reciprocal Optimization //
+	inline void _EqualizeData( const tType One = 1.0f, const tType Zero = 0.0f ) {
+		ABSet<tType> Range = GetRange();
+		tType Diff = Range.b - Range.a;
+		if ( Diff != Zero ) {
+			tType DiffR = One / Diff;
+	
+			for ( size_t idx = 0; idx < Size(); idx++ ) {
+				Data[idx] = (Data[idx] - Range.a) * DiffR;
+			}
+		}
+		else {
+			// In the rare case there is no actual difference, make all 0.5 //
+			tType Half = One / (One+One);
+			
+			for ( size_t idx = 0; idx < Size(); idx++ ) {
+				Data[idx] = Half;
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void EqualizeData( const tType One = 1.0f, const tType Zero = 0.0f ) {
+		ABSet<tType> Range = GetRange();
+		tType Diff = Range.b - Range.a;
+		if ( Diff != Zero ) {	
+			for ( size_t idx = 0; idx < Size(); idx++ ) {
+				Data[idx] = (Data[idx] - Range.a) / Diff;
+			}
+		}
+		else {
+			// In the rare case there is no actual difference, make all 0.5 //
+			tType Half = One / (One+One);
+			
+			for ( size_t idx = 0; idx < Size(); idx++ ) {
+				Data[idx] = Half;
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void ClipData( const tType Low = 0.0f, const tType High = 1.0f ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			if ( Data[idx] < Low ) {
+				Data[idx] = Low;
+			}
+			else if ( Data[idx] > High ) {
+				Data[idx] = High;
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// TODO: Replace these with operators vs tTypes //
+	// - -------------------------------------------------------------------------------------- - //
+	inline void AddData( const tType Value ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] += Value;
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void SubData( const tType Value ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] -= Value;
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void MultData( const tType Value ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] *= Value;
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void DivData( const tType Value ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] /= Value;
+		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
 };
