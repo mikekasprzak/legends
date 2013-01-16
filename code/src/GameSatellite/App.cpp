@@ -123,19 +123,15 @@ void cApp::Step( ) {
 	Net::Host_Poll();
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cApp::Draw( Screen::cNative& Native ) {
-//	glClearColor( 0.3, 0, 0, 1 );
-//	glClear( GL_COLOR_BUFFER_BIT );
-
-	
-	static float Verts[] = {
+void cApp::Draw( Screen::cNative& Native ) {	
+	static const float Verts[] = {
 		-1,-1,0,
 		-1,+1,0,
 		+1,-1,0,
 		+1,+1,0,
 	};
 
-	static UVType UVs[] = {
+	static const UVType UVs[] = {
 		UV_ZERO,UV_ZERO,
 		UV_ZERO,UV_ONE,
 		UV_ONE,	UV_ZERO,

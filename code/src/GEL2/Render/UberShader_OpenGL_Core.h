@@ -194,7 +194,8 @@ public:
 			UI_INT2,
 			UI_INT3,
 			UI_INT4,
-		};					
+		};
+		// TODO: Reorganize. Was a copy of AI types, but many ary unnecessary. //
 
 		int UniformLocation;	// glGetUniformLocation( Program, "Name" ) //
 		int Type;
