@@ -174,13 +174,15 @@ void cApp::Draw( Screen::cNative& Native ) {
 	
 		Default->Bind( TextureShader );
 		Default->UniformMatrix4x4( 0, ViewMatrix );
-		Default->UniformColor( 1, GEL_RGB_RED ); // GlobalColor //
+		Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
 		Default->Uniform1i( 2, 0 );	// TexImage0 //
 		Default->BindUniforms();
 		Texture::Bind( Texas, 0 );
 		Default->Attrib( 0, Verts );
 		Default->Attrib( 1, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
+		
+		World.Draw( Matrix );
 	}
 	
 	RT_Main->UnBind();
@@ -214,7 +216,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 	{
 		Default->Bind( TextureShader );
 		Default->UniformMatrix4x4( 0, Matrix4x4::Identity );
-		Default->UniformColor( 1, GEL_RGB(255,255,0) ); // GlobalColor //
+		Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
 		Default->Uniform1i( 2, 0 ); // TexImage0 //
 		Default->BindUniforms();
 		RT_Main->BindAsTexture();

@@ -46,6 +46,7 @@
 					"Index" : 2,
 					"Name" : "VertexColor",
 					"Type" : "uchar",
+					"Normalize" : true,
 					"Count" : 4
 				}
 			],
@@ -128,6 +129,7 @@
 					"Index" : 2,
 					"Name" : "VertexColor",
 					"Type" : "uchar",
+					"Normalize" : true,
 					"Count" : 4
 				}
 			],
@@ -216,6 +218,7 @@
 					"Index" : 2,
 					"Name" : "VertexColor",
 					"Type" : "uchar",
+					"Normalize" : true,
 					"Count" : 4
 				}
 			],
@@ -307,6 +310,7 @@
 					"Index" : 2,
 					"Name" : "VertexColor",
 					"Type" : "uchar",
+					"Normalize" : true,
 					"Count" : 4
 				}
 			],

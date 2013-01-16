@@ -1,10 +1,10 @@
 // - ------------------------------------------------------------------------------------------ - //
-#include <Debug/GelDebug.h>
+#include <Style/Style.h>
 #include <Math/Real.h>
 #include "Grid2D_HeightMap.h"
 // - ------------------------------------------------------------------------------------------ - //
 const int _displacement_PlasmaFractal_HeightMapInt( const int Displacement ) {
-	return (int)((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat();	
+	return (int)((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _diamond_PlasmaFractal_HeightMapInt( cGrid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
@@ -134,8 +134,8 @@ cGrid2D<int> generate_PlasmaFractal_HeightMapInt( const size_t Width, const size
 
 
 // - ------------------------------------------------------------------------------------------ - //
-const float _displacement_PlasmaFractal_HeightMapFloat() {
-	return Real::Random();
+const float _displacement_PlasmaFractal_HeightMapFloat( const int Displacement ) {
+	return ((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat() / (float)(Displacement<<1);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _diamond_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
@@ -158,7 +158,7 @@ void _diamond_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, c
 			Map.Wrap( x1, y2 ) +
 			Map.Wrap( x2, y2 )
 		) * 0.25f) +
-		_displacement_PlasmaFractal_HeightMapFloat();
+		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 }
 // - ------------------------------------------------------------------------------------------ - //
 void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
@@ -183,7 +183,7 @@ void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, co
 			Map.Wrap( x1 + HalfD, y1 - HalfD ) +
 			Map.Wrap( x1 + HalfD, y1 + HalfD )
 		) * 0.25f) +
-		_displacement_PlasmaFractal_HeightMapFloat();
+		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 
 	Map[G] = 
 		((
@@ -192,7 +192,7 @@ void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, co
 			Map.Wrap( x1 - HalfD, y1 + HalfD ) +
 			Map.Wrap( x1 + HalfD, y1 + HalfD )
 		) * 0.25f) +
-		_displacement_PlasmaFractal_HeightMapFloat();
+		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 
 	Map[H] = 
 		((
@@ -201,7 +201,7 @@ void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, co
 			Map.Wrap( x2 - HalfD, y1 + HalfD ) +
 			Map.Wrap( x2 + HalfD, y1 + HalfD )
 		) * 0.25f) +
-		_displacement_PlasmaFractal_HeightMapFloat();
+		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 
 	Map[I] = 
 		((
@@ -210,7 +210,7 @@ void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, co
 			Map.Wrap( x1 + HalfD, y2 - HalfD ) +
 			Map.Wrap( x1 + HalfD, y2 + HalfD )
 		) * 0.25f) +
-		_displacement_PlasmaFractal_HeightMapFloat();
+		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -223,7 +223,7 @@ cGrid2D<float> generate_PlasmaFractal_HeightMapFloat( const size_t Width, const 
 	Map.Fill(0.0f);
 	
 	// -- Setup -- //
-	Map( 0, 0 ) = 0.25f;//Map.Width() >> 2;	// Start Value //
+	Map( 0, 0 ) = 0.5;//Map.Width() * 0.25;	// Start Value //
 	int W = Map.Width();
 	int H = Map.Height();
 	

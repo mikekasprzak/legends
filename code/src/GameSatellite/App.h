@@ -90,6 +90,7 @@ public: // Server --------------------------------------------------------------
 	void Server_Stop();
 	void Server_Poll( const int TimeInMS = 0 );
 #endif // PRODUCT_SERVER //
+
 #ifdef PRODUCT_CLIENT
 public: // Client ----------------------------------------------------------------------------- - //
 	ENetHost* Client_NetHost;
@@ -107,7 +108,10 @@ public: // Client --------------------------------------------------------------
 	void Client_Stop();
 	bool Client_Connect();
 #endif // PRODUCT_CLIENT //
-	
+
+public:
+	BOAT::cWorld World;
+
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();
 	~cApp();

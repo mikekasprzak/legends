@@ -5,8 +5,13 @@
 #include <System/System.h>
 #include <Node/GelList.h>
 #include <Grid/Grid2D_Class.h>
+#include <Grid/Grid2D_HeightMap.h>
 #include <Search/Search.h>
 #include <Texture/Texture.h>
+
+#include <Render/Render.h>
+#include <Graphics/Allocator/Allocator.h>
+#include <Graphics/Allocator/Vector3DAllocator.h>
 // - ------------------------------------------------------------------------------------------ - //
 #include "Game_Player.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -90,6 +95,9 @@ public:
 	const size_t GetHeight() {
 		return Tile.Height();
 	}
+	const size_t GetSize() {
+		return Tile.Size();
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 class cWorld {
@@ -104,8 +112,24 @@ public:
 
 public:
 	cWorld() : 
-		BaseModTime( 0 )
+		BaseModTime( 0 ),
+		Map( 32, 32 )
 	{
+		cGrid2D<float> Plasma = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+		
+		for ( size_t y = 0; y < Plasma.Height(); y++ ) {
+			for ( size_t x = 0; x < Plasma.Width(); x++ ) {
+				int Val = (int)(255.0f * Plasma(x,y));
+				if ( Val > 255 )
+					Val = 255;
+				if ( Val < 0 )
+					Val = 0;
+				Map.Tile(x,y) = Val;
+//				_Log( "%x,", (int)(255.0f * Plasma(x,y)) );
+//				_Log( "%f,", Plasma(x,y) );
+			}
+//			Log( "" );
+		}
 	}
 	
 	// Server Only //
@@ -115,6 +139,30 @@ public:
 		// Do Stuff //
 		
 		// For all Players //
+	}
+	
+	void Draw( const Matrix4x4& ViewMatrix ) {
+		Vector3DAllocator Vert( Map.GetSize()*3*3 );
+		Allocator<GelColor> Color( Map.GetSize()*3*3 );
+
+		Vert.Clear();
+		Color.Clear();
+		
+		for ( size_t y = 0; y < Map.GetHeight()*3; y++ ) {
+			for ( size_t x = 0; x < Map.GetWidth()*3; x++ ) {
+				Vert.Add( Vector3D(x*2*2,y*2*2,0) );
+				int Val = Map.Tile.Wrap(x,y);
+				Color.Add( GEL_RGB(Val,Val,Val) );
+			}
+		}
+
+		Render::Default->Bind( Render::ColorShader );
+		Render::Default->UniformMatrix4x4( 0, ViewMatrix );
+		Render::Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
+		Render::Default->BindUniforms();
+		Render::Default->Attrib( 0, Vert.Get() );
+		Render::Default->Attrib( 2, Color.Get() );
+		Render::Default->DrawArrays( GEL_POINTS, Vert.Size() );
 	}
 	
 public:
