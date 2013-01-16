@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __BOAT_GAME_SPHERE_H__
-#define __BOAT_GAME_SPHERE_H__
+#ifndef __BOAT_GAME_WORLD_H__
+#define __BOAT_GAME_WORLD_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/System.h>
 #include <Node/GelList.h>
@@ -92,7 +92,7 @@ public:
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-class cSphere {
+class cWorld {
 public:
 	tModTime BaseModTime;	// Base time added to the current time. Save this, so you have the age of the world. //
 	cMap Map;
@@ -103,7 +103,7 @@ public:
 	// Ya, the observer should be separate. A server doesn't need an observer. //
 
 public:
-	cSphere() : 
+	cWorld() : 
 		BaseModTime( 0 )
 	{
 	}
@@ -127,5 +127,5 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace BOAT //
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __BOAT_GAMESPHERE_H__ //
+#endif // __BOAT_GAMEWORLD_H__ //
 // - ------------------------------------------------------------------------------------------ - //
