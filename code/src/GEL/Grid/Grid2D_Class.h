@@ -2653,32 +2653,78 @@ public:
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// TODO: Replace these with operators vs tTypes //
+	inline void RoundData( const tType Middle = 0.5f, const tType Min = 0.0f, const tType Max = 1.0f ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			if ( Data[idx] < Middle ) {
+				Data[idx] = Min;
+			}
+			else if ( Data[idx] >= Middle ) {
+				Data[idx] = Max;
+			}
+		}
+	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void AddData( const tType Value ) {
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline const cGrid2D<tType>& operator += ( const tType Value ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
 			Data[idx] += Value;
 		}
+		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SubData( const tType Value ) {
+	inline const cGrid2D<tType>& operator -= ( const tType Value ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
 			Data[idx] -= Value;
 		}
+		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void MultData( const tType Value ) {
+	inline const cGrid2D<tType>& operator *= ( const tType Value ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
 			Data[idx] *= Value;
 		}
+		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void DivData( const tType Value ) {
+	inline const cGrid2D<tType>& operator /= ( const tType Value ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
 			Data[idx] /= Value;
 		}
+		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline const cGrid2D<tType>& operator += ( const cGrid2D<tType>& Vs ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] += Vs[idx];
+		}
+		return *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const cGrid2D<tType>& operator -= ( const cGrid2D<tType>& Vs ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] -= Vs[idx];
+		}
+		return *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const cGrid2D<tType>& operator *= ( const cGrid2D<tType>& Vs ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] *= Vs[idx];
+		}
+		return *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const cGrid2D<tType>& operator /= ( const cGrid2D<tType>& Vs ) {
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			Data[idx] /= Vs[idx];
+		}
+		return *this;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_cGrid2D_Class_H__ //
