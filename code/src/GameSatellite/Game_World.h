@@ -116,12 +116,15 @@ public:
 		Map( 32, 32 )
 	{
 		cGrid2D<float> Plasma = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
-		cGrid2D<float> Plasma2 = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
-		Plasma2._EqualizeData();
-		Plasma2.RoundData();
-		Plasma *= Plasma2;
-		Plasma += 0.25;
-		Plasma.ClipData();
+//		cGrid2D<float> Plasma2 = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+//		Plasma2._EqualizeData();
+//		Plasma2.RoundData();
+//		Plasma *= Plasma2;
+//		Plasma += 0.25;
+//		Plasma.ClipData();
+		Plasma._EqualizeData();
+		Plasma.StepData(4);
+		Plasma.SoftenRigidData();
 		
 		for ( size_t y = 0; y < Plasma.Height(); y++ ) {
 			for ( size_t x = 0; x < Plasma.Width(); x++ ) {

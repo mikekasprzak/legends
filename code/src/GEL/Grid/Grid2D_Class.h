@@ -2664,6 +2664,63 @@ public:
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Steps will be the number of different values to have between 0 and 1 (inclusive) //
+	inline void StepData( const int Steps, const tType One = 1.0f ) {
+		Assert( Steps <= 1, "Steps must be 2 or more" );
+		tType StepSize = One / (tType)(Steps-1);
+		
+		for ( size_t idx = 0; idx < Size(); idx++ ) {
+			tType Val = Data[idx];
+			Val /= StepSize;
+			
+			Data[idx] = round(Val) * StepSize;
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void SoftenRigidData( const int Threshold = 2 ) {
+		// Fill in holes and hills that are alone //
+		for ( size_t y = 0; y < Height(); y++ ) {
+			for ( size_t x = 0; x < Width(); x++ ) {
+				int Common = 1;
+				tType No = Wrap(x-1,y);
+				
+				if ( Wrap(x-1,y) == operator()(x,y) )
+					Common++;
+//				else
+//					No = Wrap(x-1,y)
+				if ( Wrap(x+1,y) == operator()(x,y) )
+					Common++;
+				else
+					No = Wrap(x+1,y);
+				if ( Wrap(x,y-1) == operator()(x,y) )
+					Common++;
+				else
+					No = Wrap(x,y-1);
+				if ( Wrap(x,y+1) == operator()(x,y) )
+					Common++;
+				else
+					No = Wrap(x,y+1);
+
+				if ( Wrap(x-1,y-1) == operator()(x,y) )
+					Common++;
+				if ( Wrap(x+1,y-1) == operator()(x,y) )
+					Common++;
+				if ( Wrap(x-1,y+1) == operator()(x,y) )
+					Common++;
+				if ( Wrap(x+1,y+1) == operator()(x,y) )
+					Common++;
+				
+				// NOTE: This isn't perfect. The data read should be a NOT tile. //
+				if ( Common <= Threshold ) {
+					operator()(x,y) = No;
+				}
+			}		
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// TODO: Blob Extraction (is recursive)
+	// http://en.wikipedia.org/wiki/Blob_extraction
+
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator += ( const tType Value ) {
