@@ -110,7 +110,7 @@ public: // Client --------------------------------------------------------------
 #endif // PRODUCT_CLIENT //
 
 public:
-	BOAT::cWorld World;
+	BOAT::cWorld* World;
 
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();

@@ -87,6 +87,8 @@ cApp::cApp() {
 	Net::Host_StartClient();
 	Net::Host_Connect();
 //	Net::Host_SendPing();
+
+	World = new BOAT::cWorld();
 #endif // PRODUCT_CLIENT //
 
 	// Wait for threads to finish //
@@ -95,6 +97,8 @@ cApp::cApp() {
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
 #ifdef PRODUCT_CLIENT
+	delete World;
+
 	// Cleanup //
 	delete BlurShader;
 	delete PPShader;
@@ -166,23 +170,23 @@ void cApp::Draw( Screen::cNative& Native ) {
 	{
 		ViewMatrix = Matrix;		
 
-		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = (12*16)*3;
-		LocalMatrix(1,1) = (12*16)*3;
-			
-		ViewMatrix *= LocalMatrix;
-	
-		Default->Bind( TextureShader );
-		Default->UniformMatrix4x4( 0, ViewMatrix );
-		Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
-		Default->Uniform1i( 2, 0 );	// TexImage0 //
-		Default->BindUniforms();
-		Texture::Bind( Texas, 0 );
-		Default->Attrib( 0, Verts );
-		Default->Attrib( 1, UVs );
-		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
+//		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
+//		LocalMatrix(0,0) = (12*16)*3;
+//		LocalMatrix(1,1) = (12*16)*3;
+//			
+//		ViewMatrix *= LocalMatrix;
+//	
+//		Default->Bind( TextureShader );
+//		Default->UniformMatrix4x4( 0, ViewMatrix );
+//		Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
+//		Default->Uniform1i( 2, 0 );	// TexImage0 //
+//		Default->BindUniforms();
+//		Texture::Bind( Texas, 0 );
+//		Default->Attrib( 0, Verts );
+//		Default->Attrib( 1, UVs );
+//		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		
-		World.Draw( Matrix );
+		World->Draw( Matrix );
 	}
 	
 	RT_Main->UnBind();
