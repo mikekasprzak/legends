@@ -29,21 +29,64 @@ public:
 		{
 		}
 	};
-	std::vector<Set> Forest;
-	//GelArray<Set>* Forest;
+	//std::vector<Set> Forest;
+	Set* Forest;
+	st32 Size;
 
 public:
 	inline GelDisjointSet( const ValType n ) :
 		Forest( 0 )
 	{
-		Log( "NN %i", n );
-		Forest.reserve( n );
-		for ( st32 i=0; i<n; i++ ) {
-			Forest.push_back( Set(i) );
-//			pushback_GelArray( &Forest );//, i );
-//			back_GelArray( Forest )->Parent = i;
+//		Forest.reserve( n );
+//		for ( st32 i=0; i<n; i++ ) {
+//			Forest.push_back( Set(i) );
+//		}
+		Forest = new Set[n+1];
+		Size = n+1;
+		for ( st32 i=0; i<=n; i++ ) {
+			Forest[i] = i;
 		}
 	}
+	
+	inline ~GelDisjointSet() {
+		if ( Forest )
+			delete [] Forest;
+	}
+	
+//	// NOTE: Actually a move, not a copy! //
+//	inline GelDisjointSet( GelDisjointSet& Copy ) {
+//		if ( Forest )
+//			delete [] Forest;
+//		
+//		Forest = Copy.Forest;
+//		Copy.Forest = 0;
+//	}
+//	
+//	inline GelDisjointSet& operator = ( GelDisjointSet& Copy ) {
+//		if ( Forest )
+//			delete [] Forest;
+//		
+//		Forest = Copy.Forest;
+//		Copy.Forest = 0;
+//		
+//		return *this;
+//	}
+	
+	inline void Add( const ValType n ) {
+		Log( "Hog %i", n );
+		Set* Old = Forest;
+		
+		Forest = new Set[n+1];
+		for ( st32 i=0; i<Size; i++ ) {
+			Forest[i] = Old[i];
+		}
+		for ( st32 i=Size; i<=n; i++ ) {
+			Forest[i] = i;
+		}
+		delete [] Old;
+		Size = n+1;
+	}
+
 	
 	inline const ValType Find( const ValType i ) {
 		if ( Forest[i].Parent == i ) {

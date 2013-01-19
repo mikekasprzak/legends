@@ -2723,11 +2723,12 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// http://en.wikipedia.org/wiki/Blob_extraction
+	// http://robotix.in/tutorials/category/imageprocessing/blob_detection
 	// - -------------------------------------------------------------------------------------- - //
 	const NSet2<u16,cGrid2D<u16>> BlobExtractData( const tType Middle = 0.5f ) {
 		const u16 BGVal = 0xFFFF;
 		u16 NextLabel = 0;
-		GelDisjointSet Linked(28);//0); // HACK //
+		GelDisjointSet Linked(0); // HACK //
 		NSet2<u16,cGrid2D<u16>> Ret( 0, cGrid2D<u16>(Width(),Height(),BGVal) );
 				
 		// First Pass //
@@ -2757,7 +2758,9 @@ public:
 					
 					// If Neighbours is Empty //
 					if ( AllEq( BGVal, N[0], N[1] ) ) {
-						//Linked = GelDisjointSet(NextLabel); // HACK //
+						//GelDisjointSet NewDJ(NextLabel);
+						//Linked = NewDJ;//GelDisjointSet(NextLabel);
+						Linked.Add(NextLabel);
 						Ret.b(x,y) = NextLabel;
 						NextLabel++;
 					}
