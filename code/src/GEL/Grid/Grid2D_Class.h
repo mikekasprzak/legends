@@ -3,6 +3,8 @@
 #define __Grid_Grid2D_Class_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <math.h>
+#include <Style/Style.h>
+#include <Node/GelDisjointSet.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
 //   Rename Resize to Canvas and/or Clip. 
@@ -13,7 +15,7 @@
 
 // TODO: Rename all functions that change the data to "ActionData". 
 // - ------------------------------------------------------------------------------------------ - //
-template< class tType = int >
+template< typename tType = int >
 class cGrid2D {
 	// - -------------------------------------------------------------------------------------- - //
 	// Dimensions //
@@ -2655,11 +2657,11 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline void RoundData( const tType Middle = 0.5f, const tType Min = 0.0f, const tType Max = 1.0f ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
-			if ( Data[idx] < Middle ) {
-				Data[idx] = Min;
-			}
-			else if ( Data[idx] >= Middle ) {
+			if ( Data[idx] >= Middle ) {
 				Data[idx] = Max;
+			}
+			else if ( Data[idx] < Middle ) {
+				Data[idx] = Min;
 			}
 		}
 	}
@@ -2718,8 +2720,80 @@ public:
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// TODO: Blob Extraction (is recursive)
+
+	// - -------------------------------------------------------------------------------------- - //
 	// http://en.wikipedia.org/wiki/Blob_extraction
+	// - -------------------------------------------------------------------------------------- - //
+	const NSet2<u16,cGrid2D<u16>> BlobExtractData( const tType Middle = 0.5f ) {
+		const u16 BGVal = 0xFFFF;
+		u16 NextLabel = 0;
+		GelDisjointSet Linked(28);//0); // HACK //
+		NSet2<u16,cGrid2D<u16>> Ret( 0, cGrid2D<u16>(Width(),Height(),BGVal) );
+				
+		// First Pass //
+		for ( size_t y = 0; y < Height(); y++ ) {
+			for ( size_t x = 0; x < Width(); x++ ) {
+				if ( operator()(x,y) >= Middle ) {
+					Log( "%i %i -- %i", x, y, NextLabel );
+					enum { N_Size = 2 };
+					u16 N[N_Size];
+					for ( size_t idx = 0; idx < N_Size; idx++ ) {
+						N[idx] = BGVal;
+					}
+					
+					if ( (x>0) && (operator()(x-1,y) >= Middle) ) {
+						N[0] = Ret.b(x-1,y);
+					}
+					if ( (y>0) && (operator()(x,y-1) >= Middle) ) {
+						N[1] = Ret.b(x,y-1);
+					}
+	
+	//					if ( Wrap(x-1,y) >= Middle ) {
+	//						N[0] = Ret.b.Wrap(x-1,y);
+	//					}
+	//					if ( Wrap(x,y-1) >= Middle ) {
+	//						N[1] = Ret.b.Wrap(x,y-1);
+	//					}
+					
+					// If Neighbours is Empty //
+					if ( AllEq( BGVal, N[0], N[1] ) ) {
+						//Linked = GelDisjointSet(NextLabel); // HACK //
+						Ret.b(x,y) = NextLabel;
+						NextLabel++;
+					}
+					else {
+						Ret.b(x,y) = ::Min( N[0], N[1] );	// Ok, because BGVal is big //
+						
+						// Perform a union on Neighbours //
+						for ( size_t idx = 0; idx < N_Size; idx++ ) {
+							if ( N[idx] != BGVal ) {
+								for ( size_t idx2 = idx+1; idx2 < N_Size; idx2++ ) {
+									if ( N[idx2] != BGVal ) {
+										if ( N[idx] != N[idx2] ) {
+											Linked.Union( N[idx], N[idx2] );
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// Second Pass //
+		for ( size_t y = 0; y < Height(); y++ ) {
+			for ( size_t x = 0; x < Width(); x++ ) {
+				if ( operator()(x,y) >= Middle ) {
+					Log( "> %i %i -- %i", x, y, Ret.b(x,y) );
+					Ret.b(x,y) = Linked.Find( Ret.b(x,y) );
+				}
+			}
+		}
+		
+		return Ret;
+	}		
+	// - -------------------------------------------------------------------------------------- - //
 
 
 	// - -------------------------------------------------------------------------------------- - //

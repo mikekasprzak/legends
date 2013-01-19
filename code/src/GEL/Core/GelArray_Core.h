@@ -531,7 +531,7 @@ inline void pushback_GelArray( GelArray<Type>** p, const Type& _Value ) {
 } 
 // - ------------------------------------------------------------------------------------------ - //
 template< class Type >
-inline Type popback_GelArray( GelArray<Type>** p ) {
+inline Type& popback_GelArray( GelArray<Type>** p ) {
 	Warning( p == 0, "Zero Pointer Pointer" );
 	
 	return_value_Warning ( Type(), (*p)->Size == 0, "Zero Size" );

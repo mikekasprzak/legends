@@ -104,6 +104,7 @@ class cWorld {
 public:
 	tModTime BaseModTime;	// Base time added to the current time. Save this, so you have the age of the world. //
 	cMap Map;
+	cGrid2D<u16> Island;
 	
 	Texture::TextureHandle TileArt;
 	
@@ -170,6 +171,8 @@ public:
 		cGrid2D<float> Fertility = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
+
+		Island = Land.BlobExtractData(WaterLevel).b;
 		
 		for ( size_t y = 0; y < Land.Height(); y++ ) {
 			for ( size_t x = 0; x < Land.Width(); x++ ) {
@@ -244,7 +247,7 @@ public:
 		
 		int HalfWidth = Map.GetWidth() >> 1;
 		int HalfHeight = Map.GetHeight() >> 1;
-
+		
 		for ( size_t y = 0; y < Map.GetHeight(); y++ ) {
 			for ( size_t x = 0; x < Map.GetWidth(); x++ ) {
 				Vector3D VecXY((int)x - HalfWidth,(int)y - HalfHeight,0);
@@ -269,13 +272,21 @@ public:
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY)*UVStep) );
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY+1)*UVStep) );
 				
-				Color.Add( GEL_RGB_WHITE );
-				Color.Add( GEL_RGB_WHITE );
-				Color.Add( GEL_RGB_WHITE );
+				GelColor Col = GEL_RGB_WHITE;
+				if ( Island(x,y) != 0xFFFF ) {
+					float Val = Island(x,y);
+					Val /= 16.0f;
+					Val *= 360.0f;
+					Col = GEL_HSV( Val, 1, 1 );
+				}
 				
-				Color.Add( GEL_RGB_WHITE );
-				Color.Add( GEL_RGB_WHITE );
-				Color.Add( GEL_RGB_WHITE );
+				Color.Add( Col );
+				Color.Add( Col );
+				Color.Add( Col );
+				
+				Color.Add( Col );
+				Color.Add( Col );
+				Color.Add( Col );
 				
 				//int Val = Map.Tile.Wrap(x,y);
 				//Color.Add( GEL_RGB(Val,Val,Val) );
