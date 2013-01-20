@@ -1,10 +1,9 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_GRID_GRID2D_H__
-#define __GEL2_GRID_GRID2D_H__
+#ifndef __GEL2_GRID_GRID2D_BLOBEXTRACT_H__
+#define __GEL2_GRID_GRID2D_BLOBEXTRACT_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Grid2D_Class.h"
-#include "Grid2D_HeightMap.h"
-#include "Grid2D_BlobExtract.h"
+template< typename tType >
+const NSet2<u16,Grid2D<u16>> BlobExtract( const Grid2D<tType>& Data, const tType Middle = 0.5f );
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __GEL2_GRID_GRID2D_H__ //
+#endif // __GEL2_GRID_GRID2D_BLOBEXTRACT_H__ //
 // - ------------------------------------------------------------------------------------------ - //

@@ -7,7 +7,7 @@
 #include <Core/DataBlock.h>
 #include <Core/GelArray.h>
 
-#include <Grid/Grid2D_Class.h>
+#include <Grid/Grid2D.h>
 
 #include <Math/Vector.h>
 #include <Geometry/Rect.h>

@@ -4,8 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <System/System.h>
 #include <Node/GelList.h>
-#include <Grid/Grid2D_Class.h>
-#include <Grid/Grid2D_HeightMap.h>
+#include <Grid/Grid2D.h>
 #include <Search/Search.h>
 #include <Texture/Texture.h>
 
@@ -172,7 +171,7 @@ public:
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 
-		Island = Land.BlobExtractData(WaterLevel).b;
+		Island = BlobExtract(Land, WaterLevel).b;
 		
 		for ( size_t y = 0; y < Land.Height(); y++ ) {
 			for ( size_t x = 0; x < Land.Width(); x++ ) {

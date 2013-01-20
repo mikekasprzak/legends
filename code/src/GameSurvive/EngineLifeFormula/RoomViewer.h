@@ -12,7 +12,7 @@
 #include <Graphics/Allocator/Vector3DAllocator.h>
 #include <Types/Set.h>
 
-#include <Grid/Grid2D_Class.h>
+#include <Grid/Grid2D.h>
 #include "Tile.h"
 
 #include "Active.h"

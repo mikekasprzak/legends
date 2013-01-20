@@ -9,7 +9,7 @@
 #include "WorldPlayer.h"
 #include "WorldAnimal.h"
 
-#include <Grid/Grid2D_Class.h>
+#include <Grid/Grid2D.h>
 
 #include <Graphics/GraphicsDraw.h>
 // - ------------------------------------------------------------------------------------------ - //
