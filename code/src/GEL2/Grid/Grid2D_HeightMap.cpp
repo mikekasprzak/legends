@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Style/Style.h>
 #include <Math/Real.h>
-#include "Grid2D_HeightMap.h"
+#include "Grid2D.h"
 // - ------------------------------------------------------------------------------------------ - //
 const int _displacement_PlasmaFractal_HeightMapInt( const int Displacement ) {
 	return (int)((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat();

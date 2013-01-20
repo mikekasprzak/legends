@@ -6,7 +6,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Style/GelTypes.h>
 #include <stdio.h>				// FILE*, fopen, ftell, etc //
-
 // - ------------------------------------------------------------------------------------------ - //
 // NOTE: This code could "technically" be made in to a general purpose reader/writer for all //
 //   IO Operations.  F:/Art/DataFile.img for files, M1:/MyData.img for a memory card, 
@@ -26,7 +25,29 @@
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Come up with a standard interface for streamable data. //
 // - ------------------------------------------------------------------------------------------ - //
-//namespace Data {
+
+// For fastest loops, use 64bit numbers and SIMD types //
+
+//#define FASTLOOP(Count) for(unsigned ___idx_ ## __COUNTER__ = (Count)+1; --___idx_ ## __COUNTER__;)
+
+inline void u32set_Data( const unsigned _Value, void* _Data, const size_t _Size ) {
+	unsigned* Data = (unsigned*)_Data;
+	unsigned* DataTarget = (unsigned*)((char*)_Data+_Size);
+
+	// I need to test the pointer if it's at the target. No way to go faster. :( //
+	while ( Data != DataTarget ) {
+		*Data = _Value;
+		++Data;
+	}
+
+	// Fast yes, but index is unusuable //
+//	FASTLOOP(_Size>>2) {
+//		Data[
+//	}
+	// The solution to the unusable index is to change the base pointer. //
+	// Then the index can simply be added to the target address before performing a store. //
+}
+
 // - ------------------------------------------------------------------------------------------ - //
 // MemSET wrapper //
 inline void set_Data( const int _Value, void* _Data, const size_t _Size ) {

@@ -133,7 +133,7 @@ public:
 public:
 	cWorld() : 
 		BaseModTime( 0 ),
-		Map( 64, 64 )
+		Map( 32, 32 )
 	{
 		#ifdef PRODUCT_CLIENT
 		{
@@ -171,7 +171,7 @@ public:
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 
-		Island = BlobExtract(Land, WaterLevel).b;
+		Island = BlobExtractWrapped(Land, WaterLevel);
 		
 		for ( size_t y = 0; y < Land.Height(); y++ ) {
 			for ( size_t x = 0; x < Land.Width(); x++ ) {
@@ -216,8 +216,6 @@ public:
 		#ifdef PRODUCT_CLIENT
 		Texture::delete_TextureHandle( TileArt );
 		#endif // PRODUCT_CLIENT //
-		
-		Log( "MAX: %i %i %i -- %i %i %i", U16_MIN, U16_MID, U16_MAX, S16_MIN, S16_MID, S16_MAX );
 	}
 	
 	// Server Only //
@@ -261,7 +259,10 @@ public:
 				Vert.Add( (VecXY)*TileSize );
 				Vert.Add( (VecXY+PlusY)*TileSize );
 
-				int Index = Map.Tile.Wrap(x,y);
+				int TX = x;
+				int TY = Map.GetHeight()-1-y;
+				int Index = Map.Tile.Wrap(TX,TY);
+				// UV Texture is 16x16 (in tiles) //
 				int UVX = (Index & 15);
 				int UVY = 15-((Index >> 4) & 15);
 				
@@ -274,8 +275,8 @@ public:
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY+1)*UVStep) );
 				
 				GelColor Col = GEL_RGB_WHITE;
-				if ( Island(x,y) != 0xFFFF ) {
-					float Val = Island(x,y);
+				if ( Island(TX,TY) != 0xFFFF ) {
+					float Val = Island(TX,TY);
 					Val /= 16.0f;
 					Val *= 360.0f;
 					Col = GEL_HSV( Val, 1, 1 );
@@ -288,9 +289,6 @@ public:
 				Color.Add( Col );
 				Color.Add( Col );
 				Color.Add( Col );
-				
-				//int Val = Map.Tile.Wrap(x,y);
-				//Color.Add( GEL_RGB(Val,Val,Val) );
 			}
 		}
 
