@@ -188,7 +188,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexClip( int _x, int _y ) const {
+	inline const size_t IndexSaturate( int _x, int _y ) const {
 		if ( _x >= Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
@@ -203,7 +203,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexClipX( int _x, int _y ) const {
+	inline const size_t IndexSaturateX( int _x, int _y ) const {
 		if ( _x >= Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
@@ -213,7 +213,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexClipY( int _x, int _y ) const {
+	inline const size_t IndexSaturateY( int _x, int _y ) const {
 		if ( _y >= Height() )
 			_y = Height() - 1;
 		else if ( _y < 0 )
@@ -296,39 +296,41 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& Clip( const int _x, const int _y ) {
-		return Data[ IndexClip( _x, _y ) ];
+	inline tType& Saturate( const int _x, const int _y ) {
+		return Data[ IndexSaturate( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const tType& Clip( const int _x, const int _y ) const {	
-		return Data[ IndexClip( _x, _y ) ];
+	inline const tType& Saturate( const int _x, const int _y ) const {	
+		return Data[ IndexSaturate( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& ClipX( const int _x, const int _y ) {
-		return Data[ IndexClipX( _x, _y ) ];
+	inline tType& SaturateX( const int _x, const int _y ) {
+		return Data[ IndexSaturateX( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const tType& ClipX( const int _x, const int _y ) const {	
-		return Data[ IndexClipX( _x, _y ) ];
+	inline const tType& SaturateX( const int _x, const int _y ) const {	
+		return Data[ IndexSaturateX( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& ClipY( const int _x, const int _y ) {
-		return Data[ IndexClipY( _x, _y ) ];
+	inline tType& SaturateY( const int _x, const int _y ) {
+		return Data[ IndexSaturateY( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const tType& ClipY( const int _x, const int _y ) const {	
-		return Data[ IndexClipY( _x, _y ) ];
+	inline const tType& SaturateY( const int _x, const int _y ) const {	
+		return Data[ IndexSaturateY( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// These are for converting explicit X and Y values in to ones that fit within grid ranges //
+	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const int ClipX( int _x ) const {
+	inline const int AxisSaturateX( int _x ) const {
 		if ( _x >= Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
@@ -338,7 +340,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const int ClipY( int _y ) const {
+	inline const int AxisSaturateY( int _y ) const {
 		if ( _y >= Height() )
 			_y = Height() - 1;
 		else if ( _y < 0 )
@@ -347,13 +349,13 @@ public:
 		return _y;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t WrapX( int _x ) const {
+	inline const size_t AxisWrapX( int _x ) const {
 		if ( _x < 0 )
 			_x = -_x;
 		return (_x % Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t WrapY( int _y ) const {
+	inline const size_t AxisWrapY( int _y ) const {
 		if ( _y < 0 )
 			_y = -_y;
 		return (_y % Height());
@@ -363,7 +365,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
-	inline const tType& DeadClip( const int _x, const int _y, const tType& DeadValue = tType() ) const {
+	inline const size_t DeadIndex( const int _x, const int _y, const size_t DeadValue = (0-1) ) const {
 		if ( _x >= Width() )
 			return DeadValue;
 		else if ( _x < 0 )
@@ -374,7 +376,17 @@ public:
 		else if ( _y < 0 )
 			return DeadValue;
 			
-		return Data[ Index( _x, _y ) ];
+		return Index( _x, _y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, returning the dead value if over //
+	inline const tType& Dead( const int _x, const int _y, const tType& DeadValue = tType() ) const {
+		size_t DIndex = DeadIndex(_x,_y);
+		
+		if ( DIndex != (0-1) )
+			return Data[ Index( _x, _y ) ];
+		else
+			return DeadValue;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -942,8 +954,8 @@ public:
 	// NOTE: This function might not be needed, but was easy enough to write after all //
 	// - -------------------------------------------------------------------------------------- - //	
 	static inline const cGrid2D< tType > Crop( const cGrid2D< tType >& Src, const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {
-		size_t NewWidth = Src.ClipX( x2 ) + 1 - Src.ClipX( x1 );
-		size_t NewHeight = Src.ClipY( y2 ) + 1 - Src.ClipY( y1 );
+		size_t NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
+		size_t NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
 		
 		if ( x2 < x1 )
 			NewWidth = 1;
@@ -951,7 +963,7 @@ public:
 		if ( y2 < y1 )
 			NewHeight = 1; 
 	
-		return Copy( Src, NewWidth, NewHeight, Src.ClipX( x1 ), Src.ClipY( y1 ), 0, 0 );
+		return Copy( Src, NewWidth, NewHeight, Src.AxisSaturateX( x1 ), Src.AxisSaturateY( y1 ), 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D< tType > Crop( const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {	
@@ -1279,8 +1291,8 @@ public:
 	// Count the number of instances of tiles equal to the tile we point to. //
 	inline const size_t CountAdjacentX( int x, int y ) const {
 		size_t CurrentCount = 1;
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
 
 		for ( int _x = x; _x-- > 0; ) {
@@ -1303,8 +1315,8 @@ public:
 	// Count the number of instances of tiles equal to the tile we point to. //
 	inline const size_t CountAdjacentY( int x, int y ) const {
 		size_t CurrentCount = 1;
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
 
 		for ( int _y = y; _y-- > 0; ) {
@@ -1326,7 +1338,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
 	inline const size_t CountAdjacentX( int x, int y, const tType& Value ) const  {
-		if ( Clip( x, y ) != Value )
+		if ( Saturate( x, y ) != Value )
 			return 0;
 		else
 			return CountAdjacentX( x, y );
@@ -1334,7 +1346,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
 	inline const size_t CountAdjacentY( int x, int y, const tType& Value ) const {
-		if ( Clip( x, y ) != Value )
+		if ( Saturate( x, y ) != Value )
 			return 0;
 		else
 			return CountAdjacentY( x, y );
@@ -1345,8 +1357,8 @@ public:
 	// Clear the number of instances of tiles equal to the tile we point to. //
 	inline const size_t ClearAdjacentX( int x, int y ) const {
 		size_t CurrentCount = 1;
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
 		operator()( x, y ) = 0;
 
@@ -1374,8 +1386,8 @@ public:
 	// Clear the number of instances of tiles equal to the tile we point to. //
 	inline const size_t ClearAdjacentY( int x, int y ) const {
 		size_t CurrentCount = 1;
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
 		operator()( x, y ) = 0; 
 
@@ -1405,7 +1417,7 @@ public:
 	// Count the number of instances of tiles on a line //
 	inline const size_t CountLineX( int y, const tType& Value ) const {
 		size_t CurrentCount = 0;
-		y = ClipY( y );
+		y = AxisSaturateY( y );
 
 		for ( int _x = Width(); _x--; ) {
 			if ( operator()( _x, y ) == Value )
@@ -1418,7 +1430,7 @@ public:
 	// Count the number of instances of tiles on a line //
 	inline const size_t CountLineY( int x, const tType& Value ) const {
 		size_t CurrentCount = 0;
-		x = ClipY( x );
+		x = AxisSaturateY( x );
 
 		for ( int _y = Height(); _y--; ) {
 			if ( operator()( x, _y ) == Value )
@@ -1433,8 +1445,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first occurence of Value starting at point x,y //
 	inline const int FirstX( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; x < Width(); x++ ) {
 			if ( operator()( x, y ) == Value )
 				return x;
@@ -1444,8 +1456,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the first occurence of Value starting at point x,y //
 	inline const int FirstY( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; y < Height(); y++ ) {
 			if ( operator()( x, y ) == Value )
 				return y;
@@ -1455,8 +1467,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of Value starting at point x,y //
 	inline const int LastX( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; x--; ) {
 			if ( operator()( x, y ) == Value )
 				return x;
@@ -1466,8 +1478,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last occurence of Value starting at point x,y //
 	inline const int LastY( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; y--; ) {
 			if ( operator()( x, y ) == Value )
 				return x;
@@ -1481,8 +1493,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first non occurence of Value starting at point x,y //
 	inline const int FirstNotX( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; x < Width(); x++ ) {
 			if ( operator()( x, y ) != Value )
 				return x;
@@ -1492,8 +1504,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the first non occurence of Value starting at point x,y //
 	inline const int FirstNotY( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; y < Height(); y++ ) {
 			if ( operator()( x, y ) != Value )
 				return y;
@@ -1503,8 +1515,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last non occurence of Value starting at point x,y //
 	inline const int LastNotX( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; x--; ) {
 			if ( operator()( x, y ) != Value )
 				return x;
@@ -1514,8 +1526,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last non occurence of Value starting at point x,y //
 	inline const int LastNotY( int x, int y, const tType& Value ) const {
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		for ( ; y--; ) {
 			if ( operator()( x, y ) != Value )
 				return x;
@@ -1582,8 +1594,8 @@ public:
 	inline const cGrid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
 		cGrid2D<int> NewGrid( Width(), Height() );
 		
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		
 		if ( operator()( x, y ) != Value )
 			return NewGrid;
@@ -1623,8 +1635,8 @@ public:
 	inline const cGrid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
 		cGrid2D<int> NewGrid( Width(), Height() );
 		
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		
 		if ( operator()( x, y ) != Value )
 			return NewGrid;
@@ -1661,11 +1673,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const {
-		return GenerateAdjacentXAdjacencyGrid( x, y, Clip( x, y ) );
+		return GenerateAdjacentXAdjacencyGrid( x, y, Saturate( x, y ) );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const {
-		return GenerateAdjacentYAdjacencyGrid( x, y, Clip( x, y ) );
+		return GenerateAdjacentYAdjacencyGrid( x, y, Saturate( x, y ) );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1909,16 +1921,16 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CanDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Clip the incoming co-ordinates //
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		
 		// Bail if the tile is already empty //
 		if ( operator()(x,y) == Value )
 			return 0;
 		
 		// Generate and clip offset co-ordinate //
-		int DownOffsetX = ClipX( x + OffsetX );
-		int DownOffsetY = ClipY( y + OffsetY );
+		int DownOffsetX = AxisSaturateX( x + OffsetX );
+		int DownOffsetY = AxisSaturateY( y + OffsetY );
 			
 		// If the offset tile is our test value, then we can drop //
 		return operator()( DownOffsetX, DownOffsetY ) == Value;
@@ -1926,16 +1938,16 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Clip the incoming co-ordinates //
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		
 		// Bail if the tile is already empty //
 		if ( operator()(x,y) == Value )
 			return 0;
 		
 		// Generate and clip the immediate offset co-ordinate //
-		int DownOffsetX = ClipX( x + OffsetX );
-		int DownOffsetY = ClipY( y + OffsetY );
+		int DownOffsetX = AxisSaturateX( x + OffsetX );
+		int DownOffsetY = AxisSaturateY( y + OffsetY );
 		
 		// Bail if we happened to clip ourselves to the same position (i.e. on a limit) //
 		if ( (DownOffsetX == x) && (DownOffsetY == y) )
@@ -1947,9 +1959,9 @@ public:
 
 			
 		// Test to the left //
-		if ( Clip( x - OffsetY, y + OffsetX ) == Value ) {
-			int DownX = ClipX( DownOffsetX - OffsetY );
-			int DownY = ClipY( DownOffsetY + OffsetX );
+		if ( Saturate( x - OffsetY, y + OffsetX ) == Value ) {
+			int DownX = AxisSaturateX( DownOffsetX - OffsetY );
+			int DownY = AxisSaturateY( DownOffsetY + OffsetX );
 
 			// Test below the left //
 			if ( operator()( DownX, DownY ) == Value ) {
@@ -1958,9 +1970,9 @@ public:
 		}
 		
 		// Test to the right //
-		if ( Clip( x + OffsetY, y - OffsetX ) == Value ) {
-			int DownX = ClipX( DownOffsetX + OffsetY );
-			int DownY = ClipY( DownOffsetY - OffsetX );
+		if ( Saturate( x + OffsetY, y - OffsetX ) == Value ) {
+			int DownX = AxisSaturateX( DownOffsetX + OffsetY );
+			int DownY = AxisSaturateY( DownOffsetY - OffsetX );
 
 			// Test below the right //
 			if ( operator()( DownX, DownY ) == Value ) {
@@ -1978,8 +1990,8 @@ public:
 		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
 		
 		// Clip the incoming co-ordinates //
-		x = ClipX( x );
-		y = ClipY( y );
+		x = AxisSaturateX( x );
+		y = AxisSaturateY( y );
 		
 		// Bail if the tile is already empty //
 //		if ( operator()(x,y) == Value )
@@ -2106,11 +2118,11 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Exchange the value of two tiles //
 	inline void Swap( int x1, int y1, int x2, int y2 ) {
-		x1 = ClipX( x1 );
-		y1 = ClipY( y1 );
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
 		
-		x2 = ClipX( x2 );
-		y2 = ClipY( y2 );
+		x2 = AxisSaturateX( x2 );
+		y2 = AxisSaturateY( y2 );
 		
 		tType Temp = operator()(x1,y1);
 		operator()(x1,y1) = operator()(x2,y2);
@@ -2119,8 +2131,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Exchange the passed value with the tile, returning the value of the tile //
 	inline const tType Swap( int x1, int y1, const tType& Value ) {
-		x1 = ClipX( x1 );
-		y1 = ClipY( y1 );
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
 			
 		tType Temp = operator()(x1,y1);
 		operator()(x1,y1) = Value;
@@ -2149,8 +2161,8 @@ public:
 	inline void ApplyRockfordDrop( const int x, const int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1 ) {
 		// Left Drop //
 		if ( DropType == 1 ) {
-			int DownOffsetX = ClipX( x + OffsetX );
-			int DownOffsetY = ClipY( y + OffsetY );
+			int DownOffsetX = AxisSaturateX( x + OffsetX );
+			int DownOffsetY = AxisSaturateY( y + OffsetY );
 	
 			Swap( x, y, DownOffsetX - OffsetY, DownOffsetY + OffsetX );
 		}
@@ -2160,8 +2172,8 @@ public:
 		}
 		// Right Drop //
 		else if ( DropType == 3 ) {
-			int DownOffsetX = ClipX( x + OffsetX );
-			int DownOffsetY = ClipY( y + OffsetY );
+			int DownOffsetX = AxisSaturateX( x + OffsetX );
+			int DownOffsetY = AxisSaturateY( y + OffsetY );
 	
 			Swap( x, y, DownOffsetX + OffsetY, DownOffsetY - OffsetX );			
 		}
@@ -2344,7 +2356,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool CanISet( const int x, const int y ) const {
-		return Clip(x,y) == 0;
+		return Saturate(x,y) == 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool CanIDrop( const int _Index, const int OffsetX, const int OffsetY ) const {
@@ -2396,7 +2408,7 @@ public:
 			y = 0;
 		}
 		
-		return Clip(x,y);
+		return Saturate(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline tType& EdgeDistance( const int _Index, const int OffsetX, const int OffsetY ) {
@@ -2407,24 +2419,24 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetY < 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = 0;
 		}
 		
 		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
 		
-		return Clip(x + (OffsetX*Distance), y + (OffsetY*Distance));
+		return Saturate(x + (OffsetX*Distance), y + (OffsetY*Distance));
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
@@ -2450,7 +2462,7 @@ public:
 			y = 0;
 		}
 		
-		return IndexClip(x,y);
+		return IndexSaturate(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY ) {
@@ -2461,24 +2473,24 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetY < 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = 0;
 		}
 		
 		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
 		
-		return IndexClip(x + (OffsetX*Distance), y + (OffsetY*Distance));
+		return IndexSaturate(x + (OffsetX*Distance), y + (OffsetY*Distance));
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline bool AddDrop( const int _Index, const int OffsetX, const int OffsetY, const tType& Value ) {
@@ -2520,18 +2532,18 @@ public:
 		
 		if ( OffsetX < 0 ) {
 			x = Width() - 1;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetX > 0 ) {
 			x = 0;
-			y = ClipY(_Index);
+			y = AxisSaturateY(_Index);
 		}
 		else if ( OffsetY < 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = Height() - 1;
 		}
 		else  if ( OffsetY > 0 ) {
-			x = ClipX(_Index);
+			x = AxisSaturateX(_Index);
 			y = 0;
 		}
 		
@@ -2644,7 +2656,8 @@ public:
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ClipData( const tType Low = 0.0f, const tType High = 1.0f ) {
+	// Was ClipData //
+	inline void SaturateData( const tType Low = 0.0f, const tType High = 1.0f ) {
 		for ( size_t idx = 0; idx < Size(); idx++ ) {
 			if ( Data[idx] < Low ) {
 				Data[idx] = Low;
@@ -2735,7 +2748,7 @@ public:
 		for ( size_t y = 0; y < Height(); y++ ) {
 			for ( size_t x = 0; x < Width(); x++ ) {
 				if ( operator()(x,y) >= Middle ) {
-					Log( "%i %i -- %i", x, y, NextLabel );
+//					Log( "%i %i -- %i", x, y, NextLabel );
 					enum { N_Size = 2 };
 					u16 N[N_Size];
 					for ( size_t idx = 0; idx < N_Size; idx++ ) {
@@ -2788,7 +2801,7 @@ public:
 		for ( size_t y = 0; y < Height(); y++ ) {
 			for ( size_t x = 0; x < Width(); x++ ) {
 				if ( operator()(x,y) >= Middle ) {
-					Log( "> %i %i -- %i", x, y, Ret.b(x,y) );
+//					Log( "> %i %i -- %i", x, y, Ret.b(x,y) );
 					Ret.b(x,y) = Linked.Find( Ret.b(x,y) );
 				}
 			}

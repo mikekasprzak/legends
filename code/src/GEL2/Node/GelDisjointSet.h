@@ -73,7 +73,7 @@ public:
 //	}
 	
 	inline void Add( const ValType n ) {
-		Log( "Hog %i", n );
+//		Log( "Hog %i", n );
 		Set* Old = Forest;
 		
 		Forest = new Set[n+1];
@@ -93,14 +93,14 @@ public:
 			return i;
 		}
 		else {
-			Log( "* %i %x", i, Forest[i].Parent );
+//			Log( "* %i %x", i, Forest[i].Parent );
 			Forest[i].Parent = Find( Forest[i].Parent );
 			return Forest[i].Parent;
 		}
 	}
 	
 	inline void Union( const ValType i, const ValType j ) {
-		Log( "UNE! %i %i", i, j );
+//		Log( "UNE! %i %i", i, j );
 		ValType root_i = Find(i);
 		ValType root_j = Find(j);
 		

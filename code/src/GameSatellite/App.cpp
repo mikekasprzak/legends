@@ -228,25 +228,25 @@ void cApp::Draw( Screen::cNative& Native ) {
 		Default->Attrib( 1, UVs );
 		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 
-		Render::EnableAlphaBlending();
-		{
-			cUberShader* Sh = PPShader;
-			PPShader->Bind();
-			
-//			cUberShader* Sh = Default;
-//			Default->Bind( TextureShader );
-	
-			Sh->UniformMatrix4x4( 0, Matrix4x4::Identity );
-			Sh->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
-			Sh->Uniform1i( 2, 0 ); // TexImage0 //
-			Sh->Uniform2f( 3, 1.0f / Native.GetAspectRatio(), 1.0f ); // AspectScalar //
-			Sh->BindUniforms();
-			RT_Blur[1]->BindAsTexture();
-			Sh->Attrib( 0, Verts );
-			Sh->Attrib( 1, UVs );
-			Sh->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
-		}		
-		Render::DisableBlending();
+//		Render::EnableAlphaBlending();
+//		{
+//			cUberShader* Sh = PPShader;
+//			PPShader->Bind();
+//			
+////			cUberShader* Sh = Default;
+////			Default->Bind( TextureShader );
+//	
+//			Sh->UniformMatrix4x4( 0, Matrix4x4::Identity );
+//			Sh->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
+//			Sh->Uniform1i( 2, 0 ); // TexImage0 //
+//			Sh->Uniform2f( 3, 1.0f / Native.GetAspectRatio(), 1.0f ); // AspectScalar //
+//			Sh->BindUniforms();
+//			RT_Blur[1]->BindAsTexture();
+//			Sh->Attrib( 0, Verts );
+//			Sh->Attrib( 1, UVs );
+//			Sh->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
+//		}		
+//		Render::DisableBlending();
 	}
 	
 	// Draw Text //

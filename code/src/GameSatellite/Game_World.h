@@ -134,7 +134,7 @@ public:
 public:
 	cWorld() : 
 		BaseModTime( 0 ),
-		Map( 32, 32 )
+		Map( 64, 64 )
 	{
 		#ifdef PRODUCT_CLIENT
 		{
