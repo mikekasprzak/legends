@@ -7,7 +7,7 @@ const int _displacement_PlasmaFractal_HeightMapInt( const int Displacement ) {
 	return (int)((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat();
 }
 // - ------------------------------------------------------------------------------------------ - //
-void _diamond_PlasmaFractal_HeightMapInt( cGrid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
+void _diamond_PlasmaFractal_HeightMapInt( Grid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
 	int Step = x2-x1;	// Always a Power of Two, so this is safe //
 	
 	if ( Step <= 1 )
@@ -30,7 +30,7 @@ void _diamond_PlasmaFractal_HeightMapInt( cGrid2D<int>& Map, const int x1, const
 		_displacement_PlasmaFractal_HeightMapInt( Displacement );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void _square_PlasmaFractal_HeightMapInt( cGrid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
+void _square_PlasmaFractal_HeightMapInt( Grid2D<int>& Map, const int x1, const int y1, const int x2, const int y2 ) {
 	int Step = x2-x1;	// Always a Power of Two, so this is safe //
 	
 	if ( Step <= 1 )
@@ -87,8 +87,8 @@ void _square_PlasmaFractal_HeightMapInt( cGrid2D<int>& Map, const int x1, const 
 // The Diamond-Square algorithm (Midpoint Displacement, Cloud/Plasma Fractal) -- Powers of Two //
 // - http://en.wikipedia.org/wiki/Diamond-square_algorithm //
 // - Game Programming Gems #1 - 4.18 Fractal Terrain Generation - Pg 503 //
-cGrid2D<int> generate_PlasmaFractal_HeightMapInt( const size_t Width, const size_t Height ) {
-	cGrid2D<int> Map(Width, Height);
+Grid2D<int> generate_PlasmaFractal_HeightMapInt( const size_t Width, const size_t Height ) {
+	Grid2D<int> Map(Width, Height);
 	Map.Fill(0);
 	
 	// -- Setup -- //
@@ -138,7 +138,7 @@ const float _displacement_PlasmaFractal_HeightMapFloat( const int Displacement )
 	return ((Real::Random() * Real(Displacement)) - Real(Displacement >> 1)).ToFloat() / (float)(Displacement<<1);
 }
 // - ------------------------------------------------------------------------------------------ - //
-void _diamond_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
+void _diamond_PlasmaFractal_HeightMapFloat( Grid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
 	int Step = x2-x1;	// Always a Power of Two, so this is safe //
 	
 	if ( Step <= 1 )
@@ -161,7 +161,7 @@ void _diamond_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, c
 		_displacement_PlasmaFractal_HeightMapFloat( Displacement );
 }
 // - ------------------------------------------------------------------------------------------ - //
-void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
+void _square_PlasmaFractal_HeightMapFloat( Grid2D<float>& Map, const int x1, const int y1, const int x2, const int y2 ) {
 	int Step = x2-x1;	// Always a Power of Two, so this is safe //
 	
 	if ( Step <= 1 )
@@ -218,8 +218,8 @@ void _square_PlasmaFractal_HeightMapFloat( cGrid2D<float>& Map, const int x1, co
 // The Diamond-Square algorithm (Midpoint Displacement, Cloud/Plasma Fractal) -- Powers of Two //
 // - http://en.wikipedia.org/wiki/Diamond-square_algorithm //
 // - Game Programming Gems #1 - 4.18 Fractal Terrain Generation - Pg 503 //
-cGrid2D<float> generate_PlasmaFractal_HeightMapFloat( const size_t Width, const size_t Height ) {
-	cGrid2D<float> Map(Width, Height);
+Grid2D<float> generate_PlasmaFractal_HeightMapFloat( const size_t Width, const size_t Height ) {
+	Grid2D<float> Map(Width, Height);
 	Map.Fill(0.0f);
 	
 	// -- Setup -- //

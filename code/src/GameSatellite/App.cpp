@@ -58,7 +58,7 @@ cApp::cApp() {
 		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
 		
 		// I needed some alpha in the image, otherwise the alpha got discarded.
-		cGrid2D<st8> Byter = to_8bit_Grid2D_STBTexture( Tex );
+		Grid2D<st8> Byter = to_8bit_Grid2D_STBTexture( Tex );
 		
 		Log( "%i, %i (%x %x -- %x %x)", Byter.Width(), Byter.Height(), (int)Byter(0,0),(int)Byter(12,0),(int)Byter(0,12),(int)Byter(12,12) );
 		

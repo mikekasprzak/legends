@@ -68,9 +68,9 @@ class cMap {
 public:
 	typedef unsigned char tTile;
 
-	cGrid2D<tTile>		Tile;		// Must be separate from other data, because it's bytes //
-	cGrid2D<cTileInfo> 	TileInfo;
-	cGrid2D<cRegion>	Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
+	Grid2D<tTile>		Tile;		// Must be separate from other data, because it's bytes //
+	Grid2D<cTileInfo> 	TileInfo;
+	Grid2D<cRegion>	Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
 
 public:
 	cMap()
@@ -104,7 +104,7 @@ class cWorld {
 public:
 	tModTime BaseModTime;	// Base time added to the current time. Save this, so you have the age of the world. //
 	cMap Map;
-	cGrid2D<u16> Island;
+	Grid2D<u16> Island;
 	
 	Texture::TextureHandle TileArt;
 	
@@ -163,12 +163,12 @@ public:
 		
 		srand( 1 );
 
-		cGrid2D<float> Land = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+		Grid2D<float> Land = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
 		Land.RoundData( WaterLevel );
 		Land.SoftenRigidData(2);
 		Land.SoftenRigidData(4);
 		Land.SoftenRigidData(2);
-		cGrid2D<float> Fertility = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+		Grid2D<float> Fertility = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 

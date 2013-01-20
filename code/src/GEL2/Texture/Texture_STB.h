@@ -26,9 +26,9 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth = true, 
 // NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
 //   the STBTexture type, before deleting the STBTexture (i.e. Texture.Width, etc) //
 // - ------------------------------------------------------------------------------------------ - //
-inline cGrid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture ) {
+inline Grid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture ) {
 	typedef unsigned tType;
-	cGrid2D<tType> Grid;
+	Grid2D<tType> Grid;
 	
 	Grid.SetW( Texture.Width );
 	Grid.SetH( Texture.Height );
@@ -47,9 +47,9 @@ inline cGrid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture ) {
 	return Grid;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline cGrid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture ) {
+inline Grid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture ) {
 	typedef unsigned short tType;
-	cGrid2D<tType> Grid;
+	Grid2D<tType> Grid;
 	
 	Grid.SetW( Texture.Width );
 	Grid.SetH( Texture.Height );
@@ -72,9 +72,9 @@ inline cGrid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture )
 	return Grid;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline cGrid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture ) {
+inline Grid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture ) {
 	typedef unsigned char tType;
-	cGrid2D<tType> Grid;
+	Grid2D<tType> Grid;
 	
 	Grid.SetW( Texture.Width );
 	Grid.SetH( Texture.Height );

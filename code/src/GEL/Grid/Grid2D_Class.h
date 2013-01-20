@@ -14,7 +14,7 @@
 // TODO: Rename all functions that change the data to "ActionData". 
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType = int >
-class cGrid2D {
+class Grid2D {
 	// - -------------------------------------------------------------------------------------- - //
 	// Dimensions //
 	szt _w, _h;
@@ -24,21 +24,21 @@ class cGrid2D {
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D() :
+	inline Grid2D() :
 		_w( 0 ),
 		_h( 0 ),
 		Data( 0 )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const szt w, const szt h ) :
+	inline Grid2D( const szt w, const szt h ) :
 		_w( w ),
 		_h( h ),
 		Data( new tType[w*h] )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const szt w, const szt h, const tType& Type ) :
+	inline Grid2D( const szt w, const szt h, const tType& Type ) :
 		_w( w ),
 		_h( h ),
 		Data( new tType[w*h] )
@@ -46,7 +46,7 @@ public:
 		Fill(Type);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const cGrid2D<tType>& Orig ) :
+	inline Grid2D( const Grid2D<tType>& Orig ) :
 		_w( Orig._w ),
 		_h( Orig._h ),
 		Data( new tType[Size()] )
@@ -56,7 +56,7 @@ public:
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D<tType>& operator = (const cGrid2D<tType>& Orig) {
+	inline Grid2D<tType>& operator = (const Grid2D<tType>& Orig) {
 		if ( this != &Orig ) {
 			// If we just happen to be the same total size //
 			if ( Orig.Size() == Size() ) {
@@ -88,7 +88,7 @@ public:
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline ~cGrid2D() {
+	inline ~Grid2D() {
 		if ( Data ) {
 			delete [] Data;
 			Data = 0;
@@ -391,7 +391,7 @@ public:
 private:
 	// - -------------------------------------------------------------------------------------- - //
 	static inline tType* CopyData(
-		const cGrid2D< tType >& Src,
+		const Grid2D< tType >& Src,
 		const szt NewWidth,
 		const szt NewHeight,
 		const int SrcStartX,
@@ -434,8 +434,8 @@ private:
 		return DataCopy;
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > Copy(
-		const cGrid2D< tType >& Src,
+	static inline const Grid2D< tType > Copy(
+		const Grid2D< tType >& Src,
 		const szt NewWidth,
 		const szt NewHeight,
 		const int SrcStartX,
@@ -445,7 +445,7 @@ private:
 		const tType& InitValue = tType()
 		)
 	{
-		cGrid2D< tType > NewGrid;
+		Grid2D< tType > NewGrid;
 		
 		NewGrid.SetData( CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
 		NewGrid.w = NewWidth;
@@ -455,9 +455,9 @@ private:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 public:
-	static inline const cGrid2D< tType > Merge(
-		const cGrid2D< tType >& GridA,
-		const cGrid2D< tType >& GridB,
+	static inline const Grid2D< tType > Merge(
+		const Grid2D< tType >& GridA,
+		const Grid2D< tType >& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -497,7 +497,7 @@ public:
 		int BY = GridBY - GridY1;
 			
 		// Create a Grid to hold our copy //
-		cGrid2D< tType > NewGrid( Width, Height, InitValue );
+		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
 		for ( szt _y = GridA.Height(); _y--; ) {
@@ -517,9 +517,9 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > MergeBlend(
-		const cGrid2D< tType >& GridA,
-		const cGrid2D< tType >& GridB,
+	static inline const Grid2D< tType > MergeBlend(
+		const Grid2D< tType >& GridA,
+		const Grid2D< tType >& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -560,7 +560,7 @@ public:
 		int BY = GridBY - GridY1;
 			
 		// Create a Grid to hold our copy //
-		cGrid2D< tType > NewGrid( Width, Height, InitValue );
+		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
 		for ( szt _y = GridA.Height(); _y--; ) {
@@ -582,9 +582,9 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > MergeBlendOnly(
-		const cGrid2D< tType >& GridA,
-		const cGrid2D< tType >& GridB,
+	static inline const Grid2D< tType > MergeBlendOnly(
+		const Grid2D< tType >& GridA,
+		const Grid2D< tType >& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -625,7 +625,7 @@ public:
 		int BY = GridBY - GridY1;
 			
 		// Create a Grid to hold our copy //
-		cGrid2D< tType > NewGrid( Width, Height, InitValue );
+		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
 		for ( szt _y = GridA.Height(); _y--; ) {
@@ -647,9 +647,9 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > MergeBlendOnlyMask(
-		const cGrid2D< tType >& GridA,
-		const cGrid2D< tType >& GridB,
+	static inline const Grid2D< tType > MergeBlendOnlyMask(
+		const Grid2D< tType >& GridA,
+		const Grid2D< tType >& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -691,7 +691,7 @@ public:
 		int BY = GridBY - GridY1;
 			
 		// Create a Grid to hold our copy //
-		cGrid2D< tType > NewGrid( Width, Height, InitValue );
+		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
 		for ( szt _y = GridA.Height(); _y--; ) {
@@ -713,9 +713,9 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > MergeBlendMask(
-		const cGrid2D< tType >& GridA,
-		const cGrid2D< tType >& GridB,
+	static inline const Grid2D< tType > MergeBlendMask(
+		const Grid2D< tType >& GridA,
+		const Grid2D< tType >& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -757,7 +757,7 @@ public:
 		int BY = GridBY - GridY1;
 			
 		// Create a Grid to hold our copy //
-		cGrid2D< tType > NewGrid( Width, Height, InitValue );
+		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
 		for ( szt _y = GridA.Height(); _y--; ) {
@@ -779,8 +779,8 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > RotateCW( const cGrid2D< tType >& Src ) {
-		cGrid2D< tType > NewGrid( Src.Height(), Src.Width() );
+	static inline const Grid2D< tType > RotateCW( const Grid2D< tType >& Src ) {
+		Grid2D< tType > NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcHeight = Src.Height();
 		for ( szt _y = SrcHeight; _y--; ) {
@@ -792,8 +792,8 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > RotateCCW( const cGrid2D< tType >& Src ) {
-		cGrid2D< tType > NewGrid( Src.Height(), Src.Width() );
+	static inline const Grid2D< tType > RotateCCW( const Grid2D< tType >& Src ) {
+		Grid2D< tType > NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcWidth = Src.Width();
 		for ( szt _y = Src.Height(); _y--; ) {
@@ -805,16 +805,16 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > RotateCW( ) {
+	inline const Grid2D< tType > RotateCW( ) {
 		return RotateCW( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > RotateCCW( ) {
+	inline const Grid2D< tType > RotateCCW( ) {
 		return RotateCCW( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > FlipX( const cGrid2D< tType >& Src ) {
-		cGrid2D< tType > NewGrid( Src.Width(), Src.Height() );
+	static inline const Grid2D< tType > FlipX( const Grid2D< tType >& Src ) {
+		Grid2D< tType > NewGrid( Src.Width(), Src.Height() );
 		
 		szt SrcWidth = Src.Width();
 		szt SrcHeight = Src.Height();
@@ -827,8 +827,8 @@ public:
 		return NewGrid;		
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const cGrid2D< tType > FlipY( const cGrid2D< tType >& Src ) {
-		cGrid2D< tType > NewGrid( Src.Width(), Src.Height() );
+	static inline const Grid2D< tType > FlipY( const Grid2D< tType >& Src ) {
+		Grid2D< tType > NewGrid( Src.Width(), Src.Height() );
 		
 		szt SrcWidth = Src.Width();
 		szt SrcHeight = Src.Height();
@@ -841,11 +841,11 @@ public:
 		return NewGrid;		
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > FlipX( ) {
+	inline const Grid2D< tType > FlipX( ) {
 		return FlipX( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > FlipY( ) {
+	inline const Grid2D< tType > FlipY( ) {
 		return FlipY( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
@@ -931,7 +931,7 @@ public:
 		return y2;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const cGrid2D< tType > Trim( const cGrid2D< tType >& Src, const tType& Zero = tType() ) {
+	static inline const Grid2D< tType > Trim( const Grid2D< tType >& Src, const tType& Zero = tType() ) {
 		szt x1 = Src.TrimX1();
 		szt y1 = Src.TrimY1();
 		szt x2 = Src.TrimX2();
@@ -943,7 +943,7 @@ public:
 		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > Trim( const tType& Zero = tType() ) {
+	inline const Grid2D< tType > Trim( const tType& Zero = tType() ) {
 		return Trim( *this, Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
@@ -951,7 +951,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //	
 	// NOTE: This function might not be needed, but was easy enough to write after all //
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const cGrid2D< tType > Crop( const cGrid2D< tType >& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
+	static inline const Grid2D< tType > Crop( const Grid2D< tType >& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
 		szt NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
 		szt NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
 		
@@ -964,7 +964,7 @@ public:
 		return Copy( Src, NewWidth, NewHeight, Src.AxisSaturateX( x1 ), Src.AxisSaturateY( y1 ), 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
+	inline const Grid2D< tType > Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
 		return Crop( *this, x1, y1, x2, y2 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -1589,8 +1589,8 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Generate a grid of values for how far away each found value is from the start //
-	inline const cGrid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
-		cGrid2D<int> NewGrid( Width(), Height() );
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
+		Grid2D<int> NewGrid( Width(), Height() );
 		
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
@@ -1630,8 +1630,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Generate a grid of values for how far away each found value is from the start //
-	inline const cGrid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
-		cGrid2D<int> NewGrid( Width(), Height() );
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
+		Grid2D<int> NewGrid( Width(), Height() );
 		
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
@@ -1670,11 +1670,11 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const {
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const {
 		return GenerateAdjacentXAdjacencyGrid( x, y, Saturate( x, y ) );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const {
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const {
 		return GenerateAdjacentYAdjacencyGrid( x, y, Saturate( x, y ) );
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -1682,19 +1682,19 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// In the case of rows and columns, an Adjacency Grid is exactly the same as a Distance Grid //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y, const tType& Value ) const {
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y, const tType& Value ) const {
 		return GenerateAdjacentXAdjacencyGrid( x, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y, const tType& Value ) const {
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y, const tType& Value ) const {
 		return GenerateAdjacentYAdjacencyGrid( x, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y ) const {
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y ) const {
 		return GenerateAdjacentXAdjacencyGrid( x, y );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y ) const {
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y ) const {
 		return GenerateAdjacentYAdjacencyGrid( x, y );
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -1706,7 +1706,7 @@ public:
 	
 	// Add a function for generating a mask from a Grid.  I.e. all tiles that match a pattern, or //
 	//   dont match a pattern.  //
-	// Perhaps have a distinct MaskGrid type (cGrid2D<int>), and functions for generating either //
+	// Perhaps have a distinct MaskGrid type (Grid2D<int>), and functions for generating either //
 	//   a MaskGrid or a regular Grid copy. //
 	
 	// Add a function for testing "per pixel collision" style for contacts between two placed //
@@ -2060,9 +2060,9 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all tiles that are allowed to drop //
-	inline const cGrid2D<int> GenerateDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const Grid2D<int> GenerateDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		cGrid2D<int> DropGrid( Width(), Height() );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
 		for ( int x = 0; x < Width(); x++ ) {
 			for ( int y = 0; y < Height(); y++ ) {
@@ -2075,9 +2075,9 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all tiles that are allowed to rockford drop //
-	inline const cGrid2D<int> GenerateRockfordDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const Grid2D<int> GenerateRockfordDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		cGrid2D<int> DropGrid( Width(), Height() );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
 		for ( int x = 0; x < Width(); x++ ) {
 			for ( int y = 0; y < Height(); y++ ) {
@@ -2092,9 +2092,9 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all distances a tile can drop //
-	inline const cGrid2D<int> GenerateDropDistanceGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const Grid2D<int> GenerateDropDistanceGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		cGrid2D<int> DropGrid( Width(), Height() );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
 		for ( int x = 0; x < Width(); x++ ) {
 			for ( int y = 0; y < Height(); y++ ) {
@@ -2736,11 +2736,11 @@ public:
 	// http://en.wikipedia.org/wiki/Blob_extraction
 	// http://robotix.in/tutorials/category/imageprocessing/blob_detection
 	// - -------------------------------------------------------------------------------------- - //
-	const NSet2<u16,cGrid2D<u16>> BlobExtractData( const tType Middle = 0.5f ) {
+	const NSet2<u16,Grid2D<u16>> BlobExtractData( const tType Middle = 0.5f ) {
 		const u16 BGVal = 0xFFFF;
 		u16 NextLabel = 0;
 		GelDisjointSet Linked(0); // HACK //
-		NSet2<u16,cGrid2D<u16>> Ret( 0, cGrid2D<u16>(Width(),Height(),BGVal) );
+		NSet2<u16,Grid2D<u16>> Ret( 0, Grid2D<u16>(Width(),Height(),BGVal) );
 				
 		// First Pass //
 		for ( szt y = 0; y < Height(); y++ ) {
@@ -2811,28 +2811,28 @@ public:
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator += ( const tType Value ) {
+	inline const Grid2D<tType>& operator += ( const tType Value ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] += Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator -= ( const tType Value ) {
+	inline const Grid2D<tType>& operator -= ( const tType Value ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] -= Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator *= ( const tType Value ) {
+	inline const Grid2D<tType>& operator *= ( const tType Value ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] *= Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator /= ( const tType Value ) {
+	inline const Grid2D<tType>& operator /= ( const tType Value ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] /= Value;
 		}
@@ -2841,28 +2841,28 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator += ( const cGrid2D<tType>& Vs ) {
+	inline const Grid2D<tType>& operator += ( const Grid2D<tType>& Vs ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] += Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator -= ( const cGrid2D<tType>& Vs ) {
+	inline const Grid2D<tType>& operator -= ( const Grid2D<tType>& Vs ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] -= Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator *= ( const cGrid2D<tType>& Vs ) {
+	inline const Grid2D<tType>& operator *= ( const Grid2D<tType>& Vs ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] *= Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D<tType>& operator /= ( const cGrid2D<tType>& Vs ) {
+	inline const Grid2D<tType>& operator /= ( const Grid2D<tType>& Vs ) {
 		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] /= Vs[idx];
 		}
