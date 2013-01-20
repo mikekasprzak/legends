@@ -248,8 +248,8 @@ int main( int argc, char* argv[] ) {
 	// **** //
 
 	System::Init();
-	Input::Init();
 	Search::Init();
+	Input::Init();
 	Render::Init();
 	
 	// **** //

@@ -15,40 +15,37 @@
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType = int >
 class Grid2D {
-	// - -------------------------------------------------------------------------------------- - //
-	// Dimensions //
-	szt _w, _h;
-	
-	// Data Array //
-	tType* Data;
+	// - -------------------------------------------------------------------------------------- - //	
+	szt w, h;		// Dimensions //
+	tType* Data;	// Data Array //
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D() :
-		_w( 0 ),
-		_h( 0 ),
+		w( 0 ),
+		h( 0 ),
 		Data( 0 )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Grid2D( const szt w, const szt h ) :
-		_w( w ),
-		_h( h ),
+	inline Grid2D( const szt _w, const szt _h ) :
+		w( _w ),
+		h( _h ),
 		Data( new tType[w*h] )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Grid2D( const szt w, const szt h, const tType& Type ) :
-		_w( w ),
-		_h( h ),
+	inline Grid2D( const szt _w, const szt _h, const tType& Type ) :
+		w( _w ),
+		h( _h ),
 		Data( new tType[w*h] )
 	{
 		Fill(Type);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D( const Grid2D<tType>& Orig ) :
-		_w( Orig._w ),
-		_h( Orig._h ),
+		w( Orig.w ),
+		h( Orig.h ),
 		Data( new tType[Size()] )
 	{
 		for ( szt idx = Size(); idx--; ) {
@@ -60,8 +57,8 @@ public:
 		if ( this != &Orig ) {
 			// If we just happen to be the same total size //
 			if ( Orig.Size() == Size() ) {
-				_w = Orig._w;
-				_h = Orig._h;
+				w = Orig.w;
+				h = Orig.h;
 
 				// Copy our data and don't delete it //
 				for ( szt idx = Size(); idx--; ) {
@@ -74,8 +71,8 @@ public:
 				if ( Data )
 					delete [] Data;
 				
-				_w = Orig._w;
-				_h = Orig._h;
+				w = Orig.w;
+				h = Orig.h;
 				
 				// Create and copy the data //
 				Data = new tType[ Size() ];
@@ -98,23 +95,23 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt Width() const {
-		return _w;
+		return w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt Height() const {
-		return _h;
+		return h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt HalfWidth() const {
-		return _w >> 1;
+		return w >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt HalfHeight() const {
-		return _h >> 1;
+		return h >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt Size() const {
-		return _w * _h;
+		return w * h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	static inline void Fill( tType* Dest, const szt Size, const tType& Value = tType() ) {
@@ -135,12 +132,12 @@ public:
 		Data = NewData;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetW( const szt w ) {
-		_w = w;
+	inline void SetW( const szt _w ) {
+		w = _w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetH( const szt h ) {
-		_h = h;
+	inline void SetH( const szt _h ) {
+		h = _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	const tType* operator *() const {
@@ -1005,8 +1002,8 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		_w = NewWidth;
-		_h = NewHeight;
+		w = NewWidth;
+		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void ResizeAlign( const szt NewWidth, const szt NewHeight, const int XAlign, const int YAlign, const tType& InitValue = tType() ) {
@@ -1077,8 +1074,8 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		_w = NewWidth;
-		_h = NewHeight;
+		w = NewWidth;
+		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1103,7 +1100,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
-		_w = NewWidth;
+		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidthLeft( const szt NewWidth, const tType& InitValue = tType() ) {
@@ -1117,7 +1114,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
-		_w = NewWidth;
+		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidthRight( const szt NewWidth, const tType& InitValue = tType() ) {
@@ -1136,7 +1133,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, NewWidth, Height(), SrcStart, 0, DestStart, 0, InitValue ) );
-		_w = NewWidth;
+		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -1162,7 +1159,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		_h = NewHeight;
+		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetHeightTop( const szt NewHeight, const tType& InitValue = tType() ) {
@@ -1176,7 +1173,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		_h = NewHeight;
+		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetHeightBottom( const szt NewHeight, const tType& InitValue = tType() ) {
@@ -1195,7 +1192,7 @@ public:
 		
 		// Copy the data and set the new dimensions //
 		SetData( CopyData( *this, Width(), NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
-		_h = NewHeight;
+		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 public:
@@ -1717,94 +1714,94 @@ public:
 	// Add equivalent functions for Adjacency searching (GenerateAdjacentDistanceGrid, ...) //
 
 
-	inline void _DrawHLine( const int x, const int y, const int w, const tType& Value = tType() ) {
-		for ( szt idx = x; idx < x+w; idx++ ) {
+	inline void _DrawHLine( const int x, const int y, const int _w, const tType& Value = tType() ) {
+		for ( szt idx = x; idx < x+_w; idx++ ) {
 			operator()(idx,y) = Value;
 		}
 	}
-	inline void DrawHLine( int x, const int y, int w, const tType& Value = tType() ) {
+	inline void DrawHLine( int x, const int y, int _w, const tType& Value = tType() ) {
 		if ( y < 0 )
 			return;
 		else if ( y >= Height() )
 			return;
 			
 		if ( x < 0 ) {
-			w += x;
+			_w += x;
 			x = 0;
 		}		
 		else if ( x >= Width() )
 			return;
 		
-		if ( w < 1 )
+		if ( _w < 1 )
 			return;
-		else if ( x+w >= Width() )
-			w = Width()-x;
+		else if ( x+_w >= Width() )
+			_w = Width()-x;
 		
-		_DrawHLine( x, y, w, Value );
+		_DrawHLine( x, y, _w, Value );
 	}
 
 
-	inline void _DrawVLine( const int x, const int y, const int h, const tType& Value = tType() ) {
-		for ( szt idx = y; idx < y+h; idx++ ) {
+	inline void _DrawVLine( const int x, const int y, const int _h, const tType& Value = tType() ) {
+		for ( szt idx = y; idx < y+_h; idx++ ) {
 			operator()(x,idx) = Value;
 		}
 	}
-	inline void DrawVLine( const int x, int y, int h, const tType& Value = tType() ) {
+	inline void DrawVLine( const int x, int y, int _h, const tType& Value = tType() ) {
 		if ( x < 0 )
 			return;
 		else if ( x >= Width() )
 			return;
 			
 		if ( y < 0 ) {
-			h += y;
+			_h += y;
 			y = 0;
 		}		
 		else if ( y >= Height() )
 			return;
 
-		if ( h < 1 )
+		if ( _h < 1 )
 			return;
-		else if ( y+h >= Height() )
-			h = Height()-y;
+		else if ( y+_h >= Height() )
+			_h = Height()-y;
 		
-		_DrawVLine( x, y, h, Value );
+		_DrawVLine( x, y, _h, Value );
 	}
 
-	inline void DrawRect( const int x, const int y, const int w, const int h, const tType& Value = tType() ) {
-		DrawHLine( x, y, w, Value );
-		DrawHLine( x, y-1+h, w, Value );
+	inline void DrawRect( const int x, const int y, const int _w, const int _h, const tType& Value = tType() ) {
+		DrawHLine( x, y, _w, Value );
+		DrawHLine( x, y-1+_h, _w, Value );
 
-		DrawVLine( x, y+1, h-2, Value );
-		DrawVLine( x-1+w, y+1, h-2, Value );
+		DrawVLine( x, y+1, _h-2, Value );
+		DrawVLine( x-1+_w, y+1, _h-2, Value );
 	}
 
-	inline void DrawRectFill( int x, int y, int w, int h, const tType& Value = tType() ) {
+	inline void DrawRectFill( int x, int y, int _w, int _h, const tType& Value = tType() ) {
 		if ( x < 0 ) {
-			w += x;
+			_w += x;
 			x = 0;
 		}
 		else if ( x >= Width() )
 			return;
 			
 		if ( y < 0 ) {
-			h += y;
+			_h += y;
 			y = 0;
 		}		
 		else if ( y >= Height() )
 			return;
 
-		if ( w < 1 )
+		if ( _w < 1 )
 			return;
-		else if ( x+w >= Width() )
-			w = Width()-x;
+		else if ( x+_w >= Width() )
+			_w = Width()-x;
 		
-		if ( h < 1 )
+		if ( _h < 1 )
 			return;
-		else if ( y+h >= Height() )
-			h = Height()-y;
+		else if ( y+_h >= Height() )
+			_h = Height()-y;
 
-		for ( szt idx = y; idx < y+h; idx++ ) {
-			_DrawHLine( x, idx, w, Value );
+		for ( szt idx = y; idx < y+_h; idx++ ) {
+			_DrawHLine( x, idx, _w, Value );
 		}
 	}
 	
