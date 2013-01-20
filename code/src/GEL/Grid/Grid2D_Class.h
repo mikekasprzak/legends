@@ -363,7 +363,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
-	inline const szt DeadIndex( const int _x, const int _y, const szt DeadValue = (0-1) ) const {
+	inline const szt DeadIndex( const int _x, const int _y, const szt DeadValue = SZT_MAX ) const {
 		if ( _x >= Width() )
 			return DeadValue;
 		else if ( _x < 0 )
@@ -381,7 +381,7 @@ public:
 	inline const tType& Dead( const int _x, const int _y, const tType& DeadValue = tType() ) const {
 		szt DIndex = DeadIndex(_x,_y);
 		
-		if ( DIndex != (0-1) )
+		if ( DIndex != SZT_MAX )
 			return Data[ Index( _x, _y ) ];
 		else
 			return DeadValue;

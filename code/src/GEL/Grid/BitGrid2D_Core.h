@@ -4,6 +4,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/Data.h>
 // - ------------------------------------------------------------------------------------------ - //
+// TODO: Switch tType to 'int'... or possible an unsigned int, due to bits only.
+//   Make [] and () operators read only, because you can't correctly return a sub-address of a 
+//   chunk of data. Therefor, you need a Set function.
+//   Have a function for getting data Signed (if it's decided default behavior in unsigned).
+// NOTE: DataBlock style may not be ideal for bits.
+// - ------------------------------------------------------------------------------------------ - //
 template< int BPP >
 struct BitGrid2D {
 	size_t w, h;
