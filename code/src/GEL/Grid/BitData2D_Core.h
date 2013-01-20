@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Grid_BitGrid2D_Core_H__
-#define __Grid_BitGrid2D_Core_H__
+#ifndef __GEL2_GRID_BITDATA2D_CORE_H__
+#define __GEL2_GRID_BITDATA2D_CORE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/Data.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -11,7 +11,7 @@
 // NOTE: DataBlock style may not be ideal for bits.
 // - ------------------------------------------------------------------------------------------ - //
 template< int BPP >
-struct BitGrid2D {
+struct BitData2D {
 	size_t w, h;
 	typedef char tType;
 	tType Data[];
@@ -44,10 +44,10 @@ public:
 
 // - ------------------------------------------------------------------------------------------ - //
 template< int BPP >
-inline BitGrid2D<BPP>* new_BitGrid2D( const size_t _Width, const size_t _Height ) {
-	const size_t Size = BitGrid2D<BPP>::SizeInBytes( _Width, _Height );
+inline BitData2D<BPP>* new_BitData2D( const size_t _Width, const size_t _Height ) {
+	const size_t Size = BitData2D<BPP>::SizeInBytes( _Width, _Height );
 	
-	BitGrid2D<BPP>* p = reinterpret_cast<BitGrid2D<BPP>*>(new_Data( Size + sizeof(BitGrid2D<BPP>) ));
+	BitData2D<BPP>* p = reinterpret_cast<BitData2D<BPP>*>(new_Data( Size + sizeof(BitData2D<BPP>) ));
 	if ( p ) {
 		p->w = _Width;
 		p->h = _Height;
@@ -57,11 +57,11 @@ inline BitGrid2D<BPP>* new_BitGrid2D( const size_t _Width, const size_t _Height 
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< int BPP >
-inline void delete_BitGrid2D( BitGrid2D<BPP>* p ) {
+inline void delete_BitData2D( BitData2D<BPP>* p ) {
 	delete_Data( reinterpret_cast<char*>(p) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Grid_BitGrid2D_Core_H__ //
+#endif // __GEL2_GRID_BITDATA2D_CORE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

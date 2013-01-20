@@ -2,7 +2,7 @@
 #ifndef __GEL2_GRID_GRID2D_H__
 #define __GEL2_GRID_GRID2D_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Grid2D_Core.h"
+#include "Grid2D_Class.h"
 #include "Grid2D_HeightMap.h"
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GRID_GRID2D_H__ //

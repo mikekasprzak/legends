@@ -1,30 +1,30 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Grid_Grid2D_Geometry_H__
-#define __Grid_Grid2D_Geometry_H__
+#ifndef __Grid_Data2D_Geometry_H__
+#define __Grid_Data2D_Geometry_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Core/GelArray.h>
-#include "Grid2D_Core.h"
+#include "Data2D_Core.h"
 // - ------------------------------------------------------------------------------------------ - //
 // Optimized_TriangleStrips are ordered in cache friendly columns (Y) //
 // Even columns cache, odd columns miss, but that's still better than not caching at all. //
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_OptimizedVertexes_Triangles( Grid2D<tType>* Data, size_t* VertexCount ) {
+inline void calculate_OptimizedVertexes_Triangles( Data2D<tType>* Data, size_t* VertexCount ) {
 	*VertexCount = Data->Size();
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_OptimizedVertexes_TriangleStrips( Grid2D<tType>* Data, size_t* VertexCount ) {
+inline void calculate_OptimizedVertexes_TriangleStrips( Data2D<tType>* Data, size_t* VertexCount ) {
 	*VertexCount = Data->Size();
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_OptimizedIndexes_Triangles( Grid2D<tType>* Data, size_t* IndexCount ) {
+inline void calculate_OptimizedIndexes_Triangles( Data2D<tType>* Data, size_t* IndexCount ) {
 	*IndexCount = (Data->Height() - 1) * (Data->Width() - 1) * (3+3);
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_OptimizedIndexes_TriangleStrips( Grid2D<tType>* Data, size_t* IndexCount, const bool PrimitiveRestart = false ) {
+inline void calculate_OptimizedIndexes_TriangleStrips( Data2D<tType>* Data, size_t* IndexCount, const bool PrimitiveRestart = false ) {
 	// If using primitive-restart, degenerates are 1 vertex (special code -1), otherwise 2 //
 	if ( PrimitiveRestart ) {
 		// Primitive Restart Command //
@@ -37,19 +37,19 @@ inline void calculate_OptimizedIndexes_TriangleStrips( Grid2D<tType>* Data, size
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_Optimized_Triangles( Grid2D<tType>* Data, size_t* VertexCount, size_t* IndexCount ) {
+inline void calculate_Optimized_Triangles( Data2D<tType>* Data, size_t* VertexCount, size_t* IndexCount ) {
 	calculate_OptimizedVertexes_Triangles( Data, VertexCount );
 	calculate_OptimizedIndexes_Triangles( Data, IndexCount );
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void calculate_Optimized_TriangleStrips( Grid2D<tType>* Data, size_t* VertexCount, size_t* IndexCount, const bool PrimitiveRestart = false ) {
+inline void calculate_Optimized_TriangleStrips( Data2D<tType>* Data, size_t* VertexCount, size_t* IndexCount, const bool PrimitiveRestart = false ) {
 	calculate_OptimizedVertexes_TriangleStrips( Data, VertexCount );
 	calculate_OptimizedIndexes_TriangleStrips( Data, IndexCount, PrimitiveRestart );
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType, class tType >
-inline void generate_OptimizedVertexes_Triangles( Grid2D<tType>* Data, VertType* Vertex, const Vector3D Scale = Vector3D(1,1,1) ) {
+inline void generate_OptimizedVertexes_Triangles( Data2D<tType>* Data, VertType* Vertex, const Vector3D Scale = Vector3D(1,1,1) ) {
 	// Generate Vertices (-1 to +1) //
 	const Real WScalar = Real(2) / Real(Data->Width() - 1);
 	const Real HScalar = Real(2) / Real(Data->Height() - 1);
@@ -73,7 +73,7 @@ inline void generate_OptimizedVertexes_Triangles( Grid2D<tType>* Data, VertType*
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType, class tType >
-inline void generate_OptimizedVertexes_TriangleStrips( Grid2D<tType>* Data, VertType* Vertex, const Vector3D Scale = Vector3D(1,1,1) ) {
+inline void generate_OptimizedVertexes_TriangleStrips( Data2D<tType>* Data, VertType* Vertex, const Vector3D Scale = Vector3D(1,1,1) ) {
 	// Generate Vertices (two rows at a time, for cache) //
 	size_t Rows = Data->Width() - 1;
 	const Real WScalar = Real(2) / Real(Rows);
@@ -94,7 +94,7 @@ inline void generate_OptimizedVertexes_TriangleStrips( Grid2D<tType>* Data, Vert
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void generate_OptimizedIndexes_Triangles( Grid2D<tType>* Data, unsigned short* Index ) {
+inline void generate_OptimizedIndexes_Triangles( Data2D<tType>* Data, unsigned short* Index ) {
 	const size_t Rows = Data->Width();
 	const size_t Column = Data->Height();
 	size_t IndexValue = 0;
@@ -116,7 +116,7 @@ inline void generate_OptimizedIndexes_Triangles( Grid2D<tType>* Data, unsigned s
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void generate_OptimizedIndexes_TriangleStrips( Grid2D<tType>* Data, unsigned short* Index, const bool PrimitiveRestart = false ) {
+inline void generate_OptimizedIndexes_TriangleStrips( Data2D<tType>* Data, unsigned short* Index, const bool PrimitiveRestart = false ) {
 	const size_t Rows = Data->Width() - 1;
 	size_t IndexValue = 0;
 	size_t OddValueA;
@@ -169,20 +169,20 @@ inline void generate_OptimizedIndexes_TriangleStrips( Grid2D<tType>* Data, unsig
 // - ------------------------------------------------------------------------------------------ - //
 // WARNING! Width must be even! //
 template< class VertType, class tType >
-inline void generate_Optimized_Triangles( Grid2D<tType>* Data, VertType* Vertex, unsigned short* Index, const Vector3D Scale = Vector3D(1,1,1) ) {
+inline void generate_Optimized_Triangles( Data2D<tType>* Data, VertType* Vertex, unsigned short* Index, const Vector3D Scale = Vector3D(1,1,1) ) {
 	generate_OptimizedVertexes_Triangles( Data, Vertex, Scale );
 	generate_OptimizedIndexes_Triangles( Data, Index  );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // WARNING! Width must be even! //
 template< class VertType, class tType >
-inline void generate_Optimized_TriangleStrips( Grid2D<tType>* Data, VertType* Vertex, unsigned short* Index, const Vector3D Scale = Vector3D(1,1,1), const bool PrimitiveRestart = false ) {
+inline void generate_Optimized_TriangleStrips( Data2D<tType>* Data, VertType* Vertex, unsigned short* Index, const Vector3D Scale = Vector3D(1,1,1), const bool PrimitiveRestart = false ) {
 	generate_OptimizedVertexes_TriangleStrips( Data, Vertex, Scale );
 	generate_OptimizedIndexes_TriangleStrips( Data, Index, PrimitiveRestart );
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType, class tType >
-inline void new_Optimized_TriangleStrips( Grid2D<tType>* Data, GelArray<VertType>** Vertex, GelArray<unsigned short>** Index, const Vector3D Scale = Vector3D(1,1,1), const bool PrimitiveRestart = false ) {
+inline void new_Optimized_TriangleStrips( Data2D<tType>* Data, GelArray<VertType>** Vertex, GelArray<unsigned short>** Index, const Vector3D Scale = Vector3D(1,1,1), const bool PrimitiveRestart = false ) {
 	size_t VertexCount;
 	size_t IndexCount;
 	calculate_Optimized_TriangleStrips( Data, &VertexCount, &IndexCount, PrimitiveRestart );
@@ -194,7 +194,7 @@ inline void new_Optimized_TriangleStrips( Grid2D<tType>* Data, GelArray<VertType
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class VertType, class tType >
-inline void new_Optimized_Triangles( Grid2D<tType>* Data, GelArray<VertType>** Vertex, GelArray<unsigned short>** Index, const Vector3D Scale = Vector3D(1,1,1) ) {
+inline void new_Optimized_Triangles( Data2D<tType>* Data, GelArray<VertType>** Vertex, GelArray<unsigned short>** Index, const Vector3D Scale = Vector3D(1,1,1) ) {
 	size_t VertexCount;
 	size_t IndexCount;
 	calculate_Optimized_Triangles( Data, &VertexCount, &IndexCount );
@@ -222,7 +222,7 @@ inline const size_t indexVertex_Optimized_TriangleStrips( const size_t Height, c
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline const size_t indexVertex_Optimized_TriangleStrips( Grid2D<tType>* Data, const size_t x, const size_t y ) {
+inline const size_t indexVertex_Optimized_TriangleStrips( Data2D<tType>* Data, const size_t x, const size_t y ) {
 	return indexVertex_Optimized_TriangleStrips(Data->Height(),x,y);
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -231,7 +231,7 @@ inline const size_t indexStripSize_Optimized_TriangleStrips( const size_t Height
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline const size_t indexStripSize_Optimized_TriangleStrips( Grid2D<tType>* Data ) {
+inline const size_t indexStripSize_Optimized_TriangleStrips( Data2D<tType>* Data ) {
 	return indexStripSize_Optimized_TriangleStrips(Data->Height());
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -240,7 +240,7 @@ inline const size_t indexStripCount_Optimized_TriangleStrips( const size_t Width
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline const size_t indexStripCount_Optimized_TriangleStrips( Grid2D<tType>* Data ) {
+inline const size_t indexStripCount_Optimized_TriangleStrips( Data2D<tType>* Data ) {
 	return indexStripCount_Optimized_TriangleStrips(Data->Width());
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -252,7 +252,7 @@ inline const size_t indexIndex_Optimized_TriangleStrips( const size_t Height, co
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline const size_t indexIndex_Optimized_TriangleStrips( Grid2D<tType>* Data, const size_t Strip, const size_t Index, const bool PrimitiveRestart = false ) {
+inline const size_t indexIndex_Optimized_TriangleStrips( Data2D<tType>* Data, const size_t Strip, const size_t Index, const bool PrimitiveRestart = false ) {
 	return indexIndex_Optimized_TriangleStrips(Data->Height(),Strip,Index,PrimitiveRestart);
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -408,5 +408,5 @@ inline void delete_OutlineList( GelArray<unsigned short>* Index ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Grid_Grid2D_Geometry_H__ //
+#endif // __Grid_Data2D_Geometry_H__ //
 // - ------------------------------------------------------------------------------------------ - //

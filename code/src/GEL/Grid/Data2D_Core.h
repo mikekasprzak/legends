@@ -1,13 +1,13 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Grid_Grid2D_Core_H__
-#define __Grid_Grid2D_Core_H__
+#ifndef __GEL2_GRID_DATA2D_CORE_H__
+#define __GEL2_GRID_DATA2D_CORE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <limits.h>
 #include <Core/GelLimits.h>
 #include <Core/Data.h>
 // - ------------------------------------------------------------------------------------------ - //
-template< class tType = int >
-struct Grid2D {
+template< typename tType = int >
+struct Data2D {
 	size_t w, h;
 	tType Data[];
 
@@ -46,10 +46,11 @@ public:
 
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline Grid2D<tType>* new_Grid2D( const size_t _Width, const size_t _Height ) {
-	const size_t Size = Grid2D<tType>::SizeInBytes( _Width, _Height );
+inline Data2D<tType>* new_Data2D( const size_t _Width, const size_t _Height ) {
+	const size_t Size = Data2D<tType>::SizeInBytes( _Width, _Height );
 	
-	Grid2D<tType>* p = reinterpret_cast<Grid2D<tType>*>(new_Data( Size + sizeof(Grid2D<tType>) ));
+	// TODO: just use regular new, so constructors called //
+	Data2D<tType>* p = reinterpret_cast<Data2D<tType>*>(new_Data( Size + sizeof(Data2D<tType>) ));
 	if ( p ) {
 		p->w = _Width;
 		p->h = _Height;
@@ -59,11 +60,11 @@ inline Grid2D<tType>* new_Grid2D( const size_t _Width, const size_t _Height ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType >
-inline void delete_Grid2D( Grid2D<tType>* p ) {
+inline void delete_Data2D( Data2D<tType>* p ) {
 	delete_Data( reinterpret_cast<char*>(p) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Grid_Grid2D_Core_H__ //
+#endif // __GEL2_GRID_DATA2D_CORE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
