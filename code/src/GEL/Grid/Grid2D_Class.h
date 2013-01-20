@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __Grid_Grid2D_Class_H__
-#define __Grid_Grid2D_Class_H__
+#ifndef __GEL2_GRID_GRID2D_CLASS_H__
+#define __GEL2_GRID_GRID2D_CLASS_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <math.h>
 #include <Style/Style.h>
@@ -10,8 +10,6 @@
 //   Rename Resize to Canvas and/or Clip. 
 //   Make Resize do scaling, providing scaling algorithm choices. Pixel, Bilinear.
 //   Make SetWidth make more sense (i.e. what SetW does).
-//   Do Dimensions really need to be size_t's? st32's maybe. 65535x65535 is > 4 GB,
-//   that said you may want a tall skinny grid, so st32 is preferable to st16.
 
 // TODO: Rename all functions that change the data to "ActionData". 
 // - ------------------------------------------------------------------------------------------ - //
@@ -19,7 +17,7 @@ template< typename tType = int >
 class cGrid2D {
 	// - -------------------------------------------------------------------------------------- - //
 	// Dimensions //
-	size_t _w, _h;
+	szt _w, _h;
 	
 	// Data Array //
 	tType* Data;
@@ -33,14 +31,14 @@ public:
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const size_t w, const size_t h ) :
+	inline cGrid2D( const szt w, const szt h ) :
 		_w( w ),
 		_h( h ),
 		Data( new tType[w*h] )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cGrid2D( const size_t w, const size_t h, const tType& Type ) :
+	inline cGrid2D( const szt w, const szt h, const tType& Type ) :
 		_w( w ),
 		_h( h ),
 		Data( new tType[w*h] )
@@ -53,7 +51,7 @@ public:
 		_h( Orig._h ),
 		Data( new tType[Size()] )
 	{
-		for ( size_t idx = Size(); idx--; ) {
+		for ( szt idx = Size(); idx--; ) {
 			Data[ idx ] = Orig.Data[ idx ];
 		}
 	}
@@ -66,7 +64,7 @@ public:
 				_h = Orig._h;
 
 				// Copy our data and don't delete it //
-				for ( size_t idx = Size(); idx--; ) {
+				for ( szt idx = Size(); idx--; ) {
 					Data[ idx ] = Orig.Data[ idx ];
 				}				
 			}
@@ -81,7 +79,7 @@ public:
 				
 				// Create and copy the data //
 				Data = new tType[ Size() ];
-				for ( size_t idx = Size(); idx--; ) {
+				for ( szt idx = Size(); idx--; ) {
 					Data[ idx ] = Orig.Data[ idx ];
 				}
 			}
@@ -99,28 +97,28 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Width() const {
+	inline const szt Width() const {
 		return _w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Height() const {
+	inline const szt Height() const {
 		return _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t HalfWidth() const {
+	inline const szt HalfWidth() const {
 		return _w >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t HalfHeight() const {
+	inline const szt HalfHeight() const {
 		return _h >> 1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Size() const {
+	inline const szt Size() const {
 		return _w * _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline void Fill( tType* Dest, const size_t Size, const tType& Value = tType() ) {
-		for ( size_t idx = Size; idx--; ) {
+	static inline void Fill( tType* Dest, const szt Size, const tType& Value = tType() ) {
+		for ( szt idx = Size; idx--; ) {
 			Dest[ idx ] = Value;
 		}
 	}
@@ -137,11 +135,11 @@ public:
 		Data = NewData;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetW( const size_t w ) {
+	inline void SetW( const szt w ) {
 		_w = w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetH( const size_t h ) {
+	inline void SetH( const szt h ) {
 		_h = h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -158,12 +156,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Index Generating functions.  Return a valid index for [] operator. //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Index( const int _x, const int _y ) const {
+	inline const szt Index( const int _x, const int _y ) const {
 		// TODO: Assert out of bounds 
 		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrap( int _x, int _y ) const {
+	inline const szt IndexWrap( int _x, int _y ) const {
 		if ( _x < 0 )
 			_x = -_x;
 		if ( _y < 0 )
@@ -171,24 +169,24 @@ public:
 		return (_x % Width()) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrapX( int _x, const int _y ) const {
+	inline const szt IndexWrapX( int _x, const int _y ) const {
 		if ( _x < 0 )
 			_x = -_x;
 		return (_x % Width()) + ((_y) * Height());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrapY( const int _x, int _y ) const {
+	inline const szt IndexWrapY( const int _x, int _y ) const {
 		if ( _y < 0 )
 			_y = -_y;
 		return (_x) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexNextWrap( const int _x, const int _y ) const {
+	inline const szt IndexNextWrap( const int _x, const int _y ) const {
 		return (_x + (_y * Width())) % Size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexSaturate( int _x, int _y ) const {
+	inline const szt IndexSaturate( int _x, int _y ) const {
 		if ( _x >= Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
@@ -203,7 +201,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexSaturateX( int _x, int _y ) const {
+	inline const szt IndexSaturateX( int _x, int _y ) const {
 		if ( _x >= Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
@@ -213,7 +211,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t IndexSaturateY( int _x, int _y ) const {
+	inline const szt IndexSaturateY( int _x, int _y ) const {
 		if ( _y >= Height() )
 			_y = Height() - 1;
 		else if ( _y < 0 )
@@ -224,12 +222,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexToX( const int _Index ) const {
+	inline const szt IndexToX( const int _Index ) const {
 		// TODO: Assert out of bounds 
 		return _Index % Width();
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexToY( const int _Index ) const {
+	inline const szt IndexToY( const int _Index ) const {
 		// TODO: Assert out of bounds 
 		return _Index / Width();
 	}
@@ -237,20 +235,20 @@ public:
 
 	
 	// - -------------------------------------------------------------------------------------- - //
-	inline tType& operator () ( const size_t _x, const size_t _y ) {
+	inline tType& operator () ( const szt _x, const szt _y ) {
 		return Data[ Index( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const tType& operator () ( const size_t _x, const size_t _y ) const {
+	inline const tType& operator () ( const szt _x, const szt _y ) const {
 		return Data[ Index( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline tType& operator [] ( const size_t _Index ) {
+	inline tType& operator [] ( const szt _Index ) {
 		// TODO: Assert out of bounds 
 		return Data[ _Index ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const tType& operator [] ( const size_t _Index ) const {
+	inline const tType& operator [] ( const szt _Index ) const {
 		// TODO: Assert out of bounds 
 		return Data[ _Index ];
 	}
@@ -349,13 +347,13 @@ public:
 		return _y;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t AxisWrapX( int _x ) const {
+	inline const szt AxisWrapX( int _x ) const {
 		if ( _x < 0 )
 			_x = -_x;
 		return (_x % Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t AxisWrapY( int _y ) const {
+	inline const szt AxisWrapY( int _y ) const {
 		if ( _y < 0 )
 			_y = -_y;
 		return (_y % Height());
@@ -365,7 +363,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
-	inline const size_t DeadIndex( const int _x, const int _y, const size_t DeadValue = (0-1) ) const {
+	inline const szt DeadIndex( const int _x, const int _y, const szt DeadValue = (0-1) ) const {
 		if ( _x >= Width() )
 			return DeadValue;
 		else if ( _x < 0 )
@@ -381,7 +379,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
 	inline const tType& Dead( const int _x, const int _y, const tType& DeadValue = tType() ) const {
-		size_t DIndex = DeadIndex(_x,_y);
+		szt DIndex = DeadIndex(_x,_y);
 		
 		if ( DIndex != (0-1) )
 			return Data[ Index( _x, _y ) ];
@@ -394,8 +392,8 @@ private:
 	// - -------------------------------------------------------------------------------------- - //
 	static inline tType* CopyData(
 		const cGrid2D< tType >& Src,
-		const size_t NewWidth,
-		const size_t NewHeight,
+		const szt NewWidth,
+		const szt NewHeight,
 		const int SrcStartX,
 		const int SrcStartY,
 		const int DestStartX,
@@ -406,8 +404,8 @@ private:
 		tType* DataCopy = new tType[ NewWidth * NewHeight ];
 		Fill( DataCopy, NewWidth * NewHeight, InitValue );
 		
-		size_t CopyWidth = 0;
-		size_t CopyHeight = 0;
+		szt CopyWidth = 0;
+		szt CopyHeight = 0;
 		
 		// How much to Copy Wide //
 		if ( NewWidth > Src.Width() ) {
@@ -426,8 +424,8 @@ private:
 		}
 		
 		// Copy Data //
-		for ( size_t _y = CopyHeight; _y--; ) {
-			for ( size_t _x = CopyWidth; _x--; ) {
+		for ( szt _y = CopyHeight; _y--; ) {
+			for ( szt _x = CopyWidth; _x--; ) {
 				DataCopy[DestStartX + _x + ((DestStartY + _y) * NewWidth)] = 
 					Src.Data[SrcStartX + _x + ((SrcStartY + _y) * Src.Width())];
 			}
@@ -438,8 +436,8 @@ private:
 	// - -------------------------------------------------------------------------------------- - //
 	static inline const cGrid2D< tType > Copy(
 		const cGrid2D< tType >& Src,
-		const size_t NewWidth,
-		const size_t NewHeight,
+		const szt NewWidth,
+		const szt NewHeight,
 		const int SrcStartX,
 		const int SrcStartY,
 		const int DestStartX,
@@ -502,15 +500,15 @@ public:
 		cGrid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
-		for ( size_t _y = GridA.Height(); _y--; ) {
-			for ( size_t _x = GridA.Width(); _x--; ) {
+		for ( szt _y = GridA.Height(); _y--; ) {
+			for ( szt _x = GridA.Width(); _x--; ) {
 				NewGrid( AX + _x, AY + _y ) = GridA( _x, _y );
 			}
 		}
 
 		// Copy GridB //
-		for ( size_t _y = GridB.Height(); _y--; ) {
-			for ( size_t _x = GridB.Width(); _x--; ) {
+		for ( szt _y = GridB.Height(); _y--; ) {
+			for ( szt _x = GridB.Width(); _x--; ) {
 				NewGrid( BX + _x, BY + _y ) = GridB( _x, _y );
 			}
 		}
@@ -565,16 +563,16 @@ public:
 		cGrid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
-		for ( size_t _y = GridA.Height(); _y--; ) {
-			for ( size_t _x = GridA.Width(); _x--; ) {
+		for ( szt _y = GridA.Height(); _y--; ) {
+			for ( szt _x = GridA.Width(); _x--; ) {
 				if ( GridA( _x, _y ) != TestValue )
 					NewGrid( AX + _x, AY + _y ) = GridA( _x, _y );
 			}
 		}
 
 		// Copy GridB //
-		for ( size_t _y = GridB.Height(); _y--; ) {
-			for ( size_t _x = GridB.Width(); _x--; ) {
+		for ( szt _y = GridB.Height(); _y--; ) {
+			for ( szt _x = GridB.Width(); _x--; ) {
 				if ( GridB( _x, _y ) != TestValue )
 					NewGrid( BX + _x, BY + _y ) = GridB( _x, _y );
 			}
@@ -630,16 +628,16 @@ public:
 		cGrid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
-		for ( size_t _y = GridA.Height(); _y--; ) {
-			for ( size_t _x = GridA.Width(); _x--; ) {
+		for ( szt _y = GridA.Height(); _y--; ) {
+			for ( szt _x = GridA.Width(); _x--; ) {
 				if ( GridA( _x, _y ) == TestValue )
 					NewGrid( AX + _x, AY + _y ) = GridA( _x, _y );
 			}
 		}
 
 		// Copy GridB //
-		for ( size_t _y = GridB.Height(); _y--; ) {
-			for ( size_t _x = GridB.Width(); _x--; ) {
+		for ( szt _y = GridB.Height(); _y--; ) {
+			for ( szt _x = GridB.Width(); _x--; ) {
 				if ( GridB( _x, _y ) == TestValue )
 					NewGrid( BX + _x, BY + _y ) = GridB( _x, _y );
 			}
@@ -696,16 +694,16 @@ public:
 		cGrid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
-		for ( size_t _y = GridA.Height(); _y--; ) {
-			for ( size_t _x = GridA.Width(); _x--; ) {
+		for ( szt _y = GridA.Height(); _y--; ) {
+			for ( szt _x = GridA.Width(); _x--; ) {
 				if ( GridA( _x, _y ) == TestValue )
 					NewGrid( AX + _x, AY + _y ) = MaskValue;
 			}
 		}
 
 		// Copy GridB //
-		for ( size_t _y = GridB.Height(); _y--; ) {
-			for ( size_t _x = GridB.Width(); _x--; ) {
+		for ( szt _y = GridB.Height(); _y--; ) {
+			for ( szt _x = GridB.Width(); _x--; ) {
 				if ( GridB( _x, _y ) == TestValue )
 					NewGrid( BX + _x, BY + _y ) = MaskValue;
 			}
@@ -762,16 +760,16 @@ public:
 		cGrid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
-		for ( size_t _y = GridA.Height(); _y--; ) {
-			for ( size_t _x = GridA.Width(); _x--; ) {
+		for ( szt _y = GridA.Height(); _y--; ) {
+			for ( szt _x = GridA.Width(); _x--; ) {
 				if ( GridA( _x, _y ) != TestValue )
 					NewGrid( AX + _x, AY + _y ) = MaskValue;
 			}
 		}
 
 		// Copy GridB //
-		for ( size_t _y = GridB.Height(); _y--; ) {
-			for ( size_t _x = GridB.Width(); _x--; ) {
+		for ( szt _y = GridB.Height(); _y--; ) {
+			for ( szt _x = GridB.Width(); _x--; ) {
 				if ( GridB( _x, _y ) != TestValue )
 					NewGrid( BX + _x, BY + _y ) = MaskValue;
 			}
@@ -784,9 +782,9 @@ public:
 	static inline const cGrid2D< tType > RotateCW( const cGrid2D< tType >& Src ) {
 		cGrid2D< tType > NewGrid( Src.Height(), Src.Width() );
 		
-		size_t SrcHeight = Src.Height();
-		for ( size_t _y = SrcHeight; _y--; ) {
-			for ( size_t _x = Src.Width(); _x--; ) {
+		szt SrcHeight = Src.Height();
+		for ( szt _y = SrcHeight; _y--; ) {
+			for ( szt _x = Src.Width(); _x--; ) {
 				NewGrid( (SrcHeight-1)-_y, _x ) = Src( _x, _y );
 			}
 		}		
@@ -797,9 +795,9 @@ public:
 	static inline const cGrid2D< tType > RotateCCW( const cGrid2D< tType >& Src ) {
 		cGrid2D< tType > NewGrid( Src.Height(), Src.Width() );
 		
-		size_t SrcWidth = Src.Width();
-		for ( size_t _y = Src.Height(); _y--; ) {
-			for ( size_t _x = SrcWidth; _x--; ) {
+		szt SrcWidth = Src.Width();
+		for ( szt _y = Src.Height(); _y--; ) {
+			for ( szt _x = SrcWidth; _x--; ) {
 				NewGrid( _y, (SrcWidth-1)-_x ) = Src( _x, _y );
 			}
 		}		
@@ -818,10 +816,10 @@ public:
 	static inline const cGrid2D< tType > FlipX( const cGrid2D< tType >& Src ) {
 		cGrid2D< tType > NewGrid( Src.Width(), Src.Height() );
 		
-		size_t SrcWidth = Src.Width();
-		size_t SrcHeight = Src.Height();
-		for ( size_t _y = SrcHeight; _y--; ) {
-			for ( size_t _x = SrcWidth; _x--; ) {
+		szt SrcWidth = Src.Width();
+		szt SrcHeight = Src.Height();
+		for ( szt _y = SrcHeight; _y--; ) {
+			for ( szt _x = SrcWidth; _x--; ) {
 				NewGrid( (SrcWidth-1)-_x, _y ) = Src( _x, _y );
 			}
 		}		
@@ -832,10 +830,10 @@ public:
 	static inline const cGrid2D< tType > FlipY( const cGrid2D< tType >& Src ) {
 		cGrid2D< tType > NewGrid( Src.Width(), Src.Height() );
 		
-		size_t SrcWidth = Src.Width();
-		size_t SrcHeight = Src.Height();
-		for ( size_t _y = SrcHeight; _y--; ) {
-			for ( size_t _x = SrcWidth; _x--; ) {
+		szt SrcWidth = Src.Width();
+		szt SrcHeight = Src.Height();
+		for ( szt _y = SrcHeight; _y--; ) {
+			for ( szt _x = SrcWidth; _x--; ) {
 				NewGrid( _x, (SrcHeight-1)-_y ) = Src( _x, _y );
 			}
 		}		
@@ -853,14 +851,14 @@ public:
 	// - -------------------------------------------------------------------------------------- - //	
 
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const size_t TrimX1( const tType& Zero = tType() ) const {
-		size_t x1 = 0;
+	inline const szt TrimX1( const tType& Zero = tType() ) const {
+		szt x1 = 0;
 		
 		bool BlockFound = false;
-		for ( size_t _x = 0; _x < Width(); _x++ ) {
+		for ( szt _x = 0; _x < Width(); _x++ ) {
 			x1 = _x;
 			// For every item in the vertical row //
-			for ( size_t _y = Height(); _y--; ) {
+			for ( szt _y = Height(); _y--; ) {
 				// Test if it's not our zero //
 				if ( operator()( _x, _y ) != Zero )
 					BlockFound = true;
@@ -873,14 +871,14 @@ public:
 		return x1;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const size_t TrimY1( const tType& Zero = tType() ) const {
-		size_t y1 = 0;
+	inline const szt TrimY1( const tType& Zero = tType() ) const {
+		szt y1 = 0;
 		
 		bool BlockFound = false;
-		for ( size_t _y = 0; _y < Height(); _y++ ) {
+		for ( szt _y = 0; _y < Height(); _y++ ) {
 			y1 = _y;
 			// For every item in the vertical row //
-			for ( size_t _x = Width(); _x--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				// Test if it's not our zero //
 				if ( operator()( _x, _y ) != Zero )
 					BlockFound = true;
@@ -893,14 +891,14 @@ public:
 		return y1;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const size_t TrimX2( const tType& Zero = tType() ) const {
-		size_t x2 = 0;
+	inline const szt TrimX2( const tType& Zero = tType() ) const {
+		szt x2 = 0;
 		
 		bool BlockFound = false;
 		for ( int _x = Width() - 1; _x >= 0; _x-- ) {
 			x2 = _x;
 			// For every item in the vertical row //
-			for ( size_t _y = Height(); _y--; ) {
+			for ( szt _y = Height(); _y--; ) {
 				// Test if it's not our zero //
 				if ( operator()( _x, _y ) != Zero )
 					BlockFound = true;
@@ -913,8 +911,8 @@ public:
 		return x2;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const size_t TrimY2( const tType& Zero = tType() ) const {
-		size_t y2 = 0;
+	inline const szt TrimY2( const tType& Zero = tType() ) const {
+		szt y2 = 0;
 		
 		bool BlockFound = false;
 		for ( int _y = Height() - 1; _y >= 0; _y-- ) {
@@ -934,13 +932,13 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //	
 	static inline const cGrid2D< tType > Trim( const cGrid2D< tType >& Src, const tType& Zero = tType() ) {
-		size_t x1 = Src.TrimX1();
-		size_t y1 = Src.TrimY1();
-		size_t x2 = Src.TrimX2();
-		size_t y2 = Src.TrimY2();
+		szt x1 = Src.TrimX1();
+		szt y1 = Src.TrimY1();
+		szt x2 = Src.TrimX2();
+		szt y2 = Src.TrimY2();
 
-		size_t NewWidth = x2 + 1 - x1;
-		size_t NewHeight = y2 + 1 - y1;
+		szt NewWidth = x2 + 1 - x1;
+		szt NewHeight = y2 + 1 - y1;
 	
 		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
 	}
@@ -953,9 +951,9 @@ public:
 	// - -------------------------------------------------------------------------------------- - //	
 	// NOTE: This function might not be needed, but was easy enough to write after all //
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const cGrid2D< tType > Crop( const cGrid2D< tType >& Src, const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {
-		size_t NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
-		size_t NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
+	static inline const cGrid2D< tType > Crop( const cGrid2D< tType >& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
+		szt NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
+		szt NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
 		
 		if ( x2 < x1 )
 			NewWidth = 1;
@@ -966,18 +964,18 @@ public:
 		return Copy( Src, NewWidth, NewHeight, Src.AxisSaturateX( x1 ), Src.AxisSaturateY( y1 ), 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const cGrid2D< tType > Crop( const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {	
+	inline const cGrid2D< tType > Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
 		return Crop( *this, x1, y1, x2, y2 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 		
 public:
 	// - -------------------------------------------------------------------------------------- - //
-	inline void Resize( const size_t NewWidth, const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void Resize( const szt NewWidth, const szt NewHeight, const tType& InitValue = tType() ) {
 		ResizeCenter( NewWidth, NewHeight, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ResizeCenter( const size_t NewWidth, const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void ResizeCenter( const szt NewWidth, const szt NewHeight, const tType& InitValue = tType() ) {
 		int SrcStartX;
 		int DestStartX;
 
@@ -1011,7 +1009,7 @@ public:
 		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ResizeAlign( const size_t NewWidth, const size_t NewHeight, const int XAlign, const int YAlign, const tType& InitValue = tType() ) {
+	inline void ResizeAlign( const szt NewWidth, const szt NewHeight, const int XAlign, const int YAlign, const tType& InitValue = tType() ) {
 		int SrcStartX;
 		int DestStartX;
 
@@ -1085,11 +1083,11 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetWidth( const size_t NewWidth, const tType& InitValue = tType() ) {
+	inline void SetWidth( const szt NewWidth, const tType& InitValue = tType() ) {
 		SetWidthCenter( NewWidth, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetWidthCenter( const size_t NewWidth, const tType& InitValue = tType() ) {
+	inline void SetWidthCenter( const szt NewWidth, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1108,7 +1106,7 @@ public:
 		_w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetWidthLeft( const size_t NewWidth, const tType& InitValue = tType() ) {
+	inline void SetWidthLeft( const szt NewWidth, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1122,7 +1120,7 @@ public:
 		_w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetWidthRight( const size_t NewWidth, const tType& InitValue = tType() ) {
+	inline void SetWidthRight( const szt NewWidth, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1144,11 +1142,11 @@ public:
 	
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetHeight( const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void SetHeight( const szt NewHeight, const tType& InitValue = tType() ) {
 		SetHeightCenter( NewHeight, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetHeightCenter( const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void SetHeightCenter( const szt NewHeight, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1167,7 +1165,7 @@ public:
 		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetHeightTop( const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void SetHeightTop( const szt NewHeight, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1181,7 +1179,7 @@ public:
 		_h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetHeightBottom( const size_t NewHeight, const tType& InitValue = tType() ) {
+	inline void SetHeightBottom( const szt NewHeight, const tType& InitValue = tType() ) {
 		int SrcStart;
 		int DestStart;
 		
@@ -1203,11 +1201,11 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of instances of a value //
-	inline const size_t Count( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt Count( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) == Value )
 					CurrentCount++;
 			}
@@ -1217,11 +1215,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountNot( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountNot( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) != Value )
 					CurrentCount++;
 			}
@@ -1231,11 +1229,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountGT( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountGT( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) > Value )
 					CurrentCount++;
 			}
@@ -1245,11 +1243,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountLT( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountLT( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) < Value )
 					CurrentCount++;
 			}
@@ -1259,11 +1257,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountGTE( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountGTE( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) >= Value )
 					CurrentCount++;
 			}
@@ -1273,11 +1271,11 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountLTE( const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountLTE( const tType& Value ) const {
+		szt CurrentCount = 0;
 
-		for ( size_t _y = Height(); _y--; ) {
-			for ( size_t _x = Width(); _x--; ) {
+		for ( szt _y = Height(); _y--; ) {
+			for ( szt _x = Width(); _x--; ) {
 				if ( operator()( _x, _y ) <= Value )
 					CurrentCount++;
 			}
@@ -1289,8 +1287,8 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentX( int x, int y ) const {
-		size_t CurrentCount = 1;
+	inline const szt CountAdjacentX( int x, int y ) const {
+		szt CurrentCount = 1;
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
@@ -1313,8 +1311,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentY( int x, int y ) const {
-		size_t CurrentCount = 1;
+	inline const szt CountAdjacentY( int x, int y ) const {
+		szt CurrentCount = 1;
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
@@ -1337,7 +1335,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentX( int x, int y, const tType& Value ) const  {
+	inline const szt CountAdjacentX( int x, int y, const tType& Value ) const  {
 		if ( Saturate( x, y ) != Value )
 			return 0;
 		else
@@ -1345,7 +1343,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentY( int x, int y, const tType& Value ) const {
+	inline const szt CountAdjacentY( int x, int y, const tType& Value ) const {
 		if ( Saturate( x, y ) != Value )
 			return 0;
 		else
@@ -1355,8 +1353,8 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Clear the number of instances of tiles equal to the tile we point to. //
-	inline const size_t ClearAdjacentX( int x, int y ) const {
-		size_t CurrentCount = 1;
+	inline const szt ClearAdjacentX( int x, int y ) const {
+		szt CurrentCount = 1;
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
@@ -1384,8 +1382,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Clear the number of instances of tiles equal to the tile we point to. //
-	inline const size_t ClearAdjacentY( int x, int y ) const {
-		size_t CurrentCount = 1;
+	inline const szt ClearAdjacentY( int x, int y ) const {
+		szt CurrentCount = 1;
 		x = AxisSaturateX( x );
 		y = AxisSaturateY( y );
 		tType Value = operator()( x, y );
@@ -1415,8 +1413,8 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles on a line //
-	inline const size_t CountLineX( int y, const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountLineX( int y, const tType& Value ) const {
+		szt CurrentCount = 0;
 		y = AxisSaturateY( y );
 
 		for ( int _x = Width(); _x--; ) {
@@ -1428,8 +1426,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles on a line //
-	inline const size_t CountLineY( int x, const tType& Value ) const {
-		size_t CurrentCount = 0;
+	inline const szt CountLineY( int x, const tType& Value ) const {
+		szt CurrentCount = 0;
 		x = AxisSaturateY( x );
 
 		for ( int _y = Height(); _y--; ) {
@@ -1603,7 +1601,7 @@ public:
 		NewGrid( x, y ) = 1;
 		
 		{
-			size_t Distance = 1;
+			szt Distance = 1;
 			for ( int _x = x; _x-- > 0; ) {
 				if ( operator()( _x, y ) == Value ) {
 					Distance++;
@@ -1616,7 +1614,7 @@ public:
 		}
 
 		{
-			size_t Distance = 1;
+			szt Distance = 1;
 			for ( int _x = x; ++_x < Width(); ) {
 				if ( operator()( _x, y ) == Value ) {
 					Distance++;
@@ -1644,7 +1642,7 @@ public:
 		NewGrid( x, y ) = 1;
 		
 		{
-			size_t Distance = 1;
+			szt Distance = 1;
 			for ( int _y = y; _y-- > 0; ) {
 				if ( operator()( x, _y ) == Value ) {
 					Distance++;
@@ -1657,7 +1655,7 @@ public:
 		}
 
 		{
-			size_t Distance = 1;
+			szt Distance = 1;
 			for ( int _y = y; ++_y < Height(); ) {
 				if ( operator()( x, _y ) == Value ) {
 					Distance++;
@@ -1720,7 +1718,7 @@ public:
 
 
 	inline void _DrawHLine( const int x, const int y, const int w, const tType& Value = tType() ) {
-		for ( size_t idx = x; idx < x+w; idx++ ) {
+		for ( szt idx = x; idx < x+w; idx++ ) {
 			operator()(idx,y) = Value;
 		}
 	}
@@ -1747,7 +1745,7 @@ public:
 
 
 	inline void _DrawVLine( const int x, const int y, const int h, const tType& Value = tType() ) {
-		for ( size_t idx = y; idx < y+h; idx++ ) {
+		for ( szt idx = y; idx < y+h; idx++ ) {
 			operator()(x,idx) = Value;
 		}
 	}
@@ -1805,7 +1803,7 @@ public:
 		else if ( y+h >= Height() )
 			h = Height()-y;
 
-		for ( size_t idx = y; idx < y+h; idx++ ) {
+		for ( szt idx = y; idx < y+h; idx++ ) {
 			_DrawHLine( x, idx, w, Value );
 		}
 	}
@@ -1863,7 +1861,7 @@ public:
 			else if ( x2 > Width() )
 				EndX = (xDiff) - (x2-Width());
 			
-			for ( size_t idx = StartX; idx < EndX; idx++ ) {
+			for ( szt idx = StartX; idx < EndX; idx++ ) {
 				operator()( x1 + idx, y1 + round(Slope*(float)(idx)) ) = Value;
 			}
 		}
@@ -1899,7 +1897,7 @@ public:
 			else if ( y2 > Height() )
 				EndY = (yDiff) - (y2-Height());
 		
-			for ( size_t idx = StartY; idx < EndY; idx++ ) {
+			for ( szt idx = StartY; idx < EndY; idx++ ) {
 				operator()( x1 + round(Slope*(float)(idx)), y1 + idx ) = Value;
 			}			
 		}
@@ -2578,7 +2576,7 @@ public:
 		tType Value;
 		if ( Size() ) {
 			Value = Data[0];
-			for ( size_t idx = 1; idx < Size(); idx++ ) {
+			for ( szt idx = 1; idx < Size(); idx++ ) {
 				if ( Data[idx] < Value ) {
 					Value = Data[idx];
 				}
@@ -2591,7 +2589,7 @@ public:
 		tType Value;
 		if ( Size() ) {
 			Value = Data[0];
-			for ( size_t idx = 1; idx < Size(); idx++ ) {
+			for ( szt idx = 1; idx < Size(); idx++ ) {
 				if ( Data[idx] > Value ) {
 					Value = Data[idx];
 				}
@@ -2605,7 +2603,7 @@ public:
 		if ( Size() ) {
 			Value.a = Data[0];
 			Value.b = Data[0];
-			for ( size_t idx = 1; idx < Size(); idx++ ) {
+			for ( szt idx = 1; idx < Size(); idx++ ) {
 				if ( Data[idx] < Value.a ) {
 					Value.a = Data[idx];
 				}
@@ -2624,7 +2622,7 @@ public:
 		if ( Diff != Zero ) {
 			tType DiffR = One / Diff;
 	
-			for ( size_t idx = 0; idx < Size(); idx++ ) {
+			for ( szt idx = 0; idx < Size(); idx++ ) {
 				Data[idx] = (Data[idx] - Range.a) * DiffR;
 			}
 		}
@@ -2632,7 +2630,7 @@ public:
 			// In the rare case there is no actual difference, make all 0.5 //
 			tType Half = One / (One+One);
 			
-			for ( size_t idx = 0; idx < Size(); idx++ ) {
+			for ( szt idx = 0; idx < Size(); idx++ ) {
 				Data[idx] = Half;
 			}
 		}
@@ -2642,7 +2640,7 @@ public:
 		ABSet<tType> Range = GetRange();
 		tType Diff = Range.b - Range.a;
 		if ( Diff != Zero ) {	
-			for ( size_t idx = 0; idx < Size(); idx++ ) {
+			for ( szt idx = 0; idx < Size(); idx++ ) {
 				Data[idx] = (Data[idx] - Range.a) / Diff;
 			}
 		}
@@ -2650,7 +2648,7 @@ public:
 			// In the rare case there is no actual difference, make all 0.5 //
 			tType Half = One / (One+One);
 			
-			for ( size_t idx = 0; idx < Size(); idx++ ) {
+			for ( szt idx = 0; idx < Size(); idx++ ) {
 				Data[idx] = Half;
 			}
 		}
@@ -2658,7 +2656,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Was ClipData //
 	inline void SaturateData( const tType Low = 0.0f, const tType High = 1.0f ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			if ( Data[idx] < Low ) {
 				Data[idx] = Low;
 			}
@@ -2669,7 +2667,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void RoundData( const tType Middle = 0.5f, const tType Min = 0.0f, const tType Max = 1.0f ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			if ( Data[idx] >= Middle ) {
 				Data[idx] = Max;
 			}
@@ -2684,7 +2682,7 @@ public:
 		Assert( Steps <= 1, "Steps must be 2 or more" );
 		tType StepSize = One / (tType)(Steps-1);
 		
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			tType Val = Data[idx];
 			Val /= StepSize;
 			
@@ -2694,8 +2692,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SoftenRigidData( const int Threshold = 2 ) {
 		// Fill in holes and hills that are alone //
-		for ( size_t y = 0; y < Height(); y++ ) {
-			for ( size_t x = 0; x < Width(); x++ ) {
+		for ( szt y = 0; y < Height(); y++ ) {
+			for ( szt x = 0; x < Width(); x++ ) {
 				int Common = 1;
 				tType No = Wrap(x-1,y);
 				
@@ -2745,13 +2743,13 @@ public:
 		NSet2<u16,cGrid2D<u16>> Ret( 0, cGrid2D<u16>(Width(),Height(),BGVal) );
 				
 		// First Pass //
-		for ( size_t y = 0; y < Height(); y++ ) {
-			for ( size_t x = 0; x < Width(); x++ ) {
+		for ( szt y = 0; y < Height(); y++ ) {
+			for ( szt x = 0; x < Width(); x++ ) {
 				if ( operator()(x,y) >= Middle ) {
 //					Log( "%i %i -- %i", x, y, NextLabel );
 					enum { N_Size = 2 };
 					u16 N[N_Size];
-					for ( size_t idx = 0; idx < N_Size; idx++ ) {
+					for ( szt idx = 0; idx < N_Size; idx++ ) {
 						N[idx] = BGVal;
 					}
 					
@@ -2781,9 +2779,9 @@ public:
 						Ret.b(x,y) = ::Min( N[0], N[1] );	// Ok, because BGVal is big //
 						
 						// Perform a union on Neighbours //
-						for ( size_t idx = 0; idx < N_Size; idx++ ) {
+						for ( szt idx = 0; idx < N_Size; idx++ ) {
 							if ( N[idx] != BGVal ) {
-								for ( size_t idx2 = idx+1; idx2 < N_Size; idx2++ ) {
+								for ( szt idx2 = idx+1; idx2 < N_Size; idx2++ ) {
 									if ( N[idx2] != BGVal ) {
 										if ( N[idx] != N[idx2] ) {
 											Linked.Union( N[idx], N[idx2] );
@@ -2798,8 +2796,8 @@ public:
 		}
 		
 		// Second Pass //
-		for ( size_t y = 0; y < Height(); y++ ) {
-			for ( size_t x = 0; x < Width(); x++ ) {
+		for ( szt y = 0; y < Height(); y++ ) {
+			for ( szt x = 0; x < Width(); x++ ) {
 				if ( operator()(x,y) >= Middle ) {
 //					Log( "> %i %i -- %i", x, y, Ret.b(x,y) );
 					Ret.b(x,y) = Linked.Find( Ret.b(x,y) );
@@ -2814,28 +2812,28 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator += ( const tType Value ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] += Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator -= ( const tType Value ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] -= Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator *= ( const tType Value ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] *= Value;
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator /= ( const tType Value ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] /= Value;
 		}
 		return *this;
@@ -2844,28 +2842,28 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator += ( const cGrid2D<tType>& Vs ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] += Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator -= ( const cGrid2D<tType>& Vs ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] -= Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator *= ( const cGrid2D<tType>& Vs ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] *= Vs[idx];
 		}
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const cGrid2D<tType>& operator /= ( const cGrid2D<tType>& Vs ) {
-		for ( size_t idx = 0; idx < Size(); idx++ ) {
+		for ( szt idx = 0; idx < Size(); idx++ ) {
 			Data[idx] /= Vs[idx];
 		}
 		return *this;
@@ -2874,5 +2872,5 @@ public:
 
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __Grid_cGrid2D_Class_H__ //
+#endif // __GEL2_GRID_GRID2D_CLASS_H__ //
 // - ------------------------------------------------------------------------------------------ - //
