@@ -11,7 +11,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
 // - ------------------------------------------------------------------------------------------ - //
-class GelDisjointSet {
+class DisjointSet {
 public:
 	typedef st32 ValType;
 	struct Set {
@@ -34,7 +34,7 @@ public:
 	st32 Size;
 
 public:
-	inline GelDisjointSet( const ValType n ) :
+	inline DisjointSet( const ValType n ) :
 		Forest( 0 )
 	{
 //		Forest.reserve( n );
@@ -48,13 +48,13 @@ public:
 		}
 	}
 	
-	inline ~GelDisjointSet() {
+	inline ~DisjointSet() {
 		if ( Forest )
 			delete [] Forest;
 	}
 	
 //	// NOTE: Actually a move, not a copy! //
-//	inline GelDisjointSet( GelDisjointSet& Copy ) {
+//	inline DisjointSet( DisjointSet& Copy ) {
 //		if ( Forest )
 //			delete [] Forest;
 //		
@@ -62,7 +62,7 @@ public:
 //		Copy.Forest = 0;
 //	}
 //	
-//	inline GelDisjointSet& operator = ( GelDisjointSet& Copy ) {
+//	inline DisjointSet& operator = ( DisjointSet& Copy ) {
 //		if ( Forest )
 //			delete [] Forest;
 //		

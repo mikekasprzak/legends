@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <math.h>
 #include <Style/Style.h>
-#include <Node/GelDisjointSet.h>
+#include <Node/DisjointSet.h>
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
 //   Rename Resize to Canvas and/or Clip. 
@@ -2736,7 +2736,7 @@ public:
 	const NSet2<u16,Grid2D<u16>> BlobExtractData( const tType Middle = 0.5f ) {
 		const u16 BGVal = 0xFFFF;
 		u16 NextLabel = 0;
-		GelDisjointSet Linked(0); // HACK //
+		DisjointSet Linked(0); // HACK //
 		NSet2<u16,Grid2D<u16>> Ret( 0, Grid2D<u16>(Width(),Height(),BGVal) );
 				
 		// First Pass //
@@ -2766,8 +2766,6 @@ public:
 					
 					// If Neighbours is Empty //
 					if ( AllEq( BGVal, N[0], N[1] ) ) {
-						//GelDisjointSet NewDJ(NextLabel);
-						//Linked = NewDJ;//GelDisjointSet(NextLabel);
 						Linked.Add(NextLabel);
 						Ret.b(x,y) = NextLabel;
 						NextLabel++;

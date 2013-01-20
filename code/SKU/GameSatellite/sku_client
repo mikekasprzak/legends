@@ -10,7 +10,6 @@ SRC_FOLDERS			+=	src/MainClient \
 						src/GEL/Math \
 						src/GEL/System \
 						src/GEL/Timer \
-						src/GEL/Grid \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
 INCLUDE_FOLDERS		+=	src/GEL \

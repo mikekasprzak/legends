@@ -1,5 +1,8 @@
 // - ------------------------------------------------------------------------------------------ - //
-// DataArray - A typed DataBlock.  A C implementation, and a lightweight STL vector. //
+// DataArray - A typed DataBlock. //
+// - ------------------------------------------------------------------------------------------ - //
+// NOTE: GelArray does most of what this does. The only thing this can do to be unique is to //
+//   store the size in bytes.
 // - ------------------------------------------------------------------------------------------ - //
 #ifndef __Library_Data_DataArray_Core_H__
 #define __Library_Data_DataArray_Core_H__
