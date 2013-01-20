@@ -217,6 +217,8 @@ public:
 		#ifdef PRODUCT_CLIENT
 		Texture::delete_TextureHandle( TileArt );
 		#endif // PRODUCT_CLIENT //
+		
+		Log( "MAX: %i %i %i -- %i %i %i", U16_MIN, U16_MID, U16_MAX, S16_MIN, S16_MID, S16_MAX );
 	}
 	
 	// Server Only //
