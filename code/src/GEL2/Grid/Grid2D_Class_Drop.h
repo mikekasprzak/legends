@@ -3,6 +3,7 @@
 #define __GEL2_GRID_GRID2D_CLASS_DROP_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Logical Functions for games that play on a grid and have some sort of gravity (i.e. Smiles) //
+// NOTE: Any mentions of OffsetX and OffsetY define an edge. (+0,+1) is downward gravity.
 // - ------------------------------------------------------------------------------------------ - //
 //CanDrop( x, y, offx, offy, TestValue )
 //CanRockfordDrop( ... )

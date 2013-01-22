@@ -911,7 +911,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const szt CountNot( const tType& Value ) const {
+	inline const szt CountNEq( const tType& Value ) const {
 		szt CurrentCount = 0;
 
 		for ( szt _y = Height(); _y--; ) {
@@ -1284,320 +1284,31 @@ public:
 
 public:
 	// - -------------------------------------------------------------------------------------- - //
-	// Generate a grid of values for how far away each found value is from the start //
-	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
-		Grid2D<int> NewGrid( Width(), Height() );
-		
-		x = AxisSaturateX( x );
-		y = AxisSaturateY( y );
-		
-		if ( operator()( x, y ) != Value )
-			return NewGrid;
-		
-		NewGrid( x, y ) = 1;
-		
-		{
-			szt Distance = 1;
-			for ( int _x = x; _x-- > 0; ) {
-				if ( operator()( _x, y ) == Value ) {
-					Distance++;
-					
-					NewGrid( _x, y ) = Distance;
-				}
-				else
-					break;
-			}
-		}
-
-		{
-			szt Distance = 1;
-			for ( int _x = x; ++_x < Width(); ) {
-				if ( operator()( _x, y ) == Value ) {
-					Distance++;
-					
-					NewGrid( _x, y ) = Distance;
-				}
-				else
-					break;
-			}
-		}
-		
-		return NewGrid;
-	}
+	// Grid2D_Class_Adjacency.h //
 	// - -------------------------------------------------------------------------------------- - //
-	// Generate a grid of values for how far away each found value is from the start //
-	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
-		Grid2D<int> NewGrid( Width(), Height() );
-		
-		x = AxisSaturateX( x );
-		y = AxisSaturateY( y );
-		
-		if ( operator()( x, y ) != Value )
-			return NewGrid;
-		
-		NewGrid( x, y ) = 1;
-		
-		{
-			szt Distance = 1;
-			for ( int _y = y; _y-- > 0; ) {
-				if ( operator()( x, _y ) == Value ) {
-					Distance++;
-					
-					NewGrid( x, _y ) = Distance;
-				}
-				else
-					break;
-			}
-		}
-
-		{
-			szt Distance = 1;
-			for ( int _y = y; ++_y < Height(); ) {
-				if ( operator()( x, _y ) == Value ) {
-					Distance++;
-					
-					NewGrid( x, _y ) = Distance;
-				}
-				else
-					break;
-			}
-		}
-		
-		return NewGrid;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const {
-		return GenerateAdjacentXAdjacencyGrid( x, y, Saturate( x, y ) );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const {
-		return GenerateAdjacentYAdjacencyGrid( x, y, Saturate( x, y ) );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-
-	// - -------------------------------------------------------------------------------------- - //
-	// In the case of rows and columns, an Adjacency Grid is exactly the same as a Distance Grid //
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y, const tType& Value ) const {
-		return GenerateAdjacentXAdjacencyGrid( x, y, Value );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y, const tType& Value ) const {
-		return GenerateAdjacentYAdjacencyGrid( x, y, Value );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y ) const {
-		return GenerateAdjacentXAdjacencyGrid( x, y );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y ) const {
-		return GenerateAdjacentYAdjacencyGrid( x, y );
-	}
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const;
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const;
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const;
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const;
+	// In the case of rows and columns, an Adjacency Grid is exactly the same as a Distance Grid (i.e. wrappers) //
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y, const tType& Value ) const;
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y, const tType& Value ) const;
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y ) const;
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y ) const;
 	// - -------------------------------------------------------------------------------------- - //
 
 public:
-	// Drawing Code //		
-	//DrawRadiusRect
-	//DrawRadiusFilledRect
-	
-	// Add a function for generating a mask from a Grid.  I.e. all tiles that match a pattern, or //
-	//   dont match a pattern.  //
-	// Perhaps have a distinct MaskGrid type (Grid2D<int>), and functions for generating either //
-	//   a MaskGrid or a regular Grid copy. //
-	
-	// Add a function for testing "per pixel collision" style for contacts between two placed //
-	//   overlapping grids.  This is needed (preferred) for a tetris move verification function. //
-	
-	// Add a function for shifting the contents of a grid //
-	
-	// Add equivalent functions for Adjacency searching (GenerateAdjacentDistanceGrid, ...) //
-
-
-	inline void _DrawHLine( const int x, const int y, const int _w, const tType& Value = tType() ) {
-		for ( szt idx = x; idx < x+_w; idx++ ) {
-			operator()(idx,y) = Value;
-		}
-	}
-	inline void DrawHLine( int x, const int y, int _w, const tType& Value = tType() ) {
-		if ( y < 0 )
-			return;
-		else if ( y >= Height() )
-			return;
-			
-		if ( x < 0 ) {
-			_w += x;
-			x = 0;
-		}		
-		else if ( x >= Width() )
-			return;
-		
-		if ( _w < 1 )
-			return;
-		else if ( x+_w >= Width() )
-			_w = Width()-x;
-		
-		_DrawHLine( x, y, _w, Value );
-	}
-
-
-	inline void _DrawVLine( const int x, const int y, const int _h, const tType& Value = tType() ) {
-		for ( szt idx = y; idx < y+_h; idx++ ) {
-			operator()(x,idx) = Value;
-		}
-	}
-	inline void DrawVLine( const int x, int y, int _h, const tType& Value = tType() ) {
-		if ( x < 0 )
-			return;
-		else if ( x >= Width() )
-			return;
-			
-		if ( y < 0 ) {
-			_h += y;
-			y = 0;
-		}		
-		else if ( y >= Height() )
-			return;
-
-		if ( _h < 1 )
-			return;
-		else if ( y+_h >= Height() )
-			_h = Height()-y;
-		
-		_DrawVLine( x, y, _h, Value );
-	}
-
-	inline void DrawRect( const int x, const int y, const int _w, const int _h, const tType& Value = tType() ) {
-		DrawHLine( x, y, _w, Value );
-		DrawHLine( x, y-1+_h, _w, Value );
-
-		DrawVLine( x, y+1, _h-2, Value );
-		DrawVLine( x-1+_w, y+1, _h-2, Value );
-	}
-
-	inline void DrawRectFill( int x, int y, int _w, int _h, const tType& Value = tType() ) {
-		if ( x < 0 ) {
-			_w += x;
-			x = 0;
-		}
-		else if ( x >= Width() )
-			return;
-			
-		if ( y < 0 ) {
-			_h += y;
-			y = 0;
-		}		
-		else if ( y >= Height() )
-			return;
-
-		if ( _w < 1 )
-			return;
-		else if ( x+_w >= Width() )
-			_w = Width()-x;
-		
-		if ( _h < 1 )
-			return;
-		else if ( y+_h >= Height() )
-			_h = Height()-y;
-
-		for ( szt idx = y; idx < y+_h; idx++ ) {
-			_DrawHLine( x, idx, _w, Value );
-		}
-	}
-	
-	inline void DrawLine( int x1, int y1, int x2, int y2, const tType& Value = tType() ) {
-		int xDiff = x2-x1;
-		int yDiff = y2-y1;
-		
-		int SignX = 1;
-		int SignY = 1;
-		int xDiffABS = xDiff;
-		int yDiffABS = yDiff;
-		
-		// Figure out the sign of xDiff //
-		if ( xDiff < 0 ) {
-			SignX = -1;
-			xDiffABS = -xDiff;
-		}
-
-		// Figure out the sign of yDiff //
-		if ( yDiff < 0 ) {
-			SignY = -1;
-			yDiffABS = -yDiff;
-		}
-		
-		// Wider than Tall //
-		if ( xDiffABS >= yDiffABS ) {
-			// Swap if X is backwards //
-			if ( x1 > x2 ) {
-				int Temp = x2;
-				x2 = x1;
-				x1 = Temp;
-				Temp = y2;
-				y2 = y1;
-				y1 = Temp;
-				
-				xDiff = -xDiff;
-			}
-			
-			float Slope = 0;
-			if ( xDiffABS != 0 ) {
-				Slope = (float)yDiff / (float)xDiff;
-				Slope *= SignX;
-			}
-			
-			int StartX = 0;
-			if ( x1 < 0 )
-				StartX = -x1;
-			else if ( x1 > Width() )
-				return;
-
-			int EndX = xDiff+1;
-			if ( x2 < 0 )
-				return;
-			else if ( x2 > Width() )
-				EndX = (xDiff) - (x2-Width());
-			
-			for ( szt idx = StartX; idx < EndX; idx++ ) {
-				operator()( x1 + idx, y1 + round(Slope*(float)(idx)) ) = Value;
-			}
-		}
-		// Taller than Wide //
-		else {
-			// Swap if Y is backwards //
-			if ( y1 > y2 ) {
-				int Temp = x2;
-				x2 = x1;
-				x1 = Temp;
-				Temp = y2;
-				y2 = y1;
-				y1 = Temp;
-				
-				yDiff = -yDiff;
-			}
-
-			float Slope = 0;
-			if ( yDiffABS != 0 ) {
-				Slope = (float)xDiff / (float)yDiff;
-				Slope *= SignY;
-			}
-	
-			int StartY = 0;
-			if ( y1 < 0 )
-				StartY = -y1;
-			else if ( y1 > Height() )
-				return;
-
-			int EndY = yDiff+1;
-			if ( y2 < 0 )
-				return;
-			else if ( y2 > Height() )
-				EndY = (yDiff) - (y2-Height());
-		
-			for ( szt idx = StartY; idx < EndY; idx++ ) {
-				operator()( x1 + round(Slope*(float)(idx)), y1 + idx ) = Value;
-			}			
-		}
-	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Grid2D_Class_Draw.h //
+	// - -------------------------------------------------------------------------------------- - //
+	inline void _DrawHLine( const int x, const int y, const int _w, const tType& Value = tType() );
+	inline void DrawHLine( int x, const int y, int _w, const tType& Value = tType() );
+	inline void _DrawVLine( const int x, const int y, const int _h, const tType& Value = tType() );
+	inline void DrawVLine( const int x, int y, int _h, const tType& Value = tType() );
+	inline void DrawRect( const int x, const int y, const int _w, const int _h, const tType& Value = tType() );
+	inline void DrawRectFill( int x, int y, int _w, int _h, const tType& Value = tType() );
+	inline void DrawLine( int x1, int y1, int x2, int y2, const tType& Value = tType() );
+	// - -------------------------------------------------------------------------------------- - //
 
 public:
 	// - -------------------------------------------------------------------------------------- - //
