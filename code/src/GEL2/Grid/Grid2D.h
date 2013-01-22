@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Grid2D_Class.h"
 #include "Grid2D_Class_Blit.h"
+#include "Grid2D_Class_Drop.h"
 
 #include "Grid2D_HeightMap.h"
 #include "Grid2D_BlobExtract.h"
