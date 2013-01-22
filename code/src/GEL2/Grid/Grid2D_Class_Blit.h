@@ -4,7 +4,7 @@
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 tType* Grid2D<tType>::CopyData(
-	const Grid2D< tType >& Src,
+	const Grid2D<tType>& Src,
 	const szt NewWidth,
 	const szt NewHeight,
 	const int SrcStartX,
@@ -49,7 +49,7 @@ tType* Grid2D<tType>::CopyData(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 const Grid2D<tType> Grid2D<tType>::Copy(
-	const Grid2D< tType >& Src,
+	const Grid2D<tType>& Src,
 	const szt NewWidth,
 	const szt NewHeight,
 	const int SrcStartX,
@@ -59,7 +59,7 @@ const Grid2D<tType> Grid2D<tType>::Copy(
 	const tType& InitValue
 	)
 {
-	Grid2D< tType > NewGrid;
+	Grid2D<tType> NewGrid;
 	
 	NewGrid.SetData( CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
 	NewGrid.w = NewWidth;
@@ -72,8 +72,8 @@ const Grid2D<tType> Grid2D<tType>::Copy(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 const Grid2D<tType> Grid2D<tType>::Merge(
-	const Grid2D< tType >& GridA,
-	const Grid2D< tType >& GridB,
+	const Grid2D<tType>& GridA,
+	const Grid2D<tType>& GridB,
 	const int GridAX,
 	const int GridAY,
 	const int GridBX,
@@ -113,7 +113,7 @@ const Grid2D<tType> Grid2D<tType>::Merge(
 	int BY = GridBY - GridY1;
 		
 	// Create a Grid to hold our copy //
-	Grid2D< tType > NewGrid( Width, Height, InitValue );
+	Grid2D<tType> NewGrid( Width, Height, InitValue );
 
 	// Copy GridA //
 	for ( szt _y = GridA.Height(); _y--; ) {
@@ -135,8 +135,8 @@ const Grid2D<tType> Grid2D<tType>::Merge(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >	
 const Grid2D<tType> Grid2D<tType>::MergeBlend(
-	const Grid2D< tType >& GridA,
-	const Grid2D< tType >& GridB,
+	const Grid2D<tType>& GridA,
+	const Grid2D<tType>& GridB,
 	const int GridAX,
 	const int GridAY,
 	const int GridBX,
@@ -177,7 +177,7 @@ const Grid2D<tType> Grid2D<tType>::MergeBlend(
 	int BY = GridBY - GridY1;
 		
 	// Create a Grid to hold our copy //
-	Grid2D< tType > NewGrid( Width, Height, InitValue );
+	Grid2D<tType> NewGrid( Width, Height, InitValue );
 
 	// Copy GridA //
 	for ( szt _y = GridA.Height(); _y--; ) {
@@ -201,8 +201,8 @@ const Grid2D<tType> Grid2D<tType>::MergeBlend(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 const Grid2D<tType> Grid2D<tType>::MergeBlendOnly(
-	const Grid2D< tType >& GridA,
-	const Grid2D< tType >& GridB,
+	const Grid2D<tType>& GridA,
+	const Grid2D<tType>& GridB,
 	const int GridAX,
 	const int GridAY,
 	const int GridBX,
@@ -243,7 +243,7 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendOnly(
 	int BY = GridBY - GridY1;
 		
 	// Create a Grid to hold our copy //
-	Grid2D< tType > NewGrid( Width, Height, InitValue );
+	Grid2D<tType> NewGrid( Width, Height, InitValue );
 
 	// Copy GridA //
 	for ( szt _y = GridA.Height(); _y--; ) {
@@ -267,8 +267,8 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendOnly(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 const Grid2D<tType> Grid2D<tType>::MergeBlendOnlyMask(
-	const Grid2D< tType >& GridA,
-	const Grid2D< tType >& GridB,
+	const Grid2D<tType>& GridA,
+	const Grid2D<tType>& GridB,
 	const int GridAX,
 	const int GridAY,
 	const int GridBX,
@@ -310,7 +310,7 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendOnlyMask(
 	int BY = GridBY - GridY1;
 		
 	// Create a Grid to hold our copy //
-	Grid2D< tType > NewGrid( Width, Height, InitValue );
+	Grid2D<tType> NewGrid( Width, Height, InitValue );
 
 	// Copy GridA //
 	for ( szt _y = GridA.Height(); _y--; ) {
@@ -334,8 +334,8 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendOnlyMask(
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 const Grid2D<tType> Grid2D<tType>::MergeBlendMask(
-	const Grid2D< tType >& GridA,
-	const Grid2D< tType >& GridB,
+	const Grid2D<tType>& GridA,
+	const Grid2D<tType>& GridB,
 	const int GridAX,
 	const int GridAY,
 	const int GridBX,
@@ -377,7 +377,7 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendMask(
 	int BY = GridBY - GridY1;
 		
 	// Create a Grid to hold our copy //
-	Grid2D< tType > NewGrid( Width, Height, InitValue );
+	Grid2D<tType> NewGrid( Width, Height, InitValue );
 
 	// Copy GridA //
 	for ( szt _y = GridA.Height(); _y--; ) {

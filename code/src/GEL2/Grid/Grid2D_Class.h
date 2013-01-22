@@ -2049,8 +2049,8 @@ public:
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool CanISet( const int x, const int y ) const {
-		return Saturate(x,y) == 0;
+	inline const bool CanISet( const int x, const int y, const tType Value = 0 ) const {
+		return Saturate(x,y) == Value;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool CanIDrop( const int _Index, const int OffsetX, const int OffsetY ) const {
