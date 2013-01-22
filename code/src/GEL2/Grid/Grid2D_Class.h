@@ -897,15 +897,13 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of instances of a value //
-	inline const szt Count( const tType& Value ) const {
+	inline const szt CountEq( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) == Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] == Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
@@ -914,68 +912,58 @@ public:
 	inline const szt CountNEq( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) != Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] != Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const szt CountGT( const tType& Value ) const {
+	inline const szt CountGt( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) > Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] > Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const szt CountLT( const tType& Value ) const {
+	inline const szt CountLt( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) < Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] < Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const szt CountGTE( const tType& Value ) const {
+	inline const szt CountGte( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) >= Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] >= Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const szt CountLTE( const tType& Value ) const {
+	inline const szt CountLte( const tType& Value ) const {
 		szt CurrentCount = 0;
 
-		for ( szt _y = Height(); _y--; ) {
-			for ( szt _x = Width(); _x--; ) {
-				if ( operator()( _x, _y ) <= Value )
-					CurrentCount++;
-			}
-		}	
+		for ( szt idx = Size(); idx--; ) {
+			if ( Data[idx] <= Value )
+				CurrentCount++;
+		}
 		
 		return CurrentCount;
 	}
@@ -1231,26 +1219,24 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	// NOTE: Should these be called FirstXOnLine(), etc?
-	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first occurence of Value on a line //
-	inline const int FirstLineX( int y, const tType& Value ) const {
+	inline const int FirstXOnLine( int y, const tType& Value ) const {
 		return FirstX( 0, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the first occurence of Value on a line //
-	inline const int FirstLineY( int x, const tType& Value ) const {
+	inline const int FirstYOnLine( int x, const tType& Value ) const {
 		return FirstY( x, 0, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of Value on a line //
-	inline const int LastLineX( int y, const tType& Value ) const {
+	inline const int LastXOnLine( int y, const tType& Value ) const {
 		// NOTE: 'cause LastX does clipping, you could technically pass Width directly // 
 		return LastX( Width() - 1, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last occurence of Value on a line //
-	inline const int LastLineY( int x, const tType& Value ) const {
+	inline const int LastYOnLine( int x, const tType& Value ) const {
 		// NOTE: 'cause LastY does clipping, you could technically pass Height directly //
 		return LastY( x, Height() - 1, Value );
 	}
@@ -1260,23 +1246,23 @@ public:
 	// NOTE: The "Not" may be confusing, since it's Not Equality, not Not X (i.e. Y). //
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first occurence of not Value on a line //
-	inline const int FirstLineNotX( int y, const tType& Value ) const {
+	inline const int FirstNotXOnLine( int y, const tType& Value ) const {
 		return FirstNotX( 0, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the first occurence of not Value on a line //
-	inline const int FirstLineNotY( int x, const tType& Value ) const {
+	inline const int FirstNotYOnLine( int x, const tType& Value ) const {
 		return FirstNotY( x, 0, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of not Value on a line //
-	inline const int LastLineNotX( int y, const tType& Value ) const {
+	inline const int LastNotXOnLine( int y, const tType& Value ) const {
 		// NOTE: 'cause LastX does clipping, you could technically pass Width directly // 
 		return LastNotX( Width() - 1, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last occurence of not Value on a line //
-	inline const int LastLineNotY( int x, const tType& Value ) const {
+	inline const int LastNotYOnLine( int x, const tType& Value ) const {
 		// NOTE: 'cause LastY does clipping, you could technically pass Height directly //
 		return LastNotY( x, Height() - 1, Value );
 	}
