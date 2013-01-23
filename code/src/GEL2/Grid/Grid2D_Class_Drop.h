@@ -542,6 +542,40 @@ bool Grid2D<tType>::AddRockfordDrop( const int _Index, const int OffsetX, const 
 	}
 	return true;
 }
+// - -------------------------------------------------------------------------------------- - //
+template< typename tType>
+const int Grid2D<tType>::EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY ) {
+	// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+	//   Row/Column //
+
+	int x, y;
+	
+	if ( OffsetX < 0 ) {
+		x = Width() - 1;
+		y = AxisSaturateY(_Index);
+	}
+	else if ( OffsetX > 0 ) {
+		x = 0;
+		y = AxisSaturateY(_Index);
+	}
+	else if ( OffsetY < 0 ) {
+		x = AxisSaturateX(_Index);
+		y = Height() - 1;
+	}
+	else  if ( OffsetY > 0 ) {
+		x = AxisSaturateX(_Index);
+		y = 0;
+	}
+	
+	int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
+	
+	return IndexSaturate(x + (OffsetX*Distance), y + (OffsetY*Distance));
+}
+// - -------------------------------------------------------------------------------------- - //
+template< typename tType>
+tType& Grid2D<tType>::EdgeDistance( const int _Index, const int OffsetX, const int OffsetY ) {
+	return Data[ EdgeDistanceIndex( _Index, OffsetX, OffsetY ) ];
+}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GRID_GRID2D_CLASS_DROP_H__ //
 // - ------------------------------------------------------------------------------------------ - //

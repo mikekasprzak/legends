@@ -391,6 +391,79 @@ public:
 			return DeadValue;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Given an edge described by OffsetX and OffsetY (Top=(0,1) Left=(1,0) ...), Index along it. //
+	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = _Index;
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = _Index;
+		}
+		else if ( OffsetY < 0 ) {
+			x = _Index;
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = _Index;
+			y = 0;
+		}
+		
+		return IndexSaturate(x,y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& Edge( const int _Index, const int OffsetX, const int OffsetY ) {
+		return Data[ EdgeIndex( _Index, OffsetX, OffsetY ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange two values given their coordinates //
+	inline void _Swap( const int x1, const int y1, const int x2, const int y2 ) {
+		tType Temp = operator()(x1,y1);
+		operator()(x1,y1) = operator()(x2,y2);
+		operator()(x2,y2) = Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void Swap( int x1, int y1, int x2, int y2 ) {
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
+		
+		x2 = AxisSaturateX( x2 );
+		y2 = AxisSaturateY( y2 );
+		
+		_Swap(x1,y1,x2,y2);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the value at the coordinate, returning the coordinate's value //
+	inline const tType _Swap( const int x1, const int y1, const tType& Value ) {
+		tType Temp = operator()(x1,y1);
+		operator()(x1,y1) = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType Swap( int x1, int y1, const tType& Value ) {
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
+
+		return _Swap(x1,y1,Value);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the value at the Index, returning the value at the Index //
+	inline const tType Swap( int _Index, const tType& Value ) {
+		tType Temp = operator[](_Index);
+		operator[](_Index) = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	
 private:
 	// - -------------------------------------------------------------------------------------- - //
@@ -1319,153 +1392,12 @@ public:
 	inline bool AddDropDistance( const int _Index, const int OffsetX, const int OffsetY, const tType& Value );
 	inline bool AddRockfordDrop( const int _Index, const int OffsetX, const int OffsetY, const tType& Value );
 	// - -------------------------------------------------------------------------------------- - //
+	inline const int EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY );
+	inline tType& EdgeDistance( const int _Index, const int OffsetX, const int OffsetY );
+	// - -------------------------------------------------------------------------------------- - //
+
 
 public:
-	// - -------------------------------------------------------------------------------------- - //
-	// Exchange the value of two tiles //
-	inline void Swap( int x1, int y1, int x2, int y2 ) {
-		x1 = AxisSaturateX( x1 );
-		y1 = AxisSaturateY( y1 );
-		
-		x2 = AxisSaturateX( x2 );
-		y2 = AxisSaturateY( y2 );
-		
-		tType Temp = operator()(x1,y1);
-		operator()(x1,y1) = operator()(x2,y2);
-		operator()(x2,y2) = Temp;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Exchange the passed value with the tile, returning the value of the tile //
-	inline const tType Swap( int x1, int y1, const tType& Value ) {
-		x1 = AxisSaturateX( x1 );
-		y1 = AxisSaturateY( y1 );
-			
-		tType Temp = operator()(x1,y1);
-		operator()(x1,y1) = Value;
-		
-		return Temp;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Exchange the passed value with the tile, returning the value of the tile //
-	inline const tType Swap( int _Index, const tType& Value ) {
-		tType Temp = operator[](_Index);
-		operator[](_Index) = Value;
-		
-		return Temp;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-
-public:
-	// - -------------------------------------------------------------------------------------- - //
-	inline tType& Edge( const int _Index, const int OffsetX, const int OffsetY ) {
-		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
-		//   Row/Column //
-
-		int x, y;
-		
-		if ( OffsetX < 0 ) {
-			x = Width() - 1;
-			y = _Index;
-		}
-		else if ( OffsetX > 0 ) {
-			x = 0;
-			y = _Index;
-		}
-		else if ( OffsetY < 0 ) {
-			x = _Index;
-			y = Height() - 1;
-		}
-		else  if ( OffsetY > 0 ) {
-			x = _Index;
-			y = 0;
-		}
-		
-		return Saturate(x,y);
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline tType& EdgeDistance( const int _Index, const int OffsetX, const int OffsetY ) {
-		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
-		//   Row/Column //
-
-		int x, y;
-		
-		if ( OffsetX < 0 ) {
-			x = Width() - 1;
-			y = AxisSaturateY(_Index);
-		}
-		else if ( OffsetX > 0 ) {
-			x = 0;
-			y = AxisSaturateY(_Index);
-		}
-		else if ( OffsetY < 0 ) {
-			x = AxisSaturateX(_Index);
-			y = Height() - 1;
-		}
-		else  if ( OffsetY > 0 ) {
-			x = AxisSaturateX(_Index);
-			y = 0;
-		}
-		
-		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
-		
-		return Saturate(x + (OffsetX*Distance), y + (OffsetY*Distance));
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
-		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
-		//   Row/Column //
-
-		int x, y;
-		
-		if ( OffsetX < 0 ) {
-			x = Width() - 1;
-			y = _Index;
-		}
-		else if ( OffsetX > 0 ) {
-			x = 0;
-			y = _Index;
-		}
-		else if ( OffsetY < 0 ) {
-			x = _Index;
-			y = Height() - 1;
-		}
-		else  if ( OffsetY > 0 ) {
-			x = _Index;
-			y = 0;
-		}
-		
-		return IndexSaturate(x,y);
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const int EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY ) {
-		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
-		//   Row/Column //
-
-		int x, y;
-		
-		if ( OffsetX < 0 ) {
-			x = Width() - 1;
-			y = AxisSaturateY(_Index);
-		}
-		else if ( OffsetX > 0 ) {
-			x = 0;
-			y = AxisSaturateY(_Index);
-		}
-		else if ( OffsetY < 0 ) {
-			x = AxisSaturateX(_Index);
-			y = Height() - 1;
-		}
-		else  if ( OffsetY > 0 ) {
-			x = AxisSaturateX(_Index);
-			y = 0;
-		}
-		
-		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
-		
-		return IndexSaturate(x + (OffsetX*Distance), y + (OffsetY*Distance));
-	}
-	// - -------------------------------------------------------------------------------------- - //
-
 	// - -------------------------------------------------------------------------------------- - //
 	inline const tType GetLowest() const {
 		tType Value;
