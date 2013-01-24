@@ -175,6 +175,7 @@ public:
 		
 		for ( size_t y = 0; y < Land.Height(); y++ ) {
 			for ( size_t x = 0; x < Land.Width(); x++ ) {
+				//_Log( "%02x,", (int)Island(x,y)&0xff );
 				int Val = TL_DIRT;
 				if ( Land(x,y) >= WaterLevel ) {
 					float Fert = (Fertility(x,y) * 2.0f) - 1.0f;
@@ -209,6 +210,7 @@ public:
 					
 				Map.Tile(x,y) = Val;
 			}
+			//Log( "" );
 		}
 	}
 	
