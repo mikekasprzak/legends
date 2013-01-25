@@ -212,6 +212,116 @@ inline Grid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture, con
 	return Grid;
 }
 // - ------------------------------------------------------------------------------------------ - //
+inline Grid2D<unsigned short> to_16bit_2_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
+	typedef unsigned short tType;
+	Grid2D<tType> Grid;
+	
+	szt Width = Texture.Width / StepX;
+	szt Height = Texture.Height / StepY;
+	szt Size = Width * Height;
+	
+	Grid.SetW( Width );
+	Grid.SetH( Height );
+	tType* Data = new tType[ Size ];
+	Grid.SetData( Data );
+
+	unsigned char* SrcData = (unsigned char*)Texture.Data;
+		
+	if ( Texture.Info == 4 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex<<2)+0]>>4) << 0) | 
+					((SrcData[(SrcIndex<<2)+1]>>4) << 8);
+			}
+		}
+	}
+	else if ( Texture.Info == 3 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex*3)+0]>>4) << 0) | 
+					((SrcData[(SrcIndex*3)+1]>>4) << 8);
+			}
+		}
+	}
+	else if ( Texture.Info == 1 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[SrcIndex]>>4) << 0) | 
+					((SrcData[SrcIndex]>>4) << 8);
+			}
+		}
+	}
+	else {
+		Log( "! Unsupported Bit Depth (%i)", Texture.Info );
+	}
+	
+	return Grid;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Grid2D<unsigned char> to_8bit_2_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
+	typedef unsigned char tType;
+	Grid2D<tType> Grid;
+	
+	szt Width = Texture.Width / StepX;
+	szt Height = Texture.Height / StepY;
+	szt Size = Width * Height;
+	
+	Grid.SetW( Width );
+	Grid.SetH( Height );
+	tType* Data = new tType[ Size ];
+	Grid.SetData( Data );
+
+	unsigned char* SrcData = (unsigned char*)Texture.Data;
+		
+	if ( Texture.Info == 4 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex<<2)+0]>>6) << 0) | 
+					((SrcData[(SrcIndex<<2)+1]>>6) << 4);
+			}
+		}
+	}
+	else if ( Texture.Info == 3 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex*3)+0]>>6) << 0) | 
+					((SrcData[(SrcIndex*3)+1]>>6) << 4);
+			}
+		}
+	}
+	else if ( Texture.Info == 1 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[SrcIndex]>>6) << 0) | 
+					((SrcData[SrcIndex]>>6) << 4);
+			}
+		}
+	}
+	else {
+		Log( "! Unsupported Bit Depth (%i)", Texture.Info );
+	}
+	
+	return Grid;
+}
+// - ------------------------------------------------------------------------------------------ - //
 inline Grid2D<unsigned char> to_8bit_1_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
 	typedef unsigned char tType;
 	Grid2D<tType> Grid;
@@ -259,6 +369,18 @@ inline Grid2D<unsigned char> to_8bit_1_Channel_Grid2D_STBTexture( STBTexture& Te
 	}
 	
 	return Grid;
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Grid2D<unsigned> to_32bit_4_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
+	return to_32bit_Grid2D_STBTexture( Texture, StepX, StepY );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Grid2D<unsigned short> to_16bit_4_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
+	return to_16bit_Grid2D_STBTexture( Texture, StepX, StepY );
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline Grid2D<unsigned char> to_8bit_4_Channel_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
+	return to_8bit_Grid2D_STBTexture( Texture, StepX, StepY );
 }
 // - ------------------------------------------------------------------------------------------ - //
 }; // namespace Texture //
