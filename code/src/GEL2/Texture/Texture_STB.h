@@ -26,71 +26,136 @@ TextureHandle upload_STBTexture( STBTexture& Texture, const bool Smooth = true, 
 // NOTE: If you want Width, Height, or Info, you should retrieve it directly from //
 //   the STBTexture type, before deleting the STBTexture (i.e. Texture.Width, etc) //
 // - ------------------------------------------------------------------------------------------ - //
-inline Grid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture ) {
+
+// - ------------------------------------------------------------------------------------------ - //
+// StepX and StepY as 1 is an ordinary copy from an image to Grid2D. //
+inline Grid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
 	typedef unsigned tType;
 	Grid2D<tType> Grid;
 	
-	Grid.SetW( Texture.Width );
-	Grid.SetH( Texture.Height );
-	tType* Data = new tType[ Texture.Width * Texture.Height ];
+	szt Width = Texture.Width / StepX;
+	szt Height = Texture.Height / StepY;
+	szt Size = Width * Height;
+	
+	Grid.SetW( Width );
+	Grid.SetH( Height );
+	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
+	
+	if ( Texture.Info == 4 ) {
+		unsigned* SrcData = (unsigned*)Texture.Data;
 
-	unsigned* SrcData = (unsigned*)Texture.Data;
-		
-	for ( int h = 0; h < Texture.Height; h++ ) {
-		for ( int w = 0; w < Texture.Width; w++ ) {
-			size_t Index = w + (h * Texture.Width);
-			Data[Index] = SrcData[Index];
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = SrcData[SrcIndex];
+			}
+		}
+	}
+	else if ( Texture.Info == 3 ) {
+		unsigned char* SrcData = (unsigned char*)Texture.Data;
+			
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					(SrcData[(SrcIndex*3)+0] << 0) | 
+					(SrcData[(SrcIndex*3)+1] << 8) | 
+					(SrcData[(SrcIndex*3)+2] << 16) | 
+					(0xFF << 24);
+			}
 		}
 	}
 	
 	return Grid;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Grid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture ) {
+inline Grid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
 	typedef unsigned short tType;
 	Grid2D<tType> Grid;
 	
-	Grid.SetW( Texture.Width );
-	Grid.SetH( Texture.Height );
-	tType* Data = new tType[ Texture.Width * Texture.Height ];
+	szt Width = Texture.Width / StepX;
+	szt Height = Texture.Height / StepY;
+	szt Size = Width * Height;
+	
+	Grid.SetW( Width );
+	Grid.SetH( Height );
+	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
 	unsigned char* SrcData = (unsigned char*)Texture.Data;
 		
-	for ( int h = 0; h < Texture.Height; h++ ) {
-		for ( int w = 0; w < Texture.Width; w++ ) {
-			size_t Index = w + (h * Texture.Width);
-			Data[Index] = 
-				((SrcData[(Index<<2)+0]>>4) << 0) | 
-				((SrcData[(Index<<2)+1]>>4) << 4) | 
-				((SrcData[(Index<<2)+2]>>4) << 8) | 
-				((SrcData[(Index<<2)+3]>>4) << 12);
+	if ( Texture.Info == 4 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex<<2)+0]>>4) << 0) | 
+					((SrcData[(SrcIndex<<2)+1]>>4) << 4) | 
+					((SrcData[(SrcIndex<<2)+2]>>4) << 8) | 
+					((SrcData[(SrcIndex<<2)+3]>>4) << 12);
+			}
+		}
+	}
+	else if ( Texture.Info == 3 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex*3)+0]>>4) << 0) | 
+					((SrcData[(SrcIndex*3)+1]>>4) << 4) | 
+					((SrcData[(SrcIndex*3)+2]>>4) << 8) | 
+					(0xF << 12);
+			}
 		}
 	}
 	
 	return Grid;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline Grid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture ) {
+inline Grid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture, const int StepX = 1, const int StepY = 1 ) {
 	typedef unsigned char tType;
 	Grid2D<tType> Grid;
 	
-	Grid.SetW( Texture.Width );
-	Grid.SetH( Texture.Height );
-	tType* Data = new tType[ Texture.Width * Texture.Height ];
+	szt Width = Texture.Width / StepX;
+	szt Height = Texture.Height / StepY;
+	szt Size = Width * Height;
+	
+	Grid.SetW( Width );
+	Grid.SetH( Height );
+	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
 	unsigned char* SrcData = (unsigned char*)Texture.Data;
 		
-	for ( int h = 0; h < Texture.Height; h++ ) {
-		for ( int w = 0; w < Texture.Width; w++ ) {
-			size_t Index = w + (h * Texture.Width);
-			Data[Index] = 
-				((SrcData[(Index<<2)+0]>>6) << 0) | 
-				((SrcData[(Index<<2)+1]>>6) << 2) | 
-				((SrcData[(Index<<2)+2]>>6) << 4) | 
-				((SrcData[(Index<<2)+3]>>6) << 6);
+	if ( Texture.Info == 4 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex<<2)+0]>>6) << 0) | 
+					((SrcData[(SrcIndex<<2)+1]>>6) << 2) | 
+					((SrcData[(SrcIndex<<2)+2]>>6) << 4) | 
+					((SrcData[(SrcIndex<<2)+3]>>6) << 6);
+			}
+		}
+	}
+	else if ( Texture.Info == 3 ) {
+		for ( szt h = 0; h < Height; h++ ) {
+			for ( szt w = 0; w < Width; w++ ) {
+				szt SrcIndex = (w*StepX) + ((h*StepY) * Texture.Width);
+				szt DestIndex = w + (h * Width);
+				Data[DestIndex] = 
+					((SrcData[(SrcIndex*3)+0]>>6) << 0) | 
+					((SrcData[(SrcIndex*3)+1]>>6) << 2) | 
+					((SrcData[(SrcIndex*3)+2]>>6) << 4) | 
+					(0x3 << 6);
+			}
 		}
 	}
 	
