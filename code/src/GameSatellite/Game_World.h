@@ -259,8 +259,9 @@ public:
 		SubGrid2D<cMap::tTile> SubMap( 0,0, 13,13, Map.Tile );
 		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
 		
-		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height(), 0 );
-		GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth()+1, SubMap.HalfHeight()+1, *TilesetInfo, 0x8 );
+		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
+		//GenerateMagnitudeDistanceGrid( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
+		GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );
