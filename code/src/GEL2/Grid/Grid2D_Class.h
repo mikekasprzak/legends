@@ -475,6 +475,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 public:
+	// - -------------------------------------------------------------------------------------- - //
 	static inline void Copy(
 		const Grid2D<tType>& Src,
 		Grid2D<tType>& Dest,
@@ -607,7 +608,10 @@ public:
 		return CopyWrap( *this, SrcX, SrcY, _Width, _Height );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Like copy, but the surface created is large enough to contain both. May not be useful. //
 	// - -------------------------------------------------------------------------------------- - //	
 	static inline const Grid2D<tType> Merge(
 		const Grid2D<tType>& GridA,
@@ -665,9 +669,11 @@ public:
 		const tType& InitValue = tType()
 		);
 	// - -------------------------------------------------------------------------------------- - //
-	
+
+public:	
 	// - -------------------------------------------------------------------------------------- - //
 	static inline const Grid2D<tType> RotateCW( const Grid2D<tType>& Src ) {
+		// NOTE: Height Width, not Width Height, due to rotation //
 		Grid2D<tType> NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcHeight = Src.Height();
@@ -681,6 +687,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	static inline const Grid2D<tType> RotateCCW( const Grid2D<tType>& Src ) {
+		// NOTE: Height Width, not Width Height, due to rotation //
 		Grid2D<tType> NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcWidth = Src.Width();
@@ -737,9 +744,12 @@ public:
 		return FlipY( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-/*
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Used by Trim. Determines the first rows and columns containing something not "Unused". //
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const szt TrimX1( const tType& Zero = tType() ) const {
+	inline const szt FindUnusedX1( const tType& Unused = tType() ) const {
 		szt x1 = 0;
 		
 		bool BlockFound = false;
@@ -747,8 +757,8 @@ public:
 			x1 = _x;
 			// For every item in the vertical row //
 			for ( szt _y = Height(); _y--; ) {
-				// Test if it's not our zero //
-				if ( operator()( _x, _y ) != Zero )
+				// Test if it's not our Unused //
+				if ( operator()( _x, _y ) != Unused )
 					BlockFound = true;
 			}
 			// If a block was found, bail from this //
@@ -759,7 +769,7 @@ public:
 		return x1;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const szt TrimY1( const tType& Zero = tType() ) const {
+	inline const szt FindUnusedY1( const tType& Unused = tType() ) const {
 		szt y1 = 0;
 		
 		bool BlockFound = false;
@@ -767,8 +777,8 @@ public:
 			y1 = _y;
 			// For every item in the vertical row //
 			for ( szt _x = Width(); _x--; ) {
-				// Test if it's not our zero //
-				if ( operator()( _x, _y ) != Zero )
+				// Test if it's not our Unused //
+				if ( operator()( _x, _y ) != Unused )
 					BlockFound = true;
 			}
 			// If a block was found, bail from this //
@@ -779,7 +789,7 @@ public:
 		return y1;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const szt TrimX2( const tType& Zero = tType() ) const {
+	inline const szt FindUnusedX2( const tType& Unused = tType() ) const {
 		szt x2 = 0;
 		
 		bool BlockFound = false;
@@ -787,8 +797,8 @@ public:
 			x2 = _x;
 			// For every item in the vertical row //
 			for ( szt _y = Height(); _y--; ) {
-				// Test if it's not our zero //
-				if ( operator()( _x, _y ) != Zero )
+				// Test if it's not our Unused //
+				if ( operator()( _x, _y ) != Unused )
 					BlockFound = true;
 			}
 			// If a block was found, bail from this //
@@ -799,7 +809,7 @@ public:
 		return x2;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const szt TrimY2( const tType& Zero = tType() ) const {
+	inline const szt FindUnusedY2( const tType& Unused = tType() ) const {
 		szt y2 = 0;
 		
 		bool BlockFound = false;
@@ -807,8 +817,8 @@ public:
 			y2 = _y;
 			// For every item in the vertical row //
 			for ( int _x = Width(); _x--; ) {
-				// Test if it's not our zero //
-				if ( operator()( _x, _y ) != Zero )
+				// Test if it's not our Unused //
+				if ( operator()( _x, _y ) != Unused )
 					BlockFound = true;
 			}
 			// If a block was found, bail from this //
@@ -818,24 +828,28 @@ public:
 		
 		return y2;
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Used to remove (trim) unused space around edge of a grid. //
+	// i.e. Like Paint Shop Pro's copy->paste new->copy->paste new trick. //
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const Grid2D<tType> Trim( const Grid2D<tType>& Src, const tType& Zero = tType() ) {
-		szt x1 = Src.TrimX1();
-		szt y1 = Src.TrimY1();
-		szt x2 = Src.TrimX2();
-		szt y2 = Src.TrimY2();
+	static inline const Grid2D<tType> Trim( const Grid2D<tType>& Src, const tType& Unused = tType() ) {
+		szt x1 = Src.FindUnusedX1(Unused);
+		szt y1 = Src.FindUnusedY1(Unused);
+		szt x2 = Src.FindUnusedX2(Unused);
+		szt y2 = Src.FindUnusedY2(Unused);
 
-		szt NewWidth = x2 + 1 - x1;
-		szt NewHeight = y2 + 1 - y1;
+		// Plus one, because we're doing x&y pairs, not width&height //
+		szt NewWidth = x2 - x1 + 1;
+		szt NewHeight = y2 - y1 + 1;
 	
-		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
+		return Copy( Src, x1, y1, NewWidth, NewHeight );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<tType> Trim( const tType& Zero = tType() ) {
-		return Trim( *this, Zero );
+	inline const Grid2D<tType> Trim( const tType& Unused = tType() ) {
+		return Trim( *this, Unused );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-*/
+
 /*
 	// - -------------------------------------------------------------------------------------- - //	
 	// NOTE: This returns a cropped region... is this unnecessary? //
@@ -866,6 +880,8 @@ public:
 */		
 public:
 	// - -------------------------------------------------------------------------------------- - //
+	// Like a Canvas Resize in Paint Shop Pro (i.e. no filtering, no scaling, just cropping) //
+	// TopLeft is (-1,-1), Center is (0,0), BottomRight is (+1,+1) //
 	inline void Resize( const szt NewWidth, const szt NewHeight, const int XAlign = 0, const int YAlign = 0, const tType& InitValue = tType() ) {
 		int SrcStartX;
 		int DestStartX;
@@ -933,17 +949,13 @@ public:
 		}		
 		
 		// Copy the data //
-//		Grid2D<tType> Src( this->Move() );
-//		*this = Grid2D<tType>( NewWidth, NewHeight, InitValue );
-//		Copy( Src, *this, SrcStartX, SrcStartY, DestStartX, DestStartY );
-
 		Grid2D<tType> Ret( NewWidth, NewHeight, InitValue );
 		Copy( *this, Ret, SrcStartX, SrcStartY, DestStartX, DestStartY );
 		*this = Ret;
-		
-		//*this = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// NOTE: I'm almost certain these are useless //
 /*
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidth( const szt NewWidth, const tType& InitValue = tType() ) {

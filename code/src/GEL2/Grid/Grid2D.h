@@ -3,7 +3,7 @@
 #define __GEL2_GRID_GRID2D_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "Grid2D_Class.h"
-#include "Grid2D_Class_Blit.h"
+#include "Grid2D_Class_Merge.h"
 #include "Grid2D_Class_Adjacency.h"
 #include "Grid2D_Class_Draw.h"
 #include "Grid2D_Class_Drop.h"

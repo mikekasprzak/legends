@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __GEL2_GRID_GRID2D_CLASS_BLIT_H__
-#define __GEL2_GRID_GRID2D_CLASS_BLIT_H__
+#ifndef __GEL2_GRID_GRID2D_CLASS_MERGE_H__
+#define __GEL2_GRID_GRID2D_CLASS_MERGE_H__
 // - -------------------------------------------------------------------------------------- - //
 #define _GRID2D_MERGE_SETUP() \
 	/* Top corner of the grid */ \
@@ -217,5 +217,5 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendMask(
 // - -------------------------------------------------------------------------------------- - //
 #undef _GRID2D_MERGE_SETUP
 // - -------------------------------------------------------------------------------------- - //
-#endif // __GEL2_GRID_GRID2D_CLASS_BLIT_H__ //
+#endif // __GEL2_GRID_GRID2D_CLASS_MERGE_H__ //
 // - -------------------------------------------------------------------------------------- - //
