@@ -549,7 +549,100 @@ public:
 				Dest(DestX + x, DestY + y) = Src(SrcX + x, SrcY + y);
 			}
 		}
-	}	
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void Copy( Grid2D<tType>& Dest, const int SrcX, const int SrcY, const int DestX, const int DestY, const int _Width = -1, const int _Height = -1 ) {
+		return Copy( *this, Dest, SrcX, SrcY, DestX, DestY, _Width, _Height );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Wrapped version. Cannot determine the size of the box automatically. Size must be provided.
+	static inline void CopyWrap(
+		const Grid2D<tType>& Src,
+		Grid2D<tType>& Dest,
+		int SrcX,
+		int SrcY,
+		int DestX,
+		int DestY,
+		int Width,
+		int Height
+		)
+	{		
+		// Copy Data //
+		for ( szt y = Height; y--; ) {
+			for ( szt x = Width; x--; ) {
+				Dest.Wrap(DestX + x, DestY + y) = Src.Wrap(SrcX + x, SrcY + y);
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void CopyWrap( Grid2D<tType>& Dest, const int SrcX, const int SrcY, const int DestX, const int DestY, const int _Width = -1, const int _Height = -1 ) {
+		return CopyWrap( *this, Dest, SrcX, SrcY, DestX, DestY, _Width, _Height );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	static inline const Grid2D<tType> Copy(
+		const Grid2D<tType>& Src,
+		int SrcX,
+		int SrcY,
+		int Width = -1,
+		int Height = -1
+		)
+	{
+		// Saturate the data, to make sure it's within range //
+		SrcX = Src.AxisSaturateX( SrcX );
+		SrcY = Src.AxisSaturateY( SrcY );
+		
+		// Saturate the width //
+		if ( (Width == -1) || (SrcX+Width > (int)Src.Width()) ) {
+			Width = Src.Width() - SrcX;
+		}
+	
+		// Saturate the height //
+		if ( (Height == -1) || (SrcY+Height > (int)Src.Height()) ) {
+			Height = Src.Height() - SrcY;
+		}
+		
+		Grid2D<tType> Dest(Width,Height);
+		
+		// Copy Data //
+		for ( szt y = Height; y--; ) {
+			for ( szt x = Width; x--; ) {
+				Dest(x,y) = Src(SrcX + x, SrcY + y);
+			}
+		}
+		
+		return Dest;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<tType> Copy( const int SrcX, const int SrcY, const int _Width = -1, const int _Height = -1 ) {
+		return Copy( *this, SrcX, SrcY, _Width, _Height );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Wrapped version. Cannot determine the size of the box automatically. Size must be provided.
+	static inline const Grid2D<tType> CopyWrap(
+		const Grid2D<tType>& Src,
+		int SrcX,
+		int SrcY,
+		int Width,
+		int Height
+		)
+	{		
+		Grid2D<tType> Dest(Width,Height);
+		
+		// Copy Data //
+		for ( szt y = Height; y--; ) {
+			for ( szt x = Width; x--; ) {
+				Dest(x,y) = Src.Wrap(SrcX + x, SrcY + y);
+			}
+		}
+		
+		return Dest;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<tType> CopyWrap( const int SrcX, const int SrcY, const int _Width = -1, const int _Height = -1 ) {
+		return CopyWrap( *this, SrcX, SrcY, _Width, _Height );
+	}
+	// - -------------------------------------------------------------------------------------- - //	
+	
 	// - -------------------------------------------------------------------------------------- - //	
 	static inline const Grid2D<tType> Merge(
 		const Grid2D<tType>& GridA,
