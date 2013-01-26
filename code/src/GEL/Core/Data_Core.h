@@ -31,7 +31,7 @@
 
 //#define FASTLOOP(Count) for(unsigned ___idx_ ## __COUNTER__ = (Count)+1; --___idx_ ## __COUNTER__;)
 
-inline void u32set_Data( const unsigned _Value, void* _Data, const size_t _Size ) {
+inline void u32set_Data( const unsigned _Value, void* _Data, const st _Size ) {
 	unsigned* Data = (unsigned*)_Data;
 	unsigned* DataTarget = (unsigned*)((char*)_Data+_Size);
 
@@ -50,23 +50,23 @@ inline void u32set_Data( const unsigned _Value, void* _Data, const size_t _Size 
 }
 
 // - ------------------------------------------------------------------------------------------ - //
-//inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const szt _Size ) {
+//inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const st _Size ) {
 //	unsigned* Src = (unsigned* const)_Src;
 //	unsigned* Dest = (unsigned* const)_Dest;
 //	--Src;
 //	--Dest;
 //
-//	for ( szt Index = _Size+1; --Index; ) {
+//	for ( st Index = _Size+1; --Index; ) {
 //		Dest[Index] = Src[Index];
 //	}
 //}
 // - ------------------------------------------------------------------------------------------ - //
 // You probably want this, not MemSet //
 template< typename tType >
-inline void fill_Data( const tType& Src, tType* Dest, const szt Count ) {
+inline void fill_Data( const tType& Src, tType* Dest, const st Count ) {
 	--Dest;
 
-	for ( szt Index = Count+1; --Index; ) {
+	for ( st Index = Count+1; --Index; ) {
 		Dest[Index] = Src;
 	}
 }
@@ -74,22 +74,22 @@ inline void fill_Data( const tType& Src, tType* Dest, const szt Count ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 // MemSET wrapper -- Only writes bytes (despite input being an int) //
-inline void set_Data( const int _Value, void* _Data, const size_t _Size ) {
+inline void set_Data( const int _Value, void* _Data, const st _Size ) {
 	memset( _Data, _Value, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // MemCPY wrapper //
-inline void copy_Data( const void* _Src, void* _Dest, const size_t _Size ) {
+inline void copy_Data( const void* _Src, void* _Dest, const st _Size ) {
 	memcpy( _Dest, _Src, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // MemMove wrapper //
-inline void move_Data( const void* _Src, void* _Dest, const size_t _Size ) {
+inline void move_Data( const void* _Src, void* _Dest, const st _Size ) {
 	memmove( _Dest, _Src, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // MemCMP wrapper //
-inline const int compare_Data( const void* const _Src, const void* _Dest, const size_t _Size ) {
+inline const int compare_Data( const void* const _Src, const void* _Dest, const st _Size ) {
 	return memcmp( _Dest, _Src, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -97,18 +97,18 @@ inline const int compare_Data( const void* const _Src, const void* _Dest, const 
 // - ------------------------------------------------------------------------------------------ - //
 // copy data while applying padding //
 // WARNING: SIZE SHOULD BE a multiple of Bytes*Padding!! //
-inline void copyPadded_Data( void* _Src, void* _Dest, const size_t _Size, const size_t Bytes, const size_t Padding, const int PadValue ) {
+inline void copyPadded_Data( void* _Src, void* _Dest, const st _Size, const st Bytes, const st Padding, const int PadValue ) {
 	char* Src = (char*)_Src;
 	char* Dest = (char*)_Dest;
 	char* TargetSrc = Src + _Size;
 	
 	while ( Src < TargetSrc ) {
-		for ( size_t Num = Bytes; Num--; ) {
+		for ( st Num = Bytes; Num--; ) {
 			*Dest = *Src;
 			Dest++;
 			Src++;
 		}
-		for ( size_t Num = Padding; Num--; ) {
+		for ( st Num = Padding; Num--; ) {
 			*Dest = PadValue;
 			Dest++;
 		}
@@ -118,13 +118,13 @@ inline void copyPadded_Data( void* _Src, void* _Dest, const size_t _Size, const 
 
 // - ------------------------------------------------------------------------------------------ - //
 // Zero Memory //
-inline void zero_Data( void* _Data, const size_t _Size ) {
+inline void zero_Data( void* _Data, const st _Size ) {
 	// TODO: optimized for loop that does 32bit writes //
 	set_Data( 0, _Data, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Write a bitmask of all 1's (-1) //
-inline void one_Data( void* _Data, const size_t _Size ) {
+inline void one_Data( void* _Data, const st _Size ) {
 	// TODO: optimized for loop that does 32bit writes //
 	set_Data( -1, _Data, _Size );
 }
@@ -139,7 +139,7 @@ inline void Zero( tType& _Data ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType >
-inline void Zero( tType* _Data, const szt Count ) {
+inline void Zero( tType* _Data, const st Count ) {
 	zero_Data( _Data, sizeof(tType)*Count );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -149,14 +149,14 @@ inline void One( tType& _Data ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType >
-inline void One( tType* _Data, const szt Count ) {
+inline void One( tType* _Data, const st Count ) {
 	one_Data( _Data, sizeof(tType)*Count );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline const size_t read_Data( const char* _FileName, void* Data, const size_t _Size ) {
+inline const st read_Data( const char* _FileName, void* Data, const st _Size ) {
 	// Open File //
 	FILE* fp = fopen( _FileName, "rb" );
 	if ( fp == 0 ) {
@@ -166,7 +166,7 @@ inline const size_t read_Data( const char* _FileName, void* Data, const size_t _
 	
 	// Determine how large file is //
 	fseek( fp, 0, SEEK_END );
-	size_t Size = ftell( fp );
+	st Size = ftell( fp );
 #ifdef _MSC_VER
 	fseek( fp, 0L, SEEK_SET );
 #else // _MSC_VER //
@@ -174,7 +174,7 @@ inline const size_t read_Data( const char* _FileName, void* Data, const size_t _
 #endif // _MSC_VER //
 
 	// Read data (only as much as the smallest size) //
-	size_t BytesRead = fread( Data, 1, Size > _Size ? _Size : Size, fp );
+	st BytesRead = fread( Data, 1, Size > _Size ? _Size : Size, fp );
 	
 	// Close file //
 	fclose( fp );
@@ -183,7 +183,7 @@ inline const size_t read_Data( const char* _FileName, void* Data, const size_t _
 	return BytesRead;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline const size_t write_Data( const char* _FileName, void* Data, size_t _Size ) {
+inline const st write_Data( const char* _FileName, void* Data, st _Size ) {
 	// Open File //
 	FILE* fp = fopen( _FileName, "wb" );
 	if ( fp == 0 ) {
@@ -192,7 +192,7 @@ inline const size_t write_Data( const char* _FileName, void* Data, size_t _Size 
 	}
 	
 	// Write the data //
-	size_t BytesWritten = fwrite( Data, 1, _Size, fp );
+	st BytesWritten = fwrite( Data, 1, _Size, fp );
 	// TODO: Assert on fire write error //
 	
 	// Close file //
@@ -205,7 +205,7 @@ inline const size_t write_Data( const char* _FileName, void* Data, size_t _Size 
 
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void* new_Data( const size_t _Size ) {
+inline void* new_Data( const st _Size ) {
 	return (void*)(new char[_Size]);
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -222,7 +222,7 @@ inline void* new_Data( const char* _FileName ) {
 	
 	// Determine how large file is //
 	fseek( fp, 0, SEEK_END );
-	size_t Size = ftell( fp );
+	st Size = ftell( fp );
 #ifdef _MSC_VER
 	fseek( fp, 0L, SEEK_SET );
 #else // _MSC_VER //
@@ -247,7 +247,7 @@ inline void* new_Data( const char* _FileName ) {
 // - ------------------------------------------------------------------------------------------ - //
 // Copy one DataBlock to another, no larger than Destination Size Bytes //
 // - ------------------------------------------------------------------------------------------ - //
-inline void copy_Data( const void* _SrcData, const size_t _SrcSize, void* _DestData, const size_t _DestSize ) {
+inline void copy_Data( const void* _SrcData, const st _SrcSize, void* _DestData, const st _DestSize ) {
 	// If source is smaller than the destination //
 	if ( _DestSize > _SrcSize ) {
 		// Copy source number of bytes //
@@ -261,7 +261,7 @@ inline void copy_Data( const void* _SrcData, const size_t _SrcSize, void* _DestD
 // - ------------------------------------------------------------------------------------------ - //
 // Allocate and return a duplicate of a Data //
 // - ------------------------------------------------------------------------------------------ - //
-inline void* copy_Data( const void* _Src, const size_t _Size ) {
+inline void* copy_Data( const void* _Src, const st _Size ) {
 	// Allocate our new block //
 	void* NewData = new_Data( _Size );
 	
@@ -279,7 +279,7 @@ inline void* copy_Data( const void* _Src, const size_t _Size ) {
 // Reducing size can work safely, but expanding would require new allocation //
 //   this is because new/delete ignore my internal size variable //
 // - ------------------------------------------------------------------------------------------ - //
-inline void reallocate_Data( void** p, const size_t _OldSize, const size_t _NewSize ) {
+inline void reallocate_Data( void** p, const st _OldSize, const st _NewSize ) {
 	// Allocate our new block //
 	void* NewData = new_Data( _NewSize );
 	
@@ -293,7 +293,7 @@ inline void reallocate_Data( void** p, const size_t _OldSize, const size_t _NewS
 	(*p) = NewData;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void resize_Data( void** p, const size_t _OldSize, const size_t _NewSize ) {
+inline void resize_Data( void** p, const st _OldSize, const st _NewSize ) {
 	// A cheat.  We can resize the block without reallocating
 	if ( _NewSize <= _OldSize ) {
 		// If the size wasn't something implicit, we'd set it right now. //
@@ -311,7 +311,7 @@ inline void resize_Data( void** p, const size_t _OldSize, const size_t _NewSize 
 // Initializer capable versions of resize, reallocate, and copy //
 // - ------------------------------------------------------------------------------------------ - //
 // Copy one DataBlock to another, no larger than Destination Size Bytes //
-inline void copy_Data( const void* _Src, const size_t _SrcSize, void* _Dest, const size_t _DestSize, const int _InitValue ) {
+inline void copy_Data( const void* _Src, const st _SrcSize, void* _Dest, const st _DestSize, const int _InitValue ) {
 	// If source is smaller than the destination //
 	if ( _DestSize > _SrcSize ) {
 		// Copy source number of bytes //
@@ -325,7 +325,7 @@ inline void copy_Data( const void* _Src, const size_t _SrcSize, void* _Dest, con
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void reallocate_Data( void** p, const size_t _OldSize, const size_t _NewSize, const int _InitValue ) {
+inline void reallocate_Data( void** p, const st _OldSize, const st _NewSize, const int _InitValue ) {
 	// Allocate our new block //
 	void* NewData = new_Data( _NewSize );
 	
@@ -339,7 +339,7 @@ inline void reallocate_Data( void** p, const size_t _OldSize, const size_t _NewS
 	(*p) = NewData;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void resize_Data( void** p, const size_t _OldSize, const size_t _NewSize, const int _InitValue ) {
+inline void resize_Data( void** p, const st _OldSize, const st _NewSize, const int _InitValue ) {
 	// A cheat.  We can resize the block without reallocating
 	if ( _NewSize <= _OldSize ) {
 		// If the size wasn't something implicit, we'd set it right now. //
