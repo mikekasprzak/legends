@@ -2,83 +2,6 @@
 #ifndef __GEL2_GRID_GRID2D_CLASS_BLIT_H__
 #define __GEL2_GRID_GRID2D_CLASS_BLIT_H__
 // - -------------------------------------------------------------------------------------- - //
-//template< typename tType >
-//void Grid2D<tType>::Copy(
-//	const Grid2D<tType>& Src,
-//	const Grid2D<tType>& Dest,
-//	const int SrcX,
-//	const int SrcY,
-//	const int DestX,
-//	const int DestY,
-//	int Width,
-//	int Height
-//	)
-//{
-//	if ( SrcX+Width > Src.Width() ) {
-//		Width = Src.Width() - SrcX;
-//	}
-//	if ( SrcX+Width > Dest.Width() ) {
-//		Width = Dest.Width() - SrcX;
-//	}
-//
-//	if ( SrcY+Height > Src.Height() ) {
-//		Height = Src.Height() - SrcY;
-//	}
-//	if ( SrcY+Height > Dest.Height() ) {
-//		Height = Dest.Height() - SrcY;
-//	}
-//	
-//	// Copy Data //
-//	for ( szt y = Height; y--; ) {
-//		for ( szt x = Width; x--; ) {
-//			Dest(DestX + x, DestY + y) = Src(SrcX + x, SrcY + y);
-//		}
-//	}
-//}
-/*
-// - -------------------------------------------------------------------------------------- - //
-template< typename tType >
-tType* Grid2D<tType>::CopyData(
-	const Grid2D<tType>& Src,
-	const szt NewWidth,
-	const szt NewHeight,
-	const int SrcStartX,
-	const int SrcStartY,
-	const int DestStartX,
-	const int DestStartY,
-	const tType& InitValue
-	)
-{
-	Grid2D Dest( NewWidth, NewHeight, InitValue );
-	//tType* DataCopy = new tType[ NewWidth * NewHeight ];
-	//Fill( DataCopy, NewWidth * NewHeight, InitValue );
-
-	return CopyData( Src, Dest, SrcStartX, SrcStartY, DestStartX, DestStartY );
-}
-// - -------------------------------------------------------------------------------------- - //
-template< typename tType >
-const Grid2D<tType> Grid2D<tType>::Copy(
-	const Grid2D<tType>& Src,
-	const szt NewWidth,
-	const szt NewHeight,
-	const int SrcStartX,
-	const int SrcStartY,
-	const int DestStartX,
-	const int DestStartY,
-	const tType& InitValue
-	)
-{
-	Grid2D<tType> NewGrid;
-	
-	NewGrid.SetData( CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-	NewGrid.w = NewWidth;
-	NewGrid.h = NewHeight;
-	
-	return NewGrid;
-}
-// - -------------------------------------------------------------------------------------- - //
-*/
-// - -------------------------------------------------------------------------------------- - //
 #define _GRID2D_MERGE_SETUP() \
 	/* Top corner of the grid */ \
 	int GridX1 = GridAX; \
@@ -291,6 +214,8 @@ const Grid2D<tType> Grid2D<tType>::MergeBlendMask(
 	// Return the grid //
 	return NewGrid;
 }
+// - -------------------------------------------------------------------------------------- - //
+#undef _GRID2D_MERGE_SETUP
 // - -------------------------------------------------------------------------------------- - //
 #endif // __GEL2_GRID_GRID2D_CLASS_BLIT_H__ //
 // - -------------------------------------------------------------------------------------- - //

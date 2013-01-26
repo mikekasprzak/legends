@@ -473,42 +473,7 @@ public:
 		return Temp;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	
-//private:
-//	// - -------------------------------------------------------------------------------------- - //
-//	static inline tType* CopyData(
-//		const Grid2D<tType>& Src,
-//		const szt NewWidth,
-//		const szt NewHeight,
-//		const int SrcStartX,
-//		const int SrcStartY,
-//		const int DestStartX,
-//		const int DestStartY,
-//		const tType& InitValue = tType()
-//		);
-//	// - -------------------------------------------------------------------------------------- - //
-//	static inline const Grid2D<tType> Copy(
-//		const Grid2D<tType>& Src,
-//		const szt NewWidth,
-//		const szt NewHeight,
-//		const int SrcStartX,
-//		const int SrcStartY,
-//		const int DestStartX,
-//		const int DestStartY,
-//		const tType& InitValue = tType()
-//		);
-	// - -------------------------------------------------------------------------------------- - //
-//	inline const Grid2D<tType>& Copy(
-//		const Grid2D<tType>& Src,
-//		const szt NewWidth,
-//		const szt NewHeight,
-//		const int SrcStartX,
-//		const int SrcStartY,
-//		const int DestStartX,
-//		const int DestStartY,
-//		const tType& InitValue = tType()
-//		);
-	// - -------------------------------------------------------------------------------------- - //
+
 public:
 	static inline void Copy(
 		const Grid2D<tType>& Src,
