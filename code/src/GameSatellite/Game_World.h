@@ -260,7 +260,7 @@ public:
 		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
 		
 		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
-		//GenerateMagnitudeDistanceGrid( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
+		//GenerateMagnitudeDistanceGrid2D( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
 		GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
