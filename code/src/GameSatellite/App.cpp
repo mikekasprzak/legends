@@ -185,7 +185,9 @@ void cApp::Draw( Screen::cNative& Native ) {
 //		Default->Attrib( 1, UVs );
 //		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		
+		Render::EnableAlphaBlending();
 		World->Draw( Matrix );
+		Render::DisableBlending();
 	}
 	
 	RT_Main->UnBind();

@@ -259,6 +259,9 @@ public:
 		SubGrid2D<cMap::tTile> SubMap( 0,0, 13,13, Map.Tile );
 		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
 		
+		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height(), 0 );
+		GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth()+1, SubMap.HalfHeight()+1, *TilesetInfo, 0x8 );
+		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );
 		Allocator<GelColor> Color( SubMap.Size()*6 );
@@ -280,6 +283,29 @@ public:
 		
 		for ( size_t y = 0; y < SubMap.Height(); y++ ) {
 			for ( size_t x = 0; x < SubMap.Width(); x++ ) {
+				int TX = x;
+				int TY = SubMap.Height()-1-y;
+				int Index = SubMap.Wrap(TX,TY);
+				// UV Texture is 16x16 (in tiles) //
+				int UVX = (Index & 15);
+				int UVY = 15-((Index >> 4) & 15);
+				
+				GelColor Col = GEL_RGB_WHITE;
+				u8 Val = Occlusion(TX,TY);
+				if ( Val > 5 ) {
+					// Omit geometry //
+					continue;
+				}
+				else if ( Val > 0 ) {
+					Col = GEL_RGBA(255,255,255,128-(Val*12));
+				}
+//				if ( Island(TX,TY) != 0xFFFF ) {
+//					float Val = Island(TX,TY);
+//					Val /= 16.0f;
+//					Val *= 360.0f;
+//					Col = GEL_HSV( Val, 1, 1 );
+//				}
+				
 				Vector3D VecXY((int)x - HalfWidth,(int)y - HalfHeight,0);
 
 				Vert.Add( (VecXY+PlusY)*TileSize );
@@ -289,13 +315,6 @@ public:
 				Vert.Add( (VecXY+PlusX)*TileSize );
 				Vert.Add( (VecXY)*TileSize );
 				Vert.Add( (VecXY+PlusY)*TileSize );
-
-				int TX = x;
-				int TY = SubMap.Height()-1-y;
-				int Index = SubMap.Wrap(TX,TY);
-				// UV Texture is 16x16 (in tiles) //
-				int UVX = (Index & 15);
-				int UVY = 15-((Index >> 4) & 15);
 				
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY+1)*UVStep) );
 				UV.Add( UVSet<GelUV>((UVX+1)*UVStep, (UVY+1)*UVStep) );
@@ -304,15 +323,7 @@ public:
 				UV.Add( UVSet<GelUV>((UVX+1)*UVStep, (UVY)*UVStep) );
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY)*UVStep) );
 				UV.Add( UVSet<GelUV>((UVX)*UVStep, (UVY+1)*UVStep) );
-				
-				GelColor Col = GEL_RGB_WHITE;
-				if ( Island(TX,TY) != 0xFFFF ) {
-					float Val = Island(TX,TY);
-					Val /= 16.0f;
-					Val *= 360.0f;
-					Col = GEL_HSV( Val, 1, 1 );
-				}
-				
+								
 				Color.Add( Col );
 				Color.Add( Col );
 				Color.Add( Col );

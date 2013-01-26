@@ -56,13 +56,13 @@ public:
 		fill_Data<tType>( InitValue, Data, Size() );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	// For building from pointers //
-	inline Grid2D( const szt _w, const szt _h, tType* _Data ) :
-		w( _w ),
-		h( _h ),
-		Data( _Data )
-	{
-	}
+//	// For building from pointers //
+//	inline Grid2D( const szt _w, const szt _h, tType* _Data ) :
+//		w( _w ),
+//		h( _h ),
+//		Data( _Data )
+//	{
+//	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D( const Grid2D<tType>& Orig ) :
 		w( Orig.w ),
