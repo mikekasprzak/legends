@@ -1731,6 +1731,10 @@ public:
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+// A type for creating a reference or fake Grid2D //
+// It exists to be used as a proxy for calling Grid2D functions on arbitrary data. //
+// i.e. Grid2DRef MyGrid(10,10,Blah); return MyGrid.ToGrid2D()->GetLowest();
+// - ------------------------------------------------------------------------------------------ - //
 template< typename tType >
 class Grid2DRef {
 public:
