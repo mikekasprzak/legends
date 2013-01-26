@@ -2,46 +2,40 @@
 #ifndef __GEL2_GRID_GRID2D_CLASS_BLIT_H__
 #define __GEL2_GRID_GRID2D_CLASS_BLIT_H__
 // - -------------------------------------------------------------------------------------- - //
+//template< typename tType >
+//void Grid2D<tType>::Copy(
+//	const Grid2D<tType>& Src,
+//	const Grid2D<tType>& Dest,
+//	const int SrcX,
+//	const int SrcY,
+//	const int DestX,
+//	const int DestY,
+//	int Width,
+//	int Height
+//	)
+//{
+//	if ( SrcX+Width > Src.Width() ) {
+//		Width = Src.Width() - SrcX;
+//	}
+//	if ( SrcX+Width > Dest.Width() ) {
+//		Width = Dest.Width() - SrcX;
+//	}
+//
+//	if ( SrcY+Height > Src.Height() ) {
+//		Height = Src.Height() - SrcY;
+//	}
+//	if ( SrcY+Height > Dest.Height() ) {
+//		Height = Dest.Height() - SrcY;
+//	}
+//	
+//	// Copy Data //
+//	for ( szt y = Height; y--; ) {
+//		for ( szt x = Width; x--; ) {
+//			Dest(DestX + x, DestY + y) = Src(SrcX + x, SrcY + y);
+//		}
+//	}
+//}
 /*
-template< typename tType >
-tType* Grid2D<tType>::CopyData(
-	const Grid2D<tType>& Src,
-	const Grid2D<tType>& Dest,
-	const int SrcStartX,
-	const int SrcStartY,
-	const int DestStartX,
-	const int DestStartY
-	)
-{
-	szt CopyWidth = 0;
-	szt CopyHeight = 0;
-	
-	// How much to Copy Wide //
-	if ( NewWidth > Src.Width() ) {
-		CopyWidth = Src.Width();
-	}
-	else {
-		CopyWidth = NewWidth;
-	}
-	
-	// How much to Copy Tall //
-	if ( NewHeight > Src.Height() ) {
-		CopyHeight = Src.Height();
-	}
-	else {
-		CopyHeight = NewHeight;
-	}
-	
-	// Copy Data //
-	for ( szt _y = CopyHeight; _y--; ) {
-		for ( szt _x = CopyWidth; _x--; ) {
-			Dest.Data[DestStartX + _x + ((DestStartY + _y) * NewWidth)] = 
-				Src.Data[SrcStartX + _x + ((SrcStartY + _y) * Src.Width())];
-		}
-	}
-	
-	return DataCopy;
-}
 // - -------------------------------------------------------------------------------------- - //
 template< typename tType >
 tType* Grid2D<tType>::CopyData(

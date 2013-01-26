@@ -31,23 +31,23 @@
 
 //#define FASTLOOP(Count) for(unsigned ___idx_ ## __COUNTER__ = (Count)+1; --___idx_ ## __COUNTER__;)
 
-inline void u32set_Data( const unsigned _Value, void* _Data, const st _Size ) {
-	unsigned* Data = (unsigned*)_Data;
-	unsigned* DataTarget = (unsigned*)((char*)_Data+_Size);
-
-	// I need to test the pointer if it's at the target. No way to go faster. :( //
-	while ( Data != DataTarget ) {
-		*Data = _Value;
-		++Data;
-	}
-
-	// Fast yes, but index is unusuable //
-//	FASTLOOP(_Size>>2) {
-//		Data[
+//inline void u32set_Data( const unsigned _Value, void* _Data, const st _Size ) {
+//	unsigned* Data = (unsigned*)_Data;
+//	unsigned* DataTarget = (unsigned*)((char*)_Data+_Size);
+//
+//	// I need to test the pointer if it's at the target. No way to go faster. :( //
+//	while ( Data != DataTarget ) {
+//		*Data = _Value;
+//		++Data;
 //	}
-	// The solution to the unusable index is to change the base pointer. //
-	// Then the index can simply be added to the target address before performing a store. //
-}
+//
+//	// Fast yes, but index is unusuable //
+////	FASTLOOP(_Size>>2) {
+////		Data[
+////	}
+//	// The solution to the unusable index is to change the base pointer. //
+//	// Then the index can simply be added to the target address before performing a store. //
+//}
 
 // - ------------------------------------------------------------------------------------------ - //
 //inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const st _Size ) {

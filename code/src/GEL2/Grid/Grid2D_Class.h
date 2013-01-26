@@ -13,6 +13,11 @@
 // TODO: Rename all functions that change the data to "ActionData". 
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType = int >
+class Grid2DRef;
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType = int >
 class Grid2D {
 	// - -------------------------------------------------------------------------------------- - //	
 	szt w, h;		// Dimensions //
@@ -91,6 +96,16 @@ public:
 			delete [] Data;
 			Data = 0;
 		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Removes the data from itself, but doesn't free it. //
+	// TODO: come up with a better name for this //
+	inline Grid2D<tType> Move() {
+		Grid2D<tType> Ret( w, h, Data );
+		w = 0;
+		h = 0;
+		Data = 0;
+		return Ret;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -327,7 +342,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline const int AxisSaturateX( int _x ) const {
-		if ( _x >= Width() )
+		if ( _x >= (int)Width() )
 			_x = Width() - 1;
 		else if ( _x < 0 )
 			_x = 0;
@@ -337,7 +352,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline const int AxisSaturateY( int _y ) const {
-		if ( _y >= Height() )
+		if ( _y >= (int)Height() )
 			_y = Height() - 1;
 		else if ( _y < 0 )
 			_y = 0;
@@ -459,29 +474,29 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
-private:
-	// - -------------------------------------------------------------------------------------- - //
-	static inline tType* CopyData(
-		const Grid2D<tType>& Src,
-		const szt NewWidth,
-		const szt NewHeight,
-		const int SrcStartX,
-		const int SrcStartY,
-		const int DestStartX,
-		const int DestStartY,
-		const tType& InitValue = tType()
-		);
-	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D<tType> Copy(
-		const Grid2D<tType>& Src,
-		const szt NewWidth,
-		const szt NewHeight,
-		const int SrcStartX,
-		const int SrcStartY,
-		const int DestStartX,
-		const int DestStartY,
-		const tType& InitValue = tType()
-		);
+//private:
+//	// - -------------------------------------------------------------------------------------- - //
+//	static inline tType* CopyData(
+//		const Grid2D<tType>& Src,
+//		const szt NewWidth,
+//		const szt NewHeight,
+//		const int SrcStartX,
+//		const int SrcStartY,
+//		const int DestStartX,
+//		const int DestStartY,
+//		const tType& InitValue = tType()
+//		);
+//	// - -------------------------------------------------------------------------------------- - //
+//	static inline const Grid2D<tType> Copy(
+//		const Grid2D<tType>& Src,
+//		const szt NewWidth,
+//		const szt NewHeight,
+//		const int SrcStartX,
+//		const int SrcStartY,
+//		const int DestStartX,
+//		const int DestStartY,
+//		const tType& InitValue = tType()
+//		);
 	// - -------------------------------------------------------------------------------------- - //
 //	inline const Grid2D<tType>& Copy(
 //		const Grid2D<tType>& Src,
@@ -495,6 +510,47 @@ private:
 //		);
 	// - -------------------------------------------------------------------------------------- - //
 public:
+	static inline void Copy(
+		const Grid2D<tType>& Src,
+		Grid2D<tType>& Dest,
+		int SrcX,
+		int SrcY,
+		int DestX,
+		int DestY,
+		int Width = -1,
+		int Height = -1
+		)
+	{
+		// Saturate the data, to make sure it's within range //
+		SrcX = Src.AxisSaturateX( SrcX );
+		SrcY = Src.AxisSaturateY( SrcY );
+		DestX = Src.AxisSaturateX( DestX );
+		DestY = Src.AxisSaturateY( DestY );
+		
+		// Saturate the width //
+		if ( (Width == -1) || (DestX+Width > (int)Dest.Width()) ) {
+			Width = Dest.Width() - DestX;
+		}
+		if ( SrcX+Width > (int)Src.Width() ) {
+			Width = Src.Width() - SrcX;
+		}
+	
+		// Saturate the height //
+		if ( (Height == -1) || (DestY+Height > (int)Dest.Height()) ) {
+			Height = Dest.Height() - DestY;
+		}
+		if ( SrcY+Height > (int)Src.Height() ) {
+			Height = Src.Height() - SrcY;
+		}
+		
+		// Copy Data //
+		for ( szt y = Height; y--; ) {
+			for ( szt x = Width; x--; ) {
+				Dest(DestX + x, DestY + y) = Src(SrcX + x, SrcY + y);
+			}
+		}
+	}	
+	// - -------------------------------------------------------------------------------------- - //	
 	static inline const Grid2D<tType> Merge(
 		const Grid2D<tType>& GridA,
 		const Grid2D<tType>& GridB,
@@ -623,7 +679,7 @@ public:
 		return FlipY( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-
+/*
 	// - -------------------------------------------------------------------------------------- - //	
 	inline const szt TrimX1( const tType& Zero = tType() ) const {
 		szt x1 = 0;
@@ -721,28 +777,35 @@ public:
 		return Trim( *this, Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-
+*/
+/*
 	// - -------------------------------------------------------------------------------------- - //	
-	// NOTE: This function might not be needed, but was easy enough to write after all //
+	// NOTE: This returns a cropped region... is this unnecessary? //
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const Grid2D<tType> Crop( const Grid2D<tType>& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
-		szt NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
-		szt NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
+	static inline const Grid2D<tType> Crop( const Grid2D<tType>& Src, int x1, int y1, int x2, int y2 ) {
+		// Saturate the coordinates (i.e. make them fit within (0->Width,0->Height) range) //
+		x1 = Src.AxisSaturateX( x1 );
+		y1 = Src.AxisSaturateY( y1 );
+		x2 = Src.AxisSaturateX( x2 );
+		y2 = Src.AxisSaturateY( y2 );
 		
-		if ( x2 < x1 )
-			NewWidth = 1;
+		Sort( x1, x2 );
+		Sort( y1, y2 );
 		
-		if ( y2 < y1 )
-			NewHeight = 1; 
-	
-		return Copy( Src, NewWidth, NewHeight, Src.AxisSaturateX( x1 ), Src.AxisSaturateY( y1 ), 0, 0 );
+		// This is plus one because it's X+Y pairs, not Width+Height. //
+		szt Width = x2 - x1 + 1;
+		szt Height = y2 - y1 + 1;
+			
+		Grid2D<tType> Ret( Width, Height );
+		Copy( Src, Ret, x1, y1, 0, 0 );
+		return Ret;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D<tType> Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
+	inline const Grid2D<tType> Crop( const int x1, const int y1, const int x2, const int y2 ) {	
 		return Crop( *this, x1, y1, x2, y2 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-		
+*/		
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline void Resize( const szt NewWidth, const szt NewHeight, const int XAlign = 0, const int YAlign = 0, const tType& InitValue = tType() ) {
@@ -803,7 +866,7 @@ public:
 			// Right Align the Positions //
 			if ( NewHeight > Height() ) {
 				SrcStartY = 0;
-				DestStartY = (NewHeight - Height());
+				DestStartY = NewHeight - Height();
 			}
 			else {
 				SrcStartY = (Height() - NewHeight);
@@ -812,7 +875,15 @@ public:
 		}		
 		
 		// Copy the data //
-		*this = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+//		Grid2D<tType> Src( this->Move() );
+//		*this = Grid2D<tType>( NewWidth, NewHeight, InitValue );
+//		Copy( Src, *this, SrcStartX, SrcStartY, DestStartX, DestStartY );
+
+		Grid2D<tType> Ret( NewWidth, NewHeight, InitValue );
+		Copy( *this, Ret, SrcStartX, SrcStartY, DestStartX, DestStartY );
+		*this = Ret;
+		
+		//*this = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 /*
@@ -1586,6 +1657,44 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+};
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+class Grid2DRef {
+public:
+	szt w, h;		// Dimensions //
+	tType* Data;	// Data Array //	
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	inline Grid2DRef( const szt _w, const szt _h ) :
+		w( _w ),
+		h( _h ),
+		Data( 0 )
+	{
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline Grid2DRef( const szt _w, const szt _h, tType* _Data ) :
+		w( _w ),
+		h( _h ),
+		Data( _Data )
+	{
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline Grid2DRef( const Grid2D<tType>& Orig ) :
+		w( Orig.Width() ),
+		h( Orig.Height() ),
+		Data( *Orig )
+	{
+	}
+	// - -------------------------------------------------------------------------------------- - //		
+
+public:
+	inline Grid2D<tType>* ToGrid2D() {
+		return (Grid2D<tType>*)this;
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GRID_GRID2D_CLASS_H__ //

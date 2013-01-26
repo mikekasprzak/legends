@@ -212,6 +212,10 @@ public:
 			}
 			//Log( "" );
 		}
+		
+//		Map.Tile.Resize(8,8);
+//		Map.TileInfo.Resize(8,8);
+//		Island.Resize(8,8);
 	}
 	
 	~cWorld() {
