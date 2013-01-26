@@ -130,6 +130,7 @@ inline void GenerateMinitudeDistanceGrid( Grid2D<u8>& Dest, const int x1, const 
 			if ( yDiff < 0 )
 				yDiffABS = -yDiff;
 
+			// Axitude (Axis'manitude? since it generates axis distances) //
 			// Minitude Distance (the opposite of Chebyshev, Min instead of Max) //
 			if ( xDiffABS < yDiffABS )
 				Dest(x2,y2) = xDiffABS;
