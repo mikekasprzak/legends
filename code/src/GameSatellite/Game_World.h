@@ -70,7 +70,7 @@ public:
 
 	Grid2D<tTile>		Tile;		// Must be separate from other data, because it's bytes //
 	Grid2D<cTileInfo> 	TileInfo;
-	Grid2D<cRegion>	Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
+	Grid2D<cRegion>		Region;		// 8x8 Areas (so Width/8 and Height/8 in size) //
 
 public:
 	cMap()
@@ -78,25 +78,28 @@ public:
 	}
 	
 	// Must be multiples of 8 //
-	cMap( const size_t Width, const size_t Height ) :
-		Tile( Width, Height ),
-		TileInfo( Width, Height ),
-		Region( Width >> 3, Height >> 3 )	// div 8 //
+	cMap( const size_t _Width, const size_t _Height ) :
+		Tile( _Width, _Height ),
+		TileInfo( _Width, _Height ),
+		Region( _Width >> 3, _Height >> 3 )	// div 8 //
 	{
-		Warning( (Width & 7) != 0, "Bad Width %i (%i)", Width, Width & 7 );		// mod 8 //
-		Warning( (Height & 7) != 0, "Bad Height %i (%i)", Height, Height & 7 );	// mod 8 //
+		Warning( (_Width & 7) != 0, "Bad Width %i (%i)", _Width, _Width & 7 );		// mod 8 //
+		Warning( (_Height & 7) != 0, "Bad Height %i (%i)", _Height, _Height & 7 );	// mod 8 //
 		
 	}
 
 public:
-	const size_t GetWidth() {
+	inline const size_t Width() {
 		return Tile.Width();
 	}
-	const size_t GetHeight() {
+	inline const size_t Height() {
 		return Tile.Height();
 	}
-	const size_t GetSize() {
+	inline const size_t Size() {
 		return Tile.Size();
+	}
+	inline const size_t SizeOf() {
+		return Tile.SizeOf();
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
@@ -106,7 +109,8 @@ public:
 	cMap Map;
 	Grid2D<u16> Island;
 	
-	Texture::TextureHandle TileArt;
+	Texture::TextureHandle TilesetArt;
+	Grid2D<u8> TilesetInfo;
 	
 	// Current Player //
 	// Camera relative current player //
@@ -137,8 +141,9 @@ public:
 		Map( 32, 32 )
 	{
 		#ifdef PRODUCT_CLIENT
+		// Tileset Loading //
 		{
-			const char* File = Search::Search( "Tiles" );
+			const char* File = Search::Search( "Tiles0" );
 			
 			DataBlock* Data = new_read_DataBlock( File );
 			Texture::STBTexture Tex = Texture::new_STBTexture( Data->Data, Data->Size );
@@ -146,7 +151,23 @@ public:
 			
 			Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
 			
-			TileArt = Texture::upload_STBTexture( Tex, true );
+			TilesetArt = Texture::upload_STBTexture( Tex, false );
+			
+			delete_STBTexture( Tex );
+		}
+		
+		// Tileset Info Loading //
+		{
+			const char* File = Search::Search( "Tiles_Info" );
+			
+			DataBlock* Data = new_read_DataBlock( File );
+			Texture::STBTexture Tex = Texture::new_STBTexture( Data->Data, Data->Size );
+			delete_DataBlock( Data );
+			
+			Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+			
+			// Tileset, despite actual size, will be 16x16 unique pieces of data //
+			TilesetInfo = Texture::to_8bit_Grid2D_STBTexture( Tex, Tex.Width/16, Tex.Height/16 );
 			
 			delete_STBTexture( Tex );
 		}
@@ -163,12 +184,12 @@ public:
 		
 		srand( 1 );
 
-		Grid2D<float> Land = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+		Grid2D<float> Land = generate_PlasmaFractal_HeightMapFloat( Map.Width(), Map.Height() );
 		Land.RoundData( WaterLevel );
 		Land.SoftenRigidData(2);
 		Land.SoftenRigidData(4);
 		Land.SoftenRigidData(2);
-		Grid2D<float> Fertility = generate_PlasmaFractal_HeightMapFloat( Map.GetWidth(), Map.GetHeight() );
+		Grid2D<float> Fertility = generate_PlasmaFractal_HeightMapFloat( Map.Width(), Map.Height() );
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 
@@ -221,7 +242,7 @@ public:
 	
 	~cWorld() {
 		#ifdef PRODUCT_CLIENT
-		Texture::delete_TextureHandle( TileArt );
+		Texture::delete_TextureHandle( TilesetArt );
 		#endif // PRODUCT_CLIENT //
 	}
 	
@@ -235,9 +256,12 @@ public:
 	}
 	
 	void Draw( const Matrix4x4& ViewMatrix ) {
-		Vector3DAllocator Vert( Map.GetSize()*6 );
-		UVAllocator UV( Map.GetSize()*6 );
-		Allocator<GelColor> Color( Map.GetSize()*6 );
+		SubGrid2D<cMap::tTile> SubMap( 0,0, 13,13, Map.Tile );
+		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
+		
+		Vector3DAllocator Vert( SubMap.Size()*6 );
+		UVAllocator UV( SubMap.Size()*6 );
+		Allocator<GelColor> Color( SubMap.Size()*6 );
 
 		Vert.Clear();
 		UV.Clear();
@@ -249,13 +273,13 @@ public:
 		
 		GelUV UVStep = GEL_UV_ONE / 16;
 		
-		Real TileSize = 2*12;
+		Real TileSize = 2*12*3;
 		
-		int HalfWidth = Map.GetWidth() >> 1;
-		int HalfHeight = Map.GetHeight() >> 1;
+		int HalfWidth = SubMap.HalfWidth();
+		int HalfHeight = SubMap.HalfHeight();
 		
-		for ( size_t y = 0; y < Map.GetHeight(); y++ ) {
-			for ( size_t x = 0; x < Map.GetWidth(); x++ ) {
+		for ( size_t y = 0; y < SubMap.Height(); y++ ) {
+			for ( size_t x = 0; x < SubMap.Width(); x++ ) {
 				Vector3D VecXY((int)x - HalfWidth,(int)y - HalfHeight,0);
 
 				Vert.Add( (VecXY+PlusY)*TileSize );
@@ -267,8 +291,8 @@ public:
 				Vert.Add( (VecXY+PlusY)*TileSize );
 
 				int TX = x;
-				int TY = Map.GetHeight()-1-y;
-				int Index = Map.Tile.Wrap(TX,TY);
+				int TY = SubMap.Height()-1-y;
+				int Index = SubMap.Wrap(TX,TY);
 				// UV Texture is 16x16 (in tiles) //
 				int UVX = (Index & 15);
 				int UVY = 15-((Index >> 4) & 15);
@@ -304,34 +328,11 @@ public:
 		Render::Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
 		Render::Default->Uniform1i( 2, 0 ); // TexImage0 //
 		Render::Default->BindUniforms();
-		Texture::Bind( TileArt, 0 );
+		Texture::Bind( TilesetArt, 0 );
 		Render::Default->Attrib( 0, Vert.Get() );
 		Render::Default->Attrib( 1, UV.Get() );
 		Render::Default->Attrib( 2, Color.Get() );
 		Render::Default->DrawArrays( GEL_TRIANGLES, Vert.Size() );
-
-		
-//		Vector3DAllocator Vert( Map.GetSize()*3*3 );
-//		Allocator<GelColor> Color( Map.GetSize()*3*3 );
-//
-//		Vert.Clear();
-//		Color.Clear();
-//		
-//		for ( size_t y = 0; y < Map.GetHeight()*3; y++ ) {
-//			for ( size_t x = 0; x < Map.GetWidth()*3; x++ ) {
-//				Vert.Add( Vector3D(x*2*2,y*2*2,0) );
-//				int Val = Map.Tile.Wrap(x,y);
-//				Color.Add( GEL_RGB(Val,Val,Val) );
-//			}
-//		}
-//
-//		Render::Default->Bind( Render::ColorShader );
-//		Render::Default->UniformMatrix4x4( 0, ViewMatrix );
-//		Render::Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
-//		Render::Default->BindUniforms();
-//		Render::Default->Attrib( 0, Vert.Get() );
-//		Render::Default->Attrib( 2, Color.Get() );
-//		Render::Default->DrawArrays( GEL_POINTS, Vert.Size() );
 	}
 	
 public:

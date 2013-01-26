@@ -37,32 +37,32 @@ cApp::cApp() {
 	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 	
 #ifdef PRODUCT_CLIENT
-	{
-		const char* File = Search::Search( "Tiles" );
-		
-		DataBlock* Data = new_read_DataBlock( File );
-		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
-		delete_DataBlock( Data );
-		
-		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
-		
-		Texas = upload_STBTexture( Tex, false );
-		
-		delete_STBTexture( Tex );
-		
-		File = Search::Search( "Tiles_Info" );
-		Data = new_read_DataBlock( File );
-		Tex = new_STBTexture( Data->Data, Data->Size );
-		delete_DataBlock( Data );
-		
-		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
-		
-		Grid2D<u8> Byter = to_8bit_Grid2D_STBTexture( Tex, Tex.Width/16, Tex.Height/16 );
-		
-		Log( "%i, %i (%x %x -- %x %x)", Byter.Width(), Byter.Height(), (int)Byter(0,0),(int)Byter(1,0),(int)Byter(0,1),(int)Byter(1,2) );
-		
-		delete_STBTexture( Tex );
-	}
+//	{
+//		const char* File = Search::Search( "Tiles" );
+//		
+//		DataBlock* Data = new_read_DataBlock( File );
+//		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
+//		delete_DataBlock( Data );
+//		
+//		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+//		
+//		Texas = upload_STBTexture( Tex, false );
+//		
+//		delete_STBTexture( Tex );
+//		
+//		File = Search::Search( "Tiles_Info" );
+//		Data = new_read_DataBlock( File );
+//		Tex = new_STBTexture( Data->Data, Data->Size );
+//		delete_DataBlock( Data );
+//		
+//		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+//		
+//		Grid2D<u8> Byter = to_8bit_Grid2D_STBTexture( Tex, Tex.Width/16, Tex.Height/16 );
+//		
+//		Log( "%i, %i (%x %x -- %x %x)", Byter.Width(), Byter.Height(), (int)Byter(0,0),(int)Byter(1,0),(int)Byter(0,1),(int)Byter(1,2) );
+//		
+//		delete_STBTexture( Tex );
+//	}
 	
 	Font = new cFont( Search::Search( "C64Pro.fnt" ) );
 
