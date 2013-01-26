@@ -34,12 +34,12 @@ public:
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Grid2D( const szt _w, const szt _h, const tType& Type ) :
+	inline Grid2D( const szt _w, const szt _h, const tType& InitValue ) :
 		w( _w ),
 		h( _h ),
-		Data( new tType[w*h] )
+		Data( new tType[ _w * _h] )
 	{
-		Fill(Type);
+		fill_Data<tType>( InitValue, Data, Size() );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// For building from pointers //
@@ -53,11 +53,9 @@ public:
 	inline Grid2D( const Grid2D<tType>& Orig ) :
 		w( Orig.w ),
 		h( Orig.h ),
-		Data( new tType[Size()] )
+		Data( new tType[Orig.Size()] )
 	{
-		for ( szt idx = Size(); idx--; ) {
-			Data[ idx ] = Orig.Data[ idx ];
-		}
+		copy_Data( Orig.Data, Data, Orig.SizeOf() );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D<tType>& operator = (const Grid2D<tType>& Orig) {
@@ -68,9 +66,7 @@ public:
 				h = Orig.h;
 
 				// Copy our data and don't delete it //
-				for ( szt idx = Size(); idx--; ) {
-					Data[ idx ] = Orig.Data[ idx ];
-				}				
+				copy_Data( Orig.Data, Data, Orig.SizeOf() );
 			}
 			// If different size, or no size //
 			else {
@@ -82,10 +78,8 @@ public:
 				h = Orig.h;
 				
 				// Create and copy the data //
-				Data = new tType[ Size() ];
-				for ( szt idx = Size(); idx--; ) {
-					Data[ idx ] = Orig.Data[ idx ];
-				}
+				Data = new tType[ Orig.Size() ];
+				copy_Data( Orig.Data, Data, Orig.SizeOf() );
 			}
 		}
 		
@@ -121,14 +115,14 @@ public:
 		return w * h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline void Fill( tType* Dest, const szt Size, const tType& Value = tType() ) {
-		for ( szt idx = Size; idx--; ) {
-			Dest[ idx ] = Value;
-		}
+	inline const szt SizeOf() const {
+		return Size() * sizeof(tType);
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	inline void Fill( const tType& Value = tType() ) {
-		Fill( Data, Size(), Value );
+		fill_Data( Value, Data, Size() );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Used Internally to explicitly change the Data pointer //
@@ -139,11 +133,11 @@ public:
 		Data = NewData;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetW( const szt _w ) {
+	inline void SetWidth( const szt _w ) {
 		w = _w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetH( const szt _h ) {
+	inline void SetHeight( const szt _h ) {
 		h = _h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -468,7 +462,7 @@ public:
 private:
 	// - -------------------------------------------------------------------------------------- - //
 	static inline tType* CopyData(
-		const Grid2D< tType >& Src,
+		const Grid2D<tType>& Src,
 		const szt NewWidth,
 		const szt NewHeight,
 		const int SrcStartX,
@@ -478,8 +472,8 @@ private:
 		const tType& InitValue = tType()
 		);
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > Copy(
-		const Grid2D< tType >& Src,
+	static inline const Grid2D<tType> Copy(
+		const Grid2D<tType>& Src,
 		const szt NewWidth,
 		const szt NewHeight,
 		const int SrcStartX,
@@ -488,11 +482,22 @@ private:
 		const int DestStartY,
 		const tType& InitValue = tType()
 		);
+	// - -------------------------------------------------------------------------------------- - //
+//	inline const Grid2D<tType>& Copy(
+//		const Grid2D<tType>& Src,
+//		const szt NewWidth,
+//		const szt NewHeight,
+//		const int SrcStartX,
+//		const int SrcStartY,
+//		const int DestStartX,
+//		const int DestStartY,
+//		const tType& InitValue = tType()
+//		);
 	// - -------------------------------------------------------------------------------------- - //
 public:
-	static inline const Grid2D< tType > Merge(
-		const Grid2D< tType >& GridA,
-		const Grid2D< tType >& GridB,
+	static inline const Grid2D<tType> Merge(
+		const Grid2D<tType>& GridA,
+		const Grid2D<tType>& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -500,20 +505,9 @@ public:
 		const tType& InitValue = tType()
 		);
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > MergeBlend(
-		const Grid2D< tType >& GridA,
-		const Grid2D< tType >& GridB,
-		const int GridAX,
-		const int GridAY,
-		const int GridBX,
-		const int GridBY,
-		const tType& TestValue = tType(),
-		const tType& InitValue = tType()
-		);
-	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > MergeBlendOnly(
-		const Grid2D< tType >& GridA,
-		const Grid2D< tType >& GridB,
+	static inline const Grid2D<tType> MergeBlend(
+		const Grid2D<tType>& GridA,
+		const Grid2D<tType>& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -522,9 +516,20 @@ public:
 		const tType& InitValue = tType()
 		);
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > MergeBlendOnlyMask(
-		const Grid2D< tType >& GridA,
-		const Grid2D< tType >& GridB,
+	static inline const Grid2D<tType> MergeBlendOnly(
+		const Grid2D<tType>& GridA,
+		const Grid2D<tType>& GridB,
+		const int GridAX,
+		const int GridAY,
+		const int GridBX,
+		const int GridBY,
+		const tType& TestValue = tType(),
+		const tType& InitValue = tType()
+		);
+	// - -------------------------------------------------------------------------------------- - //
+	static inline const Grid2D<tType> MergeBlendOnlyMask(
+		const Grid2D<tType>& GridA,
+		const Grid2D<tType>& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -534,9 +539,9 @@ public:
 		const tType& InitValue = tType()
 		);
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > MergeBlendMask(
-		const Grid2D< tType >& GridA,
-		const Grid2D< tType >& GridB,
+	static inline const Grid2D<tType> MergeBlendMask(
+		const Grid2D<tType>& GridA,
+		const Grid2D<tType>& GridB,
 		const int GridAX,
 		const int GridAY,
 		const int GridBX,
@@ -548,8 +553,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > RotateCW( const Grid2D< tType >& Src ) {
-		Grid2D< tType > NewGrid( Src.Height(), Src.Width() );
+	static inline const Grid2D<tType> RotateCW( const Grid2D<tType>& Src ) {
+		Grid2D<tType> NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcHeight = Src.Height();
 		for ( szt _y = SrcHeight; _y--; ) {
@@ -561,8 +566,8 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > RotateCCW( const Grid2D< tType >& Src ) {
-		Grid2D< tType > NewGrid( Src.Height(), Src.Width() );
+	static inline const Grid2D<tType> RotateCCW( const Grid2D<tType>& Src ) {
+		Grid2D<tType> NewGrid( Src.Height(), Src.Width() );
 		
 		szt SrcWidth = Src.Width();
 		for ( szt _y = Src.Height(); _y--; ) {
@@ -574,16 +579,16 @@ public:
 		return NewGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > RotateCW( ) {
+	inline const Grid2D<tType> RotateCW( ) {
 		return RotateCW( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > RotateCCW( ) {
+	inline const Grid2D<tType> RotateCCW( ) {
 		return RotateCCW( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > FlipX( const Grid2D< tType >& Src ) {
-		Grid2D< tType > NewGrid( Src.Width(), Src.Height() );
+	static inline const Grid2D<tType> FlipX( const Grid2D<tType>& Src ) {
+		Grid2D<tType> NewGrid( Src.Width(), Src.Height() );
 		
 		szt SrcWidth = Src.Width();
 		szt SrcHeight = Src.Height();
@@ -596,8 +601,8 @@ public:
 		return NewGrid;		
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const Grid2D< tType > FlipY( const Grid2D< tType >& Src ) {
-		Grid2D< tType > NewGrid( Src.Width(), Src.Height() );
+	static inline const Grid2D<tType> FlipY( const Grid2D<tType>& Src ) {
+		Grid2D<tType> NewGrid( Src.Width(), Src.Height() );
 		
 		szt SrcWidth = Src.Width();
 		szt SrcHeight = Src.Height();
@@ -610,11 +615,11 @@ public:
 		return NewGrid;		
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > FlipX( ) {
+	inline const Grid2D<tType> FlipX( ) {
 		return FlipX( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > FlipY( ) {
+	inline const Grid2D<tType> FlipY( ) {
 		return FlipY( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
@@ -700,7 +705,7 @@ public:
 		return y2;
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const Grid2D< tType > Trim( const Grid2D< tType >& Src, const tType& Zero = tType() ) {
+	static inline const Grid2D<tType> Trim( const Grid2D<tType>& Src, const tType& Zero = tType() ) {
 		szt x1 = Src.TrimX1();
 		szt y1 = Src.TrimY1();
 		szt x2 = Src.TrimX2();
@@ -712,7 +717,7 @@ public:
 		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > Trim( const tType& Zero = tType() ) {
+	inline const Grid2D<tType> Trim( const tType& Zero = tType() ) {
 		return Trim( *this, Zero );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
@@ -720,7 +725,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //	
 	// NOTE: This function might not be needed, but was easy enough to write after all //
 	// - -------------------------------------------------------------------------------------- - //	
-	static inline const Grid2D< tType > Crop( const Grid2D< tType >& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
+	static inline const Grid2D<tType> Crop( const Grid2D<tType>& Src, const szt x1, const szt y1, const szt x2, const szt y2 ) {
 		szt NewWidth = Src.AxisSaturateX( x2 ) + 1 - Src.AxisSaturateX( x1 );
 		szt NewHeight = Src.AxisSaturateY( y2 ) + 1 - Src.AxisSaturateY( y1 );
 		
@@ -733,52 +738,14 @@ public:
 		return Copy( Src, NewWidth, NewHeight, Src.AxisSaturateX( x1 ), Src.AxisSaturateY( y1 ), 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
+	inline const Grid2D<tType> Crop( const szt x1, const szt y1, const szt x2, const szt y2 ) {	
 		return Crop( *this, x1, y1, x2, y2 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 		
 public:
 	// - -------------------------------------------------------------------------------------- - //
-	inline void Resize( const szt NewWidth, const szt NewHeight, const tType& InitValue = tType() ) {
-		ResizeCenter( NewWidth, NewHeight, InitValue );
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline void ResizeCenter( const szt NewWidth, const szt NewHeight, const tType& InitValue = tType() ) {
-		int SrcStartX;
-		int DestStartX;
-
-		// Center the X //
-		if ( NewWidth > Width() ) {
-			SrcStartX = 0;
-			DestStartX = (NewWidth - Width()) >> 1;
-		}
-		else {
-			SrcStartX = (Width() - NewWidth) >> 1;
-			DestStartX = 0;
-		}
-		
-		
-		int SrcStartY;
-		int DestStartY;
-
-		// Center the Y //
-		if ( NewHeight > Height() ) {
-			SrcStartY = 0;
-			DestStartY = (NewHeight - Height()) >> 1;
-		}
-		else {
-			SrcStartY = (Height() - NewHeight) >> 1;
-			DestStartY = 0;
-		}
-		
-		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		w = NewWidth;
-		h = NewHeight;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline void ResizeAlign( const szt NewWidth, const szt NewHeight, const int XAlign, const int YAlign, const tType& InitValue = tType() ) {
+	inline void Resize( const szt NewWidth, const szt NewHeight, const int XAlign = 0, const int YAlign = 0, const tType& InitValue = tType() ) {
 		int SrcStartX;
 		int DestStartX;
 
@@ -844,13 +811,11 @@ public:
 			}	
 		}		
 		
-		// Copy the data and set the new dimensions //
-		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
-		w = NewWidth;
-		h = NewHeight;
+		// Copy the data //
+		*this = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-
+/*
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetWidth( const szt NewWidth, const tType& InitValue = tType() ) {
 		SetWidthCenter( NewWidth, InitValue );
@@ -967,6 +932,7 @@ public:
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+*/
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of instances of a value //

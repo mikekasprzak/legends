@@ -37,8 +37,8 @@ inline Grid2D<unsigned> to_32bit_Grid2D_STBTexture( STBTexture& Texture, const i
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 	
@@ -98,8 +98,8 @@ inline Grid2D<unsigned short> to_16bit_Grid2D_STBTexture( STBTexture& Texture, c
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
@@ -159,8 +159,8 @@ inline Grid2D<unsigned char> to_8bit_Grid2D_STBTexture( STBTexture& Texture, con
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
@@ -220,8 +220,8 @@ inline Grid2D<unsigned short> to_16bit_2_Channel_Grid2D_STBTexture( STBTexture& 
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
@@ -275,8 +275,8 @@ inline Grid2D<unsigned char> to_8bit_2_Channel_Grid2D_STBTexture( STBTexture& Te
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 
@@ -330,8 +330,8 @@ inline Grid2D<unsigned char> to_8bit_1_Channel_Grid2D_STBTexture( STBTexture& Te
 	szt Height = Texture.Height / StepY;
 	szt Size = Width * Height;
 	
-	Grid.SetW( Width );
-	Grid.SetH( Height );
+	Grid.SetWidth( Width );
+	Grid.SetHeight( Height );
 	tType* Data = new tType[ Size ];
 	Grid.SetData( Data );
 

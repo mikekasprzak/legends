@@ -5,6 +5,7 @@
 #define __Library_GELCore_Data_Core_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Style/GelTypes.h>
+#include "Ptr.h"				// is_aligned_Ptr() //
 #include <stdio.h>				// FILE*, fopen, ftell, etc //
 // - ------------------------------------------------------------------------------------------ - //
 // NOTE: This code could "technically" be made in to a general purpose reader/writer for all //
@@ -47,6 +48,28 @@ inline void u32set_Data( const unsigned _Value, void* _Data, const size_t _Size 
 	// The solution to the unusable index is to change the base pointer. //
 	// Then the index can simply be added to the target address before performing a store. //
 }
+
+// - ------------------------------------------------------------------------------------------ - //
+inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const szt _Size ) {
+	unsigned* Src = (unsigned* const)_Src;
+	unsigned* Dest = (unsigned* const)_Dest;
+	--Src;
+	--Dest;
+
+	for ( szt Index = _Size+1; --Index; ) {
+		Dest[Index] = Src[Index];
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void fill_Data( const tType& Src, tType* Dest, const szt Count ) {
+	--Dest;
+
+	for ( szt Index = Count+1; --Index; ) {
+		Dest[Index] = Src;
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // MemSET wrapper //
