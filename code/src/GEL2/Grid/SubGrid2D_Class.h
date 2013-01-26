@@ -158,6 +158,234 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& operator () ( const szt _x, const szt _y ) {
+		return Grid->Data[ Index( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType& operator () ( const szt _x, const szt _y ) const {
+		return Grid->Data[ Index( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& operator [] ( const szt _Index ) {
+		// TODO: Assert out of bounds 
+		return Grid->Data[ _Index ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType& operator [] ( const szt _Index ) const {
+		// TODO: Assert out of bounds 
+		return Grid->Data[ _Index ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline tType& Wrap( const int _x, const int _y ) {
+		return Grid->Data[ IndexWrap( _x, _y ) ];
+	}
+	inline const tType& Wrap( const int _x, const int _y ) const {
+		return Grid->Data[ IndexWrap( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline tType& WrapX( const int _x, const int _y ) {
+		return Grid->Data[ IndexWrapX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline const tType& WrapX( const int _x, const int _y ) const {
+		return Grid->Data[ IndexWrapX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline tType& WrapY( const int _x, const int _y ) {
+		return Grid->Data[ IndexWrapY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline const tType& WrapY( const int _x, const int _y ) const {
+		return Grid->Data[ IndexWrapY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with next line/first line wrapping //
+	inline tType& NextWrap( const int _x, const int _y ) {
+		return Grid->Data[ IndexNextWrap( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with next line/first line wrapping //
+	inline const tType& NextWrap( const int _x, const int _y ) const {
+		return Grid->Data[ IndexNextWrap( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline tType& Saturate( const int _x, const int _y ) {
+		return Grid->Data[ IndexSaturate( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& Saturate( const int _x, const int _y ) const {	
+		return Grid->Data[ IndexSaturate( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline tType& SaturateX( const int _x, const int _y ) {
+		return Grid->Data[ IndexSaturateX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& SaturateX( const int _x, const int _y ) const {	
+		return Grid->Data[ IndexSaturateX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline tType& SaturateY( const int _x, const int _y ) {
+		return Grid->Data[ IndexSaturateY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& SaturateY( const int _x, const int _y ) const {	
+		return Grid->Data[ IndexSaturateY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// These are for converting explicit X and Y values in to ones that fit within grid ranges //
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const int AxisSaturateX( int _x ) const {
+		if ( _x >= (int)Width() )
+			_x = Width() - 1;
+		else if ( _x < 0 )
+			_x = 0;
+		
+		return _x;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const int AxisSaturateY( int _y ) const {
+		if ( _y >= (int)Height() )
+			_y = Height() - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return _y;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const szt AxisWrapX( int _x ) const {
+		if ( _x < 0 )
+			_x = -_x;
+		return (_x % Width());
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const szt AxisWrapY( int _y ) const {
+		if ( _y < 0 )
+			_y = -_y;
+		return (_y % Height());
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, returning the dead value if over //
+	inline const szt DeadIndex( const int _x, const int _y, const szt DeadValue = SZT_MAX ) const {
+		if ( _x >= Width() )
+			return DeadValue;
+		else if ( _x < 0 )
+			return DeadValue;
+			
+		if ( _y >= Height() )
+			return DeadValue;
+		else if ( _y < 0 )
+			return DeadValue;
+			
+		return Index( _x, _y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, returning the dead value if over //
+	inline const tType& Dead( const int _x, const int _y, const tType& DeadValue = tType() ) const {
+		szt DIndex = DeadIndex(_x,_y);
+		
+		if ( DIndex != SZT_MAX )
+			return Grid->Data[ Index( _x, _y ) ];
+		else
+			return DeadValue;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Given an edge described by OffsetX and OffsetY (Top=(0,1) Left=(1,0) ...), Index along it. //
+	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
+		int _x, _y;
+		
+		if ( OffsetX < 0 ) {
+			_x = Width() - 1;
+			_y = _Index;
+		}
+		else if ( OffsetX > 0 ) {
+			_x = 0;
+			_y = _Index;
+		}
+		else if ( OffsetY < 0 ) {
+			_x = _Index;
+			_y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			_x = _Index;
+			_y = 0;
+		}
+		
+		return IndexSaturate(_x,_y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& Edge( const int _Index, const int OffsetX, const int OffsetY ) {
+		return Grid->Data[ EdgeIndex( _Index, OffsetX, OffsetY ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange two values given their coordinates //
+	inline void _Swap( const int x1, const int y1, const int x2, const int y2 ) {
+		tType Temp = (*Grid)(x1,y1);
+		(*Grid)(x1,y1) = (*Grid)(x2,y2);
+		(*Grid)(x2,y2) = Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void Swap( int x1, int y1, int x2, int y2 ) {
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
+		
+		x2 = AxisSaturateX( x2 );
+		y2 = AxisSaturateY( y2 );
+		
+		_Swap(x1,y1,x2,y2);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the value at the coordinate, returning the coordinate's value //
+	inline const tType _Swap( const int x1, const int y1, const tType& Value ) {
+		tType Temp = (*Grid)(x1,y1);
+		(*Grid)(x1,y1) = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const tType Swap( int x1, int y1, const tType& Value ) {
+		x1 = AxisSaturateX( x1 );
+		y1 = AxisSaturateY( y1 );
+
+		return _Swap(x1,y1,Value);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the value at the Index, returning the value at the Index //
+	inline const tType Swap( int _Index, const tType& Value ) {
+		tType Temp = (*Grid)[_Index];
+		(*Grid)[_Index] = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GRID_SUBGRID2D_CLASS_H__ //
