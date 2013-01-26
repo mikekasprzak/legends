@@ -135,6 +135,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline void Fill( const tType& Value = tType() ) {
 		fill_Data( Value, Data, Size() );
@@ -185,7 +186,7 @@ public:
 	inline const szt IndexWrapX( int _x, const int _y ) const {
 		if ( _x < 0 )
 			_x = -_x;
-		return (_x % Width()) + ((_y) * Height());
+		return (_x % Width()) + ((_y) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrapY( const int _x, int _y ) const {
@@ -194,8 +195,9 @@ public:
 		return (_x) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Wraps linearly to the next line, but around to the top //
 	inline const szt IndexNextWrap( const int _x, const int _y ) const {
-		return (_x + (_y * Width())) % Size();
+		return abs(Index(_x,_y)) % Size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //

@@ -5,6 +5,7 @@
 #include <System/System.h>
 #include <Node/GelList.h>
 #include <Grid/Grid2D.h>
+#include <Grid/SubGrid2D.h>
 #include <Search/Search.h>
 #include <Texture/Texture.h>
 
