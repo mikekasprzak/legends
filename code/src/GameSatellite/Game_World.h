@@ -297,7 +297,7 @@ public:
 					continue;
 				}
 				else if ( Val > 0 ) {
-					Col = GEL_RGBA(255,255,255,128-(Val*12));
+					Col = GEL_RGBA(255,255,255,128-(Val*24));
 				}
 //				if ( Island(TX,TY) != 0xFFFF ) {
 //					float Val = Island(TX,TY);
