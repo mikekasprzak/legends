@@ -50,17 +50,18 @@ inline void u32set_Data( const unsigned _Value, void* _Data, const size_t _Size 
 }
 
 // - ------------------------------------------------------------------------------------------ - //
-inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const szt _Size ) {
-	unsigned* Src = (unsigned* const)_Src;
-	unsigned* Dest = (unsigned* const)_Dest;
-	--Src;
-	--Dest;
-
-	for ( szt Index = _Size+1; --Index; ) {
-		Dest[Index] = Src[Index];
-	}
-}
+//inline void aligned_copy_Data( const void* const _Src, void* const _Dest, const szt _Size ) {
+//	unsigned* Src = (unsigned* const)_Src;
+//	unsigned* Dest = (unsigned* const)_Dest;
+//	--Src;
+//	--Dest;
+//
+//	for ( szt Index = _Size+1; --Index; ) {
+//		Dest[Index] = Src[Index];
+//	}
+//}
 // - ------------------------------------------------------------------------------------------ - //
+// You probably want this, not MemSet //
 template< typename tType >
 inline void fill_Data( const tType& Src, tType* Dest, const szt Count ) {
 	--Dest;
@@ -72,7 +73,7 @@ inline void fill_Data( const tType& Src, tType* Dest, const szt Count ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-// MemSET wrapper //
+// MemSET wrapper -- Only writes bytes (despite input being an int) //
 inline void set_Data( const int _Value, void* _Data, const size_t _Size ) {
 	memset( _Data, _Value, _Size );
 }
@@ -122,13 +123,36 @@ inline void zero_Data( void* _Data, const size_t _Size ) {
 	set_Data( 0, _Data, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
-// "One" Memory, or in other words, write a bitmask of all 1's (-1) //
+// Write a bitmask of all 1's (-1) //
 inline void one_Data( void* _Data, const size_t _Size ) {
 	// TODO: optimized for loop that does 32bit writes //
 	set_Data( -1, _Data, _Size );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+// Special template variants of zeroing/oneing //
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void Zero( tType& _Data ) {
+	zero_Data( &_Data, sizeof(_Data) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void Zero( tType* _Data, const szt Count ) {
+	zero_Data( _Data, sizeof(tType)*Count );
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void One( tType& _Data ) {
+	one_Data( &_Data, sizeof(_Data) );
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void One( tType* _Data, const szt Count ) {
+	one_Data( _Data, sizeof(tType)*Count );
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 
 // - ------------------------------------------------------------------------------------------ - //
