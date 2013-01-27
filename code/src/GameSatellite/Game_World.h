@@ -204,15 +204,15 @@ public:
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 
-//		{
-//			Grid2D<u16> Swirl = GenerateSwirlGrid2D<u16>(5,5,2,2);
-//			for ( size_t y = 0; y < Swirl.Height(); y++ ) {
-//				for ( size_t x = 0; x < Swirl.Width(); x++ ) {
-//					_Log( "%02x,", (int)Swirl(x,y)&0xff );
-//				}
-//				Log("");
-//			}
-//		}
+		{
+			Grid2D<u16> Swirl = GenerateSwirlGrid2D<u16>(9,3,4,1);
+			for ( size_t y = 0; y < Swirl.Height(); y++ ) {
+				for ( size_t x = 0; x < Swirl.Width(); x++ ) {
+					_Log( "%02x,", (int)Swirl(x,y)&0xff );
+				}
+				Log("");
+			}
+		}
 
 		Island = BlobExtractWrapped(Land, WaterLevel);
 		

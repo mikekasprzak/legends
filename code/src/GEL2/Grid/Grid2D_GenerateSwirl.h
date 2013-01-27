@@ -6,7 +6,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // NOTE: Swirl map max size with u16 is 65535, i.e. smaller than 256x256 //
 template< typename tType >
-inline void GenerateSwirlGrid2D( Grid2D<tType>& Dest, const int x1, const int y1 ) {
+inline void GeneratePathfinderSwirlGrid2D( Grid2D<tType>& Dest, const int x1, const int y1 ) {
 	const tType Max = (tType)0xFFFFFFFF;
 	Dest.Fill( Max );
 	
@@ -39,6 +39,47 @@ inline void GenerateSwirlGrid2D( Grid2D<tType>& Dest, const int x1, const int y1
 			break;
 		}
 	};
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline const Grid2D<tType> GeneratePathfinderSwirlGrid2D( const szt w, const szt h, const int CenterX, const int CenterY ) {
+	Grid2D<tType> Ret(w,h);
+	GeneratePathfinderSwirlGrid2D( Ret, CenterX, CenterY );
+	return Ret;
+}
+// - ------------------------------------------------------------------------------------------ - //
+template< typename tType >
+inline void GenerateSwirlGrid2D( Grid2D<tType>& Dest, const int x1, const int y1 ) {
+	IVector2D Pos(x1,y1);
+	IVector2D Facing(0,-1);
+
+	szt Repeat = 1;
+	tType Value = 0;
+
+	// Do the start //
+	{
+		szt Index = Dest.DeadIndex(Pos.x,Pos.y,SZT_MAX);
+		if ( Index != SZT_MAX ) 
+			Dest[Index] = Value++;
+	}
+	
+	// Do the rest //
+	while( Value < Dest.Size() ) {
+		// Do it twice //
+		for ( szt idx2 = 2+1; --idx2 ; ) {
+			// Go straight "Repeat" number of times //
+			for ( szt idx = Repeat; idx-- ; ) {
+				Pos += Facing;
+				szt Index = Dest.DeadIndex(Pos.x,Pos.y,SZT_MAX);
+				if ( Index != SZT_MAX ) 
+					Dest[Index] = Value++;
+			}
+			// Turn //
+			Facing = Facing.Tangent();
+		}
+		// Increase repeats (every 2 times) //
+		Repeat++;
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< typename tType >
