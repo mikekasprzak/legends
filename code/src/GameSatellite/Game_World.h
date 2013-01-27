@@ -283,13 +283,13 @@ public:
 	}
 	
 	void Draw( const Matrix4x4& ViewMatrix ) {
-		SubGrid2D<cMap::tTile> SubMap( 0,0, 21,21, Map.Tile );
+		SubGrid2D<cMap::tTile> SubMap( 0,0, 31,31, Map.Tile );
 		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
 		
 		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
 		//GenerateMagnitudeDistanceGrid2D( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
 		//GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
-		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8, 4 );
+		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8, 6 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );
@@ -325,12 +325,12 @@ public:
 				}
 				else {
 					u8 Val = Occlusion(TX,TY);
-					if ( Val > 2 ) {
+					if ( Val > 3 ) {
 						// Omit geometry //
 						continue;
 					}
 					else if ( Val > 0 ) {
-						Col = GEL_RGBA(255,255,255,128-(Val*48));
+						Col = GEL_RGBA(255,255,255,160-(Val*48));
 					}
 				}
 //				if ( Island(TX,TY) != 0xFFFF ) {
