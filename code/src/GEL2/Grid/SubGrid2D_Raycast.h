@@ -2,36 +2,52 @@
 #ifndef __GEL2_GRID_SUBGRID2D_RAYCAST_H__
 #define __GEL2_GRID_SUBGRID2D_RAYCAST_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Math/IVector.h>
+// - ------------------------------------------------------------------------------------------ - //
 inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask ) {
 	// Only if it's untouched //
 	if ( Dest(x2,y2) == 0xFF ) {
-		int xDiff = x2-x1;
-		int yDiff = y2-y1;
-
-		int SignX = 1;
-		int SignY = 1;
-		int xDiffABS = xDiff;
-		int yDiffABS = yDiff;
+		IVector2D Start(x1,y1);
+		IVector2D End(x2,y2);
+		IVector2D Diff = End-Start;
+		IVector2D Sign(1,1);
+		IVector2D DiffABS(Diff);
 		
 		// Figure out the sign of xDiff //
-		if ( xDiff < 0 ) {
-			SignX = -1;
-			xDiffABS = -xDiff;
+		if ( Diff.x < 0 ) {
+			Sign.x = -1;
+			DiffABS.x = -Diff.x;
 		}
 	
 		// Figure out the sign of yDiff //
-		if ( yDiff < 0 ) {
-			SignY = -1;
-			yDiffABS = -yDiff;
+		if ( Diff.y < 0 ) {
+			Sign.y = -1;
+			DiffABS.y = -Diff.y;
 		}
 		
-		// HACK //
-//		Dest(x2,y2) = xDiffABS+yDiffABS;
-		if ( xDiffABS < yDiffABS ) {
-			Dest(x2,y2) = xDiffABS;
+		IVector2D LargeAxis(1,0);
+		IVector2D SmallAxis(0,1);
+		
+		if ( DiffABS.x < DiffABS.y ) {
+			LargeAxis = IVector2D(0,1);
+			SmallAxis = IVector2D(1,0);
 		}
-		else {
-			Dest(x2,y2) = yDiffABS;
+		
+		int StepsToTake = (LargeAxis*DiffABS).SumOf().ToInt();
+		
+		int FirstSolid = StepsToTake+1;
+		for ( int idx = 0; idx <= StepsToTake; idx++ ) {
+			int x = x1 + ((idx*Diff.x.ToInt())/StepsToTake);
+			int y = y1 + ((idx*Diff.y.ToInt())/StepsToTake);
+			if ( idx < FirstSolid ) {
+				if ( (TileInfo[Src(x,y)] & BitMask) == BitMask ) {
+					FirstSolid = idx;
+				}
+				Dest(x,y) = 0;
+			}
+			else {
+				Dest(x,y) = idx-FirstSolid;
+			}
 		}
 	}
 }

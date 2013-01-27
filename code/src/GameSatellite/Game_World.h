@@ -113,6 +113,7 @@ public:
 	Grid2D<u8> TilesetInfo;
 	
 	// Current Player //
+	IVector2D Pos;
 	// Camera relative current player //
 	// Or instead, make a cGameClient? cGameViewer? cGameObserver? //
 	// Ya, the observer should be separate. A server doesn't need an observer. //
@@ -238,6 +239,9 @@ public:
 //		Map.Tile.Resize(8,8);
 //		Map.TileInfo.Resize(8,8);
 //		Island.Resize(8,8);
+
+		Pos.x = 21/2;
+		Pos.y = 21/2;
 	}
 	
 	~cWorld() {
@@ -256,12 +260,13 @@ public:
 	}
 	
 	void Draw( const Matrix4x4& ViewMatrix ) {
-		SubGrid2D<cMap::tTile> SubMap( 0,0, 13,13, Map.Tile );
+		SubGrid2D<cMap::tTile> SubMap( 0,0, 21,21, Map.Tile );
 		//SubGrid2D<cMap::tTile> SubMap( Map.Tile );
 		
 		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
 		//GenerateMagnitudeDistanceGrid2D( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
-		GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
+		//GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
+		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );
@@ -277,7 +282,7 @@ public:
 		
 		GelUV UVStep = GEL_UV_ONE / 16;
 		
-		Real TileSize = 2*12*3;
+		Real TileSize = 2*12*2;
 		
 		int HalfWidth = SubMap.HalfWidth();
 		int HalfHeight = SubMap.HalfHeight();
@@ -292,13 +297,18 @@ public:
 				int UVY = 15-((Index >> 4) & 15);
 				
 				GelColor Col = GEL_RGB_WHITE;
-				u8 Val = Occlusion(TX,TY);
-				if ( Val > 5 ) {
-					// Omit geometry //
-					continue;
+				if ( (Pos.x.ToInt() == (int)x) && (Pos.y.ToInt() == (int)y) ) {
+					Col = GEL_RGB_GREEN;
 				}
-				else if ( Val > 0 ) {
-					Col = GEL_RGBA(255,255,255,128-(Val*24));
+				else {
+					u8 Val = Occlusion(TX,TY);
+					if ( Val > 5 ) {
+						// Omit geometry //
+						continue;
+					}
+					else if ( Val > 0 ) {
+						Col = GEL_RGBA(255,255,255,128-(Val*24));
+					}
 				}
 //				if ( Island(TX,TY) != 0xFFFF ) {
 //					float Val = Island(TX,TY);

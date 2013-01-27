@@ -34,8 +34,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 class IVector2D : 
 	boost::additive<IVector2D,
+	boost::multiplicative<IVector2D,
 	boost::arithmetic2<IVector2D, Integer
-	> >
+	> > >
 {
 public:
 	// - -------------------------------------------------------------------------------------- - //
@@ -86,8 +87,8 @@ public:
 	// Vector //
 	OVERLOAD_SYMBOLEQUALS_OPERATOR( += );
 	OVERLOAD_SYMBOLEQUALS_OPERATOR( -= );
-	// OVERLOAD_SYMBOLEQUALS_OPERATOR( *= );
-	// OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( *= );
+	OVERLOAD_SYMBOLEQUALS_OPERATOR( /= );
 	// - -------------------------------------------------------------------------------------- - //
 	// Dot Product //
 	inline const Integer dot( const IVector2D& _Vs ) const {

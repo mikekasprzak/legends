@@ -98,10 +98,18 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Convert all Integers to int automatically //
-	inline operator IntType () {
+//	inline operator IntType () {
+//		return Value;
+//	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline operator const IntType () {
 		return Value;
 	}
-
+	// - -------------------------------------------------------------------------------------- - //
+	inline const IntType ToInt() const {
+		return Value;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 public:		
 	// - -------------------------------------------------------------------------------------- - //
 	// Overloaded Operators, essentially a wrapping for float/double's normal operators //
