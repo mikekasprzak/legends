@@ -320,7 +320,7 @@ public:
 				int UVY = 15-((Index >> 4) & 15);
 				
 				GelColor Col = GEL_RGB_WHITE;
-				if ( (Pos.x.ToInt() == (int)x) && (SubMap.Height()-1-Pos.y.ToInt() == (int)y) ) {
+				if ( (Pos.x.ToInt() == (int)x) && (SubMap.Height()-1-Pos.y.ToInt() == y) ) {
 					Col = GEL_RGB_GREEN;
 				}
 				else {

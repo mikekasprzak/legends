@@ -6,7 +6,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask, const int ViewRadius ) {
 	// Only if it's untouched //
-	if ( Dest(x2,y2) == 0xFF ) {
+	//if ( Dest(x2,y2) == 0xFF ) 
+
+	if ( (x1 == x2) && (y1 == y1) )
+		return;
+		
+	{
 		IVector2D Start(x1,y1);
 		IVector2D End(x2,y2);
 		IVector2D Diff = End-Start;
@@ -47,15 +52,19 @@ inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int 
 			x += x1;
 			y += y1;
 			
+			int ToWrite = 0;
 			if ( idx < FirstSolid ) {
 				if ( (sqrt(MagnitudeSquared) > ViewRadius) || ((TileInfo[Src(x,y)] & BitMask) == BitMask) ) {
 					FirstSolid = idx;
 				}
-				Dest(x,y) = 0;
+				//ToWrite = 0;
 			}
 			else {
-				Dest(x,y) = idx-FirstSolid;
+				ToWrite = idx-FirstSolid;
 			}
+			
+			if ( Dest(x,y) > ToWrite )
+				Dest(x,y) = ToWrite;
 		}
 	}
 }
