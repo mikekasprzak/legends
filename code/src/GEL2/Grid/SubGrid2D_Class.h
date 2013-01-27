@@ -128,23 +128,68 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrap( int _x, int _y ) const {
+		// Inner //
 		if ( _x < 0 )
-			_x = -_x;
+			_x = Width() - ((-_x) % Width());
+		else
+			_x %= Width();
+		// Inner //		
 		if ( _y < 0 )
-			_y = -_y;
-		return ((x+(_x % Width())) % Grid->Width()) + (((y+(_y % Height())) % Grid->Width()) * Grid->Width());
+			_y = Height() - ((-_y) % Height());
+		else
+			_y %= Height();
+			
+		_x = x+_x;
+		_y = y+_y;
+
+		// Outer //
+		if ( _x < 0 )
+			_x = Grid->Width() - ((-_x) % Grid->Width());
+		else
+			_x %= Grid->Width();
+		// Outer //		
+		if ( _y < 0 )
+			_y = Grid->Height() - ((-_y) % Grid->Height());
+		else
+			_y %= Grid->Height();
+
+		return _x + (_y * Grid->Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrapX( int _x, const int _y ) const {
+		// Inner //
 		if ( _x < 0 )
-			_x = -_x;
-		return ((x+(_x % Width())) % Grid->Width()) + ((y+_y) * Grid->Width());
+			_x = Width() - ((-_x) % Width());
+		else
+			_x %= Width();
+			
+		_x = x+_x;
+
+		// Outer //
+		if ( _x < 0 )
+			_x = Grid->Width() - ((-_x) % Grid->Width());
+		else
+			_x %= Grid->Width();
+
+		return _x + ((y+_y) * Grid->Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrapY( const int _x, int _y ) const {
+		// Inner //		
 		if ( _y < 0 )
-			_y = -_y;
-		return (x+_x) + (((y+(_y % Height())) % Grid->Width()) * Grid->Width());
+			_y = Height() - ((-_y) % Height());
+		else
+			_y %= Height();
+			
+		_y = y+_y;
+
+		// Outer //		
+		if ( _y < 0 )
+			_y = Grid->Height() - ((-_y) % Grid->Height());
+		else
+			_y %= Grid->Height();
+						
+		return (x+_x) + (_y * Grid->Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Wraps linearly to the next line, but around to the top //

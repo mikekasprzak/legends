@@ -186,22 +186,34 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrap( int _x, int _y ) const {
 		if ( _x < 0 )
-			_x = -_x;
+			_x = Width() - ((-_x) % Width());
+		else
+			_x %= Width();
+		
 		if ( _y < 0 )
-			_y = -_y;
-		return (_x % Width()) + ((_y % Height()) * Width());
+			_y = Height() - ((-_y) % Height());
+		else
+			_y %= Height();
+		
+		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrapX( int _x, const int _y ) const {
 		if ( _x < 0 )
-			_x = -_x;
-		return (_x % Width()) + ((_y) * Width());
+			_x = Width() - ((-_x) % Width());
+		else
+			_x %= Width();
+
+		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const szt IndexWrapY( const int _x, int _y ) const {
 		if ( _y < 0 )
-			_y = -_y;
-		return (_x) + ((_y % Height()) * Width());
+			_y = Height() - ((-_y) % Height());
+		else
+			_y %= Height();
+
+		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Wraps linearly to the next line, but around to the top //
