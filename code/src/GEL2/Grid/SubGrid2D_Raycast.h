@@ -8,7 +8,7 @@ inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int 
 	// Only if it's untouched //
 	//if ( Dest(x2,y2) == 0xFF ) 
 
-	if ( (x1 == x2) && (y1 == y1) )
+	if ( (x1 == x2) && (y1 == y2) )
 		return;
 		
 	{
