@@ -21,6 +21,16 @@
 //   real map that gets pushed around along with all the map data as you travel the world. //
 //   A full XYWH is stored with the map (0,0,W,H) to compare against. //
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// Hack //
+extern bool __UpKey;
+extern bool __DownKey;
+extern bool __LeftKey;
+extern bool __RightKey;
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 namespace BOAT {
 // - ------------------------------------------------------------------------------------------ - //
 typedef unsigned int tModTime;
@@ -257,6 +267,19 @@ public:
 		// Do Stuff //
 		
 		// For all Players //
+		static int Delay = 0;
+		Delay++;
+		if ( Delay == 16 ) {
+			Delay = 0;
+			if ( __UpKey )
+				Pos.y--;
+			if ( __DownKey )
+				Pos.y++;
+			if ( __LeftKey )
+				Pos.x--;
+			if ( __RightKey )
+				Pos.x++;
+		}
 	}
 	
 	void Draw( const Matrix4x4& ViewMatrix ) {
@@ -266,7 +289,7 @@ public:
 		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
 		//GenerateMagnitudeDistanceGrid2D( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
 		//GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
-		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8 );
+		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8, 4 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );
@@ -297,17 +320,17 @@ public:
 				int UVY = 15-((Index >> 4) & 15);
 				
 				GelColor Col = GEL_RGB_WHITE;
-				if ( (Pos.x.ToInt() == (int)x) && (Pos.y.ToInt() == (int)y) ) {
+				if ( (Pos.x.ToInt() == (int)x) && (SubMap.Height()-1-Pos.y.ToInt() == (int)y) ) {
 					Col = GEL_RGB_GREEN;
 				}
 				else {
 					u8 Val = Occlusion(TX,TY);
-					if ( Val > 5 ) {
+					if ( Val > 2 ) {
 						// Omit geometry //
 						continue;
 					}
 					else if ( Val > 0 ) {
-						Col = GEL_RGBA(255,255,255,128-(Val*24));
+						Col = GEL_RGBA(255,255,255,128-(Val*48));
 					}
 				}
 //				if ( Island(TX,TY) != 0xFFFF ) {

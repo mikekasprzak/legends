@@ -80,8 +80,16 @@ void ArgInit( int argc, char* argv[] ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
-
-
+// - ------------------------------------------------------------------------------------------ - //
+extern bool __UpKey;
+extern bool __DownKey;
+extern bool __LeftKey;
+extern bool __RightKey;
+// - ------------------------------------------------------------------------------------------ - //
+bool __UpKey = false;
+bool __DownKey = false;
+bool __LeftKey = false;
+bool __RightKey = false;
 // - ------------------------------------------------------------------------------------------ - //
 bool KillSignal = false;
 // - ------------------------------------------------------------------------------------------ - //
@@ -106,12 +114,12 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 			return true;
 		}
 		#ifndef ndebug
-		// Only I use F10 as a standard exit key, so remove it when a release build //
-		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F10 ) {
-			Log( "> F10 Kill Signal Recieved" );
-			KillSignal = true;
-			return true;
-		}
+			// Only I use F10 as a standard exit key, so remove it when a release build //
+			else if ( Event->key.keysym.scancode == SDL_SCANCODE_F10 ) {
+				Log( "> F10 Kill Signal Recieved" );
+				KillSignal = true;
+				return true;
+			}
 		#endif // ndebug //
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F12 ) {
 			if ( Screen::Native.Size() > 1 ) {
@@ -123,6 +131,33 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 				}
 			}
 		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_UP ) {
+			__UpKey = false;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_DOWN ) {
+			__DownKey = false;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_LEFT ) {
+			__LeftKey = false;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_RIGHT ) {
+			__RightKey = false;
+		}
+	}
+	else if ( Event->type == SDL_KEYDOWN ) {
+		if ( Event->key.keysym.scancode == SDL_SCANCODE_UP ) {
+			__UpKey = true;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_DOWN ) {
+			__DownKey = true;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_LEFT ) {
+			__LeftKey = true;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_RIGHT ) {
+			__RightKey = true;
+		}
+		
 	}
 	else if ( Event->type == SDL_WINDOWEVENT ) {
 		VVLog( "**** [%i] %s [%i,%i]", Event->window.windowID, SDL_WindowEventName( Event->window.event ), Event->window.data1, Event->window.data2 );
