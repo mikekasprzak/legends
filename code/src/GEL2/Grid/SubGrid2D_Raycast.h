@@ -118,7 +118,7 @@ inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const i
 			for ( szt y = 0; y < Dest.Height(); y++ ) {	
 				for ( szt x = 0; x < Dest.Width(); x++ ) {
 					if ( Dest(x,y) == 0 ) {
-						Vector2D PointToStart(x1-x,y1-y);
+						Vector2D PointToStart( x1-(int)x, y1-(int)y );
 						
 						if ( (dot(PointToStart, RayATangent) < Real::Zero) && (dot(PointToStart,RayBTangent) < Real::Zero) ) {					
 							Dest(x,y) = 2;
