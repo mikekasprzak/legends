@@ -3,6 +3,7 @@
 #define __GEL2_GRID_SUBGRID2D_RAYCAST_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/IVector.h>
+#include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
 inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask, const int ViewRadius ) {
 	// Only if it's untouched //
@@ -70,7 +71,7 @@ inline void TraceRayGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int 
 }
 // - ------------------------------------------------------------------------------------------ - //
 inline void GenerateRaycastGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int StartX, const int StartY, const u8* const TileInfo, const u8 BitMask, const int ViewRadius = 0xFF ) {
-	Dest.Fill( 0xFF );
+	Dest.Fill( 0xFF ); // ? //
 
 	for ( szt y = 0; y < Src.Height(); y++ ) {	
 		for ( szt x = 0; x < Src.Width(); x++ ) {
@@ -84,6 +85,67 @@ inline void GenerateRaycastGrid( Grid2D<u8>& Src, Grid2D<u8>& Dest, const int St
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask ) {
+	// Only if untouched //
+	if ( Dest(x2,y2) == 0xFF ) {
+		if ( (x1 == x2) && (y1 == y2) ) {
+			Dest(x2,y2) = 0;
+			return;
+		}
+		
+		// If our tile is solid, then make it cast a shadow //
+		if ( (TileInfo[Src(x2,y2)] & BitMask) == BitMask ) {		
+			Vector2D Start(x1,y1);
+			Start += Vector2D::Half;
+				
+			Vector2D End(x2,y2);
+			End += Vector2D::Half;
+			
+			Vector2D Ray = End-Start;
+			Vector2D RayNormal = Ray.Normal();
+			
+			Real Radius(0.5f);
+			
+			Vector2D PointA = End + (RayNormal.Tangent() * Radius);
+			Vector2D PointB = End - (RayNormal.Tangent() * Radius);
+			
+			Vector2D RayA = PointA-Start;
+			Vector2D RayB = PointB-Start;
+			Vector2D RayATangent = -RayA.Normal().Tangent();
+			Vector2D RayBTangent = RayB.Normal().Tangent();
+			
+			for ( szt y = 0; y < Dest.Height(); y++ ) {	
+				for ( szt x = 0; x < Dest.Width(); x++ ) {
+					if ( Dest(x,y) == 0 ) {
+						Vector2D PointToStart(x1-x,y1-y);
+						
+						if ( (dot(PointToStart, RayATangent) < Real::Zero) && (dot(PointToStart,RayBTangent) < Real::Zero) ) {					
+							Dest(x,y) = 2;
+						}
+					}
+				}
+			}
+			
+			Dest(x2,y2) = 1;
+		}
+		else {
+			Dest(x2,y2) = 0;
+		}		
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void GenerateShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int StartX, const int StartY, const u8* const TileInfo, const u8 BitMask ) {
+	Dest.Fill( 0xFF );
+
+//	for ( szt y = 0; y < Src.Height(); y++ ) {	
+//		for ( szt x = 0; x < Src.Width(); x++ ) {
+	for ( szt y = StartY-5; y < StartY+6; y++ ) {	
+		for ( szt x = StartX-5; x < StartX+6; x++ ) {
+			TraceShadowGrid( Src, Dest, StartX, StartY, x, y, TileInfo, BitMask );
+		}
+	}
+}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GRID_SUBGRID2D_RAYCAST_H__ //
 // - ------------------------------------------------------------------------------------------ - //

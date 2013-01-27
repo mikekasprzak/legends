@@ -50,6 +50,8 @@ public:
 	static const Vector2D Identity;
 	static const Vector2D One;
 	static const Vector2D Zero;
+	static const Vector2D Half;
+	static const Vector2D Quarter;
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //

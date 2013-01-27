@@ -63,7 +63,7 @@ inline void GenerateSwirlGrid2D( Grid2D<tType>& Dest, const int x1, const int y1
 			Dest[Index] = Value++;
 	}
 	
-	// Do the rest //
+	// Do the rest (alternatively, check if Repeat is greater than the dimensions) //
 	while( Value < Dest.Size() ) {
 		// Do it twice //
 		for ( szt idx2 = 2+1; --idx2 ; ) {

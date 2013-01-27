@@ -204,15 +204,15 @@ public:
 		Fertility._EqualizeData();
 //		Fertility.ClipData();
 
-		{
-			Grid2D<u16> Swirl = GenerateSwirlGrid2D<u16>(9,3,4,1);
-			for ( size_t y = 0; y < Swirl.Height(); y++ ) {
-				for ( size_t x = 0; x < Swirl.Width(); x++ ) {
-					_Log( "%02x,", (int)Swirl(x,y)&0xff );
-				}
-				Log("");
-			}
-		}
+//		{
+//			Grid2D<u16> Swirl = GenerateSwirlGrid2D<u16>(9,3,4,1);
+//			for ( size_t y = 0; y < Swirl.Height(); y++ ) {
+//				for ( size_t x = 0; x < Swirl.Width(); x++ ) {
+//					_Log( "%02x,", (int)Swirl(x,y)&0xff );
+//				}
+//				Log("");
+//			}
+//		}
 
 		Island = BlobExtractWrapped(Land, WaterLevel);
 		
@@ -299,7 +299,8 @@ public:
 		Grid2D<u8> Occlusion( SubMap.Width(), SubMap.Height() );
 		//GenerateMagnitudeDistanceGrid2D( Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight() );
 		//GenerateRaycastGrid( SubMap, Occlusion, SubMap.HalfWidth(), SubMap.HalfHeight(), *TilesetInfo, 0x8 );
-		GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8, 6 );
+		//GenerateRaycastGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8, 6 );
+		GenerateShadowGrid( SubMap, Occlusion, Pos.x.ToInt(), Pos.y.ToInt(), *TilesetInfo, 0x8 );
 		
 		Vector3DAllocator Vert( SubMap.Size()*6 );
 		UVAllocator UV( SubMap.Size()*6 );

@@ -4,4 +4,6 @@
 const Vector2D Vector2D::Identity( 1, 1 );
 const Vector2D Vector2D::One( 1, 1 );
 const Vector2D Vector2D::Zero( 0, 0 );
+const Vector2D Vector2D::Half( 0.5, 0.5 );
+const Vector2D Vector2D::Quarter( 0.25, 0.25 );
 // - ------------------------------------------------------------------------------------------ - //
