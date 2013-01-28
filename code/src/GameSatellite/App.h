@@ -56,8 +56,8 @@ public:
 	
 	TFunctor<SatGeoData>* MyGeo;
 
-#ifdef PRODUCT_SERVER
 public: // WebServer -------------------------------------------------------------------------- - //
+#ifdef PRODUCT_SERVER
 	struct mg_context* WebServer_ctx;
 	int WebServer_Requests;
 	
@@ -66,12 +66,12 @@ public: // WebServer -----------------------------------------------------------
 	
 	void* WebServer_Callback( mg_event event, mg_connection *conn );
 	static void* stWebServer_Callback( mg_event event, mg_connection *conn );
+#endif // PRODUCT_SERVER //
 
 public: // Matchmaking ------------------------------------------------------------------------ - //
 
-public: // Server ----------------------------------------------------------------------------- - //
-	ENetHost* Server_NetHost;
-	
+
+public: // Networking Base -------------------------------------------------------------------- - //
 	enum {
 		CH_MESSAGE = 0,		// Messages Channel. Chat, Broadcasts, etc // 
 		CH_DATA,
@@ -83,26 +83,21 @@ public: // Server --------------------------------------------------------------
 	enum {
 		MSG_PING = 1,		// Ping Message, for checking how responsive a server is //
 		MSG_PONG,			// Ping Response Message //
-		
 	};
 
+public: // Server ----------------------------------------------------------------------------- - //
+#ifdef PRODUCT_SERVER
+	ENetHost* Server_NetHost;
+	
 	int Server_Start();
 	void Server_Stop();
 	void Server_Poll( const int TimeInMS = 0 );
 #endif // PRODUCT_SERVER //
 
-#ifdef PRODUCT_CLIENT
 public: // Client ----------------------------------------------------------------------------- - //
+#ifdef PRODUCT_CLIENT
 	ENetHost* Client_NetHost;
 	ENetPeer* Client_Peer;
-	
-	enum {
-		CH_MESSAGE = 0,		// Messages Channel. Chat, Broadcasts, etc // 
-		CH_DATA,
-		CH_OUTSIDERS,		// Outside Players pinging server for latency //
-		
-		CH_MAX				// Number of Channels //
-	};
 
 	int Client_Start();
 	void Client_Stop();
