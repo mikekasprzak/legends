@@ -86,6 +86,12 @@ inline void GenerateRaycastGrid( Grid2D<u8>& Src, Grid2D<u8>& Dest, const int St
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+// This is flawed because: 
+// - Tiles in shadow don't cast a shadow (and need to). "Untouched" and Swirl's fault.
+// - Shadow rasterizing is expensive and slow (when it's per tile).
+// - It will never solve corner cases, because the shadow cast by up/right tiles doesn't overlap...?
+//   - No, this is wrong. Still, when I jacked up the radius it didn't fix it entirely.
+// - ------------------------------------------------------------------------------------------ - //
 inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask ) {
 	// Only if untouched //
 	if ( Dest(x2,y2) == 0xFF ) {
@@ -112,15 +118,19 @@ inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const i
 			
 			Vector2D RayA = PointA-Start;
 			Vector2D RayB = PointB-Start;
-			Vector2D RayATangent = -RayA.Normal().Tangent();
-			Vector2D RayBTangent = RayB.Normal().Tangent();
+			Vector2D RayATangent = -RayA.Tangent();
+			Vector2D RayBTangent = RayB.Tangent();
 			
 			for ( szt y = 0; y < Dest.Height(); y++ ) {	
 				for ( szt x = 0; x < Dest.Width(); x++ ) {
-					if ( Dest(x,y) == 0 ) {
-						Vector2D PointToStart( x1-(int)x, y1-(int)y );
+					if ( (Dest(x,y) == 0) || (Dest(x,y) == 0xFF) ) {
+						Vector2D PointToStart( x1-((int)x), y1-((int)y) );
+						Vector2D PointToEnd( x2-((int)x), y2-((int)y) );
 						
-						if ( (dot(PointToStart, RayATangent) < Real::Zero) && (dot(PointToStart,RayBTangent) < Real::Zero) ) {					
+						if ((dot(PointToStart,RayATangent) < Real::Zero) && 
+							(dot(PointToStart,RayBTangent) < Real::Zero) &&
+							(dot(PointToEnd,Ray) < Real::Zero)) 
+						{					
 							Dest(x,y) = 2;
 						}
 					}
@@ -138,12 +148,51 @@ inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const i
 inline void GenerateShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int StartX, const int StartY, const u8* const TileInfo, const u8 BitMask ) {
 	Dest.Fill( 0xFF );
 
+//	for ( int y = StartY-5; y < StartY+6; y++ ) {	
+//		for ( int x = StartX-5; x < StartX+6; x++ ) {
+
 //	for ( szt y = 0; y < Src.Height(); y++ ) {	
 //		for ( szt x = 0; x < Src.Width(); x++ ) {
-	for ( szt y = StartY-5; y < StartY+6; y++ ) {	
-		for ( szt x = StartX-5; x < StartX+6; x++ ) {
-			TraceShadowGrid( Src, Dest, StartX, StartY, x, y, TileInfo, BitMask );
+//			TraceShadowGrid( Src, Dest, StartX, StartY, x, y, TileInfo, BitMask );
+//		}
+//	}
+
+	IVector2D Pos(StartX,StartY);
+	IVector2D Facing(0,-1);
+
+	szt Repeat = 1;
+
+	// Do the start //
+	{
+		szt Index = Src.DeadIndex(Pos.x,Pos.y,SZT_MAX);
+		if ( Index != SZT_MAX ) { 
+			TraceShadowGrid( Src, Dest, StartX, StartY, StartX, StartY, TileInfo, BitMask );
 		}
+	}
+	
+	int Fails = 0;
+	
+	// Do the rest (alternatively, check if Repeat is greater than the dimensions) //
+	while( Repeat > Fails ) {//Dest.Width() ) {//Value < Dest.Size() ) {
+		Fails = 0;
+		// Do it twice //
+		for ( szt idx2 = 2+1; --idx2 ; ) {
+			// Go straight "Repeat" number of times //
+			for ( szt idx = Repeat; idx-- ; ) {
+				Pos += Facing;
+				szt Index = Src.DeadIndex(Pos.x,Pos.y,SZT_MAX);
+				if ( Index != SZT_MAX ) {
+					TraceShadowGrid( Src, Dest, StartX, StartY, Pos.x.ToInt(), Pos.y.ToInt(), TileInfo, BitMask );
+				}
+				else {
+					Fails++;
+				}
+			}
+			// Turn //
+			Facing = Facing.Tangent();
+		}
+		// Increase repeats (every 2 times) //
+		Repeat++;
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
