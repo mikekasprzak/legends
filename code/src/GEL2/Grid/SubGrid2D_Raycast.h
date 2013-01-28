@@ -89,8 +89,6 @@ inline void GenerateRaycastGrid( Grid2D<u8>& Src, Grid2D<u8>& Dest, const int St
 // This is flawed because: 
 // - Tiles in shadow don't cast a shadow (and need to). "Untouched" and Swirl's fault.
 // - Shadow rasterizing is expensive and slow (when it's per tile).
-// - It will never solve corner cases, because the shadow cast by up/right tiles doesn't overlap...?
-//   - No, this is wrong. Still, when I jacked up the radius it didn't fix it entirely.
 // - ------------------------------------------------------------------------------------------ - //
 inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const int x1, const int y1, const int x2, const int y2, const u8* const TileInfo, const u8 BitMask ) {
 	// Only if untouched //
@@ -111,7 +109,8 @@ inline void TraceShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, const i
 			Vector2D Ray = End-Start;
 			Vector2D RayNormal = Ray.Normal();
 			
-			Real Radius(0.5f);
+			Real Radius(1.01f);
+//			Real Radius(0.7071f);
 			
 			Vector2D PointA = End + (RayNormal.Tangent() * Radius);
 			Vector2D PointB = End - (RayNormal.Tangent() * Radius);
