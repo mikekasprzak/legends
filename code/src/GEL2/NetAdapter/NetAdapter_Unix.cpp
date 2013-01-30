@@ -36,6 +36,7 @@
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <net/if.h>				// IFF_BROADCAST
 #include <netdb.h>
 // - ------------------------------------------------------------------------------------------ - //
@@ -96,7 +97,7 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 			// If an IPv4 //
 			if ( Current->ifa_addr->sa_family == AF_INET ) {
 				// Copy IP as string //
-				getnameinfo( Current->ifa_addr, sizeof(struct sockaddr_in), Adapters[Index]->IP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
+				//getnameinfo( Current->ifa_addr, sizeof(struct sockaddr_in), Adapters[Index]->IP, NI_MAXHOST, NULL, 0, NI_NUMERICHOST );
 
 				// Copy IP as byte array //
 				sockaddr_in* SAI = (sockaddr_in*)Current->ifa_addr;
@@ -104,6 +105,9 @@ pNetAdapterInfo* new_pNetAdapterInfo() {
 
 				int* IPv4 = (int*)Adapters[Index]->Data.IP;
 				*IPv4 = *(int*)DataAddr;
+			
+				// Copy IP as string //
+				safe_sprintf( Adapters[Index]->IP, sizeof(Adapters[Index]->IP), "%s", inet_ntoa( SAI->sin_addr ) );
 			
 //				printf("%i.%i.%i.%i\n", Adapters[Index]->Data.IP[0], Adapters[Index]->Data.IP[1], Adapters[Index]->Data.IP[2], Adapters[Index]->Data.IP[3] );
 			

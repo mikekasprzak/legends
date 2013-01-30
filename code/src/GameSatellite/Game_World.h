@@ -94,8 +94,7 @@ public:
 		Region( _Width >> 3, _Height >> 3 )	// div 8 //
 	{
 		Warning( (_Width & 7) != 0, "Bad Width %i (%i)", _Width, _Width & 7 );		// mod 8 //
-		Warning( (_Height & 7) != 0, "Bad Height %i (%i)", _Height, _Height & 7 );	// mod 8 //
-		
+		Warning( (_Height & 7) != 0, "Bad Height %i (%i)", _Height, _Height & 7 );	// mod 8 //	
 	}
 
 public:
