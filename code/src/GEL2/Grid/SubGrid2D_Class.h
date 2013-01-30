@@ -364,12 +364,12 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
 	inline const szt DeadIndex( const int _x, const int _y, const szt DeadValue = SZT_MAX ) const {
-		if ( _x >= Width() )
+		if ( _x >= (int)Width() )
 			return DeadValue;
 		else if ( _x < 0 )
 			return DeadValue;
 			
-		if ( _y >= Height() )
+		if ( _y >= (int)Height() )
 			return DeadValue;
 		else if ( _y < 0 )
 			return DeadValue;

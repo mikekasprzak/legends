@@ -169,7 +169,7 @@ inline void GenerateShadowGrid( const SubGrid2D<u8>& Src, Grid2D<u8>& Dest, cons
 		}
 	}
 	
-	int Fails = 0;
+	szt Fails = 0;
 	
 	// Do the rest (alternatively, check if Repeat is greater than the dimensions) //
 	while( Repeat > Fails ) {//Dest.Width() ) {//Value < Dest.Size() ) {

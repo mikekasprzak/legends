@@ -125,7 +125,7 @@ cApp::~cApp() {
 void cApp::Step( ) {
 	Net::Host_Poll();
 	// TODO: Server only //
-	World->Step();
+	World->Client_Step();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {	
@@ -188,7 +188,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 //		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		
 		Render::EnableAlphaBlending();
-		World->Draw( Matrix );
+		World->Client_Draw( Matrix );
 		Render::DisableBlending();
 	}
 	
