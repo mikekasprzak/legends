@@ -34,9 +34,10 @@ void cApp::Client_Stop() {
 bool cApp::Client_Connect() {
 	ENetAddress Address;
 
-//	enet_address_set_host( &Address, "127.0.0.1" );
+	enet_address_set_host( &Address, "127.0.0.1" );
 //	enet_address_set_host( &Address, "192.168.1.111" );
-	enet_address_set_host( &Address, "foagies.mooo.com" );
+//	enet_address_set_host( &Address, "foagies.mooo.com" );
+//	enet_address_set_host( &Address, "sykhronic.mooo.com" );
 	Address.port = 10240;
 
 	Client_Peer = enet_host_connect(
