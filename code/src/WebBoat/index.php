@@ -1,5 +1,7 @@
 <?php
 
+$TickStart = microtime( true );
+
 // PHP aBoaT Server //
 $DataFolder = "";
 $CTX =& $_REQUEST; // Reference //
@@ -15,7 +17,7 @@ if ( $CTX["action"] == "get" ) {
 	$fp = @fopen($file,'rb');
 	if ( $fp ) {
 		flock( $fp, LOCK_SH );
-		header('Content-Type: image/png');
+		//header('Content-Type: image/png');
 		fpassthru( $fp );
 		flock( $fp, LOCK_UN );
 		fclose( $fp );
@@ -41,7 +43,7 @@ else if ( $CTX["action"] == "update" ) {
 		imagesetpixel( $img, $x, $y, imagecolorallocate( $img, ($val)&0xff, ($val>>8)&0xff, ($val>>16)&0xff ) );
 		imagepng($img,$file);
 
-		header('Content-Type: image/png');
+		//header('Content-Type: image/png');
 		imagepng($img);
 		imagedestroy($img);
 
@@ -96,5 +98,7 @@ else if ( $CTX["action"] == "upload" ) {
 		die( "Failed to decode image" );
 	}
 }
+
+echo "\nTime Elapsed: " . (microtime(true)-$TickStart);
 
 ?>
