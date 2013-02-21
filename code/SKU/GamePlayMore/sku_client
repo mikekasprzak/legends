@@ -1,0 +1,69 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for GAME scope (no platform) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/MainClient \
+						src/GamePlayMore \
+						src/GEL2 \
+						src/GEL/Debug \
+						src/GEL/Core \
+						src/GEL/Math \
+						src/GEL/System \
+						src/GEL/Timer \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/GEL \
+						src/External \
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	PRODUCT_PLAYMORE PRODUCT_CLIENT \
+						USES_GEL2 USES_GEL USES_GPU \
+						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-lcrypto \
+						-lIphlpapi \
+						-lPsapi \
+						-lwinmm \
+# -lIphlpapi = TCP/IP stuff
+# -lPsapi = Process Info (Memory Usage)
+# -lcrypto = md5 hash and base64 encode/decode
+# -lwinmm = timegettime() (GEL::Timer)
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+#ifdef USES_DESKTOP			# Disabled for now #
+# - ------------------------------------------------------------------------ - #
+# Game Specific Library Requesting Defines #
+USES_SDL2			:=	true
+USES_OPENGL2		:=	true
+USES_OPENGL3		:=	true
+#USES_SDLMIXER		:=	true
+# TODO: Consoles will need a NON SDL, GL, CURL, ENET way of building. 
+#   The Solution may be to extract USES_DESKTOP from makefile_windows, and make
+#   it in to some sort of Target Specific feature. I.e. Windows is a Desktop OS,
+#   The PS3 is a Console OS, and iOS is a Mobile OS. Console and Mobile might
+#   be considered the same (Ouya). XINPUT/SIXENSE/HIDAPI are DESKTOP protected.
+# - ------------------------------------------------------------------------ - #
+#endif # USES_DESKTOP #		# Disabled for now #
+# - ------------------------------------------------------------------------ - #
+# Game Specific Library Requesting Defines #
+USES_STB_IMAGE		:=	true
+USES_CURL			:=	true
+#USES_ENET			:=	true
+USES_CJSON			:=	true
+USES_TINYTHREAD		:=	true
+# - ------------------------------------------------------------------------ - #
+ifdef WINDIR 		# Can't use USES_WINDOWS because not defined yet #
+# - ------------------------------------------------------------------------ - #
+# Game Specific Platform Specific Library Requesting Defines #
+USES_XINPUT			:=	true
+#USES_SIXENSE		:=	true
+#USES_HIDAPI		:=	true
+# - ------------------------------------------------------------------------ - #
+endif # WINDIR #
+# - ------------------------------------------------------------------------ - #

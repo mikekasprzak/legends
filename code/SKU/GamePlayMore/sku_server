@@ -1,0 +1,45 @@
+# - ------------------------------------------------------------------------ - #
+# NOTE: Only reference files here suitable for GAME scope (no platform) #
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/MainServer \
+						src/GameSatellite \
+						src/GEL2 \
+						src/GEL/Debug \
+						src/GEL/Core \
+						src/GEL/Math \
+						src/GEL/Timer \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/GEL \
+						src/External \
+# - ------------------------------------------------------------------------ - #
+# Files to ignore (fully qualified paths only). src/Dummy/HackFolder/%.cpp #
+IGNORE_LIST			+=	
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	PRODUCT_SATELLITE PRODUCT_SERVER \
+						USES_GEL2 USES_GEL \
+						USES_NO_GPU \
+						SVN_VERSION=$(shell Tools/SVNVersion.sh .) \
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	-lIphlpapi \
+						-lPsapi \
+						-lwinmm \
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Game Specific Library Requesting Defines #
+USES_CURSES			:=	true
+USES_STB_IMAGE		:=	true
+USES_MONGOOSE		:=	true
+USES_CURL			:=	true
+USES_ENET			:=	true
+USES_CJSON			:=	true
+USES_TINYTHREAD		:=	true
+# - ------------------------------------------------------------------------ - #
+RUN_PREFIX			:=	console 
+RUN_SUFFIX			:=
+# - ------------------------------------------------------------------------ - #
