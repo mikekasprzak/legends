@@ -19,8 +19,6 @@ cUberShader* BlurShader;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
-
-	Log( "%s: %s (%s) -- %s [%s]", Adapter->Name, Adapter->IP, Adapter->MAC, Adapter->NetMask, Adapter->Broadcast );
 	
 	Font = new cFont( Search::Search( "C64Pro.fnt" ) );
 
