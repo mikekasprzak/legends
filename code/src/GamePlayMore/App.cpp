@@ -5,7 +5,6 @@
 #include <Render/Render.h>
 
 #include "App.h"
-#include "Instance.h"
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Texture;
 using namespace Render;
