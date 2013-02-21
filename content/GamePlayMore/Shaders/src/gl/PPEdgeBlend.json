@@ -1,0 +1,50 @@
+{
+	"File"		: "PPEdgeBlend.glsl",
+	"Shaders"	: {
+		"VingetteBlend" : {
+			"Define" : [
+				"DUMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "color",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				},
+				{
+					"Index" : 3,
+					"Name" : "AspectScalar",
+					"Type" : "float2",
+					"Count" : 1
+				}
+			]
+		}
+	}
+}

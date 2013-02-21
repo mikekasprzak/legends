@@ -1,0 +1,24 @@
+{
+	"File"		: "TexTwoBlend.glsl",
+	"Shaders"	: {
+		"TexTwoBlend" : {
+			"Define" : [
+				"DUMMY"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			]
+		}
+	}
+}

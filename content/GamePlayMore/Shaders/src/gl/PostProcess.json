@@ -1,0 +1,212 @@
+{
+	"File"		: "PostProcess.glsl",
+	"Shaders"	: {
+		"HBlur" : {
+			"Define" : [
+				"H_BLUR_PASS",
+				"LIGHT_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+
+		"VBlur" : {
+			"Define" : [
+				"V_BLUR_PASS",
+				"LIGHT_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+		
+		"HBlurHeavy" : {
+			"Define" : [
+				"H_BLUR_PASS",
+				"HEAVY_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+
+		"VBlurHeavy" : {
+			"Define" : [
+				"V_BLUR_PASS",
+				"HEAVY_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+		
+		"Blur" : {
+			"Define" : [
+				"LIGHT_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+		
+		"BlurHeavy" : {
+			"Define" : [
+				"HEAVY_BLUR"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		}
+	}
+}
