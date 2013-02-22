@@ -1,30 +1,28 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_TEMPLATE_H__
-#define __PLAYMORE_TEMPLATE_H__
+#ifndef __PLAYMORE_BODY_H__
+#define __PLAYMORE_BODY_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Shared.h"
-#include "Tag.h"
-#include "Body.h"
-#include "Art.h"
-// - ------------------------------------------------------------------------------------------ - //
-class cTemplate {
+class cBody {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cTemplate thistype;
+	typedef cBody thistype;
 	inline void* GetThis() { return this; }
+public: // - Enumerations --------------------------------------------------------------------- - //
+	enum eBodyType {
+		BT_NULL = 0,
+		BT_SPHERE = 1,
+		BT_AABB = 2,
+	};
 public: // - Members -------------------------------------------------------------------------- - //
-	// Tags //
-	cTag* Tag; // TODO: Key/Value Pair //
-
-	// Collision //
-	cBody* Body;
-	
-	// Artwork //
-	cArt* Art;
-	
-	// Code //
-
+	eBodyType Type;
+	// ... //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cTemplate()
+	cBody() :
+		Type( BT_NULL )
+	{
+	}
+
+	cBody( const eBodyType& BodyType ) :
+		Type( BodyType )
 	{
 	}
 
@@ -32,5 +30,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_TEMPLATE_H__ //
+#endif // __PLAYMORE_BODY_H__ //
 // - ------------------------------------------------------------------------------------------ - //

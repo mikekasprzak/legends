@@ -1,30 +1,28 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_TEMPLATE_H__
-#define __PLAYMORE_TEMPLATE_H__
+#ifndef __PLAYMORE_ART_H__
+#define __PLAYMORE_ART_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Shared.h"
-#include "Tag.h"
-#include "Body.h"
-#include "Art.h"
-// - ------------------------------------------------------------------------------------------ - //
-class cTemplate {
+class cArt {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cTemplate thistype;
+	typedef cArt thistype;
 	inline void* GetThis() { return this; }
+public: // - Enumerations --------------------------------------------------------------------- - //
+	enum eArtType {
+		AT_NULL = 0,
+		AT_SPHERE = 1,
+		AT_AABB = 2,
+	};
 public: // - Members -------------------------------------------------------------------------- - //
-	// Tags //
-	cTag* Tag; // TODO: Key/Value Pair //
-
-	// Collision //
-	cBody* Body;
-	
-	// Artwork //
-	cArt* Art;
-	
-	// Code //
-
+	eArtType Type;
+	// ... //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cTemplate()
+	cArt() :
+		Type( AT_NULL )
+	{
+	}
+
+	cArt( const eArtType& ArtType ) :
+		Type( ArtType )
 	{
 	}
 
@@ -32,5 +30,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_TEMPLATE_H__ //
+#endif // __PLAYMORE_ART_H__ //
 // - ------------------------------------------------------------------------------------------ - //

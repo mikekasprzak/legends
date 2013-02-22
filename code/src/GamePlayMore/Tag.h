@@ -1,30 +1,15 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_TEMPLATE_H__
-#define __PLAYMORE_TEMPLATE_H__
+#ifndef __PLAYMORE_TAG_H__
+#define __PLAYMORE_TAG_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include "Shared.h"
-#include "Tag.h"
-#include "Body.h"
-#include "Art.h"
-// - ------------------------------------------------------------------------------------------ - //
-class cTemplate {
+class cTag {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cTemplate thistype;
+	typedef cTag thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	// Tags //
-	cTag* Tag; // TODO: Key/Value Pair //
-
-	// Collision //
-	cBody* Body;
-	
-	// Artwork //
-	cArt* Art;
-	
-	// Code //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cTemplate()
+	cTag()
 	{
 	}
 
@@ -32,5 +17,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_TEMPLATE_H__ //
+#endif // __PLAYMORE_TAG_H__ //
 // - ------------------------------------------------------------------------------------------ - //

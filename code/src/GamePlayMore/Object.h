@@ -13,8 +13,11 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
+#include <Geometry/Rect.h>
 
 #include "Shared.h"
+#include "Tag.h"
+#include "Body.h"
 #include "Template.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cObject {
@@ -22,28 +25,38 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cObject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	//cTemplate* Object;
+	cTemplate* Object;
 	
 	// Family //
 	cObject* Parent;
-	cObject* Child;	// TODO: Make this in to some sort of linked list. //
+	cObject* Child;	// TODO: Array //
 	
 	// Position and AABB //
-	Vector3D Pos;
-	Vector3D Shape; // Together they make an AABB //
+	Rect3D Rect;
+
+	// Tags //
+	cTag* Tag; // TODO: Key/Value Pair //
+	
+	// Collision //
+	cBody* Body;
+	
+	// Sensors //
+	cBody* Sensor; // TODO: Array //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
+		Object( 0 ),
 		Parent( 0 ),
 		Child( 0 ),
-		Pos( Vector3D::Zero ),
-		Shape( Vector3D::Zero )
+		Rect( Vector3D::Zero, Vector3D::Zero ),
+		Body( 0 ),
+		Sensor( 0 )
 	{
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const Vector3D GetPos() {
-		return Pos;
+		return Rect.Center();
 	}
 	inline const Matrix4x4& GetTransform() {
 		return Matrix4x4::Identity;
