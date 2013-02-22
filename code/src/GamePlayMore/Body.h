@@ -12,6 +12,9 @@ public: // - Enumerations ------------------------------------------------------
 		BT_POINT = 1,	// Objects with no physicality, just a position //
 		BT_SPHERE = 2,
 		BT_AABB = 3,
+		
+		// Use different ID's for non-transforming versions of these types //
+		// Station Region. Pivot Region. Transformed Region. Transformed and Pivot not actually different. //
 	};
 public: // - Members -------------------------------------------------------------------------- - //
 	eBodyType Type;
