@@ -1,13 +1,12 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_OBJECT_H__
-#define __PLAYMORE_OBJECT_H__
+#ifndef __PLAYMORE_TEMPLATE_H__
+#define __PLAYMORE_TEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Objects describe things that *CAN* exist in the game world. They're like templates for things //
-// that can be created. To exist in the game world, you need an Instance. //
+#include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cObject {
+class cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cObject thistype;
+	typedef cTemplate thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 	// Collision //
@@ -15,7 +14,7 @@ public: // - Members -----------------------------------------------------------
 	// Code //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cObject()
+	cTemplate()
 	{
 	}
 
@@ -23,5 +22,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_OBJECT_H__ //
+#endif // __PLAYMORE_TEMPLATE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

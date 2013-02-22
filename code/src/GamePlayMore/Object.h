@@ -1,32 +1,39 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_INSTANCE_H__
-#define __PLAYMORE_INSTANCE_H__
+#ifndef __PLAYMORE_OBJECT_H__
+#define __PLAYMORE_OBJECT_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Instances exist in the game world. Instances are simplified, lightweight, whatever dynamic //
-// data is needed by an Object to exist. This can be as simple as a position, or as complex as //
-// a rigid body. //
+// Objects are things in the game. An Object can be on 1 of 2 lists: The Active and the Inactive //
+// lists. The Active list is for objects and parent objects that are actively in the world. The //
+// Inactive list is for objects that are children of parent objects. Possibly, this distinction //
+// isn't clear enough. The other option is to call the Inactive list the Children list, or the //
+// Parent and Child lists respectfully (instead of Active). Any object that is a child becomes //
+// responsibility of the Parent. The parent must explicitly step and notify the children //
+// (assuming they're not shielding the children from information). Good design would be on death //
+// to release all children, or if the object suits it, kill all children (how morbid!). //
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
-#include "Object.h"
+
+#include "Shared.h"
+#include "Template.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cInstance {
+class cObject {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cInstance thistype;
+	typedef cObject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cObject* Object;
+	//cTemplate* Object;
 	
 	// Family //
-	cInstance* Parent;
-	cInstance* Child;	// TODO: Make this in to some sort of linked list. //
+	cObject* Parent;
+	cObject* Child;	// TODO: Make this in to some sort of linked list. //
 	
 	// Position and AABB //
 	Vector3D Pos;
 	Vector3D Shape; // Together they make an AABB //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cInstance() :
+	cObject() :
 		Parent( 0 ),
 		Child( 0 ),
 		Pos( Vector3D::Zero ),
@@ -52,5 +59,5 @@ public:
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_INSTANCE_H__ //
+#endif // __PLAYMORE_OBJECT_H__ //
 // - ------------------------------------------------------------------------------------------ - //
