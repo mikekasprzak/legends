@@ -35,11 +35,11 @@ cApp::cApp() {
 	PPShader = new cUberShader( Search::Search("PPEdgeBlend.json") );
 	BlurShader = new cUberShader( Search::Search("PostProcess.json") );
 	
-//	World = new BOAT::cWorld();
+	Game = new cGame();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
-//	delete World;
+	delete Game;
 
 	// Cleanup //
 	delete BlurShader;

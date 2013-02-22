@@ -7,14 +7,14 @@
 // a rigid body. //
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
+#include <Math/Matrix.h>
 #include "Object.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cInstance {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cInstance thistype;
 	inline void* GetThis() { return this; }
-
-public: // - Member Variables ----------------------------------------------------------------- - //
+public: // - Members -------------------------------------------------------------------------- - //
 	cObject* Object;
 	
 	// Family //
@@ -33,6 +33,9 @@ public: // - Constructors and Destructors --------------------------------------
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const Vector3D GetPos() {
 		return Vector3D(0,0,0);
+	}
+	inline const Matrix4x4& GetTransform() {
+		return Matrix4x4::Identity;
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

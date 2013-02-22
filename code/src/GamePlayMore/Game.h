@@ -11,8 +11,7 @@ class cGame {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cGame thistype;
 	inline void* GetThis() { return this; }
-
-public: // - Member Variables ----------------------------------------------------------------- - //
+public: // - Members -------------------------------------------------------------------------- - //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cGame()

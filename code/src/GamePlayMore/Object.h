@@ -9,7 +9,7 @@ class cObject {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cObject thistype;
 	inline void* GetThis() { return this; }
-public: // - Member Variables ----------------------------------------------------------------- - //
+public: // - Members -------------------------------------------------------------------------- - //
 	// Collision //
 	// Artwork //
 	// Code //

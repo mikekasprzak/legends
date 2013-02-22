@@ -13,7 +13,8 @@ class cApp {
 public: // Class Helpers //
 	typedef cApp thistype;
 	inline void* GetThis() { return this; }
-
+public: // - Members -------------------------------------------------------------------------- - //
+	cGame* Game;
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();
 	~cApp();
