@@ -21,21 +21,34 @@ public: // - Members -----------------------------------------------------------
 	cInstance* Parent;
 	cInstance* Child;	// TODO: Make this in to some sort of linked list. //
 	
-	// Position //
+	// Position and AABB //
+	Vector3D Pos;
+	Vector3D Shape; // Together they make an AABB //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cInstance() :
 		Parent( 0 ),
-		Child( 0 )
+		Child( 0 ),
+		Pos( Vector3D::Zero ),
+		Shape( Vector3D::Zero )
 	{
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const Vector3D GetPos() {
-		return Vector3D(0,0,0);
+		return Pos;
 	}
 	inline const Matrix4x4& GetTransform() {
 		return Matrix4x4::Identity;
+	}
+	
+public:
+	inline void Step() {
+		
+	}
+	
+	inline void Draw() {
+		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
