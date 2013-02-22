@@ -9,8 +9,9 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Enumerations --------------------------------------------------------------------- - //
 	enum eBodyType {
 		BT_NULL = 0,
-		BT_SPHERE = 1,
-		BT_AABB = 2,
+		BT_POINT = 1,	// Objects with no physicality, just a position //
+		BT_SPHERE = 2,
+		BT_AABB = 3,
 	};
 public: // - Members -------------------------------------------------------------------------- - //
 	eBodyType Type;

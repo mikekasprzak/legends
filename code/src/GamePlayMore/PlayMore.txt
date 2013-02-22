@@ -1,0 +1,22 @@
+
++ Game
+  + Shared (Global Data)
+    + Tags[] (Data)
+  + Template[] (for creating Objects)
+    + Tags[] (Data)
+    + Art
+    + Body (Collision - Static)
+    + Code
+      + Func Init (Create)
+      + Func Exit (Destroy)
+      + Func Step (called every frame)
+      + Func Contact (called on 2 objects that collide)
+      + Func Sense (called once a sensor touches something)
+      + Func Notify (called any time an explicit notification is sent. i.e. Hitbox and Response)
+  + Object[]
+    + Tags[] (Data)
+    + Ref->Template
+    + Ref->Parent (Object)
+    + Ref[]->Child (Object)
+    + Body (Collision - Dynamic)
+    + Sensor[Body] (Non-Collison regions for detecting things)

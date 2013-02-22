@@ -31,26 +31,26 @@ public: // - Members -----------------------------------------------------------
 	cObject* Parent;
 	cObject* Child;	// TODO: Array //
 	
-	// Position and AABB //
-	Rect3D Rect;
-
 	// Tags //
 	cTag* Tag; // TODO: Key/Value Pair //
 	
 	// Collision //
 	cBody* Body;
-	
 	// Sensors //
 	cBody* Sensor; // TODO: Array //
+
+	// Position and AABB //
+	Rect3D Rect;
+//	Rect3D SensorRect; // Sum of all Sensors //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
 		Object( 0 ),
 		Parent( 0 ),
 		Child( 0 ),
-		Rect( Vector3D::Zero, Vector3D::Zero ),
 		Body( 0 ),
-		Sensor( 0 )
+		Sensor( 0 ),
+		Rect( Vector3D::Zero, Vector3D::Zero )
 	{
 	}
 
@@ -62,13 +62,10 @@ public: // - Methods -----------------------------------------------------------
 		return Matrix4x4::Identity;
 	}
 	
-public:
-	inline void Step() {
-		
+public:	
+	inline void Step( const cShared& Shared ) {		
 	}
-	
-	inline void Draw() {
-		
+	inline void Draw( const cShared& Shared, const Matrix4x4& Matrix ) {		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
