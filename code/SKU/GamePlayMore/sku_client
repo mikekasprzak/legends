@@ -57,6 +57,7 @@ USES_CURL			:=	true
 #USES_ENET			:=	true
 USES_CJSON			:=	true
 USES_TINYTHREAD		:=	true
+USES_SQUIRREL		:=	true
 # - ------------------------------------------------------------------------ - #
 ifdef WINDIR 		# Can't use USES_WINDOWS because not defined yet #
 # - ------------------------------------------------------------------------ - #

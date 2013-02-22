@@ -277,7 +277,7 @@ ifdef USES_SQUIRREL
 SRC_FOLDERS			+=	src/External/Squirrel \
 # - ------------------------------------------------------------------------ - #
 # Places to ONLY include from #
-INCLUDE_FOLDERS		+=	
+INCLUDE_FOLDERS		+=	src/External/Squirrel/include
 # - ------------------------------------------------------------------------ - #
 # Defines specific to this file #
 DEFINES				+=	USES_SQUIRREL
