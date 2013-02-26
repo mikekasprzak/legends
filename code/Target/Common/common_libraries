@@ -296,6 +296,31 @@ endif # USES_SQUIRREL #
 
 
 # - ------------------------------------------------------------------------ - #
+ifdef USES_SPINE
+# - ------------------------------------------------------------------------ - #
+# Places to pull code and include files from #
+SRC_FOLDERS			+=	src/External/Spine \
+# - ------------------------------------------------------------------------ - #
+# Places to ONLY include from #
+INCLUDE_FOLDERS		+=	src/External/Spine/includes
+# - ------------------------------------------------------------------------ - #
+# Defines specific to this file #
+DEFINES				+=	USES_SPINE
+# - ------------------------------------------------------------------------ - #
+# Libraries specific to this file (full include path or -l) #
+LIBRARIES			+=	
+# - ------------------------------------------------------------------------ - #
+# Files to be copied specific to this build (.dll's, .so's, .sh's, etc) #
+COPY_FILES			+=	
+# - ------------------------------------------------------------------------ - #
+# Other Object files you want to link against (i.e. an embedded Windows Icon) #
+OTHER_O_FILES		+=	
+# - ------------------------------------------------------------------------ - #
+endif # USES_SPINE #
+# - ------------------------------------------------------------------------ - #
+
+
+# - ------------------------------------------------------------------------ - #
 ifdef USES_NVTRISTRIP
 # - ------------------------------------------------------------------------ - #
 # Places to pull code and include files from #
