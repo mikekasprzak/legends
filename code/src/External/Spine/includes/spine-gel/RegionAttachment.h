@@ -15,7 +15,7 @@ class AtlasRegion;
 
 struct SpineVertex {
 	Vector2D position;
-	ABSet<Render::UVType> texCoords;
+	XYSet<Render::UVType> texCoords;
 	GelColor color;
 };
 
