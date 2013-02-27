@@ -4,6 +4,8 @@
 #include <Search/Search.h>
 #include <Render/Render.h>
 
+#include <spine-gel/spine.h>
+
 #include "App.h"
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Texture;
@@ -16,6 +18,12 @@ cRenderTarget* RT_Blur[2];
 
 cUberShader* PPShader;
 cUberShader* BlurShader;
+
+float animationTime = 0;
+spine::Atlas* atlas = 0;
+spine::SkeletonData* skeletonData = 0;
+spine::Animation* animation = 0;
+spine::Skeleton* skeleton = 0;
 // - ------------------------------------------------------------------------------------------ - //
 cApp::cApp() {
 	Search::AddDirectory( "Content/" );
@@ -34,7 +42,36 @@ cApp::cApp() {
 		
 	PPShader = new cUberShader( Search::Search("PPEdgeBlend.json") );
 	BlurShader = new cUberShader( Search::Search("PostProcess.json") );
-	
+
+	animationTime = 0;
+//	try 
+	{
+		//ifstream atlasFile("../data/spineboy.atlas");
+		DataBlock* Data = new_read_DataBlock( Search::Search("spineboy.atlas") );		
+		atlas = new spine::Atlas( (const char*)Data->Data, (const char*)(Data->Data+Data->Size) );
+		delete_DataBlock( Data );
+
+		spine::SkeletonJson skeletonJson(atlas);
+
+//		ifstream skeletonFile("../data/spineboy-skeleton.json");
+		Data = new_read_DataBlock( Search::Search("spineboy-skeleton.json") );		
+		skeletonData = skeletonJson.readSkeletonData( (const char*)Data->Data, (const char*)(Data->Data+Data->Size) );
+		delete_DataBlock( Data );
+
+//		ifstream animationFile("../data/spineboy-walk.json");
+		Data = new_read_DataBlock( Search::Search("spineboy-walk.json") );		
+		animation = skeletonJson.readAnimation( (const char*)Data->Data, (const char*)(Data->Data+Data->Size), skeletonData);
+		delete_DataBlock( Data );
+
+		skeleton = new spine::Skeleton(skeletonData);
+		skeleton->flipX = false;
+		skeleton->flipY = false;
+		skeleton->setToBindPose();
+		skeleton->getRootBone()->x = 200;
+		skeleton->getRootBone()->y = 420;
+		skeleton->updateWorldTransform();
+	}
+
 	Game = new cGame();
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -60,6 +97,9 @@ cApp::~cApp() {
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
 //	World->Client_Step();
+	animationTime += 1000.0f/60.0f;
+	animation->apply(skeleton, animationTime, true);
+	skeleton->updateWorldTransform();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {	
@@ -123,6 +163,9 @@ void cApp::Draw( Screen::cNative& Native ) {
 		
 		Render::EnableAlphaBlending();
 //		World->Client_Draw( Matrix );
+
+		skeleton->draw( Matrix );
+
 		Render::DisableBlending();
 	}
 	

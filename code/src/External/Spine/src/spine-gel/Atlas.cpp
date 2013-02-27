@@ -29,13 +29,11 @@ BaseAtlasPage* Atlas::newAtlasPage (std::string name) {
 	//page->texture->loadFromFile(name);
 
 	{
-		const char* File = Search::Search( "Tiles" );
-		
-		DataBlock* Data = new_read_DataBlock( name.c_str() );
+		DataBlock* Data = new_read_DataBlock( Search::Search( name.c_str() ) );
 		STBTexture Tex = new_STBTexture( Data->Data, Data->Size );
 		delete_DataBlock( Data );
 		
-		Log( "%s -- %i, %i (%i)", File, Tex.Width, Tex.Height, Tex.Info );
+		Log( "%s -- %i, %i (%i)", name.c_str(), Tex.Width, Tex.Height, Tex.Info );
 		
 		page->texture = upload_STBTexture( Tex, false );
 		
