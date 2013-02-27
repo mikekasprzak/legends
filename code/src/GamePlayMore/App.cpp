@@ -161,7 +161,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 //		Default->Attrib( 1, UVs );
 //		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		
-		Render::EnableAlphaBlending();
+		//Render::EnableAlphaBlending();
+		Render::EnablePremultipliedAlphaBlending();
 //		World->Client_Draw( Matrix );
 
 		skeleton->draw( ViewMatrix );

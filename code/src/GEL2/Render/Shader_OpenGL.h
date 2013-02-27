@@ -21,6 +21,8 @@ extern ShaderHandle ColorShader;
 extern ShaderHandle ColorShader2D;
 extern ShaderHandle TextureShader;
 extern ShaderHandle TextureShader2D;
+extern ShaderHandle TextureShader_Packed;
+extern ShaderHandle TextureShader2D_Packed;
 extern ShaderHandle ColorTextureShader;
 extern ShaderHandle ColorTextureShader2D;
 extern ShaderHandle ColorTextureShader_Packed;

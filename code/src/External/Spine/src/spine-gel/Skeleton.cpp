@@ -28,7 +28,6 @@ void Skeleton::draw ( const Matrix4x4& Matrix ) const {
 	//target.draw(vertexArray, texture);
 	// DO DRAW HERE //
 
-//	Render::Default->Bind( Render::FlatShader2D_Packed );
 	Render::Default->Bind( Render::ColorTextureShader2D_Packed );
 	Render::Default->UniformMatrix4x4( 0, Matrix );
 	Render::Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //

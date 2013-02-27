@@ -16,6 +16,8 @@ ShaderHandle ColorShader;
 ShaderHandle ColorShader2D;
 ShaderHandle TextureShader;
 ShaderHandle TextureShader2D;
+ShaderHandle TextureShader_Packed;
+ShaderHandle TextureShader2D_Packed;
 ShaderHandle ColorTextureShader;
 ShaderHandle ColorTextureShader2D;
 ShaderHandle ColorTextureShader_Packed;
@@ -40,6 +42,8 @@ void InitShader() {
 	ColorShader2D = Default->Find( "Color2D" );
 	TextureShader = Default->Find( "Texture" );
 	TextureShader2D = Default->Find( "Texture2D" );
+	TextureShader_Packed = Default->Find( "Texture_Packed" );
+	TextureShader2D_Packed = Default->Find( "Texture2D_Packed" );
 	ColorTextureShader = Default->Find( "ColorTexture" );
 	ColorTextureShader2D = Default->Find( "ColorTexture2D" );
 	ColorTextureShader_Packed = Default->Find( "ColorTexture_Packed" );
