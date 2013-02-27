@@ -5,6 +5,8 @@
 //#include <SFML/Graphics/VertexArray.hpp>
 #include <Graphics/Allocator/Allocator.h>
 #include <Math/Matrix.h>
+#include <Texture/Texture.h>
+#include <spine-gel/SpineVertex.h>
 
 namespace spine {
 

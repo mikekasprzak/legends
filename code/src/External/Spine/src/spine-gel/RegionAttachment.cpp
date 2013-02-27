@@ -42,31 +42,19 @@ void RegionAttachment::draw (Slot *slot) {
 	u8 g = skeleton->g * slot->g * 255;
 	u8 b = skeleton->b * slot->b * 255;
 	u8 a = skeleton->a * slot->a * 255;
-	vertices[0].color.r = r;
-	vertices[0].color.g = g;
-	vertices[0].color.b = b;
-	vertices[0].color.a = a;
-	vertices[1].color.r = r;
-	vertices[1].color.g = g;
-	vertices[1].color.b = b;
-	vertices[1].color.a = a;
-	vertices[2].color.r = r;
-	vertices[2].color.g = g;
-	vertices[2].color.b = b;
-	vertices[2].color.a = a;
-	vertices[3].color.r = r;
-	vertices[3].color.g = g;
-	vertices[3].color.b = b;
-	vertices[3].color.a = a;
+	vertices[0].color = GEL_RGBA(r,g,b,a);
+	vertices[1].color = GEL_RGBA(r,g,b,a);
+	vertices[2].color = GEL_RGBA(r,g,b,a);
+	vertices[3].color = GEL_RGBA(r,g,b,a);
 
 	updateOffset(); // BOZO - Move to resolve()?
 	updateWorldVertices(slot->bone);
 
 	skeleton->texture = texture;
-	skeleton->vertexArray.append(vertices[0]);
-	skeleton->vertexArray.append(vertices[1]);
-	skeleton->vertexArray.append(vertices[2]);
-	skeleton->vertexArray.append(vertices[3]);
+	skeleton->vertexArray.Add(vertices[0]);
+	skeleton->vertexArray.Add(vertices[1]);
+	skeleton->vertexArray.Add(vertices[2]);
+	skeleton->vertexArray.Add(vertices[3]);
 }
 
 void RegionAttachment::updateWorldVertices (spine::Bone *bone) {

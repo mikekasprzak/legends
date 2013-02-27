@@ -15,13 +15,13 @@ namespace spine {
 
 Skeleton::Skeleton (SkeletonData *skeletonData) :
 				BaseSkeleton(skeletonData),
-				vertexArray(Quads, skeletonData->bones.size() * 4),
+				vertexArray( skeletonData->bones.size() * 4 ),
 				texture(0) {
 }
 
 //void Skeleton::draw (RenderTarget& target, RenderStates states) const {
 void Skeleton::draw ( const Matrix4x4& Matrix ) const {
-	const_cast<Skeleton*>(this)->vertexArray.clear();
+	const_cast<Skeleton*>(this)->vertexArray.Clear();
 	for (int i = 0, n = slots.size(); i < n; i++)
 		if (slots[i]->attachment) slots[i]->attachment->draw(slots[i]);
 	//target.draw(vertexArray, texture);
