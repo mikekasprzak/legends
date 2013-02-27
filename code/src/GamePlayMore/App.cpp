@@ -65,10 +65,10 @@ cApp::cApp() {
 
 		skeleton = new spine::Skeleton(skeletonData);
 		skeleton->flipX = false;
-		skeleton->flipY = false;
+		skeleton->flipY = true;
 		skeleton->setToBindPose();
-		skeleton->getRootBone()->x = 200;
-		skeleton->getRootBone()->y = 420;
+		skeleton->getRootBone()->x = -350;
+		skeleton->getRootBone()->y = -150;
 		skeleton->updateWorldTransform();
 	}
 
@@ -97,7 +97,7 @@ cApp::~cApp() {
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
 //	World->Client_Step();
-	animationTime += 1000.0f/60.0f;
+	animationTime += 1.0f/360.0f;
 	animation->apply(skeleton, animationTime, true);
 	skeleton->updateWorldTransform();
 }
@@ -146,8 +146,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix = Matrix;		
 
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-//		LocalMatrix(0,0) = 1.0f/1024.0f;//(12*16)*3;
-//		LocalMatrix(1,1) = 1.0f/1024.0f;//(12*16)*3;
+		LocalMatrix(0,0) = 2;//1.0f/1024.0f;//(12*16)*3;
+		LocalMatrix(1,1) = 2;//1.0f/1024.0f;//(12*16)*3;
 			
 		ViewMatrix *= LocalMatrix;
 	

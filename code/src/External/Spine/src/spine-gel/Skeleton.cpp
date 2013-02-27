@@ -16,7 +16,7 @@ namespace spine {
 
 Skeleton::Skeleton (SkeletonData *skeletonData) :
 				BaseSkeleton(skeletonData),
-				vertexArray( skeletonData->bones.size() * 4 ),
+				vertexArray( skeletonData->bones.size() * 6 ), // was 4 //
 				texture(0) {
 }
 
@@ -28,16 +28,17 @@ void Skeleton::draw ( const Matrix4x4& Matrix ) const {
 	//target.draw(vertexArray, texture);
 	// DO DRAW HERE //
 
-	Render::Default->Bind( Render::FlatShader2D_Packed );
+//	Render::Default->Bind( Render::FlatShader2D_Packed );
+	Render::Default->Bind( Render::ColorTextureShader2D_Packed );
 	Render::Default->UniformMatrix4x4( 0, Matrix );
 	Render::Default->UniformColor( 1, GEL_RGB_WHITE ); // GlobalColor //
 	Render::Default->Uniform1i( 2, 0 );	// TexImage0 //
 	Render::Default->BindUniforms();
 	Texture::Bind( texture, 0 );
 	Render::Default->Attrib( 0, &vertexArray[0].position );
-	Render::Default->Attrib( 1, &vertexArray[0].color );
-	Render::Default->Attrib( 2, &vertexArray[0].texCoords );
-	Render::Default->DrawArrays( GEL_TRIANGLE_STRIP, vertexArray.Size() );
+	Render::Default->Attrib( 1, &vertexArray[0].texCoords );
+	Render::Default->Attrib( 2, &vertexArray[0].color );
+	Render::Default->DrawArrays( GEL_TRIANGLES, vertexArray.Size() );
 }
 
 } /* namespace spine */

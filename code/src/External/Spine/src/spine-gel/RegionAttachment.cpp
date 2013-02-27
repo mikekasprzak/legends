@@ -14,6 +14,17 @@ RegionAttachment::RegionAttachment (AtlasRegion *region) {
 	int u2 = u + region->width;
 	int v = region->y;
 	int v2 = v + region->height;
+	
+	u *= UV_ONE;
+	v *= UV_ONE;
+	u2 *= UV_ONE;
+	v2 *= UV_ONE;
+	
+	u /= 256;
+	v /= 256;
+	u2 /= 256;
+	v2 /= 256;
+	
 	if (region->rotate) {
 		vertices[1].texCoords.x = u;
 		vertices[1].texCoords.y = v2;
@@ -38,10 +49,10 @@ RegionAttachment::RegionAttachment (AtlasRegion *region) {
 void RegionAttachment::draw (Slot *slot) {
 	Skeleton* skeleton = (Skeleton*)slot->skeleton;
 
-	u8 r = skeleton->r * slot->r * 255;
-	u8 g = skeleton->g * slot->g * 255;
-	u8 b = skeleton->b * slot->b * 255;
-	u8 a = skeleton->a * slot->a * 255;
+	int r = skeleton->r * slot->r * 255;
+	int g = skeleton->g * slot->g * 255;
+	int b = skeleton->b * slot->b * 255;
+	int a = skeleton->a * slot->a * 255;
 	vertices[0].color = GEL_RGBA(r,g,b,a);
 	vertices[1].color = GEL_RGBA(r,g,b,a);
 	vertices[2].color = GEL_RGBA(r,g,b,a);
@@ -54,7 +65,10 @@ void RegionAttachment::draw (Slot *slot) {
 	skeleton->vertexArray.Add(vertices[0]);
 	skeleton->vertexArray.Add(vertices[1]);
 	skeleton->vertexArray.Add(vertices[2]);
+	
+	skeleton->vertexArray.Add(vertices[2]);
 	skeleton->vertexArray.Add(vertices[3]);
+	skeleton->vertexArray.Add(vertices[0]);
 }
 
 void RegionAttachment::updateWorldVertices (spine::Bone *bone) {

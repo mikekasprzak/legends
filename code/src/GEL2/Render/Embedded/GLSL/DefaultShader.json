@@ -300,6 +300,107 @@
 				}
 			]
 		},
+
+		
+		"Texture_Packed" : {
+			"Define" : [
+				"SHADER_FLAT",
+				"SHADER_TEXTURE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Group" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 3
+				},
+				{
+					"Index" : 1,
+					"Group" : 0,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				},
+				{
+					"Index" : 2,
+					"Group" : 0,
+					"Name" : "VertexColor",
+					"Type" : "pad",
+					"Count" : 4
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "color",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
+		
+		"Texture2D_Packed" : {
+			"Define" : [
+				"SHADER_FLAT",
+				"SHADER_TEXTURE"
+			],
+			"Attribute" : [
+				{
+					"Index" : 0,
+					"Group" : 0,
+					"Name" : "VertexPos",
+					"Type" : "float",
+					"Count" : 2
+				},
+				{
+					"Index" : 1,
+					"Group" : 0,
+					"Name" : "TexCoord",
+					"Type" : "UVType",
+					"Count" : 2
+				},
+				{
+					"Index" : 2,
+					"Group" : 0,
+					"Name" : "VertexColor",
+					"Type" : "pad",
+					"Count" : 4
+				}
+			],
+			"Uniform" : [
+				{
+					"Index" : 0,
+					"Name" : "ViewMatrix",
+					"Type" : "mat4",
+					"Count" : 1
+				},
+				{
+					"Index" : 1,
+					"Name" : "GlobalColor",
+					"Type" : "color",
+					"Count" : 1
+				},
+				{
+					"Index" : 2,
+					"Name" : "TexImage0",
+					"Type" : "int",
+					"Count" : 1
+				}
+			]
+		},
 		
 		"ColorTexture" : {
 			"Define" : [

@@ -35,7 +35,7 @@ BaseAtlasPage* Atlas::newAtlasPage (std::string name) {
 		
 		Log( "%s -- %i, %i (%i)", name.c_str(), Tex.Width, Tex.Height, Tex.Info );
 		
-		page->texture = upload_STBTexture( Tex, false );
+		page->texture = upload_STBTexture( Tex, false, false );
 		
 		delete_STBTexture( Tex );
 	}
