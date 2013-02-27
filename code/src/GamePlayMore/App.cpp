@@ -146,8 +146,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix = Matrix;		
 
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = 1.0f/1024.0f;//(12*16)*3;
-		LocalMatrix(1,1) = 1.0f/1024.0f;//(12*16)*3;
+//		LocalMatrix(0,0) = 1.0f/1024.0f;//(12*16)*3;
+//		LocalMatrix(1,1) = 1.0f/1024.0f;//(12*16)*3;
 			
 		ViewMatrix *= LocalMatrix;
 	
