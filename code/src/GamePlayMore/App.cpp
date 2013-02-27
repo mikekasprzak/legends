@@ -97,7 +97,7 @@ cApp::~cApp() {
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
 //	World->Client_Step();
-	animationTime += 1.0f/360.0f;
+	animationTime += 1.0f/120.0f;
 	animation->apply(skeleton, animationTime, true);
 	skeleton->updateWorldTransform();
 }
