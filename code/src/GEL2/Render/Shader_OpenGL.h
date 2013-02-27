@@ -14,9 +14,17 @@ void ExitShader();
 extern cUberShader* Default;
 // - ------------------------------------------------------------------------------------------ - //
 extern ShaderHandle FlatShader;
+extern ShaderHandle FlatShader2D;
+extern ShaderHandle FlatShader_Packed;
+extern ShaderHandle FlatShader2D_Packed;
 extern ShaderHandle ColorShader;
+extern ShaderHandle ColorShader2D;
 extern ShaderHandle TextureShader;
+extern ShaderHandle TextureShader2D;
 extern ShaderHandle ColorTextureShader;
+extern ShaderHandle ColorTextureShader2D;
+extern ShaderHandle ColorTextureShader_Packed;
+extern ShaderHandle ColorTextureShader2D_Packed;
 extern ShaderHandle NoiseShader;
 extern ShaderHandle ColorNoiseShader;
 extern ShaderHandle Noise1BitShader;

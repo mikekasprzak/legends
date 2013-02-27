@@ -695,7 +695,7 @@ void cUberShader::ProcessShader( cJSON* root, const char* ShaderSource ) {
 		ShaderLookup[ ShaderObj->string ] = Shader.size();
 		Shader.push_back( Program );
 		
-		VLog( "- Program \"%s\"Finished.", ShaderObj->string );
+		VLog( "- Program \"%s\" Finished.", ShaderObj->string );
 		
 		// Next Shader //
 		ShaderObj = ShaderObj->next;
