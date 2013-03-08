@@ -14,6 +14,7 @@
       + Func Sense (called once a sensor touches something)
       + Func Notify (called any time an explicit notification is sent. i.e. Hitbox and Response)
   + Object[]
+    + UniqueId
     + Tags[] (Data)
     + Ref->Template
     + Ref->Parent (Object)
