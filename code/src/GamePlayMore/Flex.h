@@ -2,7 +2,9 @@
 #ifndef __PLAYMORE_FLEX_H__
 #define __PLAYMORE_FLEX_H__
 // - ------------------------------------------------------------------------------------------ - //
-
+// "flex" is the notable type here. It can be assigned Integers, Floats, Strings and UIDs.
+//   Output can be requested with the appropriate GetInt, GetFloat, GetUID, GetString functions.
+//   Explicit conversions can be done with ToInt, ToFloat, ToBool, and ToString.
 // - ------------------------------------------------------------------------------------------ - //
 #include "UID.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -11,6 +13,7 @@ enum eFlexType {
 
 	FT_INT,
 	FT_FLOAT,
+	FT_BOOL,
 	FT_UID,
 	FT_STRING
 };
@@ -59,6 +62,9 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsFloat() const {
 		return Type == FT_FLOAT;
 	}
+	inline const bool IsBool() const {
+		return Type == FT_BOOL;
+	}
 	inline const bool IsUID() const {
 		return Type == FT_UID;
 	}
@@ -73,6 +79,9 @@ public: // - Methods -----------------------------------------------------------
 	inline const float GetFloat() const {
 		return *((float*)Data);
 	}
+	inline const bool GetBool() const {
+		return *((bool*)Data);
+	}
 	inline const cUID GetUID() const {
 		return *((cUID*)Data);
 	}
@@ -86,6 +95,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline float* GetFloatPtr() {
 		return (float*)Data;
+	}
+	inline bool* GetBoolPtr() {
+		return (bool*)Data;
 	}
 	inline cUID* GetUIDPtr() {
 		return (cUID*)Data;
@@ -105,6 +117,12 @@ public: // - Methods -----------------------------------------------------------
 		char* Ptr = new char[ sizeof(cRawFlex) + sizeof(float) ];
 		cRawFlex* Flex = new(Ptr) cRawFlex( FT_FLOAT, sizeof(float) );
 		*(Flex->GetFloatPtr()) = Value;
+		return Flex;
+	}
+	inline static cRawFlex* new_Bool( const bool Value ) {
+		char* Ptr = new char[ sizeof(cRawFlex) + sizeof(bool) ];
+		cRawFlex* Flex = new(Ptr) cRawFlex( FT_BOOL, sizeof(bool) );
+		*(Flex->GetBoolPtr()) = Value;
 		return Flex;
 	}
 	inline static cRawFlex* new_UID( const cUID Value ) {
@@ -132,6 +150,9 @@ public: // - Methods -----------------------------------------------------------
 		// For automatic type conversion (comment out function for strict 1.0f style syntax only) //
 		return new_Float( Value );
 	}
+	inline static cRawFlex* new_Flex( const bool Value ) {
+		return new_Bool( Value );
+	}
 	inline static cRawFlex* new_Flex( const cUID Value ) {
 		return new_UID( Value );
 	}
@@ -147,6 +168,70 @@ public: // - Methods -----------------------------------------------------------
 	}
 
 	// Nice ----------------------------------------------------------------------------------- - //
+	inline const int ToInt() {
+		if ( Type == FT_INT ) {
+			return GetInt();
+		}
+		else if ( Type == FT_FLOAT ) {
+			return (int)GetFloat();
+		}
+		else if ( Type == FT_BOOL ) {
+			return (int)GetBool();
+		}
+		else if ( Type == FT_UID ) {
+			return (int)GetUID().Get();
+		}
+		else if ( Type == FT_STRING ) {
+			return atoi(GetString());
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	inline const float ToFloat() {
+		if ( Type == FT_INT ) {
+			return (float)GetInt();
+		}
+		else if ( Type == FT_FLOAT ) {
+			return GetFloat();
+		}
+		else if ( Type == FT_BOOL ) {
+			return GetBool();
+		}
+		else if ( Type == FT_UID ) {
+			return (float)GetUID().Get();
+		}
+		else if ( Type == FT_STRING ) {
+			return atof(GetString());
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline const bool ToBool() {
+		if ( Type == FT_INT ) {
+			return GetInt() != 0;
+		}
+		else if ( Type == FT_FLOAT ) {
+			return GetFloat() != 0.0f;
+		}
+		else if ( Type == FT_BOOL ) {
+			return GetBool();
+		}
+		else if ( Type == FT_UID ) {
+			return true;
+		}
+		else if ( Type == FT_STRING ) {
+			// TODO: decide whether a String converted to a bool should mean something other than true. //
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	// WARNING: A limit of 1 ToString call can be made at a time, otherwise returned values may be bad //
 	inline const char* ToString() {
 		static char Text[2048];
@@ -160,6 +245,12 @@ public: // - Methods -----------------------------------------------------------
 		else if ( Type == FT_FLOAT ) {
 			sprintf( Text, "%f", GetFloat() );
 			return Text;
+		}
+		else if ( Type == FT_BOOL ) {
+			if ( GetBool() )
+				return "True";
+			else
+				return "False";
 		}
 		else if ( Type == FT_UID ) {
 			sprintf( Text, "%i", GetUID().Get() );
@@ -180,6 +271,9 @@ public: // - Methods -----------------------------------------------------------
 		else if ( Type == FT_FLOAT ) {
 			return "Float";
 		}
+		else if ( Type == FT_BOOL ) {
+			return "Bool";
+		}
 		else if ( Type == FT_UID ) {
 			return "UID";
 		}
@@ -194,6 +288,7 @@ public: // - Methods -----------------------------------------------------------
 		}		
 	}
 };
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 class flex {
@@ -222,6 +317,10 @@ public: // - Constructors and Destructors --------------------------------------
 	{
 		// For automatic type conversion (comment out function for strict 1.0f style syntax only) //
 	}
+	inline flex( const bool _Value ) :
+		Data( cRawFlex::new_Bool( _Value ) )
+	{
+	}
 	inline flex( const cUID _Value ) :
 		Data( cRawFlex::new_UID( _Value ) )
 	{
@@ -247,6 +346,11 @@ public: // - Constructors and Destructors --------------------------------------
 	inline flex& operator = ( const double _Value ) {
 		Delete();
 		Data = cRawFlex::new_Float( _Value );
+		return *this;
+	}
+	inline flex& operator = ( const bool _Value ) {
+		Delete();
+		Data = cRawFlex::new_Bool( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const cUID _Value ) {
@@ -279,6 +383,33 @@ public: // - Methods -----------------------------------------------------------
 		}
 		else {
 			return FT_NULL;
+		}
+	}
+
+	inline const int ToInt() const {
+		if ( Data ) {
+			return Data->ToInt();
+		}
+		else {
+			return 0;
+		}
+	}
+
+	inline const float ToFloat() const {
+		if ( Data ) {
+			return Data->ToFloat();
+		}
+		else {
+			return 0.0f;
+		}
+	}
+
+	inline const bool ToBool() const {
+		if ( Data ) {
+			return Data->ToBool();
+		}
+		else {
+			return false;
 		}
 	}
 
@@ -322,6 +453,12 @@ public: // - Methods -----------------------------------------------------------
 		else
 			return false;
 	}
+	inline const bool IsBool() {
+		if ( Data )
+			return Data->IsBool();
+		else
+			return false;
+	}
 	inline const bool IsUID() {
 		if ( Data )
 			return Data->IsUID();
@@ -344,6 +481,10 @@ public: // - Methods -----------------------------------------------------------
 		// TODO: Assert Data //
 		return Data->GetFloat();
 	}
+	inline const bool GetBool() const {
+		// TODO: Assert Data //
+		return Data->GetBool();
+	}
 	inline const cUID GetUID() const {
 		// TODO: Assert Data //
 		return Data->GetInt();
@@ -361,6 +502,10 @@ public: // - Methods -----------------------------------------------------------
 	inline float* GetFloatPtr() {
 		// TODO: Assert Data //
 		return Data->GetFloatPtr();
+	}
+	inline bool* GetBoolPtr() {
+		// TODO: Assert Data //
+		return Data->GetBoolPtr();
 	}
 	inline cUID* GetUIDPtr() {
 		// TODO: Assert Data //

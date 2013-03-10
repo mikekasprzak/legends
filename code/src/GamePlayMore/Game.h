@@ -35,9 +35,9 @@ public: // - Constructors and Destructors --------------------------------------
 		cUID Scob;
 		Log( "%i", Scob.Get() );
 			
-		flex MyFlex = 14;//"Hello";
+		flex MyFlex = "Western";//true;//"Hello";
 
-		Log( "%s o_o", MyFlex.ToString() );
+		Log( "%s %i %f o_o", MyFlex.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
