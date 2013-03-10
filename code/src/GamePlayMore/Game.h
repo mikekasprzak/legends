@@ -38,8 +38,10 @@ public: // - Constructors and Destructors --------------------------------------
 		flex MyFlex = "Western";//true;//"Hello";
 		MyFlex = 44;
 		MyFlex = 12;
+		
+		flex Shoe = 144;
 
-		Log( "%s %i %f o_o", MyFlex.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
+		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //

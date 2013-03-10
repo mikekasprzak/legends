@@ -249,19 +249,23 @@ public: // - Methods -----------------------------------------------------------
 		}
 	}
 	
-	// WARNING: A limit of 1 ToString call can be made at a time, otherwise returned values may be bad //
+	// WARNING: A limit of 64 ToString calls can be made at a time, otherwise returned values may be bad //
 	inline const char* ToString() {
-		static char Text[2048];
+		static char Text[64][128];		// 64 slots, 128 chars long (8,192 bytes). An Int is 10 chars long max. //
+		static int CurrentText = 0;
+		CurrentText++;
+		CurrentText &= 63;
+		
 		if ( Type == FT_STRING ) {
 			return GetString();
 		}
 		else if ( Type == FT_INT ) {
-			sprintf( Text, "%i", GetInt() );
-			return Text;
+			safe_sprintf( Text[CurrentText], 128, "%i", GetInt() );
+			return Text[CurrentText];
 		}
 		else if ( Type == FT_FLOAT ) {
-			sprintf( Text, "%f", GetFloat() );
-			return Text;
+			safe_sprintf( Text[CurrentText], 128, "%f", GetFloat() );
+			return Text[CurrentText];
 		}
 		else if ( Type == FT_BOOL ) {
 			if ( GetBool() )
@@ -270,8 +274,8 @@ public: // - Methods -----------------------------------------------------------
 				return "False";
 		}
 		else if ( Type == FT_UID ) {
-			sprintf( Text, "%i", GetUID().Get() );
-			return Text;
+			safe_sprintf( Text[CurrentText], 128, "%i", GetUID().Get() );
+			return Text[CurrentText];
 		}
 		else if ( Type == FT_NULL ) {
 			return "Null";
