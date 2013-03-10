@@ -36,6 +36,7 @@ public: // - Constructors and Destructors --------------------------------------
 		Log( "%i", Scob.Get() );
 			
 		flex MyFlex = "Western";//true;//"Hello";
+		MyFlex = 44;
 
 		Log( "%s %i %f o_o", MyFlex.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
