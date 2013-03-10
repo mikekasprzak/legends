@@ -37,6 +37,7 @@ public: // - Constructors and Destructors --------------------------------------
 			
 		flex MyFlex = "Western";//true;//"Hello";
 		MyFlex = 44;
+		MyFlex = 12;
 
 		Log( "%s %i %f o_o", MyFlex.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}

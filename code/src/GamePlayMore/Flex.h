@@ -88,7 +88,24 @@ public: // - Methods -----------------------------------------------------------
 	inline const char* GetString() const {
 		return (char*)Data;
 	}
-	
+
+	// Data Changing -------------------------------------------------------------------------- - //
+	inline void SetInt( const int Value ) {
+		*((int*)Data) = Value;
+	}
+	inline void SetFloat( const float Value ) {
+		*((float*)Data) = Value;
+	}
+	inline void SetBool( const bool Value ) {
+		*((bool*)Data) = Value;
+	}
+	inline void SetUID( const cUID Value ) {
+		*((cUID*)Data) = Value;
+	}
+//	inline void SetString( const int Value ) {
+//		*((int*)Data) = Value;
+//	}
+
 	// Data Access ---------------------------------------------------------------------------- - //
 	inline int* GetIntPtr() {
 		return (int*)Data;
@@ -334,46 +351,81 @@ public: // - Constructors and Destructors --------------------------------------
 	
 	// Assignment //
 	inline flex& operator = ( const int _Value ) {
-		Delete();
+		if ( Data ) {
+			if ( Data->Type == FT_INT ) {
+				Data->SetInt( _Value );
+				return *this;
+			}
+			else
+				Delete();
+		}
 		Data = cRawFlex::new_Int( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const float _Value ) {
-		Delete();
+		if ( Data ) {
+			if ( Data->Type == FT_FLOAT ) {
+				Data->SetFloat( _Value );
+				return *this;
+			}
+			else
+				Delete();
+		}
 		Data = cRawFlex::new_Float( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const double _Value ) {
-		Delete();
+		if ( Data ) {
+			if ( Data->Type == FT_FLOAT ) {
+				Data->SetFloat( _Value );
+				return *this;
+			}
+			else
+				Delete();
+		}
 		Data = cRawFlex::new_Float( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const bool _Value ) {
-		Delete();
+		if ( Data ) {
+			if ( Data->Type == FT_BOOL ) {
+				Data->SetBool( _Value );
+				return *this;
+			}
+			else
+				Delete();
+		}
 		Data = cRawFlex::new_Bool( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const cUID _Value ) {
-		Delete();
+		if ( Data ) {
+			if ( Data->Type == FT_UID ) {
+				Data->SetUID( _Value );
+				return *this;
+			}
+			else
+				Delete();
+		}
 		Data = cRawFlex::new_UID( _Value );
 		return *this;
 	}
 	inline flex& operator = ( const char* _Value ) {
-		Delete();
+		if ( Data )
+			Delete();
 		Data = cRawFlex::new_String( _Value );
 		return *this;
 	}
 	
 	// Destructor //	
 	inline ~flex() {
-		Delete();
+		if ( Data )
+			Delete();
 	}
 
 private:
 	inline void Delete() {
-		if ( Data ) {
-			cRawFlex::delete_Flex( Data );
-		}
+		cRawFlex::delete_Flex( Data );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
