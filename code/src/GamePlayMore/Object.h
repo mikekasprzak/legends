@@ -11,10 +11,13 @@
 // (assuming they're not shielding the children from information). Good design would be on death //
 // to release all children, or if the object suits it, kill all children (how morbid!). //
 // - ------------------------------------------------------------------------------------------ - //
+#include <vector>
+
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 
+#include "UID.h"
 #include "Shared.h"
 #include "Tag.h"
 #include "Body.h"
@@ -25,31 +28,31 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cObject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cTemplate* Object;
+	cTemplate* Object;				// Refernce to our Parent Template (Not Parent Object) //
+	cUID UID;						// UniqueId for this Object //
 	
 	// Family //
-	cObject* Parent;
-	cObject* Child;	// TODO: Array //
+	cObject* Parent;				// My Parent Object. Zero if I have no parent //
+	std::vector<cObject*> Child;	// Our Children //
 	
 	// Tags //
-	cTag* Tag; // TODO: Key/Value Pair //
+	cTag* Tag; 						// TODO: Key/Value Pair //
 	
 	// Collision //
 	cBody* Body;
+
 	// Sensors //
-	cBody* Sensor; // TODO: Array //
+	std::vector<cBody*> Sensor; 	// Our Sensors //
 
 	// Position and AABB //
 	Rect3D Rect;
-//	Rect3D SensorRect; // Sum of all Sensors //
+//	Rect3D SensorRect; 				// Sum of all Sensors //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
 		Object( 0 ),
 		Parent( 0 ),
-		Child( 0 ),
 		Body( 0 ),
-		Sensor( 0 ),
 		Rect( Vector3D::Zero, Vector3D::Zero )
 	{
 	}
@@ -58,14 +61,14 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D GetPos() {
 		return Rect.Center();
 	}
-	inline const Matrix4x4& GetTransform() {
+	const Matrix4x4& GetTransform() {
 		return Matrix4x4::Identity;
 	}
 	
 public:	
-	inline void Step( const cShared& Shared ) {		
+	void Step( const cShared& Shared ) {		
 	}
-	inline void Draw( const cShared& Shared, const Matrix4x4& Matrix ) {		
+	void Draw( const cShared& Shared, const Matrix4x4& Matrix ) {		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

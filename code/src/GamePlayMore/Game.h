@@ -29,6 +29,16 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cGame()
 	{
+		Log( "Hey it's me" );
+		cUID Scobe;
+		cUID Scob;
+		Log( "%i", Scob.Get() );
+		
+		cTag* MyTag = cTag::newInt( 13 );
+
+		Log( "%i o_o", MyTag->GetInt() );
+
+		delete [] MyTag;		
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //

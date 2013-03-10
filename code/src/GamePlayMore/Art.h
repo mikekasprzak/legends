@@ -2,18 +2,19 @@
 #ifndef __PLAYMORE_ART_H__
 #define __PLAYMORE_ART_H__
 // - ------------------------------------------------------------------------------------------ - //
+enum eArtType {
+	AT_NULL = 0,
+	
+	AT_SPHERE,
+	AT_AABB,
+};
+// - ------------------------------------------------------------------------------------------ - //
 class cArt {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cArt thistype;
 	inline void* GetThis() { return this; }
-public: // - Enumerations --------------------------------------------------------------------- - //
-	enum eArtType {
-		AT_NULL = 0,
-		AT_SPHERE = 1,
-		AT_AABB = 2,
-	};
 public: // - Members -------------------------------------------------------------------------- - //
-	eArtType Type;
+	eArtType Type;				// 32bit //
 	// ... //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cArt() :
