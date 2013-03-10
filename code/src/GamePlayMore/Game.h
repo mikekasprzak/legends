@@ -34,11 +34,11 @@ public: // - Constructors and Destructors --------------------------------------
 		cUID Scob;
 		Log( "%i", Scob.Get() );
 		
-		cTag* MyTag = cTag::newInt( 13 );
+		cTag* MyTag = cTag::new_Tag( 13 );
 
-		Log( "%i o_o", MyTag->GetInt() );
+		Log( "%s o_o", MyTag->ToString() );
 
-		delete [] MyTag;		
+		cTag::delete_Tag( MyTag );	
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
