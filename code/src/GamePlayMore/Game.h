@@ -7,6 +7,7 @@
 #include "Shared.h"
 #include "Template.h"
 #include "Object.h"
+#include "Flex.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cGame {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -33,12 +34,10 @@ public: // - Constructors and Destructors --------------------------------------
 		cUID Scobe;
 		cUID Scob;
 		Log( "%i", Scob.Get() );
-		
-		cTag* MyTag = cTag::new_Tag( 13 );
+			
+		flex MyFlex = 14;//"Hello";
 
-		Log( "%s o_o", MyTag->ToString() );
-
-		cTag::delete_Tag( MyTag );	
+		Log( "%s o_o", MyFlex.ToString() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
