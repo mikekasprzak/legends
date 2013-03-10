@@ -35,11 +35,15 @@ public: // - Constructors and Destructors --------------------------------------
 		cUID Scob;
 		Log( "%i", Scob.Get() );
 			
-		flex MyFlex = "Western";//true;//"Hello";
-		MyFlex = 44;
-		MyFlex = 12;
+		flex MyFlex = true;
+		MyFlex += "Scores!";
+		MyFlex += 44;
 		
 		flex Shoe = 144;
+		Shoe += 10;
+		Shoe += "Sock";
+		Shoe += true;
+		Shoe += false;
 
 		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
