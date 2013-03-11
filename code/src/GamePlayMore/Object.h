@@ -12,14 +12,16 @@
 // to release all children, or if the object suits it, kill all children (how morbid!). //
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
+#include <map>
+#include <string>
 
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 
 #include "UID.h"
+#include "Flex.h"
 #include "Shared.h"
-#include "Tag.h"
 #include "Body.h"
 #include "Template.h"
 // - ------------------------------------------------------------------------------------------ - //
@@ -28,18 +30,18 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cObject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cTemplate* Object;				// Refernce to our Parent Template (Not Parent Object) //
+	cTemplate* Template;			// Refernce to our Parent Template (Not Parent Object) //
 	cUID UID;						// UniqueId for this Object //
 	
 	// Family //
 	cObject* Parent;				// My Parent Object. Zero if I have no parent //
 	std::vector<cObject*> Child;	// Our Children //
 	
-	// Tags //
-	cTag* Tag; 						// TODO: Key/Value Pair //
+	// Variables //
+	std::map<std::string,flex> Var; // Key/Value Pairs //
 	
 	// Collision //
-	cBody* Body;
+	cBody* Body;					// TODO: Do some stuff like Flex here.
 
 	// Sensors //
 	std::vector<cBody*> Sensor; 	// Our Sensors //
@@ -50,7 +52,7 @@ public: // - Members -----------------------------------------------------------
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
-		Object( 0 ),
+		Template( 0 ),
 		Parent( 0 ),
 		Body( 0 ),
 		Rect( Vector3D::Zero, Vector3D::Zero )
@@ -62,7 +64,11 @@ public: // - Methods -----------------------------------------------------------
 		return Rect.Center();
 	}
 	const Matrix4x4& GetTransform() {
-		return Matrix4x4::Identity;
+		if ( Body ) {
+			//return Body->GetTransform();
+		}
+		else
+			return Matrix4x4::Identity;
 	}
 	
 public:	
