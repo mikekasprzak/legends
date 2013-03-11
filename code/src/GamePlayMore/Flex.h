@@ -124,6 +124,11 @@ public: // - Methods -----------------------------------------------------------
 	}
 	
 	// Create --------------------------------------------------------------------------------- - //
+	inline static cRawFlex* new_Null() {
+		char* Ptr = new char[ sizeof(cRawFlex) ];
+		cRawFlex* Flex = new(Ptr) cRawFlex( FT_NULL, 0 );
+		return Flex;
+	}
 	inline static cRawFlex* new_Int( const int Value ) {
 		char* Ptr = new char[ sizeof(cRawFlex) + sizeof(int) ];
 		cRawFlex* Flex = new(Ptr) cRawFlex( FT_INT, sizeof(int) );
@@ -155,7 +160,14 @@ public: // - Methods -----------------------------------------------------------
 		memcpy( Flex->GetStringPtr(), Value, Length + 1 );
 		return Flex;
 	}
-	inline static cRawFlex* new_String( const char* Value, const char* Value2 ) {
+	// Variation where we know the string length (or want to substring by offsetting the base addr) //
+	inline static cRawFlex* new_String( const char* Value, const st32 Length ) {
+		char* Ptr = new char[ sizeof(cRawFlex) + (Length + 1) ];
+		cRawFlex* Flex = new(Ptr) cRawFlex( FT_STRING, Length + 1 );
+		memcpy( Flex->GetStringPtr(), Value, Length + 1 );
+		return Flex;
+	}
+	inline static cRawFlex* new_String2( const char* Value, const char* Value2 ) {
 		st32 Length = strlen( Value );
 		st32 Length2 = strlen( Value2 );
 		char* Ptr = new char[ sizeof(cRawFlex) + (Length + Length2 + 1) ];
@@ -164,8 +176,28 @@ public: // - Methods -----------------------------------------------------------
 		memcpy( &(Flex->Data[Length]), Value2, Length2 + 1 );
 		return Flex;
 	}
+	// Variation where we know 1 string length //
+	inline static cRawFlex* new_String2( const char* Value, const st32 Length, const char* Value2 ) {
+		st32 Length2 = strlen( Value2 );
+		char* Ptr = new char[ sizeof(cRawFlex) + (Length + Length2 + 1) ];
+		cRawFlex* Flex = new(Ptr) cRawFlex( FT_STRING, Length + Length2 + 1 );
+		memcpy( Flex->GetStringPtr(), Value, Length );
+		memcpy( &(Flex->Data[Length]), Value2, Length2 + 1 );
+		return Flex;
+	}
+	// Variation where we know both String lengths //
+	inline static cRawFlex* new_String2( const char* Value, const st32 Length, const char* Value2, const st32 Length2 ) {
+		char* Ptr = new char[ sizeof(cRawFlex) + (Length + Length2 + 1) ];
+		cRawFlex* Flex = new(Ptr) cRawFlex( FT_STRING, Length + Length2 + 1 );
+		memcpy( Flex->GetStringPtr(), Value, Length );
+		memcpy( &(Flex->Data[Length]), Value2, Length2 + 1 );
+		return Flex;
+	}
 	
 	// Autodetect Flex type based on argument //
+	inline static cRawFlex* new_Flex() {
+		return new_Null();
+	}
 	inline static cRawFlex* new_Flex( const int Value ) {
 		return new_Int( Value );
 	}
@@ -361,6 +393,30 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 	
 	// Copy Constructor //
+	inline flex( const flex& Orig )
+	{
+		if ( Orig.Data == 0 ) { // Undefined //
+			Data = 0;
+		}
+		else if (Orig.Data->Type == FT_NULL) {
+			Data = cRawFlex::new_Null();
+		}
+		else if (Orig.Data->Type == FT_INT) {
+			Data = cRawFlex::new_Int( Orig.GetInt() );
+		}
+		else if (Orig.Data->Type == FT_FLOAT) {
+			Data = cRawFlex::new_Float( Orig.GetFloat() );
+		}
+		else if (Orig.Data->Type == FT_BOOL) {
+			Data = cRawFlex::new_Bool( Orig.GetBool() );
+		}
+		else if (Orig.Data->Type == FT_UID) {
+			Data = cRawFlex::new_UID( Orig.GetUID() );
+		}
+		else if (Orig.Data->Type == FT_STRING) {
+			Data = cRawFlex::new_String( Orig.GetString() );
+		}
+	}
 	
 	// Assignment //
 	inline flex& operator = ( const int _Value ) {
@@ -370,7 +426,7 @@ public: // - Constructors and Destructors --------------------------------------
 				return *this;
 			}
 			else
-				Delete();
+				cRawFlex::delete_Flex( Data );
 		}
 		Data = cRawFlex::new_Int( _Value );
 		return *this;
@@ -382,7 +438,7 @@ public: // - Constructors and Destructors --------------------------------------
 				return *this;
 			}
 			else
-				Delete();
+				cRawFlex::delete_Flex( Data );
 		}
 		Data = cRawFlex::new_Float( _Value );
 		return *this;
@@ -394,7 +450,7 @@ public: // - Constructors and Destructors --------------------------------------
 				return *this;
 			}
 			else
-				Delete();
+				cRawFlex::delete_Flex( Data );
 		}
 		Data = cRawFlex::new_Float( _Value );
 		return *this;
@@ -406,7 +462,7 @@ public: // - Constructors and Destructors --------------------------------------
 				return *this;
 			}
 			else
-				Delete();
+				cRawFlex::delete_Flex( Data );
 		}
 		Data = cRawFlex::new_Bool( _Value );
 		return *this;
@@ -418,7 +474,7 @@ public: // - Constructors and Destructors --------------------------------------
 				return *this;
 			}
 			else
-				Delete();
+				cRawFlex::delete_Flex( Data );
 		}
 		Data = cRawFlex::new_UID( _Value );
 		return *this;
@@ -426,21 +482,55 @@ public: // - Constructors and Destructors --------------------------------------
 	inline flex& operator = ( const char* _Value ) {
 		// I always assume a string needs to be recreated to be reassigned //
 		if ( Data )
-			Delete();
+			cRawFlex::delete_Flex( Data );
 		Data = cRawFlex::new_String( _Value );
+		return *this;
+	}
+	inline flex& operator = ( const flex& Orig ) {
+		// NOTE: This could be faster if we checked for type equality and just set //
+		if ( Data ) {
+			cRawFlex::delete_Flex( Data );
+		}
+
+		// Copy Constructor Start //
+		if ( Orig.Data == 0 ) { // Undefined //
+			Data = 0;
+		}
+		else if (Orig.Data->Type == FT_NULL) {
+			Data = cRawFlex::new_Null();
+		}
+		else if (Orig.Data->Type == FT_INT) {
+			Data = cRawFlex::new_Int( Orig.GetInt() );
+		}
+		else if (Orig.Data->Type == FT_FLOAT) {
+			Data = cRawFlex::new_Float( Orig.GetFloat() );
+		}
+		else if (Orig.Data->Type == FT_BOOL) {
+			Data = cRawFlex::new_Bool( Orig.GetBool() );
+		}
+		else if (Orig.Data->Type == FT_UID) {
+			Data = cRawFlex::new_UID( Orig.GetUID() );
+		}
+		else if (Orig.Data->Type == FT_STRING) {
+			Data = cRawFlex::new_String( Orig.GetString() );
+		}
+		// Copy Constructor End //
+		
 		return *this;
 	}
 	
 	// Destructor //	
 	inline ~flex() {
 		if ( Data )
-			Delete();
+			cRawFlex::delete_Flex( Data );
 	}
-
-private:
-	inline void Delete() {
-		cRawFlex::delete_Flex( Data );
-	}
+	
+	// Erase the contained data //
+	inline void Clear() {
+		if ( Data )
+			cRawFlex::delete_Flex( Data );
+		Data = 0;
+	}		
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const eFlexType GetType() const {
@@ -539,6 +629,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	
 	// Gets //
+	inline const int GetSize() const {
+		return Data->Size;
+	}
 	inline const int GetInt() const {
 		// TODO: Assert Data //
 		return Data->GetInt();
@@ -596,7 +689,7 @@ public: // - Methods -----------------------------------------------------------
 				safe_sprintf( Text, sizeof(Text), "%i", _Value );
 
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Data->GetString(), Text );
+				Data = cRawFlex::new_String2( Data->GetString(), Data->Size-1, Text );
 				cRawFlex::delete_Flex( Old );
 			}
 		}
@@ -680,7 +773,7 @@ public: // - Methods -----------------------------------------------------------
 				safe_sprintf( Text, sizeof(Text), "%f", _Value );
 				
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Data->GetString(), Text );
+				Data = cRawFlex::new_String2( Data->GetString(), Data->Size-1, Text );
 				cRawFlex::delete_Flex( Old );
 			}
 		}
@@ -735,7 +828,7 @@ public: // - Methods -----------------------------------------------------------
 		return *this;
 	}
 	
-	// Operators -- Doubles //
+	// Operators -- Doubles (proxy) //
 	inline flex& operator += ( const double _Value ) {
 		return operator +=( (float)_Value );
 	}
@@ -754,7 +847,7 @@ public: // - Methods -----------------------------------------------------------
 		if ( Data ) {
 			if ( Data->Type == FT_STRING ) {
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Data->GetString(), _Value ? "True" : "False" );
+				Data = cRawFlex::new_String2( Data->GetString(), Data->Size-1, _Value ? "True" : "False" );
 				cRawFlex::delete_Flex( Old );
 			}
 		}
@@ -771,29 +864,29 @@ public: // - Methods -----------------------------------------------------------
 			if ( Data->Type == FT_INT ) {
 				safe_sprintf( Text, sizeof(Text), "%i", Data->GetInt() );
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Text, _Value );
+				Data = cRawFlex::new_String2( Text, _Value );
 				cRawFlex::delete_Flex( Old );
 			}
 			else if ( Data->Type == FT_FLOAT ) {
 				safe_sprintf( Text, sizeof(Text), "%f", Data->GetFloat() );
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Text, _Value );
+				Data = cRawFlex::new_String2( Text, _Value );
 				cRawFlex::delete_Flex( Old );
 			}
 			else if ( Data->Type == FT_BOOL ) {
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Old->GetBool() ? "True" : "False", _Value );
+				Data = cRawFlex::new_String2( Old->GetBool() ? "True" : "False", _Value );
 				cRawFlex::delete_Flex( Old );
 			}
 			else if ( Data->Type == FT_UID ) {
 				safe_sprintf( Text, sizeof(Text), "%i", Data->GetUID().Get() );
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Text, _Value );
+				Data = cRawFlex::new_String2( Text, _Value );
 				cRawFlex::delete_Flex( Old );
 			}
 			else if ( Data->Type == FT_STRING ) {
 				cRawFlex* Old = Data;
-				Data = cRawFlex::new_String( Old->GetString(), _Value );
+				Data = cRawFlex::new_String2( Old->GetString(), Old->Size-1, _Value );
 				cRawFlex::delete_Flex( Old );
 			}
 		}
@@ -801,6 +894,29 @@ public: // - Methods -----------------------------------------------------------
 			Data = cRawFlex::new_String( _Value );
 		}
 		return *this;
+	}
+	
+	// Operators -- flexes //
+	inline flex& operator += ( const flex& Orig ) {		
+		if ( Data == 0 ) {
+			return operator = ( Orig );
+		}
+		else if ( Orig.Data->Type == FT_INT ) {
+			return operator += ( Orig.GetInt() );
+		}
+		else if ( Orig.Data->Type == FT_FLOAT ) {
+			return operator += ( Orig.GetFloat() );
+		}
+		else if ( Orig.Data->Type == FT_BOOL ) {
+			return operator += ( Orig.GetBool() );
+		}
+		else if ( Orig.Data->Type == FT_UID ) {
+			return operator += ( Orig.GetUID() );
+		}
+		else if ( Orig.Data->Type == FT_STRING ) {
+			return operator += ( Orig.GetString() );
+		}
+		return *this; // i.e. Orig is nothing of interest (Undefined, Null) //
 	}
 
 };

@@ -44,6 +44,8 @@ public: // - Constructors and Destructors --------------------------------------
 		Shoe += "Sock";
 		Shoe += true;
 		Shoe += false;
+		
+		MyFlex += Shoe;
 
 		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
