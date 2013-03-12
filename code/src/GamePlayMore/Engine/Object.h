@@ -71,7 +71,7 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D GetPos() {
 		return Rect.Center();
 	}
-	inline const Matrix4x4& GetTransform() {
+	inline const Matrix4x4 GetTransform() {
 		if ( Body ) {
 			return Body->GetTransform();
 		}
