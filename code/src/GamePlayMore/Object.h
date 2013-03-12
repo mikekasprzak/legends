@@ -12,18 +12,16 @@
 // to release all children, or if the object suits it, kill all children (how morbid!). //
 // - ------------------------------------------------------------------------------------------ - //
 #include <vector>
-#include <map>
-#include <string>
 
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 
-#include "UID.h"
-#include "Flex.h"
-#include "Body.h"
 #include "Template.h"
-
+#include "UID.h"
+#include "KeyStore.h"
+#include "Body.h"
+// - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cObject {
@@ -39,7 +37,7 @@ public: // - Members -----------------------------------------------------------
 	std::vector<cObject*> Child;		// Our Children //
 	
 	// Variables //
-	std::map<std::string,flex> MyVar;	// Key/Value Pairs //
+	cKeyStore OVar;						// Key (Variable) Storage //
 	
 	// Collision //
 	cBody* Body;						// TODO: Do some stuff like Flex here.
@@ -49,7 +47,7 @@ public: // - Members -----------------------------------------------------------
 
 	// Position and AABB //
 	Rect3D Rect;
-//	Rect3D SensorRect; 					// Sum of all Sensors //
+	Rect3D SensorRect; 					// Sum of all Sensors //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
@@ -66,7 +64,7 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline const Matrix4x4& GetTransform() {
 		if ( Body ) {
-			//return Body->GetTransform();
+			return Body->GetTransform();
 		}
 		else {
 			return Matrix4x4::Identity;

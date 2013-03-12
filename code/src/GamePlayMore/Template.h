@@ -2,16 +2,13 @@
 #ifndef __PLAYMORE_TEMPLATE_H__
 #define __PLAYMORE_TEMPLATE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <vector>
-
 #include <Math/Matrix.h>
 
-#include "Flex.h"
 #include "KeyStore.h"
 
 #include "Body.h"
 #include "Art.h"
-
+// - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cTemplate {
@@ -19,38 +16,20 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cTemplate thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	// Tags //
-	//std::map<std::string,flex> MyVar; // TODO: Key/Value Pair //
-	cKeyStore TVar;
-
-	// Collision //
-	cBody* Body;
-	
-	// Artwork //
-	cArt* Art;
+	cKeyStore TVar;				// Key (Variable) Storage //
+	cBody* Body;				// Collision //
+	cArt* Art;					// Artwork //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cTemplate()
+	cTemplate() :
+		Body( 0 ),
+		Art( 0 )
 	{
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	// TVar, GVar, MVar //
-	
-//	inline flex& TVar( const char* Name ) {
-//		auto Itr = MyVar.find( Name );
-//		if ( Itr != MyVar.end() ) {
-//			return Itr->second;
-//		}
-//		else {
-//			Log( "! ERROR: Invalid TVar \"%s\"", Name );
-//			static flex Dummy;
-//			return Dummy;
-//		}
-//	}
-//	inline flex& TVar( const std::string Name ) {
-//		return TVar( Name.c_str() );
-//	}
+
 
 	inline flex& Var( const char* Name ) {
 		return Shared.Var( Name );

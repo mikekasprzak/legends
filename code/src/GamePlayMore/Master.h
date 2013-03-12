@@ -2,11 +2,14 @@
 #ifndef __PLAYMORE_MASTER_H__
 #define __PLAYMORE_MASTER_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include "KeyStore.h"
+// - ------------------------------------------------------------------------------------------ - //
 class cMaster {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cMaster thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
+	cKeyStore MVar;						// Key (Variable) Storage //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cMaster()

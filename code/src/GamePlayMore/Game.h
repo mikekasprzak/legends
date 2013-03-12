@@ -6,16 +6,19 @@
 
 // NOTE: May rename Game to Scene or Stage, or some generic name for a place where objects exist //
 // - ------------------------------------------------------------------------------------------ - //
-#include "Shared.h"
 #include "Template.h"
 #include "Object.h"
-#include "Flex.h"
+#include "KeyStore.h"
+// - ------------------------------------------------------------------------------------------ - //
+#include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cGame {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cGame thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
+	cKeyStore GVar;						// Key (Variable) Storage //
+
 //	//cObject[] Parents;	// Parents are Stepped and Drawn //
 //	//cObject[] Children;	// Children are only Stepped or Drawn if their Parent decides to do so. //
 	
