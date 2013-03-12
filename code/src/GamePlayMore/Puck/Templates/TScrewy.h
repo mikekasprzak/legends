@@ -32,9 +32,13 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::Destroy( Object );
 	}
 	
-//	virtual void Step( class cObject* Object );
-//	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );
-//
+//	virtual void Step( cObject* Object ) {
+//		Log( "Stepped" );
+//	}
+//	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
+//		Log( "Drawn" );
+//	}
+
 //	virtual void Contact( class cObject* Object, class cObject* Vs );
 //	virtual void Sense( class cObject* Object, class cObject* Vs );
 //	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
