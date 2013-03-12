@@ -10,6 +10,7 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
+	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
 	cSceneGame()
 	{
 		Log( "Hey it's me" );
@@ -31,6 +32,11 @@ public: // - Constructors and Destructors --------------------------------------
 
 		Log( "YO! %s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
+
+	//virtual void Destroy() { // See Above //
+	virtual ~cSceneGame() {
+		
+	}	
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	

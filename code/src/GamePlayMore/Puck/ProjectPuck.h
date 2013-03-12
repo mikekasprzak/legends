@@ -12,7 +12,8 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cProjectPuck() {
+	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
+	cProjectPuck() { 
 		AddScene( "Game", new cSceneGame() );
 		DeactivateScene( "Game" );
 		Log( "Voo: %i", Active.size() );
@@ -22,9 +23,12 @@ public: // - Constructors and Destructors --------------------------------------
 		_DeactivateScene( "Game" );
 		Log( "Voo: %i", Active.size() );
 	}
-
-public: // - Methods -------------------------------------------------------------------------- - //
 	
+	//virtual void Destroy() { // See Above //
+	virtual ~cProjectPuck() {
+		
+	}
+public: // - Methods -------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PUCK_PROJECTPUCK_H__ //

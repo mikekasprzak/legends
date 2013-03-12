@@ -21,9 +21,13 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cProject()
 	{
+		//Create(); // Will not work in C++, because constructors can't call child virtual functions //
+					// Details here: http://www.artima.com/cppsource/nevercall.html
 	}
 	
 	virtual ~cProject() {
+		//Destroy();
+		
 		for ( auto Itr = Scene.begin(); Itr != Scene.end(); Itr++ ) {
 			delete Itr->second;
 		}
@@ -134,6 +138,14 @@ public: // - Methods -----------------------------------------------------------
 	inline void _DeactivateScene( const std::string& Name ) {
 		_DeactivateScene( Name.c_str() );
 	}
+	
+public: // - Specialization Methods ----------------------------------------------------------- - //
+	// Temporary, until moved to Squirrel //
+//	virtual void Create() { }
+//	virtual void Destroy() { }
+
+//	virtual void Step( ) { }
+//	virtual void Draw( const Matrix4x4& Matrix ) { }
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_PROJECT_H__ //
