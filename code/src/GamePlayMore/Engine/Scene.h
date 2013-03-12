@@ -36,18 +36,23 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 	
 	virtual ~cScene() {
-		for ( auto Itr = Template.begin(); Itr != Template.end(); Itr++ ) {
-			delete Itr->second;
-		}
 		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+			(*Itr)->Template->Destroy( *Itr );
 			delete *Itr;
 		}
 		for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+			(*Itr)->Template->Destroy( *Itr );
 			delete *Itr;
 		}
 		for ( auto Itr = Children.begin(); Itr != Children.end(); Itr++ ) {
+			(*Itr)->Template->Destroy( *Itr );
 			delete *Itr;
 		}
+
+		// Templates Last, so the above Destroy functions work //
+		for ( auto Itr = Template.begin(); Itr != Template.end(); Itr++ ) {
+			delete Itr->second;
+		}		
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
@@ -60,7 +65,7 @@ public: // - Methods -----------------------------------------------------------
 	inline flex& PVar( const char* Name );			// The Project's Keystore //
 	inline flex& PVar( const std::string& Name );
 		
-
+	// Templates ------------------------------------------------------------------------------ - //
 	inline void AddTemplate( const char* Name, cTemplate* _Template ) {
 		Template[Name] = _Template;
 	}
@@ -80,6 +85,26 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline void DeleteTemplate( const std::string& Name ) {
 		DeleteTemplate( Name.c_str() );
+	}
+	
+	// Objects -------------------------------------------------------------------------------- - //
+	// TODO: Give a Position and Overloads //
+	inline void AddObject( const char* TemplateName ) {
+		//Template[Name] = _Template;
+		auto Itr = Template.find( TemplateName );
+		if ( Itr != Template.end() ) {
+			cObject* NewObj = new cObject( Itr->second );
+			NewObj->Template->Create( NewObj );
+			
+			Active.push_back( NewObj );
+		}
+		else {
+			Log( "! ERROR: Can't Add Object! Template \"%s\" not found!", TemplateName );
+		}
+
+	}
+	inline void AddObject( const std::string& TemplateName ) {
+		AddObject( TemplateName.c_str() );
 	}
 
 public:

@@ -19,7 +19,7 @@ public: // - Constructors and Destructors --------------------------------------
 		AddTemplate( "Screwy", new cTScrewy() );
 		
 		// Add Objects //
-		
+		AddObject( "Screwy" );
 		
 		// Whatever //
 		Log( "Hey it's me" );

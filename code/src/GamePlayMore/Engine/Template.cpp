@@ -2,11 +2,6 @@
 #include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Create( cObject* Object ) {
-	// TODO: Move this to wherever Create is called //
-	Object->Template = this;
-	// Copy Vars //
-	// Copy Body //
-	// Update Rect (Pos) //
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Destroy( cObject* Object ) {

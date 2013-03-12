@@ -24,10 +24,10 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Create( cObject* Object ) {
 		cTemplate::Create( Object );
 		// ... //
-
+		Log( "Screwy Instanced" );
 	}
 	virtual void Destroy( cObject* Object ) {
-		
+		Log( "Screwy Instance Killed" );
 		// ... //
 		cTemplate::Destroy( Object );
 	}

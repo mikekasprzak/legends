@@ -32,7 +32,7 @@ public: // - Members -----------------------------------------------------------
 	
 	// Family //
 	cObject* Parent;					// My Parent Object. Zero if I have no parent //
-	std::vector<cObject*> Child;		// Our Children //
+	std::vector<cObject*> Child;		// Our Children (Vector so they can be more easily referenced) //
 	
 	// Variables //
 	cKeyStore OVar;						// Key (Variable) Storage //
@@ -41,7 +41,7 @@ public: // - Members -----------------------------------------------------------
 	cBody* Body;						// TODO: Do some stuff like Flex here.
 
 	// Sensors //
-	std::vector<cBody*> Sensor; 		// Our Sensors //
+	std::vector<cBody*> Sensor; 		// Our Sensors (Vector so they can be more easily referenced) //
 
 	// Position and AABB //
 	Rect3D Rect;
@@ -56,6 +56,17 @@ public: // - Constructors and Destructors --------------------------------------
 	{
 	}
 
+	cObject( cTemplate* _Template ) :
+		Template( _Template ),
+		Parent( 0 ),
+		Body( 0 ),
+		Rect( Vector3D::Zero, Vector3D::Zero )
+	{
+		// Copy Vars //
+		// Copy Body //
+		// Update Rect (Pos) //
+	}
+	
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const Vector3D GetPos() {
 		return Rect.Center();
