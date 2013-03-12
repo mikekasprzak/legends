@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_GAME_H__
-#define __PLAYMORE_GAME_H__
+#ifndef __PLAYMORE_SCENE_H__
+#define __PLAYMORE_SCENE_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Games are collections of Objects that play, act, and respond to rules. //
 
@@ -12,12 +12,12 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cGame {
+class cScene {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cGame thistype;
+	typedef cScene thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cKeyStore GVar;						// Key (Variable) Storage //
+	cKeyStore SVar;						// Key (Variable) Storage, Scene Scope //
 
 //	//cObject[] Parents;	// Parents are Stepped and Drawn //
 //	//cObject[] Children;	// Children are only Stepped or Drawn if their Parent decides to do so. //
@@ -33,7 +33,7 @@ public: // - Members -----------------------------------------------------------
 	//cObject[] Children;	// Children are not tested against, and are only Stepped or Drawn by Parents. //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cGame()
+	cScene()
 	{
 		Log( "Hey it's me" );
 		cUID Scobe;
@@ -59,5 +59,5 @@ public: // - Methods -----------------------------------------------------------
 
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_GAME_H__ //
+#endif // __PLAYMORE_SCENE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

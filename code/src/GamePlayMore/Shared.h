@@ -12,7 +12,7 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 	class cMaster* 		Master;
-	class cGame* 		Game;
+	class cScene* 		Scene;
 	class cObject*		Object;
 	class cTemplate*	Template;
 
