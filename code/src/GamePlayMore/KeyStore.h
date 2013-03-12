@@ -1,37 +1,39 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_ART_H__
-#define __PLAYMORE_ART_H__
+#ifndef __PLAYMORE_KEYSTORE_H__
+#define __PLAYMORE_KEYSTORE_H__
 // - ------------------------------------------------------------------------------------------ - //
-enum eArtType {
-	AT_NULL = 0,
-	
-	AT_SPHERE,
-	AT_AABB,
-};
+#include <map>
+#include <string>
+
+#include "Flex.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cArt {
+class cKeyStore {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cArt thistype;
+	typedef cKeyStore thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	eArtType 	Type;				// 32bit //
-	st32		Size;				// 32bit -- Size in Bytes //
-	
-	char 		Data[0];			// TBD   -- The Data //
+	std::map<std::string,flex> Data;		// Key/Value Pairs //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cArt() :
-		Type( AT_NULL )
-	{
-	}
-
-	cArt( const eArtType& ArtType ) :
-		Type( ArtType )
+	cKeyStore()
 	{
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	
+	inline flex& operator() ( const char* Name ) {
+		auto Itr = Data.find( Name );
+		if ( Itr != Data.end() ) {
+			return Itr->second;
+		}
+		else {
+			Log( "! ERROR: Invalid Key \"%s\" in KeyStore", Name );
+			static flex Dummy;
+			return Dummy;
+		}		
+	}
+	inline flex& operator() ( const std::string Name ) {
+		return operator()( Name.c_str() );
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_ART_H__ //
+#endif // __PLAYMORE_KEYSTORE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

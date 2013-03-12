@@ -3,6 +3,8 @@
 #define __PLAYMORE_GAME_H__
 // - ------------------------------------------------------------------------------------------ - //
 // Games are collections of Objects that play, act, and respond to rules. //
+
+// NOTE: May rename Game to Scene or Stage, or some generic name for a place where objects exist //
 // - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
 #include "Template.h"

@@ -21,34 +21,35 @@
 
 #include "UID.h"
 #include "Flex.h"
-#include "Shared.h"
 #include "Body.h"
 #include "Template.h"
+
+#include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cObject {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cObject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cTemplate* Template;			// Refernce to our Parent Template (Not Parent Object) //
-	cUID UID;						// UniqueId for this Object //
+	cTemplate* Template;				// Refernce to our Parent Template (Not Parent Object) //
+	cUID UID;							// UniqueId for this Object //
 	
 	// Family //
-	cObject* Parent;				// My Parent Object. Zero if I have no parent //
-	std::vector<cObject*> Child;	// Our Children //
+	cObject* Parent;					// My Parent Object. Zero if I have no parent //
+	std::vector<cObject*> Child;		// Our Children //
 	
 	// Variables //
-	std::map<std::string,flex> Var; // Key/Value Pairs //
+	std::map<std::string,flex> MyVar;	// Key/Value Pairs //
 	
 	// Collision //
-	cBody* Body;					// TODO: Do some stuff like Flex here.
+	cBody* Body;						// TODO: Do some stuff like Flex here.
 
 	// Sensors //
-	std::vector<cBody*> Sensor; 	// Our Sensors //
+	std::vector<cBody*> Sensor; 		// Our Sensors //
 
 	// Position and AABB //
 	Rect3D Rect;
-//	Rect3D SensorRect; 				// Sum of all Sensors //
+//	Rect3D SensorRect; 					// Sum of all Sensors //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cObject() :
@@ -63,18 +64,19 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D GetPos() {
 		return Rect.Center();
 	}
-	const Matrix4x4& GetTransform() {
+	inline const Matrix4x4& GetTransform() {
 		if ( Body ) {
 			//return Body->GetTransform();
 		}
-		else
+		else {
 			return Matrix4x4::Identity;
+		}
 	}
 	
 public:	
-	void Step( const cShared& Shared ) {		
+	void Step() {		
 	}
-	void Draw( const cShared& Shared, const Matrix4x4& Matrix ) {		
+	void Draw( const Matrix4x4& Matrix ) {		
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -2,10 +2,11 @@
 #ifndef __PLAYMORE_FLEX_H__
 #define __PLAYMORE_FLEX_H__
 // - ------------------------------------------------------------------------------------------ - //
-// "flex" is the notable type here. It can be assigned Integers, Floats, Strings and UIDs.
+// "flex" is the notable type here. It can be assigned Integers, Floats, Bools, Strings and UIDs.
 //   Output can be requested with the appropriate GetInt, GetFloat, GetUID, GetString functions.
 //   Explicit conversions can be done with ToInt, ToFloat, ToBool, and ToString.
 // - ------------------------------------------------------------------------------------------ - //
+#include <Style/Style.h>
 #include "UID.h"
 // - ------------------------------------------------------------------------------------------ - //
 enum eFlexType {
@@ -34,7 +35,7 @@ private: // - Members ----------------------------------------------------------
 	eFlexType	Type;				// 32bit -- The Flex Type //
 	st32		Size;				// 32bit -- Size in Bytes //
 	
-	char Data[0];					// TBD   -- The Data //
+	char 		Data[0];			// TBD   -- The Data //
 	
 	friend class flex;
 
@@ -692,6 +693,9 @@ public: // - Methods -----------------------------------------------------------
 				Data = cRawFlex::new_String2( Data->GetString(), Data->Size-1, Text );
 				cRawFlex::delete_Flex( Old );
 			}
+			else {
+				Log( "! ERROR: flex containing %s += Int is invalid", TypeToString() ); 
+			}
 		}
 		else {
 			Data = cRawFlex::new_Int( _Value );
@@ -706,6 +710,9 @@ public: // - Methods -----------------------------------------------------------
 			}
 			else if ( Data->Type == FT_FLOAT ) {
 				*this = Data->GetFloat() - (float)_Value;
+			}
+			else {
+				Log( "! ERROR: flex containing %s -= Int is invalid", TypeToString() ); 
 			}
 		}
 		else {
@@ -722,6 +729,9 @@ public: // - Methods -----------------------------------------------------------
 			else if ( Data->Type == FT_FLOAT ) {
 				*this = Data->GetFloat() * (float)_Value;
 			}
+			else {
+				Log( "! ERROR: flex containing %s *= Int is invalid", TypeToString() ); 
+			}
 		}
 		else {
 			Data = cRawFlex::new_Int( _Value );
@@ -737,6 +747,9 @@ public: // - Methods -----------------------------------------------------------
 			else if ( Data->Type == FT_FLOAT ) {
 				*this = Data->GetFloat() / (float)_Value;
 			}
+			else {
+				Log( "! ERROR: flex containing %s /= Int is invalid", TypeToString() ); 
+			}
 		}
 		else {
 			Data = cRawFlex::new_Int( _Value );
@@ -750,7 +763,7 @@ public: // - Methods -----------------------------------------------------------
 				*this = Data->GetInt() % (int)_Value;
 			}
 			else {
-				// Assert //
+				Log( "! ERROR: flex containing %s %= Int is invalid", TypeToString() ); 
 			}
 		}
 		else {
