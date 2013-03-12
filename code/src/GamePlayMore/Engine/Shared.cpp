@@ -1,6 +1,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
-#include "PlayMore.h"
+#include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Use thread keyword, implying a seperate Shared instance per thread
 cShared Shared;
