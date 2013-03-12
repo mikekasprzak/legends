@@ -4,7 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 // - ------------------------------------------------------------------------------------------ - //
-#include "Templates/TScrewy.h"
+#include "Templates/Screwy.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cSceneGame: public cScene {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -16,7 +16,7 @@ public: // - Constructors and Destructors --------------------------------------
 	cSceneGame()
 	{
 		// Add Templates //
-		AddTemplate( "Screwy", new cTScrewy() );
+		AddTemplate( "Screwy", new tScrewy() );
 		
 		// Add Objects //
 		AddObject( "Screwy" );

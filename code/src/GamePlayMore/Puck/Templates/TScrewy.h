@@ -1,20 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_TSCREWY_H__
-#define __PUCK_TSCREWY_H__
+#ifndef __PUCK_TEMPLATE_SCREWY_H__
+#define __PUCK_TEMPLATE_SCREWY_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cTScrewy: public cTemplate {
+class tScrewy: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cTScrewy thistype;
+	typedef tScrewy thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cTScrewy() {
+	tScrewy() {
 		Log( "I'm Screwy" );
 	}
 	
-	virtual ~cTScrewy() {
+	virtual ~tScrewy() {
 		Log( "Screwy died" );
 	}
 
@@ -45,5 +45,5 @@ public: // - Specialization Methods --------------------------------------------
 //	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_TSCREWY_H__ //
+#endif // __PUCK_TEMPLATE_SCREWY_H__ //
 // - ------------------------------------------------------------------------------------------ - //
