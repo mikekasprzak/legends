@@ -31,7 +31,8 @@ public: // - Specialization Methods --------------------------------------------
 		// ... //
 		cTemplate::Destroy( Object );
 	}
-	
+
+	// Works Just Fine //
 //	virtual void Step( cObject* Object ) {
 //		Log( "Stepped" );
 //	}

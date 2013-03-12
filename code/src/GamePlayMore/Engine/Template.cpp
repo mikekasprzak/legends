@@ -13,7 +13,8 @@ void cTemplate::Step( cObject* Object ) {
 void cTemplate::Draw( cObject* Object, const Matrix4x4& Matrix ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cTemplate::Contact( cObject* Object, cObject* Vs ) {
+const bool cTemplate::Contact( cObject* Object, cObject* Vs ) {
+	return true;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Sense( cObject* Object, cObject* Vs ) {

@@ -55,7 +55,7 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Step( class cObject* Object );
 	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );
 
-	virtual void Contact( class cObject* Object, class cObject* Vs );
+	virtual const bool Contact( class cObject* Object, class cObject* Vs );
 	virtual void Sense( class cObject* Object, class cObject* Vs );
 	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
 };

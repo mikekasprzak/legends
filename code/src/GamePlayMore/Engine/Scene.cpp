@@ -2,15 +2,74 @@
 #include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
 void cScene::Step() {
-	// Step Statics First (because they never do tests, instead are tested) //
-	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
-		Shared.Object = *Itr;
-		(*Itr)->Step();
+	// Step All Objects //
+	{
+		// Step Statics First (because they never do tests, instead are tested) //
+		for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+			Shared.Object = *Itr;
+			(*Itr)->Step();
+		}
+		// Step Actives Second //
+		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+			Shared.Object = *Itr;
+			(*Itr)->Step();
+		}
 	}
-	// Step Actives Second //
-	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
-		Shared.Object = *Itr;
-		(*Itr)->Step();
+	
+	// Do Collision Tests //
+	{
+		// Step Only Actives //
+		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+			Shared.Object = *Itr;
+
+			// Vs Statics //
+			for ( auto Itr2 = Static.begin(); Itr2 != Static.end(); Itr2++ ) {
+//				if ( (*Itr)->Body.Check( (*Itr2)->Body ) ) {
+//					if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
+//						(*Itr)->Body.Solve( (*Itr2)->Body );
+//						(*Itr)->UpdateRect();
+//						(*Itr2)->UpdateRect();
+//					}
+//				}
+			}
+
+			// Vs Other Actives //
+			{
+				auto Itr2 = Itr;
+				Itr2++;
+				for ( ; Itr2 != Active.end(); Itr2++ ) {
+//					if ( (*Itr)->Body.Check( (*Itr2)->Body ) ) {
+//						if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
+//							(*Itr)->Body.Solve( (*Itr2)->Body );
+//							(*Itr)->UpdateRect();
+//							(*Itr2)->UpdateRect();
+//						}
+//					}
+				}
+			}
+			
+			// My Sensors //
+			st Size = (*Itr)->Sensor.size();
+			for ( st idx = 0; idx < Size; idx++ ) {
+				// Vs Statics //
+				for ( auto Itr2 = Static.begin(); Itr2 != Static.end(); Itr2++ ) {
+//					if ( (*Itr)->Sensor[idx].Check( (*Itr2)->Body ) ) {
+//						(*Itr)->Template->Sense(*Itr,*Itr2);
+//					}
+				}
+	
+				// Vs Other Actives //
+				{
+					auto Itr2 = Itr;
+					Itr2++;
+					for ( ; Itr2 != Active.end(); Itr2++ ) {
+//						if ( (*Itr)->Sensor[idx].Check( (*Itr2)->Body ) ) {
+//							(*Itr)->Template->Sense(*Itr,*Itr2);
+//						}
+					}
+				}				
+			}
+		}
 	}
 	Shared.Object = 0;
 }
