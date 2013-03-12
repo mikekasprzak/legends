@@ -11,6 +11,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Shared.h"
 // - ------------------------------------------------------------------------------------------ - //
+// Plan, Design, Original, Mold, Prototype, Prefab, Blueprint, Cookie Cutter, Master, Model, Built.
 class cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cTemplate thistype;

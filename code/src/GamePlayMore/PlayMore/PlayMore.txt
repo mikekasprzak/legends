@@ -1,8 +1,8 @@
 
-+ Super Structure
++ Engine (Super Structure)
   + Shared (Global Data)
     + Tags[] (Data)
-  + Game Structure
+  + Scene (Game Structure)
     + Shared (Game Data)
       + Tags[] (Data)
     + Template[] (for creating Objects)
@@ -24,3 +24,7 @@
       + Ref[]->Child (Object)
       + Body (Collision - Dynamic)
       + Sensor[Body] (Non-Collison regions for detecting things)
+
+
+Engine->Scene->Object->Template
+Project->Stage->Thing->Design
