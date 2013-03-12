@@ -26,22 +26,8 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	// TVar, OVar, GVar, MVar //
-
-	inline flex& Var( const char* Name ) {
-//		auto Itr = Object->MyVar.find( Name );
-//		if ( Itr != Object->MyVar.end() ) {
-//			return Itr->second;
-//		}
-//		else {
-//			Log( "! ERROR: Invalid Var \"%s\"", Name );
-			static flex Dummy;
-			return Dummy;
-//		}
-	}
-	inline flex& Var( const std::string& Name ) {
-		return Var( Name.c_str() );
-	}
+	inline flex& Var( const char* Name );
+	inline flex& Var( const std::string& Name );
 	
 };
 // - ------------------------------------------------------------------------------------------ - //

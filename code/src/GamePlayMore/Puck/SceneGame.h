@@ -13,6 +13,12 @@ public: // - Constructors and Destructors --------------------------------------
 	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
 	cSceneGame()
 	{
+		// Add Templates //
+		
+		// Add Objects //
+		
+		
+		// Whatever //
 		Log( "Hey it's me" );
 		cUID Scobe;
 		cUID Scob;

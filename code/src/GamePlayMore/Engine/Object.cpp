@@ -1,15 +1,13 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_ENGINE_H__
-#define __PLAYMORE_ENGINE_H__
+#include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
-#include "Template.h"
-#include "Object.h"
-#include "Scene.h"
-#include "Project.h"
-
-#include "Shared.h"
-
-#include "Engine_Var.h" // To get around the circular references and let me inline //
+void cObject::Step() {
+	Shared.Template = Template;
+	Template->Step( this );
+}
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_ENGINE_H__ //
+void cObject::Draw( const Matrix4x4& Matrix ) {
+	Shared.Template = Template;
+	Template->Draw( this, Matrix );
+}
 // - ------------------------------------------------------------------------------------------ - //

@@ -32,26 +32,19 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	// TVar, GVar, MVar //
-
-
-	inline flex& Var( const char* Name ) {
-		return Shared.Var( Name );
-	}
-	inline flex& Var( const std::string& Name ) {
-		return Shared.Var( Name );
-	}
+	inline flex& Var( const char* Name );
+	inline flex& Var( const std::string& Name );
 public: // - Specialization Methods ----------------------------------------------------------- - //
 	// Temporary, until moved to Squirrel //
-	virtual void Create( class cObject* Object ) { }
-	virtual void Destroy( class cObject* Object ) { }
+	virtual void Create( class cObject* Object );	// On Object Creation, call the Templates Create method //
+	virtual void Destroy( class cObject* Object );	// On Object Destruction, call the Template Destroy method //
 	
-	virtual void Step( class cObject* Object ) { }
-	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix ) { }
+	virtual void Step( class cObject* Object );
+	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );
 
-	virtual void Contact( class cObject* Object, class cObject* Vs ) { }
-	virtual void Sense( class cObject* Object, class cObject* Vs ) { }
-	virtual void Notify( class cObject* Object, class cObject* Sender, const int Message ) { }
+	virtual void Contact( class cObject* Object, class cObject* Vs );
+	virtual void Sense( class cObject* Object, class cObject* Vs );
+	virtual void Notify( class cObject* Object, class cObject* Sender, const int Message );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_TEMPLATE_H__ //

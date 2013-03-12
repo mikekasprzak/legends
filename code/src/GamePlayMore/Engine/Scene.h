@@ -32,8 +32,7 @@ public: // - Members -----------------------------------------------------------
 	//std::list<cObject*>				Inactive;	// InActive Parent Objects are Stepped, Drawn, and tested against by Actives. //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cScene()
-	{
+	cScene() {
 	}
 	
 	virtual ~cScene() {
@@ -52,7 +51,8 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-
+	virtual void Step();
+	virtual void Draw( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_SCENE_H__ //

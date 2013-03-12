@@ -19,8 +19,9 @@ public: // - Members -----------------------------------------------------------
 	std::map<std::string,cScene*>	Scene;	// All Scenes (named for easy identifying) //
 	std::list<cScene*>				Active;	// Currently Active Scenes //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cProject()
-	{
+	cProject() {
+		Shared.Project = this;
+		
 		//Create(); // Will not work in C++, because constructors can't call child virtual functions //
 					// Details here: http://www.artima.com/cppsource/nevercall.html
 	}
@@ -144,8 +145,8 @@ public: // - Specialization Methods --------------------------------------------
 //	virtual void Create() { }
 //	virtual void Destroy() { }
 
-//	virtual void Step( ) { }
-//	virtual void Draw( const Matrix4x4& Matrix ) { }
+	virtual void Step();
+	virtual void Draw( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_PROJECT_H__ //
