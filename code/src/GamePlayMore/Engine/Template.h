@@ -57,7 +57,7 @@ public: // - Specialization Methods --------------------------------------------
 
 	virtual void Contact( class cObject* Object, class cObject* Vs );
 	virtual void Sense( class cObject* Object, class cObject* Vs );
-	virtual void Notify( class cObject* Object, class cObject* Sender, const int Message );
+	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_TEMPLATE_H__ //

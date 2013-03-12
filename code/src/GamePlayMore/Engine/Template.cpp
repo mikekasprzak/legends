@@ -24,6 +24,6 @@ void cTemplate::Contact( cObject* Object, cObject* Vs ) {
 void cTemplate::Sense( cObject* Object, cObject* Vs ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cTemplate::Notify( cObject* Object, cObject* Sender, const int Message ) {
+void cTemplate::Notice( cObject* Object, cObject* Sender, const int Message ) {
 }
 // - ------------------------------------------------------------------------------------------ - //

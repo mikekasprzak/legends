@@ -68,6 +68,19 @@ public: // - Methods -----------------------------------------------------------
 			return Matrix4x4::Identity;
 		}
 	}
+	
+	void Notify( cObject* Reciever, const int Message ) {
+		cObject* TempObject = Shared.Object;
+		cTemplate* TempTemplate = Shared.Template;
+		Shared.Object = Reciever;
+		Shared.Template = Reciever->Template;
+		
+		Reciever->Template->Notice( Reciever, this, Message );
+		
+		Shared.Template = TempTemplate;
+		Shared.Object = TempObject;
+	}
+
 public:	
 	void Step();
 	void Draw( const Matrix4x4& Matrix );

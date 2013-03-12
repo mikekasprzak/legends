@@ -59,6 +59,28 @@ public: // - Methods -----------------------------------------------------------
 	//inline flex& SVar( const std::string& Name );
 	inline flex& PVar( const char* Name );			// The Project's Keystore //
 	inline flex& PVar( const std::string& Name );
+		
+
+	inline void AddTemplate( const char* Name, cTemplate* _Template ) {
+		Template[Name] = _Template;
+	}
+	inline void AddTemplate( const std::string& Name, cTemplate* _Template ) {
+		AddTemplate( Name.c_str(), _Template );
+	}
+
+	inline void DeleteTemplate( const char* Name ) {
+		auto Itr = Template.find( Name );
+		if ( Itr != Template.end() ) {
+			delete Itr->second;
+			Template.erase( Itr );
+		}
+		else {
+			Log( "! ERROR: Can't Delete Template! Template \"%s\" not found!", Name );
+		}
+	}
+	inline void DeleteTemplate( const std::string& Name ) {
+		DeleteTemplate( Name.c_str() );
+	}
 
 public:
 	virtual void Step();

@@ -12,6 +12,7 @@ void cScene::Step() {
 		Shared.Object = *Itr;
 		(*Itr)->Step();
 	}
+	Shared.Object = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cScene::Draw( const Matrix4x4& Matrix ) {
@@ -25,5 +26,6 @@ void cScene::Draw( const Matrix4x4& Matrix ) {
 		Shared.Object = *Itr;
 		(*Itr)->Draw( Matrix );
 	}
+	Shared.Object = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //

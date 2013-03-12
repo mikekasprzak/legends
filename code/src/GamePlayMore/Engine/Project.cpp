@@ -6,6 +6,7 @@ void cProject::Step() {
 		Shared.Scene = *Itr;
 		(*Itr)->Step();
 	}
+	Shared.Scene = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cProject::Draw( const Matrix4x4& Matrix ) {
@@ -13,5 +14,6 @@ void cProject::Draw( const Matrix4x4& Matrix ) {
 		Shared.Scene = *Itr;
 		(*Itr)->Draw( Matrix );
 	}
+	Shared.Scene = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
