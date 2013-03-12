@@ -27,6 +27,9 @@ public: // - Constructors and Destructors --------------------------------------
 		Art( 0 )
 	{
 	}
+	
+	virtual ~cTemplate() {
+	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	// TVar, GVar, MVar //

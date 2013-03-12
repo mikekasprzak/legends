@@ -13,7 +13,14 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cProjectPuck() {
-		Scene.push_back( new cSceneGame() );
+		AddScene( "Game", new cSceneGame() );
+		DeactivateScene( "Game" );
+		Log( "Voo: %i", Active.size() );
+		_ActivateScene( "Game" );
+		_ActivateScene( "Game" );
+		Log( "Voo: %i", Active.size() );
+		_DeactivateScene( "Game" );
+		Log( "Voo: %i", Active.size() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
