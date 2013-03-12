@@ -48,7 +48,7 @@ public: // - Members -----------------------------------------------------------
 	Rect3D SensorRect; 					// Sum of all Sensors //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cObject() :
+	inline cObject() :
 		Template( 0 ),
 		Parent( 0 ),
 		Body( 0 ),
@@ -56,7 +56,7 @@ public: // - Constructors and Destructors --------------------------------------
 	{
 	}
 
-	cObject( cTemplate* _Template ) :
+	inline cObject( cTemplate* _Template ) :
 		Template( _Template ),
 		Parent( 0 ),
 		Body( 0 ),
@@ -65,6 +65,12 @@ public: // - Constructors and Destructors --------------------------------------
 		// Copy Vars //
 		// Copy Body //
 		// Update Rect (Pos) //
+	}
+	
+	inline ~cObject() {
+		if ( Body ) {
+			cBody::delete_Body( Body );
+		}
 	}
 	
 public: // - Methods -------------------------------------------------------------------------- - //

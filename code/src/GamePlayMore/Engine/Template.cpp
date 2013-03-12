@@ -1,7 +1,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include "Engine.h"
 // - ------------------------------------------------------------------------------------------ - //
-void cTemplate::CreateObject( cObject* Object ) {
+void cTemplate::CreateObject( cObject* Object, const Vector3D& Pos ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::DestroyObject( cObject* Object ) {

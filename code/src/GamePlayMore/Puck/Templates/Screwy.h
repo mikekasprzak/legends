@@ -12,6 +12,9 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tScrewy() {
 		Log( "I'm Screwy" );
+
+		//SetArt_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
+		Art = cArt::new_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
 	}
 	
 	virtual ~tScrewy() {
@@ -21,9 +24,12 @@ public: // - Constructors and Destructors --------------------------------------
 public: // - Methods -------------------------------------------------------------------------- - //
 public: // - Specialization Methods ----------------------------------------------------------- - //
 	// Temporary, until moved to Squirrel //
-	virtual void CreateObject( cObject* Object ) {
-		cTemplate::CreateObject( Object );
+	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
+		cTemplate::CreateObject( Object, Pos );
 		// ... //
+		//SetBody( BT_POINT, Pos );
+		Object->Body = cBody::new_Point( Pos );
+		
 		Log( "Screwy Instanced" );
 	}
 	virtual void DestroyObject( cObject* Object ) {

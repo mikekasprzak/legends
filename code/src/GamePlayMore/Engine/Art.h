@@ -91,6 +91,15 @@ public: // - Methods -----------------------------------------------------------
 		new(Art->Data) cArt_Sphere( Pos, Radius, Color );
 		return Art;
 	}
+
+	// Destroy -------------------------------------------------------------------------------- - //
+	inline static void delete_Art( cArt* Art ) {
+		Art->~cArt();
+		delete [] Art;
+	}
+
+public:
+	
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_ART_H__ //

@@ -89,12 +89,12 @@ public: // - Methods -----------------------------------------------------------
 	
 	// Objects -------------------------------------------------------------------------------- - //
 	// TODO: Give a Position and Overloads //
-	inline void AddObject( const char* TemplateName ) {
+	inline void AddObject( const char* TemplateName, const Vector3D& Pos = Vector3D::Zero ) {
 		//Template[Name] = _Template;
 		auto Itr = Template.find( TemplateName );
 		if ( Itr != Template.end() ) {
 			cObject* NewObj = new cObject( Itr->second );
-			NewObj->Template->CreateObject( NewObj );
+			NewObj->Template->CreateObject( NewObj, Pos );
 			
 			Active.push_back( NewObj );
 		}
@@ -103,8 +103,8 @@ public: // - Methods -----------------------------------------------------------
 		}
 
 	}
-	inline void AddObject( const std::string& TemplateName ) {
-		AddObject( TemplateName.c_str() );
+	inline void AddObject( const std::string& TemplateName, const Vector3D& Pos = Vector3D::Zero ) {
+		AddObject( TemplateName.c_str(), Pos );
 	}
 
 public:

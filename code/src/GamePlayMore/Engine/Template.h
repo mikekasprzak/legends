@@ -29,6 +29,13 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 	
 	virtual ~cTemplate() {
+		if ( Art ) {
+			cArt::delete_Art( Art );
+		}
+
+		if ( Body ) {
+			cBody::delete_Body( Body );
+		}
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
@@ -52,8 +59,10 @@ public: // - Specialization Methods --------------------------------------------
 //	virtual void Create() { }		// On Template Creation. In C++ we use the Constructor (due to limitation) //
 //	virtual void Destroy() { }
 
-	virtual void CreateObject( class cObject* Object );		// On Object Creation, call the Templates Create method //
-	virtual void DestroyObject( class cObject* Object );	// On Object Destruction, call the Template Destroy method //
+	// On Object Creation, call the Templates Create method //
+	virtual void CreateObject( class cObject* Object, const Vector3D& Pos );
+	// On Object Destruction, call the Template Destroy method //
+	virtual void DestroyObject( class cObject* Object );
 	
 	virtual void Step( class cObject* Object );
 	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );

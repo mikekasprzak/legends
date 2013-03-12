@@ -100,6 +100,12 @@ public: // - Methods -----------------------------------------------------------
 		return Body;
 	}
 
+	// Destroy -------------------------------------------------------------------------------- - //
+	inline static void delete_Body( cBody* Body ) {
+		Body->~cBody();
+		delete [] Body;
+	}
+
 public:
 	inline const Matrix4x4 GetTransform() {
 		if ( BT_POINT ) {
