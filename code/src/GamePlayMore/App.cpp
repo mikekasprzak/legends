@@ -97,10 +97,11 @@ cApp::~cApp() {
 #ifdef PRODUCT_CLIENT
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
-//	World->Client_Step();
 	animationTime += 1.0f/120.0f;
 	animation->apply(skeleton, animationTime, true);
 	skeleton->updateWorldTransform();
+	
+	Project->Step();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Draw( Screen::cNative& Native ) {	
@@ -164,7 +165,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		
 		//Render::EnableAlphaBlending();
 		Render::EnablePremultipliedAlphaBlending();
-//		World->Client_Draw( Matrix );
+
+		Project->Draw( Matrix );
 
 		skeleton->draw( ViewMatrix );
 
