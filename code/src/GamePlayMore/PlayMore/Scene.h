@@ -2,10 +2,12 @@
 #ifndef __PLAYMORE_SCENE_H__
 #define __PLAYMORE_SCENE_H__
 // - ------------------------------------------------------------------------------------------ - //
-// Games are collections of Objects that play, act, and respond to rules. //
-
-// NOTE: May rename Game to Scene or Stage, or some generic name for a place where objects exist //
+// Scenes are collections of Objects that play, act, and respond to rules. //
 // - ------------------------------------------------------------------------------------------ - //
+#include <list>
+#include <map>
+#include <string>
+
 #include "Template.h"
 #include "Object.h"
 #include "KeyStore.h"
@@ -17,10 +19,12 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cScene thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cKeyStore SVar;						// Key (Variable) Storage, Scene Scope //
+	cKeyStore 						SVar;		// Key (Variable) Storage, Scene Scope //
+	
+	std::map<std::string,cTemplate>	Template;
 
-//	//cObject[] Parents;	// Parents are Stepped and Drawn //
-//	//cObject[] Children;	// Children are only Stepped or Drawn if their Parent decides to do so. //
+	//std::list<cObject>			Parents;	// Parents are Stepped and Drawn //
+	//std::list<cObject>			Children;	// Children are only Stepped or Drawn if their Parent decides to do so. //
 	
 	// The idea of Inactive Objects, have some flag to say "I don't check for collisions" (though //
 	// others may check me). Actually this may not work, since I may want to do the increment //
@@ -28,31 +32,13 @@ public: // - Members -----------------------------------------------------------
 	
 	// Active, Inactive, Children ? YES! //
 	
-	//cObject[] Active;		// Active Parent Objects are Stepped, Drawn, and tested against eachother. //
-	//cObject[] InActive;	// InActive Parent Objects are Stepped, Drawn, and tested against by Actives. //
-	//cObject[] Children;	// Children are not tested against, and are only Stepped or Drawn by Parents. //
+	std::list<cObject>				Active;		// Active Parent Objects are Stepped, Drawn, and tested against eachother. //
+	std::list<cObject>				InActive;	// InActive Parent Objects are Stepped, Drawn, and tested against by Actives. //
+	std::list<cObject>				Children;	// Children are not tested against, and are only Stepped or Drawn by Parents. //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cScene()
 	{
-		Log( "Hey it's me" );
-		cUID Scobe;
-		cUID Scob;
-		Log( "%i", Scob.Get() );
-			
-		flex MyFlex = true;
-		MyFlex += "Scores!";
-		MyFlex += 44;
-		
-		flex Shoe = 144;
-		Shoe += 10;
-		Shoe += "Sock";
-		Shoe += true;
-		Shoe += false;
-		
-		MyFlex += Shoe;
-
-		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //

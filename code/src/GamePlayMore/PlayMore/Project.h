@@ -18,6 +18,24 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cProject()
 	{
+		Log( "Hey it's me" );
+		cUID Scobe;
+		cUID Scob;
+		Log( "%i", Scob.Get() );
+			
+		flex MyFlex = true;
+		MyFlex += "Scores!";
+		MyFlex += 44;
+		
+		flex Shoe = 144;
+		Shoe += 10;
+		Shoe += "Sock";
+		Shoe += true;
+		Shoe += false;
+		
+		MyFlex += Shoe;
+
+		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
