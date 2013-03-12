@@ -14,7 +14,7 @@ public: // Class Helpers //
 	typedef cApp thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cEngine* Engine;
+	cProject* Project;
 public: // Main ------------------------------------------------------------------------------- - //
 	cApp();
 	~cApp();

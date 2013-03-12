@@ -72,11 +72,11 @@ cApp::cApp() {
 		skeleton->updateWorldTransform();
 	}
 
-	Engine = new cEngine();
+	Project = new cProject();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {
-	delete Engine;
+	delete Project;
 
 	// Cleanup //
 	delete BlurShader;

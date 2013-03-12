@@ -1,22 +1,22 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_ENGINE_H__
-#define __PLAYMORE_ENGINE_H__
+#ifndef __PLAYMORE_PROJECT_H__
+#define __PLAYMORE_PROJECT_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <list>
 
 #include "KeyStore.h"
 #include "Scene.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cEngine {
+class cProject {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cEngine thistype;
+	typedef cProject thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cKeyStore EVar;						// Key (Variable) Storage, Engine Scope (Highest Level) //
+	cKeyStore PVar;						// Key (Variable) Storage, Project Scope (Highest Level) //
 
 	std::list<cScene> Scene;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cEngine()
+	cProject()
 	{
 	}
 
@@ -24,5 +24,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_ENGINE_H__ //
+#endif // __PLAYMORE_PROJECT_H__ //
 // - ------------------------------------------------------------------------------------------ - //

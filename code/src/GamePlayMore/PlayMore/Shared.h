@@ -11,14 +11,14 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cShared thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	class cEngine* 		Engine;
+	class cProject* 	Project;
 	class cScene* 		Scene;
 	class cObject*		Object;
 	class cTemplate*	Template;
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cShared() :
-		Engine( 0 ),
+		Project( 0 ),
 		Scene( 0 ),
 		Object( 0 ),
 		Template( 0 )
