@@ -7,11 +7,13 @@ void cScene::Step() {
 		// Step Statics First (because they never do tests, instead are tested) //
 		for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
 			Shared.Object = *Itr;
+			Shared.Template = (*Itr)->Template;
 			(*Itr)->Step();
 		}
 		// Step Actives Second //
 		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
 			Shared.Object = *Itr;
+			Shared.Template = (*Itr)->Template;
 			(*Itr)->Step();
 		}
 	}
@@ -21,9 +23,11 @@ void cScene::Step() {
 		// Step Only Actives //
 		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
 			Shared.Object = *Itr;
+			Shared.Template = (*Itr)->Template;
 
 			// Vs Statics //
 			for ( auto Itr2 = Static.begin(); Itr2 != Static.end(); Itr2++ ) {
+				// TODO: Set shared Object and Template correctly before the Contact Call //
 //				if ( (*Itr)->Body.Check( (*Itr2)->Body ) ) {
 //					if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
 //						(*Itr)->Body.Solve( (*Itr2)->Body );
@@ -38,6 +42,7 @@ void cScene::Step() {
 				auto Itr2 = Itr;
 				Itr2++;
 				for ( ; Itr2 != Active.end(); Itr2++ ) {
+					// TODO: Set shared Object and Template correctly before the Contact Call //
 //					if ( (*Itr)->Body.Check( (*Itr2)->Body ) ) {
 //						if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
 //							(*Itr)->Body.Solve( (*Itr2)->Body );
@@ -71,6 +76,7 @@ void cScene::Step() {
 			}
 		}
 	}
+	Shared.Template = 0;
 	Shared.Object = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -85,6 +91,7 @@ void cScene::Draw( const Matrix4x4& Matrix ) {
 		Shared.Object = *Itr;
 		(*Itr)->Draw( Matrix );
 	}
+	Shared.Template = 0;
 	Shared.Object = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //

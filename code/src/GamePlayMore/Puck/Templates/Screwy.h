@@ -21,15 +21,15 @@ public: // - Constructors and Destructors --------------------------------------
 public: // - Methods -------------------------------------------------------------------------- - //
 public: // - Specialization Methods ----------------------------------------------------------- - //
 	// Temporary, until moved to Squirrel //
-	virtual void Create( cObject* Object ) {
-		cTemplate::Create( Object );
+	virtual void CreateObject( cObject* Object ) {
+		cTemplate::CreateObject( Object );
 		// ... //
 		Log( "Screwy Instanced" );
 	}
-	virtual void Destroy( cObject* Object ) {
+	virtual void DestroyObject( cObject* Object ) {
 		Log( "Screwy Instance Killed" );
 		// ... //
-		cTemplate::Destroy( Object );
+		cTemplate::DestroyObject( Object );
 	}
 
 	// Works Just Fine //

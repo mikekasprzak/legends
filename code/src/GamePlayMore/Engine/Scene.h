@@ -37,15 +37,15 @@ public: // - Constructors and Destructors --------------------------------------
 	
 	virtual ~cScene() {
 		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
-			(*Itr)->Template->Destroy( *Itr );
+			(*Itr)->Template->DestroyObject( *Itr );
 			delete *Itr;
 		}
 		for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
-			(*Itr)->Template->Destroy( *Itr );
+			(*Itr)->Template->DestroyObject( *Itr );
 			delete *Itr;
 		}
 		for ( auto Itr = Children.begin(); Itr != Children.end(); Itr++ ) {
-			(*Itr)->Template->Destroy( *Itr );
+			(*Itr)->Template->DestroyObject( *Itr );
 			delete *Itr;
 		}
 
@@ -94,7 +94,7 @@ public: // - Methods -----------------------------------------------------------
 		auto Itr = Template.find( TemplateName );
 		if ( Itr != Template.end() ) {
 			cObject* NewObj = new cObject( Itr->second );
-			NewObj->Template->Create( NewObj );
+			NewObj->Template->CreateObject( NewObj );
 			
 			Active.push_back( NewObj );
 		}

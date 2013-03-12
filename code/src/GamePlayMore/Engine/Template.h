@@ -49,8 +49,11 @@ public: // - Methods -----------------------------------------------------------
 	void DrawChildren( class cObject* Object, const Matrix4x4& Matrix );
 public: // - Specialization Methods ----------------------------------------------------------- - //
 	// Temporary, until moved to Squirrel //
-	virtual void Create( class cObject* Object );	// On Object Creation, call the Templates Create method //
-	virtual void Destroy( class cObject* Object );	// On Object Destruction, call the Template Destroy method //
+//	virtual void Create() { }		// On Template Creation. In C++ we use the Constructor (due to limitation) //
+//	virtual void Destroy() { }
+
+	virtual void CreateObject( class cObject* Object );		// On Object Creation, call the Templates Create method //
+	virtual void DestroyObject( class cObject* Object );	// On Object Destruction, call the Template Destroy method //
 	
 	virtual void Step( class cObject* Object );
 	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );
