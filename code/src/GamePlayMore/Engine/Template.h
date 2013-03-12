@@ -32,8 +32,21 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	inline flex& Var( const char* Name );
+	// Shorthands for the Shared Variable Functions //
+	inline flex& Var( const char* Name );			// Search All KeyStores (Except Template) //
 	inline flex& Var( const std::string& Name );
+
+	//inline flex& TVar( const char* Name );		// The Internal KeyStore //
+	//inline flex& TVar( const std::string& Name );
+	inline flex& OVar( const char* Name );			// The Object's KeyStore //
+	inline flex& OVar( const std::string& Name );
+	inline flex& SVar( const char* Name );			// The Scene's Keystore //
+	inline flex& SVar( const std::string& Name );
+	inline flex& PVar( const char* Name );			// The Project's Keystore //
+	inline flex& PVar( const std::string& Name );
+		
+	void StepChildren( class cObject* Object );
+	void DrawChildren( class cObject* Object, const Matrix4x4& Matrix );
 public: // - Specialization Methods ----------------------------------------------------------- - //
 	// Temporary, until moved to Squirrel //
 	virtual void Create( class cObject* Object );	// On Object Creation, call the Templates Create method //

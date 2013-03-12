@@ -35,6 +35,11 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	// Shorthands for the Shared Variable Functions //
+	inline flex& Var( const char* Name );			// Search Project KeyStore (same as PVar) //
+	inline flex& Var( const std::string& Name );
+
+public:
 	inline void AddScene( const char* Name, cScene* _Scene, const bool Activate = true ) {
 		Scene[Name] = _Scene;
 		if ( Activate ) {

@@ -51,6 +51,16 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	// Shorthands for the Shared Variable Functions //
+	inline flex& Var( const char* Name );			// Search Scene and Project Keystores //
+	inline flex& Var( const std::string& Name );
+
+	//inline flex& SVar( const char* Name );		// The Internal KeyStore //
+	//inline flex& SVar( const std::string& Name );
+	inline flex& PVar( const char* Name );			// The Project's Keystore //
+	inline flex& PVar( const std::string& Name );
+
+public:
 	virtual void Step();
 	virtual void Draw( const Matrix4x4& Matrix );
 };
