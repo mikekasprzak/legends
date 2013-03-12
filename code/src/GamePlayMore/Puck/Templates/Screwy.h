@@ -14,7 +14,7 @@ public: // - Constructors and Destructors --------------------------------------
 		Log( "I'm Screwy" );
 
 		//SetArt_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
-		Art = cArt::new_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
+		Art = cArt::new_Circle( Vector3D::Zero, Real(40), GEL_RGB_ORANGE );
 	}
 	
 	virtual ~tScrewy() {
