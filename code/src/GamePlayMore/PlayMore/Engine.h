@@ -2,7 +2,10 @@
 #ifndef __PLAYMORE_ENGINE_H__
 #define __PLAYMORE_ENGINE_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <vector>
+
 #include "KeyStore.h"
+#include "Scene.h"
 // - ------------------------------------------------------------------------------------------ - //
 class cEngine {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -11,6 +14,7 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 	cKeyStore EVar;						// Key (Variable) Storage, Engine Scope (Highest Level) //
 
+	std::vector<cScene> Scene;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cEngine()
 	{
