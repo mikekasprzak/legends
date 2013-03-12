@@ -11,15 +11,15 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cShared thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	class cMaster* 		Master;
+	class cEngine* 		Engine;
 	class cScene* 		Scene;
 	class cObject*		Object;
 	class cTemplate*	Template;
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cShared() :
-		Master( 0 ),
-		Game( 0 ),
+		Engine( 0 ),
+		Scene( 0 ),
 		Object( 0 ),
 		Template( 0 )
 	{

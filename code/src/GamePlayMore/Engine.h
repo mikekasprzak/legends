@@ -1,18 +1,18 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_MASTER_H__
-#define __PLAYMORE_MASTER_H__
+#ifndef __PLAYMORE_ENGINE_H__
+#define __PLAYMORE_ENGINE_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include "KeyStore.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cMaster {
+class cEngine {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cMaster thistype;
+	typedef cEngine thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	cKeyStore MVar;						// Key (Variable) Storage //
+	cKeyStore EVar;						// Key (Variable) Storage, Engine Scope (Highest Level) //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cMaster()
+	cEngine()
 	{
 	}
 
@@ -20,5 +20,5 @@ public: // - Methods -----------------------------------------------------------
 	
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_MASTER_H__ //
+#endif // __PLAYMORE_ENGINE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
