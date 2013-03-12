@@ -7,6 +7,7 @@
 #include <spine-gel/spine.h>
 
 #include "App.h"
+#include "Puck/ProjectPuck.h"
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Texture;
 using namespace Render;
@@ -72,7 +73,7 @@ cApp::cApp() {
 		skeleton->updateWorldTransform();
 	}
 
-	Project = new cProject();
+	Project = new cProjectPuck();
 }
 // - ------------------------------------------------------------------------------------------ - //
 cApp::~cApp() {

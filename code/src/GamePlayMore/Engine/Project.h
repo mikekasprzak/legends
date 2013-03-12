@@ -14,28 +14,15 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 	cKeyStore PVar;						// Key (Variable) Storage, Project Scope (Highest Level) //
 
-	std::list<cScene> Scene;
+	std::list<cScene*> Scene;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cProject()
-	{
-		Log( "Hey it's me" );
-		cUID Scobe;
-		cUID Scob;
-		Log( "%i", Scob.Get() );
-			
-		flex MyFlex = true;
-		MyFlex += "Scores!";
-		MyFlex += 44;
-		
-		flex Shoe = 144;
-		Shoe += 10;
-		Shoe += "Sock";
-		Shoe += true;
-		Shoe += false;
-		
-		MyFlex += Shoe;
-
-		Log( "%s %s %i %f o_o", MyFlex.ToString(), Shoe.ToString(), MyFlex.ToInt(), MyFlex.ToFloat() );
+	cProject() {
+	}
+	
+	virtual ~cProject() {
+		for ( auto Itr = Scene.begin(); Itr != Scene.end(); Itr++ ) {
+			delete *Itr;
+		}
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //

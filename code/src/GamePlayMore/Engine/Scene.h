@@ -32,9 +32,9 @@ public: // - Members -----------------------------------------------------------
 	
 	// Active, Inactive, Children ? YES! //
 	
-	std::list<cObject>				Active;		// Active Parent Objects are Stepped, Drawn, and tested against eachother. //
-	std::list<cObject>				InActive;	// InActive Parent Objects are Stepped, Drawn, and tested against by Actives. //
-	std::list<cObject>				Children;	// Children are not tested against, and are only Stepped or Drawn by Parents. //
+	std::list<cObject*>				Active;		// Active Parent Objects are Stepped, Drawn, and tested against eachother. //
+	std::list<cObject*>				InActive;	// InActive Parent Objects are Stepped, Drawn, and tested against by Actives. //
+	std::list<cObject*>				Children;	// Children are not tested against, and are only Stepped or Drawn by Parents. //
 
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cScene()
