@@ -3,6 +3,7 @@
 #define __PUCK_TEMPLATE_PLAYER_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
+#include <Input/Input.h>
 // - ------------------------------------------------------------------------------------------ - //
 class tPlayer: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -34,6 +35,8 @@ public: // - Specialization Methods --------------------------------------------
 	// Works Just Fine //
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
+			
+		*(Object->Body->GetPointPtr()) += Vector3D( Input::XInput::GamePad[0].LStickX, Input::XInput::GamePad[0].LStickY, 0 );
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );

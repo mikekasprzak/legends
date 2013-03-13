@@ -25,6 +25,8 @@ XINPUT_CAPABILITIES Caps[XUSER_MAX_COUNT];
 XINPUT_BATTERY_INFORMATION Battery[XUSER_MAX_COUNT];
 XINPUT_BATTERY_INFORMATION HeadsetBattery[XUSER_MAX_COUNT];
 XINPUT_VIBRATION Vibration[XUSER_MAX_COUNT];
+
+cGamePad GamePad[4];
 // - ------------------------------------------------------------------------------------------ - //
 void Init() {
 	ZeroMemory( &Connected, sizeof(Connected) );
@@ -65,6 +67,16 @@ void Poll() {
 			XInputGetBatteryInformation( idx, BATTERY_DEVTYPE_GAMEPAD, &Battery[idx] );
 			XInputGetBatteryInformation( idx, BATTERY_DEVTYPE_HEADSET, &HeadsetBattery[idx] );
 			XInputSetState( idx, &Vibration[idx] );
+			
+			GamePad[idx].Button = State[idx].Gamepad.wButtons;
+			GamePad[idx].LTrigger = State[idx].Gamepad.bLeftTrigger / 255.0f;
+			GamePad[idx].RTrigger = State[idx].Gamepad.bRightTrigger / 255.0f;
+
+			// NOTE: Max Positive Stick X is +32767, not +32768
+			GamePad[idx].LStickX = State[idx].Gamepad.sThumbLX / 32768.0f;
+			GamePad[idx].LStickY = State[idx].Gamepad.sThumbLY / 32768.0f;
+			GamePad[idx].RStickX = State[idx].Gamepad.sThumbRX / 32768.0f;
+			GamePad[idx].RStickY = State[idx].Gamepad.sThumbRY / 32768.0f;
 		}
 	}
 	
