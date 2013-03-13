@@ -12,7 +12,7 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tRink( const bool Square = false ) {
 		if ( Square ) {
-			Art = cArt::new_RadiusRect( Vector3D::Zero, Vector2D(180,180), GEL_RGBA(255,255,255,64) );
+			Art = cArt::new_Capsule( Vector3D(+150,0,0),Real(180), Vector3D(-150,0,0),Real(180), GEL_RGBA(255,255,255,64) );
 			Log( "Cool" );
 		}
 		else {

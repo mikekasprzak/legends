@@ -11,6 +11,8 @@ enum eArtType {
 	AT_HALFCIRCLE,
 	AT_LEFTHALFCIRCLE,
 	AT_RIGHTHALFCIRCLE,
+	
+	AT_CAPSULE,
 
 	AT_AABB,
 	AT_RECT,
@@ -19,6 +21,7 @@ enum eArtType {
 // - ------------------------------------------------------------------------------------------ - //
 #include "Art_Sphere.h"		// Storage Type for both Circles and Spheres //
 #include "Art_RadiusRect.h"	
+#include "Art_Capsule.h"	
 // - ------------------------------------------------------------------------------------------ - //
 class cArt {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -65,6 +68,9 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsRadiusRect() const {
 		return Type == AT_RADIUSRECT;
 	}
+	inline const bool IsCapsule() const {
+		return Type == AT_CAPSULE;
+	}
 
 	// Data Retrieval ------------------------------------------------------------------------- - //
 	inline const cArt_Sphere& GetCircle() const {
@@ -75,6 +81,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline const cArt_RadiusRect& GetRadiusRect() const {
 		return *((cArt_RadiusRect*)Data);
+	}
+	inline const cArt_Capsule& GetCapsule() const {
+		return *((cArt_Capsule*)Data);
 	}
 
 	// Data Changing -------------------------------------------------------------------------- - //
@@ -91,6 +100,13 @@ public: // - Methods -----------------------------------------------------------
 		((cArt_RadiusRect*)Data)->Radius = Radius;
 		((cArt_RadiusRect*)Data)->Color = Color;
 	}
+	inline void SetCapsuleRect( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB, const GelColor Color ) {
+		((cArt_Capsule*)Data)->PosA = PosA;
+		((cArt_Capsule*)Data)->RadiusA = RadiusA;
+		((cArt_Capsule*)Data)->PosB = PosB;
+		((cArt_Capsule*)Data)->RadiusB = RadiusB;
+		((cArt_Capsule*)Data)->Color = Color;
+	}
 	
 	// Data Access ---------------------------------------------------------------------------- - //
 	inline cArt_Sphere* GetCirclePtr() {
@@ -101,6 +117,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline cArt_RadiusRect* GetRadiusRectPtr() {
 		return (cArt_RadiusRect*)Data;
+	}
+	inline cArt_Capsule* GetCapsulePtr() {
+		return (cArt_Capsule*)Data;
 	}
 
 	// Create --------------------------------------------------------------------------------- - //
@@ -137,6 +156,12 @@ public: // - Methods -----------------------------------------------------------
 		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_RadiusRect) ];
 		cArt* Art = new(Ptr) cArt( AT_RADIUSRECT, sizeof(cArt_RadiusRect) );
 		new(Art->Data) cArt_RadiusRect( Pos, Radius, Color );
+		return Art;
+	}
+	inline static cArt* new_Capsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB, const GelColor Color ) {
+		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_Capsule) ];
+		cArt* Art = new(Ptr) cArt( AT_CAPSULE, sizeof(cArt_Capsule) );
+		new(Art->Data) cArt_Capsule( PosA, RadiusA, PosB, RadiusB, Color );
 		return Art;
 	}
 	

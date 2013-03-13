@@ -32,15 +32,16 @@ cSceneGame::cSceneGame() {
 	AddTemplate( "RinkSq", new tRink( true ) );
 	
 	// Add Objects //
-	AddObject( "Rink", Vector3D(-150,0,0) );
-	AddObject( "Rink", Vector3D(+150,0,0) );
+//	AddObject( "Rink", Vector3D(-150,0,0) );
+//	AddObject( "Rink", Vector3D(+150,0,0) );
 	AddObject( "RinkSq", Vector3D(0,0,0) );
 
-	AddObject( "Puck", Vector3D(0,0,0) );
 	AddObject( "Player1", Vector3D(-60,+60,0) );
 	AddObject( "Player2", Vector3D(-60,-60,0) );
 	AddObject( "Player3", Vector3D(+60,+60,0) );
 	AddObject( "Player4", Vector3D(+60,-60,0) );
+
+	AddObject( "Puck", Vector3D(0,0,0) );
 
 	AddObject( "Net1", Vector3D( -240, 0, 0 ) );
 	AddObject( "Net2", Vector3D( +240, 0, 0 ) );
