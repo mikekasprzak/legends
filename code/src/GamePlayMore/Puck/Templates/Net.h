@@ -10,8 +10,11 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tNet( const GelColor& Color = GEL_RGB_WHITE ) {
-		Art = cArt::new_Circle( Vector3D::Zero, Real(30), Color );
+	tNet( const GelColor& Color = GEL_RGB_WHITE, const bool Right = false ) {
+		if ( Right )
+			Art = cArt::new_RightHalfCircle( Vector3D::Zero, Real(30), Color );
+		else		
+			Art = cArt::new_LeftHalfCircle( Vector3D::Zero, Real(30), Color );
 	}
 	
 	virtual ~tNet() {

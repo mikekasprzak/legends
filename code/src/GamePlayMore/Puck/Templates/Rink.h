@@ -10,8 +10,14 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tRink( ) {
-		Art = cArt::new_Circle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
+	tRink( const bool Square = false ) {
+		if ( Square ) {
+			Art = cArt::new_RadiusRect( Vector3D::Zero, Vector2D(180,180), GEL_RGBA(255,255,255,64) );
+			Log( "Cool" );
+		}
+		else {
+			Art = cArt::new_Circle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
+		}
 	}
 	
 	virtual ~tRink() {

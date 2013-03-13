@@ -26,12 +26,16 @@ cSceneGame::cSceneGame() {
 	AddTemplate( "Player2", new tPlayer( GEL_RGB_ORANGE ) );
 	AddTemplate( "Player3", new tPlayer( GEL_RGB_MINT ) );
 	AddTemplate( "Player4", new tPlayer( GEL_RGB_MINT ) );
-	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE ) );
-	AddTemplate( "Net2", new tNet( GEL_RGB_MINT ) );
+	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE, false ) );
+	AddTemplate( "Net2", new tNet( GEL_RGB_MINT, true ) );
 	AddTemplate( "Rink", new tRink() );
+	AddTemplate( "RinkSq", new tRink( true ) );
 	
 	// Add Objects //
-	AddObject( "Rink", Vector3D(0,0,0) );
+	AddObject( "Rink", Vector3D(-150,0,0) );
+	AddObject( "Rink", Vector3D(+150,0,0) );
+	AddObject( "RinkSq", Vector3D(0,0,0) );
+
 	AddObject( "Puck", Vector3D(0,0,0) );
 	AddObject( "Player1", Vector3D(-60,+60,0) );
 	AddObject( "Player2", Vector3D(-60,-60,0) );
