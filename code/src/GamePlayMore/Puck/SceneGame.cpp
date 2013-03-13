@@ -8,6 +8,7 @@
 #include "Templates/Player.h"
 #include "Templates/Net.h"
 #include "Templates/Rink.h"
+#include "Templates/DummyRink.h"
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
@@ -22,19 +23,20 @@ cSceneGame::cSceneGame() {
 	// Add Templates //
 	AddTemplate( "Screwy", new tScrewy() );
 	AddTemplate( "Puck", new tPuck() );
-	AddTemplate( "Player1", new tPlayer( GEL_RGB_ORANGE ) );
-	AddTemplate( "Player2", new tPlayer( GEL_RGB_ORANGE ) );
-	AddTemplate( "Player3", new tPlayer( GEL_RGB_MINT ) );
-	AddTemplate( "Player4", new tPlayer( GEL_RGB_MINT ) );
+	AddTemplate( "Player1", new tPlayer( 0, GEL_RGB_ORANGE ) );
+	AddTemplate( "Player2", new tPlayer( 1, GEL_RGB_RED ) );
+	AddTemplate( "Player3", new tPlayer( 2, GEL_RGB_MINT ) );
+	AddTemplate( "Player4", new tPlayer( 3, GEL_RGB_GREEN ) );
 	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE, false ) );
 	AddTemplate( "Net2", new tNet( GEL_RGB_MINT, true ) );
 	AddTemplate( "Rink", new tRink() );
-	AddTemplate( "RinkSq", new tRink( true ) );
+	AddTemplate( "DummyRink1", new tDummyRink( false ) );
+	AddTemplate( "DummyRink2", new tDummyRink( true ) );
 	
 	// Add Objects //
-//	AddObject( "Rink", Vector3D(-150,0,0) );
-//	AddObject( "Rink", Vector3D(+150,0,0) );
-	AddObject( "RinkSq", Vector3D(0,0,0) );
+	AddObject( "DummyRink1", Vector3D(-150,0,0) );
+	AddObject( "DummyRink2", Vector3D(+150,0,0) );
+	AddObject( "Rink", Vector3D(0,0,0) );
 
 	AddObject( "Player1", Vector3D(-60,+60,0) );
 	AddObject( "Player2", Vector3D(-60,-60,0) );

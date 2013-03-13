@@ -11,7 +11,8 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tPlayer( const GelColor& Color = GEL_RGB_WHITE ) {
+	tPlayer( const int PlayerNumber, const GelColor& Color = GEL_RGB_WHITE ) {
+		TVar.Add("Number") = PlayerNumber;
 		Art = cArt::new_Circle( Vector3D::Zero, Real(12), Color );
 	}
 	
@@ -36,7 +37,11 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
 			
-		*(Object->Body->GetPointPtr()) += Vector3D( Input::XInput::GamePad[0].LStickX, Input::XInput::GamePad[0].LStickY, 0 );
+		*(Object->Body->GetPointPtr()) += Vector3D( 
+			Input::XInput::GamePad[TVar("Number").ToInt()].LStickX, 
+			Input::XInput::GamePad[TVar("Number").ToInt()].LStickY, 
+			0 
+			);
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );
