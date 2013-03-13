@@ -3,6 +3,10 @@
 #include <Render/Render.h>
 #include <Render/Font.h>
 // - ------------------------------------------------------------------------------------------ - //
+#include "Templates/Screwy.h"
+#include "Templates/Puck.h"
+#include "Templates/Player.h"
+// - ------------------------------------------------------------------------------------------ - //
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 cSceneGame::cSceneGame() {
@@ -11,12 +15,22 @@ cSceneGame::cSceneGame() {
 	SVar.Add("Time") = 3*60*60;
 	
 	SVar.Add("DelayTime") = 4*60;
+	SVar.Add("ShowDelayTime") = true;
 	
 	// Add Templates //
 	AddTemplate( "Screwy", new tScrewy() );
+	AddTemplate( "Puck", new tPuck() );
+	AddTemplate( "Player1", new tPlayer( GEL_RGB_ORANGE ) );
+	AddTemplate( "Player2", new tPlayer( GEL_RGB_ORANGE ) );
+	AddTemplate( "Player3", new tPlayer( GEL_RGB_MINT ) );
+	AddTemplate( "Player4", new tPlayer( GEL_RGB_MINT ) );
 	
 	// Add Objects //
-	AddObject( "Screwy", Vector3D(200,0,0) );
+	AddObject( "Puck", Vector3D(0,0,0) );
+	AddObject( "Player1", Vector3D(-60,+60,0) );
+	AddObject( "Player2", Vector3D(-60,-60,0) );
+	AddObject( "Player3", Vector3D(+60,+60,0) );
+	AddObject( "Player4", Vector3D(+60,-60,0) );
 	
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -37,24 +51,30 @@ void cSceneGame::Step() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cSceneGame::Draw( const Matrix4x4& Matrix ) {
-	// *** //
+	// ** PRE DRAW ** //
+	{
+	}
+	// ** DRAW ** //
 	cScene::Draw( Matrix );
-	// *** //
-	extern cFont* Font;
-	Font->printf( Vector3D(-270,+150,0), 64.0f, GEL_ALIGN_TOP_LEFT, "%i", SVar("Score1").ToInt() );
-	Font->printf( Vector3D(+270,+150,0), 64.0f, GEL_ALIGN_TOP_RIGHT, "%i", SVar("Score2").ToInt() );
+	// ** POST DRAW ** //
+	{
+		extern cFont* Font;
+		Font->printf( Vector3D(-270,+150,0), 64.0f, GEL_ALIGN_TOP_LEFT, "%i", SVar("Score1").ToInt() );
+		Font->printf( Vector3D(+270,+150,0), 64.0f, GEL_ALIGN_TOP_RIGHT, "%i", SVar("Score2").ToInt() );
+		
+		int Time = SVar("Time").ToInt();
+//		Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i:%02i", (Time / 60) / 60, (Time / 60) % 60, Time % 60 );
+		Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i", (Time / 60) / 60, (Time / 60) % 60 );
 	
-	int Time = SVar("Time").ToInt();
-//	Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i:%02i", (Time / 60) / 60, (Time / 60) % 60, Time % 60 );
-	Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i", (Time / 60) / 60, (Time / 60) % 60 );
-
-	int DelayTime = SVar("DelayTime").ToInt();
-	Font->printf( 
-		Vector3D(0,0,0), 
-		192.0f * ((DelayTime % 60)/60.0f), 
-		GEL_ALIGN_MIDDLE_CENTER, 
-		"%i", (DelayTime / 60) % 60
-	);
-
+		if ( SVar("ShowDelayTime").ToBool() ) {
+			int DelayTime = SVar("DelayTime").ToInt();
+			Font->printf( 
+				Vector3D(0,0,0), 
+				192.0f * ((DelayTime % 60)/60.0f), 
+				GEL_ALIGN_MIDDLE_CENTER, 
+				"%i%s", (DelayTime / 60) % 60, ((DelayTime / 60) == 0) ? "!" : ""
+			);
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //

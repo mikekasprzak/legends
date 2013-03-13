@@ -1,52 +1,51 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_TEMPLATE_PUCK_H__
-#define __PUCK_TEMPLATE_PUCK_H__
+#ifndef __PUCK_TEMPLATE_PLAYER_H__
+#define __PUCK_TEMPLATE_PLAYER_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 // - ------------------------------------------------------------------------------------------ - //
-class tPuck: public cTemplate {
+class tPlayer: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef tPuck thistype;
+	typedef tPlayer thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tPuck() {
-		//SetArt_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
-		Art = cArt::new_Circle( Vector3D::Zero, Real(4), GEL_RGB_YELLOW );
+	tPlayer( const GelColor& Color = GEL_RGB_WHITE ) {
+		Art = cArt::new_Circle( Vector3D::Zero, Real(12), Color );
 	}
 	
-	virtual ~tPuck() {
+	virtual ~tPlayer() {
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 public: // - Specialization Methods ----------------------------------------------------------- - //
-	// Temporary, until moved to Squirrel //
 	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
-		//SetBody( BT_POINT, Pos );
-		Object->Body = cBody::new_Point( Pos );
 		
-		Log( "Screwy Instanced" );
+		Object->Body = cBody::new_Point( Pos );
 	}
 	virtual void DestroyObject( cObject* Object ) {
-		Log( "Screwy Instance Killed" );
+
 		// ... //
 		cTemplate::DestroyObject( Object );
 	}
 
 	// Works Just Fine //
-//	virtual void Step( cObject* Object ) {
-//		Log( "Stepped" );
-//	}
+	virtual void Step( cObject* Object ) {
+		cTemplate::Step( Object );
+	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
-//		Log( "Drawn" );
+//		cTemplate::Draw( Object, Matrix );
 //	}
 
-//	virtual void Contact( class cObject* Object, class cObject* Vs );
-//	virtual void Sense( class cObject* Object, class cObject* Vs );
-//	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
+	virtual const bool Contact( cObject* Object, cObject* Vs ) {
+	}
+	virtual void Sense( cObject* Object, cObject* Vs ) {
+	}
+	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_TEMPLATE_PUCK_H__ //
+#endif // __PUCK_TEMPLATE_PLAYER_H__ //
 // - ------------------------------------------------------------------------------------------ - //
