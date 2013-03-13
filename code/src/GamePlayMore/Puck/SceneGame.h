@@ -19,7 +19,7 @@ public: // - Constructors and Destructors --------------------------------------
 		AddTemplate( "Screwy", new tScrewy() );
 		
 		// Add Objects //
-		AddObject( "Screwy", Vector3D(500,0,0) );
+		AddObject( "Screwy", Vector3D(200,0,0) );
 		
 		// Whatever //
 		Log( "Hey it's me" );

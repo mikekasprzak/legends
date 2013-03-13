@@ -12,8 +12,7 @@ void cTemplate::Step( cObject* Object ) {
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Draw( cObject* Object, const Matrix4x4& Matrix ) {
 	if ( Art ) {
-		//Matrix4x4 Result = Object->GetTransform() * Matrix;
-		Matrix4x4 Result = Object->GetTransform() * Matrix;//.Transpose();//.Transpose() * Matrix;
+		Matrix4x4 Result = Object->GetTransform() * Matrix;
 		Art->Draw( Result );
 	}
 }

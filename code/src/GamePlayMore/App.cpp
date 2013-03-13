@@ -147,11 +147,13 @@ void cApp::Draw( Screen::cNative& Native ) {
 	{
 		ViewMatrix = Matrix;		
 
-		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = 4;//1.0f/1024.0f;//(12*16)*3;
-		LocalMatrix(1,1) = 4;//1.0f/1024.0f;//(12*16)*3;
-			
-		ViewMatrix *= LocalMatrix;
+		{
+			Matrix4x4 LocalMatrix = Matrix4x4::Identity;
+			LocalMatrix(0,0) = 4;//1.0f/1024.0f;//(12*16)*3;
+			LocalMatrix(1,1) = 4;//1.0f/1024.0f;//(12*16)*3;
+				
+			ViewMatrix *= LocalMatrix;
+		}
 	
 //		Default->Bind( TextureShader );
 //		Default->UniformMatrix4x4( 0, ViewMatrix );
@@ -166,7 +168,7 @@ void cApp::Draw( Screen::cNative& Native ) {
 		//Render::EnableAlphaBlending();
 		Render::EnablePremultipliedAlphaBlending();
 
-		Project->Draw( Matrix );
+		Project->Draw( ViewMatrix );
 
 		skeleton->draw( ViewMatrix );
 
