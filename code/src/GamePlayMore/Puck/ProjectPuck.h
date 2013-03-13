@@ -15,13 +15,6 @@ public: // - Constructors and Destructors --------------------------------------
 	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
 	cProjectPuck() { 
 		AddScene( "Game", new cSceneGame() );
-		DeactivateScene( "Game" );
-		Log( "Voo: %i", Active.size() );
-		_ActivateScene( "Game" );
-		_ActivateScene( "Game" );
-		Log( "Voo: %i", Active.size() );
-		_DeactivateScene( "Game" );
-		Log( "Voo: %i", Active.size() );
 	}
 	
 	//virtual void Destroy() { // See Above //

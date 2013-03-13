@@ -68,8 +68,8 @@ cApp::cApp() {
 		skeleton->flipX = false;
 		skeleton->flipY = true;
 		skeleton->setToBindPose();
-		skeleton->getRootBone()->x = -350;
-		skeleton->getRootBone()->y = -150;
+		skeleton->getRootBone()->x = -180;
+		skeleton->getRootBone()->y = -70;
 		skeleton->updateWorldTransform();
 	}
 
@@ -148,8 +148,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix = Matrix;		
 
 		Matrix4x4 LocalMatrix = Matrix4x4::Identity;
-		LocalMatrix(0,0) = 2;//1.0f/1024.0f;//(12*16)*3;
-		LocalMatrix(1,1) = 2;//1.0f/1024.0f;//(12*16)*3;
+		LocalMatrix(0,0) = 4;//1.0f/1024.0f;//(12*16)*3;
+		LocalMatrix(1,1) = 4;//1.0f/1024.0f;//(12*16)*3;
 			
 		ViewMatrix *= LocalMatrix;
 	
