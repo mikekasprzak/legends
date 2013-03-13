@@ -316,6 +316,11 @@ int main( int argc, char* argv[] ) {
 			TIMEVALUE TimeDiff = SubtractTime( GetTimeNow(), WorkTime );
 			int FramesOfWork = GetFrames( &TimeDiff );
 
+			if ( FramesOfWork >= 30 ) {
+				Log("! WARNING: FramesOfWork is high (%i)! Skipping Work...", FramesOfWork );
+				FramesOfWork = 1;
+			}
+
 			for ( int Frame = 0; Frame < (FramesOfWork); Frame++ ) {
 				Input::Poll();
 				SDL_PumpEvents();
