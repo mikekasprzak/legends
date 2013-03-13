@@ -23,6 +23,16 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+extern int FramesPerSecond;
+int FramesPerSecond = 0;
+
+TIMEVALUE WorkTime;
+void SkipTime() {
+	WorkTime = GetTimeNow();
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 #include <System/Path.h>
 
 //extern char AppBaseDir[];
@@ -294,29 +304,53 @@ int main( int argc, char* argv[] ) {
 		SDL_SetEventFilter( EventHandler, 0 );
 		
 		Log( "Mem: %i", System::GetMemoryUsage() );
+
+		int FPS_Step = 0;
+		int FPS_Draw = 0;
+
+		SetFramesPerSecond( 60 );
+		WorkTime = GetTimeNow();
 		
 		extern bool KillSignal;
 		while ( !KillSignal ) {
-			Input::Poll();
-			SDL_PumpEvents();
-			App.Step();
+			TIMEVALUE TimeDiff = SubtractTime( GetTimeNow(), WorkTime );
+			int FramesOfWork = GetFrames( &TimeDiff );
 
-			// For All Screens //
-			for ( size_t idx = 0; idx < Screen::Native.Size(); idx++ ) {
-				if ( Screen::Native[idx].pWindow ) {
-					Screen::Native[idx].MakeCurrent(); // Memory Leak //
-					
-					App.Draw( Screen::Native[idx] );
-					
-					Screen::Native[idx].Swap(); // Memory Leak //
+			for ( int Frame = 0; Frame < (FramesOfWork); Frame++ ) {
+				Input::Poll();
+				SDL_PumpEvents();
+				App.Step();
+
+				AddFrame( &WorkTime );
+			}
+			FPS_Step += FramesOfWork;
+
+			if ( (FramesOfWork > 0) ) {
+				// For All Screens //
+				for ( size_t idx = 0; idx < Screen::Native.Size(); idx++ ) {
+					if ( Screen::Native[idx].pWindow ) {
+						Screen::Native[idx].MakeCurrent(); // Memory Leak //
+						
+						App.Draw( Screen::Native[idx] );
+						
+						Screen::Native[idx].Swap(); // Memory Leak //
+					}
+				}
+				FPS_Draw++;
+
+				// ** WEIRD ** //			
+				{
+					static int MemDrop = 0;
+					MemDrop++;
+					if ( (MemDrop & 255) == 255 )
+						Log( "Mem: %i (%i) -- %s", System::GetMemoryUsage(), System::GetMemoryUsage() / 1024, System::GetClockShortString() );
 				}
 			}
-			
-			{
-				static int MemDrop = 0;
-				MemDrop++;
-				if ( (MemDrop & 255) == 255 )
-					Log( "Mem: %i (%i) -- %s", System::GetMemoryUsage(), System::GetMemoryUsage() / 1024, System::GetClockShortString() );
+
+			if ( FPS_Step > 60 ) {
+				FPS_Step -= 60;
+				FramesPerSecond = FPS_Draw;
+				FPS_Draw = 0;
 			}
 			
 			Wait(5);

@@ -97,7 +97,7 @@ cApp::~cApp() {
 #ifdef PRODUCT_CLIENT
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
-	animationTime += 1.0f/120.0f;
+	animationTime += 1.0f/60.0f;
 	animation->apply(skeleton, animationTime, true);
 	skeleton->updateWorldTransform();
 	
@@ -244,6 +244,8 @@ void cApp::Draw( Screen::cNative& Native ) {
 		ViewMatrix *= LocalMatrix;
 
 		Render::EnablePremultipliedAlphaBlending();
+		extern int FramesPerSecond;
+		Font->printf( Vector3D(-130,+70,0), 8.0f, GEL_ALIGN_TOP_LEFT, "%i", FramesPerSecond );
 		Font->printf( Vector3D(-100,-50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
 		Render::DisableBlending();
 	}
