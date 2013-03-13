@@ -5,8 +5,32 @@
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
+cSceneGame::cSceneGame() {
+	SVar.Add("Score1") = 0;
+	SVar.Add("Score2") = 0;
+	SVar.Add("Time") = 3*60*60;
+	
+	SVar.Add("DelayTime") = 4*60;
+	
+	// Add Templates //
+	AddTemplate( "Screwy", new tScrewy() );
+	
+	// Add Objects //
+	AddObject( "Screwy", Vector3D(200,0,0) );
+	
+}
+// - ------------------------------------------------------------------------------------------ - //
+cSceneGame::~cSceneGame() {
+	
+}	
+// - ------------------------------------------------------------------------------------------ - //
 void cSceneGame::Step() {
-	SVar("Time") -= 1;
+	if ( SVar("DelayTime").ToInt() > 0 ) {
+		SVar("DelayTime") -= 1;
+	}
+	else {
+		SVar("Time") -= 1;		
+	}
 	
 	// *** //
 	cScene::Step();
@@ -23,6 +47,14 @@ void cSceneGame::Draw( const Matrix4x4& Matrix ) {
 	int Time = SVar("Time").ToInt();
 //	Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i:%02i", (Time / 60) / 60, (Time / 60) % 60, Time % 60 );
 	Font->printf( Vector3D(0,+150,0), 32.0f, GEL_ALIGN_TOP_CENTER, "%i:%02i", (Time / 60) / 60, (Time / 60) % 60 );
+
+	int DelayTime = SVar("DelayTime").ToInt();
+	Font->printf( 
+		Vector3D(0,0,0), 
+		192.0f * ((DelayTime % 60)/60.0f), 
+		GEL_ALIGN_MIDDLE_CENTER, 
+		"%i", (DelayTime / 60) % 60
+	);
 
 }
 // - ------------------------------------------------------------------------------------------ - //
