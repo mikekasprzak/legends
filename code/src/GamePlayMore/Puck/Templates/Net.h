@@ -1,20 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_TEMPLATE_PLAYER_H__
-#define __PUCK_TEMPLATE_PLAYER_H__
+#ifndef __PUCK_TEMPLATE_NET_H__
+#define __PUCK_TEMPLATE_NET_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 // - ------------------------------------------------------------------------------------------ - //
-class tPlayer: public cTemplate {
+class tNet: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef tPlayer thistype;
+	typedef tNet thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tPlayer( const GelColor& Color = GEL_RGB_WHITE ) {
-		Art = cArt::new_Circle( Vector3D::Zero, Real(12), Color );
+	tNet( const GelColor& Color = GEL_RGB_WHITE ) {
+		Art = cArt::new_Circle( Vector3D::Zero, Real(30), Color );
 	}
 	
-	virtual ~tPlayer() {
+	virtual ~tNet() {
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
@@ -40,7 +40,6 @@ public: // - Specialization Methods --------------------------------------------
 //	}
 
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
-		return true;
 	}
 	virtual void Sense( cObject* Object, cObject* Vs ) {
 	}
@@ -48,5 +47,5 @@ public: // - Specialization Methods --------------------------------------------
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_TEMPLATE_PLAYER_H__ //
+#endif // __PUCK_TEMPLATE_NET_H__ //
 // - ------------------------------------------------------------------------------------------ - //

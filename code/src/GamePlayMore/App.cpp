@@ -97,9 +97,9 @@ cApp::~cApp() {
 #ifdef PRODUCT_CLIENT
 // - ------------------------------------------------------------------------------------------ - //
 void cApp::Step( ) {
-	animationTime += 1.0f/60.0f;
-	animation->apply(skeleton, animationTime, true);
-	skeleton->updateWorldTransform();
+//	animationTime += 1.0f/60.0f;
+//	animation->apply(skeleton, animationTime, true);
+//	skeleton->updateWorldTransform();
 	
 	Project->Step();
 }
@@ -165,12 +165,12 @@ void cApp::Draw( Screen::cNative& Native ) {
 //		Default->Attrib( 1, UVs );
 //		Default->DrawArrays( GEL_TRIANGLE_STRIP, 4 );
 		
-		//Render::EnableAlphaBlending();
-		Render::EnablePremultipliedAlphaBlending();
+		Render::EnableAlphaBlending();
 
 		Project->Draw( ViewMatrix );
 
-		skeleton->draw( ViewMatrix );
+//		Render::EnablePremultipliedAlphaBlending();
+//		skeleton->draw( ViewMatrix );
 
 		Render::DisableBlending();
 	}

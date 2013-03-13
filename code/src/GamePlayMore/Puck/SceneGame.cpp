@@ -6,13 +6,15 @@
 #include "Templates/Screwy.h"
 #include "Templates/Puck.h"
 #include "Templates/Player.h"
+#include "Templates/Net.h"
+#include "Templates/Rink.h"
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 cSceneGame::cSceneGame() {
 	SVar.Add("Score1") = 0;
 	SVar.Add("Score2") = 0;
-	SVar.Add("Time") = 3*60*60;
+	SVar.Add("Time") = (3*60*60) + 59;
 	
 	SVar.Add("DelayTime") = 4*60;
 	SVar.Add("ShowDelayTime") = true;
@@ -24,14 +26,20 @@ cSceneGame::cSceneGame() {
 	AddTemplate( "Player2", new tPlayer( GEL_RGB_ORANGE ) );
 	AddTemplate( "Player3", new tPlayer( GEL_RGB_MINT ) );
 	AddTemplate( "Player4", new tPlayer( GEL_RGB_MINT ) );
+	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE ) );
+	AddTemplate( "Net2", new tNet( GEL_RGB_MINT ) );
+	AddTemplate( "Rink", new tRink() );
 	
 	// Add Objects //
+	AddObject( "Rink", Vector3D(0,0,0) );
 	AddObject( "Puck", Vector3D(0,0,0) );
 	AddObject( "Player1", Vector3D(-60,+60,0) );
 	AddObject( "Player2", Vector3D(-60,-60,0) );
 	AddObject( "Player3", Vector3D(+60,+60,0) );
 	AddObject( "Player4", Vector3D(+60,-60,0) );
-	
+
+	AddObject( "Net1", Vector3D( -240, 0, 0 ) );
+	AddObject( "Net2", Vector3D( +240, 0, 0 ) );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cSceneGame::~cSceneGame() {

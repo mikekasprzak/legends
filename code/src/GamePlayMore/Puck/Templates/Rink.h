@@ -1,20 +1,20 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_TEMPLATE_PLAYER_H__
-#define __PUCK_TEMPLATE_PLAYER_H__
+#ifndef __PUCK_TEMPLATE_RINK_H__
+#define __PUCK_TEMPLATE_RINK_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 // - ------------------------------------------------------------------------------------------ - //
-class tPlayer: public cTemplate {
+class tRink: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef tPlayer thistype;
+	typedef tRink thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tPlayer( const GelColor& Color = GEL_RGB_WHITE ) {
-		Art = cArt::new_Circle( Vector3D::Zero, Real(12), Color );
+	tRink( ) {
+		Art = cArt::new_Circle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
 	}
 	
-	virtual ~tPlayer() {
+	virtual ~tRink() {
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
@@ -40,13 +40,13 @@ public: // - Specialization Methods --------------------------------------------
 //	}
 
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
-		return true;
+		return false;
 	}
-	virtual void Sense( cObject* Object, cObject* Vs ) {
-	}
-	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
-	}
+//	virtual void Sense( cObject* Object, cObject* Vs ) {
+//	}
+//	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
+//	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_TEMPLATE_PLAYER_H__ //
+#endif // __PUCK_TEMPLATE_RINK_H__ //
 // - ------------------------------------------------------------------------------------------ - //
