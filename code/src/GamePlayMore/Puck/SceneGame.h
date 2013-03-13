@@ -15,6 +15,10 @@ public: // - Constructors and Destructors --------------------------------------
 	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
 	cSceneGame()
 	{
+		SVar.Add("Score1") = 0;
+		SVar.Add("Score2") = 0;
+		SVar.Add("Time") = 60*60*3;
+		
 		// Add Templates //
 		AddTemplate( "Screwy", new tScrewy() );
 		
@@ -48,7 +52,8 @@ public: // - Constructors and Destructors --------------------------------------
 	}	
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	
+	virtual void Step();
+	virtual void Draw( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PUCK_SCENEGAME_H__ //
