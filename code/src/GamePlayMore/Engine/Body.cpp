@@ -23,8 +23,14 @@ const Rect3D cBody::GetRect() {
 	}
 	else if ( IsCircle() ) {
 		return Rect3D( 
-			GetCircle().Pos - GetCircle().Radius.xxx(),
-			GetCircle().Radius.xxx() * Real::Two 
+			GetCircle().Pos - GetCircle().Radius._xx0(),
+			GetCircle().Radius._xx0() * Real::Two 
+			);
+	}
+	else if ( IsSphere() ) {
+		return Rect3D( 
+			GetCircle().Pos - GetCircle().Radius._xxx(),
+			GetCircle().Radius._xxx() * Real::Two 
 			);
 	}
 	else {

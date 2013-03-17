@@ -14,11 +14,11 @@ inline void generate_Vertex3D_Rect( T* Dest, const Vector3D& Pos, const Vector3D
 	Out = (Vector3D*)Dest++;
 	*Out = Pos;
 	Out = (Vector3D*)Dest++;
-	*Out = Pos + Vector3D(Shape.x,0,Shape.z*Real::Half);//Shape._x00();
+	*Out = Pos + Vector3D(Shape.x,0,Shape.z*Real::Half);
 	Out = (Vector3D*)Dest++;
 	*Out = Pos + Shape;
 	Out = (Vector3D*)Dest++;
-	*Out = Pos + Vector3D(0,Shape.y,Shape.z*Real::Half);//Shape._0y0();
+	*Out = Pos + Vector3D(0,Shape.y,Shape.z*Real::Half);
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< typename T >
