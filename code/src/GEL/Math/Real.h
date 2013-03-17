@@ -61,29 +61,29 @@
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLEQUALS_OPERATOR( _OP_ ) \
 	inline const Real& operator _OP_ ( const Real& _Vs ) { \
-		Data _OP_ _Vs.Data; \
+		x _OP_ _Vs.x; \
 		return *this; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLSYMBOLPREFIX_OPERATOR( _OP_ ) \
 	inline const Real& operator _OP_ () { \
-		_OP_ Data; \
+		_OP_ x; \
 		return *this; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOLSYMBOLSUFFIX_OPERATOR( _OP_ ) \
 	inline const Real operator _OP_ ( int ) { \
-		return Data _OP_; \
+		return x _OP_; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_TEST_OPERATOR( _OP_ ) \
 	inline const bool operator _OP_ ( const Real& _Vs ) const { \
-		return Data _OP_ _Vs.Data; \
+		return x _OP_ _Vs.x; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 #define OVERLOAD_SYMBOL_OPERATOR( _OP_ ) \
 	inline const Real operator _OP_ ( const Real& _Vs ) const { \
-		return Data _OP_ _Vs.Data; \
+		return x _OP_ _Vs.x; \
 	}
 // - ------------------------------------------------------------------------------------------ - //
 // - ------------------------------------------------------------------------------------------ - //
@@ -95,8 +95,8 @@ class Real {
 	// - -------------------------------------------------------------------------------------- - //
 	typedef float _RealType;
 	// - -------------------------------------------------------------------------------------- - //	
-	// Our actual data contents // 
-	_RealType Data;
+	// Our actual data contents -- NEW: Renamed "Data" to "x", to be vector friendly // 
+	_RealType x;
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
@@ -138,17 +138,17 @@ public:
 	// Constructors //
 	// - -------------------------------------------------------------------------------------- - //
 	inline Real() :
-		Data( 0 )
+		x( 0 )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline Real( const _RealType& _Data ) :
-		Data( _Data )
+	inline Real( const _RealType& _x ) :
+		x( _x )
 	{
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real& Set( const Real& _Vs ) {
-		Data = _Vs.Data;
+		x = _Vs.x;
 		return *this;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -158,7 +158,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Might need a non const float returning variant //
 	inline operator const _RealType () const {
-		return Data;	
+		return x;	
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -190,7 +190,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Negative //
 	inline const Real operator - ( ) const {
-		return -Data;
+		return -x;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -200,33 +200,33 @@ public:
 	// Regular Functions //
 	// - -------------------------------------------------------------------------------------- - //
 	inline void Normalize() {
-		if ( Data > Zero )
-			Data = One;
-		else if ( Data < Zero )
-			Data = -One;
+		if ( x > Zero )
+			x = One;
+		else if ( x < Zero )
+			x = -One;
 		else
-			Data = Zero;
+			x = Zero;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation of Normalize that returns the Magnitude after calculating the normalized vector //
 	inline const Real NormalizeRet() {
 		Real Temp( *this );
-		if ( Data > Zero )
-			Data = One;
-		else if ( Data < Zero ) {
-			Data = -One;
+		if ( x > Zero )
+			x = One;
+		else if ( x < Zero ) {
+			x = -One;
 			Temp = -Temp;
 		}
 		else
-			Data = Zero;
+			x = Zero;
 		return Temp;
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation of Normalize that only returns the normal //
 	inline const Real Normal() const {
-		if ( Data > Zero )
+		if ( x > Zero )
 			return One;
-		else if ( Data < Zero )
+		else if ( x < Zero )
 			return -One;
 		else
 			return Zero;
@@ -239,7 +239,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// The squared length of a vector //
 	inline const Real MagnitudeSquared() const {
-		return Data * Data;
+		return x * x;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// The sum of all absolute value parts //
@@ -330,10 +330,10 @@ public:
 	// Specific Functions that apply to this type //
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Real Abs() const {
-		if ( Data < Zero )
-			return -Data;
+		if ( x < Zero )
+			return -x;
 		else
-			return Data;
+			return x;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Square Root //
@@ -524,7 +524,7 @@ public:
 		return std::atan( *this * Real::TwoPi );
 	}	
 	// - -------------------------------------------------------------------------------------- - //
-	// TODO: ArcTan2 (atan2)
+	// ArcTan2 (atan2) can be found outside, since it takes 2 arguments (y,x) //
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
@@ -1175,15 +1175,172 @@ public:
 	// Due to some signature issues, printf needs an explicit function for converting to float. //
 	// - -------------------------------------------------------------------------------------- - //
 	inline const float ToFloat() const {
-		return Data;
+		return x;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	// Swizzle //
+	// - -------------------------------------------------------------------------------------- - //
+	#define SWIZZLE2_PROTO( _TYPE, _A, _B ) \
+		inline const _TYPE _A ## _B () const;
+	#define SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
+		inline const _TYPE _A ## _B ## _C () const;
+	#define SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
+		inline const _TYPE _A ## _B ## _C ## _D() const;
+	// - -------------------------------------------------------------------------------------- - //
+	#define _SWIZZLE2_PROTO( _TYPE, _A, _B ) \
+		inline const _TYPE _ ## _A ## _B () const;
+	#define _SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
+		inline const _TYPE _ ## _A ## _B ## _C () const;
+	#define _SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
+		inline const _TYPE _ ## _A ## _B ## _C ## _D() const;
+	// - -------------------------------------------------------------------------------------- - //
+	SWIZZLE2_PROTO( class Vector2D, x,x );
+	SWIZZLE3_PROTO( class Vector3D, x,x,x );
+	SWIZZLE4_PROTO( class Vector4D, x,x,x,x );
+
+	_SWIZZLE2_PROTO( class Vector2D, x,x );
+	_SWIZZLE2_PROTO( class Vector2D, x,0 );
+	_SWIZZLE2_PROTO( class Vector2D, x,1 );
+	_SWIZZLE2_PROTO( class Vector2D, 0,x );
+	_SWIZZLE2_PROTO( class Vector2D, 0,0 );
+	_SWIZZLE2_PROTO( class Vector2D, 0,1 );
+	_SWIZZLE2_PROTO( class Vector2D, 1,x );
+	_SWIZZLE2_PROTO( class Vector2D, 1,0 );
+	_SWIZZLE2_PROTO( class Vector2D, 1,1 );
+
+	_SWIZZLE3_PROTO( class Vector3D, x,x,x );
+	_SWIZZLE3_PROTO( class Vector3D, x,x,0 );
+	_SWIZZLE3_PROTO( class Vector3D, x,x,1 );
+	_SWIZZLE3_PROTO( class Vector3D, x,0,x );
+	_SWIZZLE3_PROTO( class Vector3D, x,0,0 );
+	_SWIZZLE3_PROTO( class Vector3D, x,0,1 );
+	_SWIZZLE3_PROTO( class Vector3D, x,1,x );
+	_SWIZZLE3_PROTO( class Vector3D, x,1,0 );
+	_SWIZZLE3_PROTO( class Vector3D, x,1,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,x,x );
+	_SWIZZLE3_PROTO( class Vector3D, 0,x,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,x,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,0,x );
+	_SWIZZLE3_PROTO( class Vector3D, 0,0,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,0,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,1,x );
+	_SWIZZLE3_PROTO( class Vector3D, 0,1,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 0,1,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,x,x );
+	_SWIZZLE3_PROTO( class Vector3D, 1,x,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,x,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,0,x );
+	_SWIZZLE3_PROTO( class Vector3D, 1,0,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,0,1 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,1,x );
+	_SWIZZLE3_PROTO( class Vector3D, 1,1,0 );
+	_SWIZZLE3_PROTO( class Vector3D, 1,1,1 );
+
+	_SWIZZLE4_PROTO( class Vector4D, x,x,x,x );	// *** //
+	_SWIZZLE4_PROTO( class Vector4D, x,x,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,x,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,0,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, x,1,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,x,x );	// *** //
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,x,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,0,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 0,1,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,x,x );	// *** //
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,x,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,0,1,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,x,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,x,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,x,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,0,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,0,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,0,1 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,1,x );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,1,0 );
+	_SWIZZLE4_PROTO( class Vector4D, 1,1,1,1 );	
+	// - -------------------------------------------------------------------------------------- - //
+	#undef _SWIZZLE4_PROTO
+	#undef _SWIZZLE3_PROTO
+	#undef _SWIZZLE2_PROTO
+	// - -------------------------------------------------------------------------------------- - //
+	#undef SWIZZLE4_PROTO
+	#undef SWIZZLE3_PROTO
+	#undef SWIZZLE2_PROTO
+	// - -------------------------------------------------------------------------------------- - //
 	// Random Numbers //
 	static Real Random();
+	// - -------------------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //
 
+
+// - ------------------------------------------------------------------------------------------ - //
+// Arc Tangent 2 - Input *[0,1] -- Output *[-?,+?] //
+inline const Real ArcTan2( const Real y, const Real x ) {
+	return std::atan2( y, x ) * Real::InvTwoPi; // Optimization for / TwoPi
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 // External Operations, for GLSL familiar syntax. From the Procedural book. //

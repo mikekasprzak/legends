@@ -28,7 +28,7 @@ const Real Real::ThreeQuarter( 0.75 );
 const Real Real::Third( 1.0 / 3.0 );
 	
 const Real Real::Pi( 3.1415926535897932384626433832795 );
-const Real Real::TwoPi( Pi+Pi );
+const Real Real::TwoPi( Pi+Pi );	// Tau //
 const Real Real::HalfPi( Pi * Real::Half );
 const Real Real::QuarterPi( Pi * Real::Quarter );
 const Real Real::InvPi( One / Pi );

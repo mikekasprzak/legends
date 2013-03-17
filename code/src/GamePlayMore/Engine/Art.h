@@ -9,19 +9,19 @@ enum eArtType {
 	AT_SPHERE,
 
 	AT_HALFCIRCLE,
-	AT_LEFTHALFCIRCLE,
-	AT_RIGHTHALFCIRCLE,
+	AT_HALFSPHERE,
 	
 	AT_CAPSULE,
 
-	AT_AABB,
+	AT_AABB,	// ?? //
 	AT_RECT,
 	AT_RADIUSRECT,
 };
 // - ------------------------------------------------------------------------------------------ - //
-#include "Art_Sphere.h"		// Storage Type for both Circles and Spheres //
-#include "Art_RadiusRect.h"	
-#include "Art_Capsule.h"	
+#include "Art_Sphere.h"			// Both Circles and Spheres //
+#include "Art_HalfSphere.h"		// Spheres with a dividing plane (normal) //
+#include "Art_RadiusRect.h"		// Rectangles with a center and "radius" about each axis //
+#include "Art_Capsule.h"		// A line segment of Two points and Two Radius //
 // - ------------------------------------------------------------------------------------------ - //
 class cArt {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -79,6 +79,12 @@ public: // - Methods -----------------------------------------------------------
 	inline const cArt_Sphere& GetSphere() const {
 		return GetCircle();
 	}
+	inline const cArt_HalfSphere& GetHalfCircle() const {
+		return *((cArt_HalfSphere*)Data);
+	}
+	inline const cArt_HalfSphere& GetHalfSphere() const {
+		return GetHalfCircle();
+	}
 	inline const cArt_RadiusRect& GetRadiusRect() const {
 		return *((cArt_RadiusRect*)Data);
 	}
@@ -94,6 +100,15 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline void SetSphere( const Vector3D& Pos, const Real Radius, const GelColor Color ) {
 		SetCircle( Pos, Radius, Color );
+	}
+	inline void SetHalfCircle( const Vector3D& Pos, const Real Radius, const Vector3D& Normal, const GelColor Color ) {
+		((cArt_HalfSphere*)Data)->Pos = Pos;
+		((cArt_HalfSphere*)Data)->Radius = Radius;
+		((cArt_HalfSphere*)Data)->Normal = Normal;		
+		((cArt_HalfSphere*)Data)->Color = Color;
+	}
+	inline void SetHalfSphere( const Vector3D& Pos, const Real Radius, const Vector3D& Normal, const GelColor Color ) {
+		SetHalfCircle( Pos, Radius, Normal, Color );
 	}
 	inline void SetRadiusRect( const Vector3D& Pos, const Vector2D& Radius, const GelColor Color ) {
 		((cArt_RadiusRect*)Data)->Pos = Pos;
@@ -115,9 +130,18 @@ public: // - Methods -----------------------------------------------------------
 	inline cArt_Sphere* GetSpherePtr() {
 		return GetCirclePtr();
 	}
+	
+	inline cArt_HalfSphere* GetHalfCirclePtr() {
+		return (cArt_HalfSphere*)Data;
+	}
+	inline cArt_HalfSphere* GetHalfSpherePtr() {
+		return GetHalfCirclePtr();
+	}
+	
 	inline cArt_RadiusRect* GetRadiusRectPtr() {
 		return (cArt_RadiusRect*)Data;
 	}
+	
 	inline cArt_Capsule* GetCapsulePtr() {
 		return (cArt_Capsule*)Data;
 	}
@@ -140,16 +164,16 @@ public: // - Methods -----------------------------------------------------------
 		new(Art->Data) cArt_Sphere( Pos, Radius, Color );
 		return Art;
 	}
-	inline static cArt* new_LeftHalfCircle( const Vector3D& Pos, const Real Radius, const GelColor Color ) {
-		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_Sphere) ];
-		cArt* Art = new(Ptr) cArt( AT_LEFTHALFCIRCLE, sizeof(cArt_Sphere) );
-		new(Art->Data) cArt_Sphere( Pos, Radius, Color );
+	inline static cArt* new_HalfCircle( const Vector3D& Pos, const Real Radius, const Vector3D& Normal, const GelColor Color ) {
+		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_HalfSphere) ];
+		cArt* Art = new(Ptr) cArt( AT_HALFCIRCLE, sizeof(cArt_HalfSphere) );
+		new(Art->Data) cArt_HalfSphere( Pos, Radius, Normal, Color );
 		return Art;
 	}
-	inline static cArt* new_RightHalfCircle( const Vector3D& Pos, const Real Radius, const GelColor Color ) {
-		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_Sphere) ];
-		cArt* Art = new(Ptr) cArt( AT_RIGHTHALFCIRCLE, sizeof(cArt_Sphere) );
-		new(Art->Data) cArt_Sphere( Pos, Radius, Color );
+	inline static cArt* new_HalfSphere( const Vector3D& Pos, const Real Radius, const Vector3D& Normal, const GelColor Color ) {
+		char* Ptr = new char[ sizeof(cArt) + sizeof(cArt_HalfSphere) ];
+		cArt* Art = new(Ptr) cArt( AT_HALFSPHERE, sizeof(cArt_HalfSphere) );
+		new(Art->Data) cArt_HalfSphere( Pos, Radius, Normal, Color );
 		return Art;
 	}
 	inline static cArt* new_RadiusRect( const Vector3D& Pos, const Vector2D& Radius, const GelColor Color ) {

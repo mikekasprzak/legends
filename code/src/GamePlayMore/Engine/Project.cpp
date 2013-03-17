@@ -17,3 +17,9 @@ void cProject::Draw( const Matrix4x4& Matrix ) {
 	Shared.Scene = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cProject::DrawDebug( const Matrix4x4& Matrix ) {
+	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+		(*Itr)->DrawDebug( Matrix );
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //

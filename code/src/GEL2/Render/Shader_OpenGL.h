@@ -32,6 +32,15 @@ extern ShaderHandle ColorNoiseShader;
 extern ShaderHandle Noise1BitShader;
 extern ShaderHandle ColorNoise1BitShader;
 // - ------------------------------------------------------------------------------------------ - //
+inline void Flat( const int Mode, const Matrix4x4& Matrix, const GelColor Color, const void* Verts, const st32 Count ) {
+	Default->Bind( FlatShader );
+	Default->UniformMatrix4x4( 0, Matrix );
+	Default->UniformColor( 1, Color ); // GlobalColor //
+	Default->BindUniforms();
+	Default->Attrib( 0, Verts );
+	Default->DrawArrays( Mode, Count );
+}
+// - ------------------------------------------------------------------------------------------ - //
 }; // namespace Render //
 // - ------------------------------------------------------------------------------------------ - //
 #endif // defined(USES_OPENGL2) || defined(USES_OPENGLES2) //

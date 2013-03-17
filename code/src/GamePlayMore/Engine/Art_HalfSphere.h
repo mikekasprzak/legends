@@ -1,35 +1,35 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_PROJECTPUCK_H__
-#define __PUCK_PROJECTPUCK_H__
+#ifndef __PLAYMORE_ART_HALFSPHERE_H__
+#define __PLAYMORE_ART_HALFSPHERE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Engine/Engine.h>
-
-#include "SceneGame.h"
+#include <Math/Vector.h>
+#include <Math/Real.h>
+#include <Graphics/GelColor.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cProjectPuck: public cProject {
+class cArt_HalfSphere {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cProjectPuck thistype;
+	typedef cArt_HalfSphere thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
+	Vector3D 	Pos;	// Relative //
+	Real 		Radius;
+	Vector3D	Normal;	// Dividing Plane Normal //
+	GelColor 	Color;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
-	cProjectPuck() {
-		PVar.Add( "ShowDebug" ) = true;
-		AddScene( "Game", new cSceneGame() );
+	cArt_HalfSphere()
+	{
 	}
-	
-	//virtual void Destroy() { // See Above //
-	virtual ~cProjectPuck() {
-		
+
+	cArt_HalfSphere( const Vector3D& _Pos, const Real& _Radius, const Vector3D& _Normal, const GelColor _Color ) :
+		Pos( _Pos ),
+		Radius( _Radius ),
+		Normal( _Normal ),
+		Color( _Color )
+	{
 	}
+
 public: // - Methods -------------------------------------------------------------------------- - //
-	virtual void Draw( const Matrix4x4& Matrix ) {
-		cProject::Draw( Matrix );
-		if ( PVar("ShowDebug").ToBool() ) {
-			cProject::DrawDebug( Matrix );
-		}
-	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_PROJECTPUCK_H__ //
+#endif // __PLAYMORE_ART_HALFSPHERE_H__ //
 // - ------------------------------------------------------------------------------------------ - //

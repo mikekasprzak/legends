@@ -2,18 +2,25 @@
 #ifndef __PLAYMORE_BODY_H__
 #define __PLAYMORE_BODY_H__
 // - ------------------------------------------------------------------------------------------ - //
+#include <Math/Vector.h>
+#include <Math/Matrix.h>
+#include <Geometry/Rect.h>
+// - ------------------------------------------------------------------------------------------ - //
 enum eBodyType {
 	BT_NULL = 0,
 
 	BT_POINT,			// Objects with no physicality, just a position //
-	BT_CIRCLE,
-	BT_SPHERE,
+
+	BT_CIRCLE,			// Z not tested //
+	BT_SPHERE,			// X, Y, and Z tested //
 
 //	BT_AABB,
 	
 	// Use different ID's for non-transforming versions of these types //
 	// Station Region. Pivot Region. Transformed Region. Transformed and Pivot not actually different. //
 };
+// - ------------------------------------------------------------------------------------------ - //
+#include "Body_Sphere.h"			// Both Circles and Spheres //
 // - ------------------------------------------------------------------------------------------ - //
 class cBody {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -53,39 +60,47 @@ public: // - Methods -----------------------------------------------------------
 	}
 
 	// Data Retrieval ------------------------------------------------------------------------- - //
+	// NOTE: Point is a specific Body type. This is not used to get the center. //
 	inline const Vector3D& GetPoint() const {
 		return *((Vector3D*)Data);
 	}
-//	inline const cArt_Sphere& GetCircle() const {
-//		return *((cArt_Sphere*)Data);
-//	}
-//	inline const cArt_Sphere& GetSphere() const {
-//		return GetCircle();
-//	}
+	inline const cBody_Sphere& GetCircle() const {
+		return *((cBody_Sphere*)Data);
+	}
+	inline const cBody_Sphere& GetSphere() const {
+		return GetCircle();
+	}
 
 	// Data Changing -------------------------------------------------------------------------- - //
 	inline void SetPoint( const Vector3D& Pos ) {
 		*((Vector3D*)Data) = Pos;
 	}
-//	inline void SetCircle( const Vector3D& Pos, const Real Radius, const GelColor Color ) {
-//		((cArt_Sphere*)Data)->Pos = Pos;
-//		((cArt_Sphere*)Data)->Radius = Radius;
-//		((cArt_Sphere*)Data)->Color = Color;
-//	}
-//	inline void SetSphere( const Vector3D& Pos, const Real Radius, const GelColor Color ) {
-//		SetCircle( Pos, Radius, Color );
-//	}
+	
+	inline void SetCircle( const Vector3D& Pos, const Vector3D& Old, const Real Radius ) {
+		((cBody_Sphere*)Data)->Pos = Pos;
+		((cBody_Sphere*)Data)->Old = Old;
+		((cBody_Sphere*)Data)->Radius = Radius;
+	}
+	inline void SetCircle( const Vector3D& Pos, const Real Radius ) {
+		SetCircle( Pos, Pos, Radius );
+	}
+	inline void SetSphere( const Vector3D& Pos, const Vector3D& Old, const Real Radius ) {
+		SetCircle( Pos, Old, Radius );
+	}
+	inline void SetSphere( const Vector3D& Pos, const Real Radius ) {
+		SetCircle( Pos, Pos, Radius );
+	}
 
 	// Data Access ---------------------------------------------------------------------------- - //
 	inline Vector3D* GetPointPtr() {
 		return (Vector3D*)Data;
 	}
-//	inline cArt_Sphere* GetCirclePtr() {
-//		return (cArt_Sphere*)Data;
-//	}
-//	inline cArt_Sphere* GetSpherePtr() {
-//		return GetCirclePtr();
-//	}
+	inline cBody_Sphere* GetCirclePtr() {
+		return (cBody_Sphere*)Data;
+	}
+	inline cBody_Sphere* GetSpherePtr() {
+		return GetCirclePtr();
+	}
 
 	// Create --------------------------------------------------------------------------------- - //
 	inline static cBody* new_Null() {
@@ -99,6 +114,15 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) Vector3D( Pos );
 		return Body;
 	}
+	inline static cBody* new_Circle( const Vector3D& Pos, const Vector3D& Old, const Real& Radius ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Sphere) ];
+		cBody* Body = new(Ptr) cBody( BT_POINT, sizeof(cBody_Sphere) );
+		new(Body->Data) cBody_Sphere( Pos, Old, Radius );
+		return Body;
+	}
+	inline static cBody* new_Circle( const Vector3D& Pos, const Real& Radius ) {
+		return new_Circle( Pos, Pos, Radius );
+	}
 
 	// Destroy -------------------------------------------------------------------------------- - //
 	inline static void delete_Body( cBody* Body ) {
@@ -111,11 +135,28 @@ public:
 		if ( BT_POINT ) {
 			return Matrix4x4::TranslationMatrix( GetPoint() );
 		}
+		else if ( BT_CIRCLE ) {
+			return Matrix4x4::TranslationMatrix( GetCircle().Pos );
+		}
 		else {
 			return Matrix4x4::Identity;
 		}
 	}
 	
+	inline const Rect3D GetRect() {
+		if ( BT_POINT ) {
+			return Rect3D( GetPoint(), Vector3D::Zero );
+		}
+		else if ( BT_CIRCLE ) {
+			return Rect3D( GetCircle().Pos - GetCircle().Radius.xxx(), GetCircle().Radius.xxx() * Real::Two );
+		}
+		else {
+			return Rect3D( Vector3D::Zero, Vector3D::Zero );
+		}		
+	}
+
+public:
+	void DrawDebug( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_H__ //

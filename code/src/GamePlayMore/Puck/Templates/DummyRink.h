@@ -11,10 +11,10 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tDummyRink( const bool Right = false ) {
-		if ( Right )
-			Art = cArt::new_RightHalfCircle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
-		else		
-			Art = cArt::new_LeftHalfCircle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
+//		if ( Right )
+//			Art = cArt::new_RightHalfCircle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
+//		else		
+//			Art = cArt::new_LeftHalfCircle( Vector3D::Zero, Real(180), GEL_RGBA(255,255,255,64) );
 	}
 	
 	virtual ~tDummyRink() {

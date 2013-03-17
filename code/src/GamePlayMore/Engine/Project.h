@@ -152,6 +152,8 @@ public: // - Specialization Methods --------------------------------------------
 
 	virtual void Step();
 	virtual void Draw( const Matrix4x4& Matrix );
+
+	void DrawDebug( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_PROJECT_H__ //

@@ -511,17 +511,41 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-#define SWIZZLE2_PROTO( _TYPE, _A, _B ) \
-	inline const _TYPE _A ## _B () const;
-#define SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
-	inline const _TYPE _A ## _B ## _C () const;
-#define SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
-	inline const _TYPE _A ## _B ## _C ## _D() const;
-
+	#define SWIZZLE2_PROTO( _TYPE, _A, _B ) \
+		inline const _TYPE _A ## _B () const;
+	#define SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
+		inline const _TYPE _A ## _B ## _C () const;
+	#define SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
+		inline const _TYPE _A ## _B ## _C ## _D() const;
+	// - -------------------------------------------------------------------------------------- - //
+	#define _SWIZZLE2_PROTO( _TYPE, _A, _B ) \
+		inline const _TYPE _ ## _A ## _B () const;
+	#define _SWIZZLE3_PROTO( _TYPE, _A, _B, _C ) \
+		inline const _TYPE _ ## _A ## _B ## _C () const;
+	#define _SWIZZLE4_PROTO( _TYPE, _A, _B, _C, _D ) \
+		inline const _TYPE _ ## _A ## _B ## _C ## _D() const;
+	// - -------------------------------------------------------------------------------------- - //
 	SWIZZLE2_PROTO( Vector2D, x,x );
 	SWIZZLE2_PROTO( Vector2D, x,y );
 	SWIZZLE2_PROTO( Vector2D, y,x );
 	SWIZZLE2_PROTO( Vector2D, y,y );
+
+	_SWIZZLE2_PROTO( Vector2D, x,x );
+	_SWIZZLE2_PROTO( Vector2D, x,y );
+	_SWIZZLE2_PROTO( Vector2D, x,0 );
+	_SWIZZLE2_PROTO( Vector2D, x,1 );
+	_SWIZZLE2_PROTO( Vector2D, y,x );
+	_SWIZZLE2_PROTO( Vector2D, y,y );
+	_SWIZZLE2_PROTO( Vector2D, y,0 );
+	_SWIZZLE2_PROTO( Vector2D, y,1 );
+	_SWIZZLE2_PROTO( Vector2D, 0,x );
+	_SWIZZLE2_PROTO( Vector2D, 0,y );
+	_SWIZZLE2_PROTO( Vector2D, 0,0 );
+	_SWIZZLE2_PROTO( Vector2D, 0,1 );
+	_SWIZZLE2_PROTO( Vector2D, 1,x );
+	_SWIZZLE2_PROTO( Vector2D, 1,y );
+	_SWIZZLE2_PROTO( Vector2D, 1,0 );
+	_SWIZZLE2_PROTO( Vector2D, 1,1 );
 
 	SWIZZLE3_PROTO( Vector3D, x,x,x );
 	SWIZZLE3_PROTO( Vector3D, x,x,y );
@@ -531,8 +555,73 @@ public:
 	SWIZZLE3_PROTO( Vector3D, y,x,y );
 	SWIZZLE3_PROTO( Vector3D, y,y,x );
 	SWIZZLE3_PROTO( Vector3D, y,y,y );
+
+	_SWIZZLE3_PROTO( Vector3D, x,x,x );
+	_SWIZZLE3_PROTO( Vector3D, x,x,y );
+	_SWIZZLE3_PROTO( Vector3D, x,x,0 );
+	_SWIZZLE3_PROTO( Vector3D, x,x,1 );
+	_SWIZZLE3_PROTO( Vector3D, x,y,x );
+	_SWIZZLE3_PROTO( Vector3D, x,y,y );
+	_SWIZZLE3_PROTO( Vector3D, x,y,0 );
+	_SWIZZLE3_PROTO( Vector3D, x,y,1 );
+	_SWIZZLE3_PROTO( Vector3D, x,0,x );
+	_SWIZZLE3_PROTO( Vector3D, x,0,y );
+	_SWIZZLE3_PROTO( Vector3D, x,0,0 );
+	_SWIZZLE3_PROTO( Vector3D, x,0,1 );
+	_SWIZZLE3_PROTO( Vector3D, x,1,x );
+	_SWIZZLE3_PROTO( Vector3D, x,1,y );
+	_SWIZZLE3_PROTO( Vector3D, x,1,0 );
+	_SWIZZLE3_PROTO( Vector3D, x,1,1 );
+	_SWIZZLE3_PROTO( Vector3D, y,x,x );
+	_SWIZZLE3_PROTO( Vector3D, y,x,y );
+	_SWIZZLE3_PROTO( Vector3D, y,x,0 );
+	_SWIZZLE3_PROTO( Vector3D, y,x,1 );
+	_SWIZZLE3_PROTO( Vector3D, y,y,x );
+	_SWIZZLE3_PROTO( Vector3D, y,y,y );
+	_SWIZZLE3_PROTO( Vector3D, y,y,0 );
+	_SWIZZLE3_PROTO( Vector3D, y,y,1 );
+	_SWIZZLE3_PROTO( Vector3D, y,0,x );
+	_SWIZZLE3_PROTO( Vector3D, y,0,y );
+	_SWIZZLE3_PROTO( Vector3D, y,0,0 );
+	_SWIZZLE3_PROTO( Vector3D, y,0,1 );
+	_SWIZZLE3_PROTO( Vector3D, y,1,x );
+	_SWIZZLE3_PROTO( Vector3D, y,1,y );
+	_SWIZZLE3_PROTO( Vector3D, y,1,0 );
+	_SWIZZLE3_PROTO( Vector3D, y,1,1 );
+	_SWIZZLE3_PROTO( Vector3D, 0,x,x );
+	_SWIZZLE3_PROTO( Vector3D, 0,x,y );
+	_SWIZZLE3_PROTO( Vector3D, 0,x,0 );
+	_SWIZZLE3_PROTO( Vector3D, 0,x,1 );
+	_SWIZZLE3_PROTO( Vector3D, 0,y,x );
+	_SWIZZLE3_PROTO( Vector3D, 0,y,y );
+	_SWIZZLE3_PROTO( Vector3D, 0,y,0 );
+	_SWIZZLE3_PROTO( Vector3D, 0,y,1 );
+	_SWIZZLE3_PROTO( Vector3D, 0,0,x );
+	_SWIZZLE3_PROTO( Vector3D, 0,0,y );
+	_SWIZZLE3_PROTO( Vector3D, 0,0,0 );
+	_SWIZZLE3_PROTO( Vector3D, 0,0,1 );
+	_SWIZZLE3_PROTO( Vector3D, 0,1,x );
+	_SWIZZLE3_PROTO( Vector3D, 0,1,y );
+	_SWIZZLE3_PROTO( Vector3D, 0,1,0 );
+	_SWIZZLE3_PROTO( Vector3D, 0,1,1 );
+	_SWIZZLE3_PROTO( Vector3D, 1,x,x );
+	_SWIZZLE3_PROTO( Vector3D, 1,x,y );
+	_SWIZZLE3_PROTO( Vector3D, 1,x,0 );
+	_SWIZZLE3_PROTO( Vector3D, 1,x,1 );
+	_SWIZZLE3_PROTO( Vector3D, 1,y,x );
+	_SWIZZLE3_PROTO( Vector3D, 1,y,y );
+	_SWIZZLE3_PROTO( Vector3D, 1,y,0 );
+	_SWIZZLE3_PROTO( Vector3D, 1,y,1 );
+	_SWIZZLE3_PROTO( Vector3D, 1,0,x );
+	_SWIZZLE3_PROTO( Vector3D, 1,0,y );
+	_SWIZZLE3_PROTO( Vector3D, 1,0,0 );
+	_SWIZZLE3_PROTO( Vector3D, 1,0,1 );
+	_SWIZZLE3_PROTO( Vector3D, 1,1,x );
+	_SWIZZLE3_PROTO( Vector3D, 1,1,y );
+	_SWIZZLE3_PROTO( Vector3D, 1,1,0 );
+	_SWIZZLE3_PROTO( Vector3D, 1,1,1 );
 	
-	SWIZZLE4_PROTO( Vector4D, x,x,x,x );
+	SWIZZLE4_PROTO( Vector4D, x,x,x,x );	// *** //
 	SWIZZLE4_PROTO( Vector4D, x,x,x,y );
 	SWIZZLE4_PROTO( Vector4D, x,x,y,x );
 	SWIZZLE4_PROTO( Vector4D, x,x,y,y );
@@ -548,10 +637,207 @@ public:
 	SWIZZLE4_PROTO( Vector4D, y,y,x,y );
 	SWIZZLE4_PROTO( Vector4D, y,y,y,x );
 	SWIZZLE4_PROTO( Vector4D, y,y,y,y );
-	
-#undef SWIZZLE4_PROTO
-#undef SWIZZLE3_PROTO
-#undef SWIZZLE2_PROTO
+
+	_SWIZZLE4_PROTO( Vector4D, x,x,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, x,x,x,y );
+	_SWIZZLE4_PROTO( Vector4D, x,x,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,y,x );
+	_SWIZZLE4_PROTO( Vector4D, x,x,y,y );
+	_SWIZZLE4_PROTO( Vector4D, x,x,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,0,x );
+	_SWIZZLE4_PROTO( Vector4D, x,x,0,y );
+	_SWIZZLE4_PROTO( Vector4D, x,x,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,1,x );
+	_SWIZZLE4_PROTO( Vector4D, x,x,1,y );
+	_SWIZZLE4_PROTO( Vector4D, x,x,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,x,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, x,y,x,y );
+	_SWIZZLE4_PROTO( Vector4D, x,y,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,y,x );
+	_SWIZZLE4_PROTO( Vector4D, x,y,y,y );
+	_SWIZZLE4_PROTO( Vector4D, x,y,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,0,x );
+	_SWIZZLE4_PROTO( Vector4D, x,y,0,y );
+	_SWIZZLE4_PROTO( Vector4D, x,y,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,1,x );
+	_SWIZZLE4_PROTO( Vector4D, x,y,1,y );
+	_SWIZZLE4_PROTO( Vector4D, x,y,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,y,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, x,0,x,y );
+	_SWIZZLE4_PROTO( Vector4D, x,0,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,y,x );
+	_SWIZZLE4_PROTO( Vector4D, x,0,y,y );
+	_SWIZZLE4_PROTO( Vector4D, x,0,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,0,x );
+	_SWIZZLE4_PROTO( Vector4D, x,0,0,y );
+	_SWIZZLE4_PROTO( Vector4D, x,0,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,1,x );
+	_SWIZZLE4_PROTO( Vector4D, x,0,1,y );
+	_SWIZZLE4_PROTO( Vector4D, x,0,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,0,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, x,1,x,y );
+	_SWIZZLE4_PROTO( Vector4D, x,1,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,y,x );
+	_SWIZZLE4_PROTO( Vector4D, x,1,y,y );
+	_SWIZZLE4_PROTO( Vector4D, x,1,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,0,x );
+	_SWIZZLE4_PROTO( Vector4D, x,1,0,y );
+	_SWIZZLE4_PROTO( Vector4D, x,1,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,1,x );
+	_SWIZZLE4_PROTO( Vector4D, x,1,1,y );
+	_SWIZZLE4_PROTO( Vector4D, x,1,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, x,1,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, y,x,x,y );
+	_SWIZZLE4_PROTO( Vector4D, y,x,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,y,x );
+	_SWIZZLE4_PROTO( Vector4D, y,x,y,y );
+	_SWIZZLE4_PROTO( Vector4D, y,x,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,0,x );
+	_SWIZZLE4_PROTO( Vector4D, y,x,0,y );
+	_SWIZZLE4_PROTO( Vector4D, y,x,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,1,x );
+	_SWIZZLE4_PROTO( Vector4D, y,x,1,y );
+	_SWIZZLE4_PROTO( Vector4D, y,x,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,x,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, y,y,x,y );
+	_SWIZZLE4_PROTO( Vector4D, y,y,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,y,x );
+	_SWIZZLE4_PROTO( Vector4D, y,y,y,y );
+	_SWIZZLE4_PROTO( Vector4D, y,y,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,0,x );
+	_SWIZZLE4_PROTO( Vector4D, y,y,0,y );
+	_SWIZZLE4_PROTO( Vector4D, y,y,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,1,x );
+	_SWIZZLE4_PROTO( Vector4D, y,y,1,y );
+	_SWIZZLE4_PROTO( Vector4D, y,y,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,y,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, y,0,x,y );
+	_SWIZZLE4_PROTO( Vector4D, y,0,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,y,x );
+	_SWIZZLE4_PROTO( Vector4D, y,0,y,y );
+	_SWIZZLE4_PROTO( Vector4D, y,0,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,0,x );
+	_SWIZZLE4_PROTO( Vector4D, y,0,0,y );
+	_SWIZZLE4_PROTO( Vector4D, y,0,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,1,x );
+	_SWIZZLE4_PROTO( Vector4D, y,0,1,y );
+	_SWIZZLE4_PROTO( Vector4D, y,0,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,0,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, y,1,x,y );
+	_SWIZZLE4_PROTO( Vector4D, y,1,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,y,x );
+	_SWIZZLE4_PROTO( Vector4D, y,1,y,y );
+	_SWIZZLE4_PROTO( Vector4D, y,1,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,0,x );
+	_SWIZZLE4_PROTO( Vector4D, y,1,0,y );
+	_SWIZZLE4_PROTO( Vector4D, y,1,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,1,x );
+	_SWIZZLE4_PROTO( Vector4D, y,1,1,y );
+	_SWIZZLE4_PROTO( Vector4D, y,1,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, y,1,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, 0,0,x,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,y,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,y,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,0,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,0,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,1,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,1,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,0,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, 0,1,x,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,y,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,y,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,0,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,0,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,1,x );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,1,y );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, 0,1,1,1 );	
+	_SWIZZLE4_PROTO( Vector4D, 1,0,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, 1,0,x,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,y,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,y,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,0,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,0,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,1,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,1,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,0,1,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,x,x );	// *** //
+	_SWIZZLE4_PROTO( Vector4D, 1,1,x,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,x,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,x,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,y,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,y,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,y,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,y,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,0,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,0,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,0,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,0,1 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,1,x );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,1,y );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,1,0 );
+	_SWIZZLE4_PROTO( Vector4D, 1,1,1,1 );
+	// - -------------------------------------------------------------------------------------- - //
+	#undef _SWIZZLE4_PROTO
+	#undef _SWIZZLE3_PROTO
+	#undef _SWIZZLE2_PROTO
+	// - -------------------------------------------------------------------------------------- - //
+	#undef SWIZZLE4_PROTO
+	#undef SWIZZLE3_PROTO
+	#undef SWIZZLE2_PROTO
 	// - -------------------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //

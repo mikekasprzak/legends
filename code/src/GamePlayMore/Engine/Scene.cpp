@@ -95,3 +95,16 @@ void cScene::Draw( const Matrix4x4& Matrix ) {
 	Shared.Object = 0;
 }
 // - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+void cScene::DrawDebug( const Matrix4x4& Matrix ) {
+	// Draw Statics First (because they'll typically occlude Actives) //
+	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+		(*Itr)->Body->DrawDebug( Matrix );
+	}
+	// Draw Actives Second //
+	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+		(*Itr)->Body->DrawDebug( Matrix );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //

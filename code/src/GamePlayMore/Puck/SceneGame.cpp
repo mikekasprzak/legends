@@ -30,12 +30,12 @@ cSceneGame::cSceneGame() {
 	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE, false ) );
 	AddTemplate( "Net2", new tNet( GEL_RGB_MINT, true ) );
 	AddTemplate( "Rink", new tRink() );
-	AddTemplate( "DummyRink1", new tDummyRink( false ) );
-	AddTemplate( "DummyRink2", new tDummyRink( true ) );
+//	AddTemplate( "DummyRink1", new tDummyRink( false ) );
+//	AddTemplate( "DummyRink2", new tDummyRink( true ) );
 	
 	// Add Objects //
-	AddObject( "DummyRink1", Vector3D(-150,0,0) );
-	AddObject( "DummyRink2", Vector3D(+150,0,0) );
+//	AddObject( "DummyRink1", Vector3D(-150,0,0) );
+//	AddObject( "DummyRink2", Vector3D(+150,0,0) );
 	AddObject( "Rink", Vector3D(0,0,0) );
 
 	AddObject( "Player1", Vector3D(-60,+60,0) );

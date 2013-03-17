@@ -1,35 +1,39 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PUCK_PROJECTPUCK_H__
-#define __PUCK_PROJECTPUCK_H__
+#ifndef __PLAYMORE_BODY_SPHERE_H__
+#define __PLAYMORE_BODY_SPHERE_H__
 // - ------------------------------------------------------------------------------------------ - //
-#include <Engine/Engine.h>
-
-#include "SceneGame.h"
+#include <Math/Vector.h>
+#include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cProjectPuck: public cProject {
+class cBody_Sphere {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cProjectPuck thistype;
+	typedef cBody_Sphere thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
+	Vector3D 	Pos;
+	Vector3D 	Old;
+	Real 		Radius;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
-	cProjectPuck() {
-		PVar.Add( "ShowDebug" ) = true;
-		AddScene( "Game", new cSceneGame() );
+	cBody_Sphere()
+	{
 	}
-	
-	//virtual void Destroy() { // See Above //
-	virtual ~cProjectPuck() {
-		
+
+	cBody_Sphere( const Vector3D& _Pos, const Real& _Radius ) :
+		Pos( _Pos ),
+		Old( _Pos ),
+		Radius( _Radius )
+	{
 	}
+
+	cBody_Sphere( const Vector3D& _Pos, const Vector3D& _Old, const Real& _Radius ) :
+		Pos( _Pos ),
+		Old( _Old ),
+		Radius( _Radius )
+	{
+	}
+
 public: // - Methods -------------------------------------------------------------------------- - //
-	virtual void Draw( const Matrix4x4& Matrix ) {
-		cProject::Draw( Matrix );
-		if ( PVar("ShowDebug").ToBool() ) {
-			cProject::DrawDebug( Matrix );
-		}
-	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PUCK_PROJECTPUCK_H__ //
+#endif // __PLAYMORE_BODY_SPHERE_H__ //
 // - ------------------------------------------------------------------------------------------ - //
