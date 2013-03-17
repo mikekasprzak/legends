@@ -116,7 +116,7 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline static cBody* new_Circle( const Vector3D& Pos, const Vector3D& Old, const Real& Radius ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Sphere) ];
-		cBody* Body = new(Ptr) cBody( BT_POINT, sizeof(cBody_Sphere) );
+		cBody* Body = new(Ptr) cBody( BT_CIRCLE, sizeof(cBody_Sphere) );
 		new(Body->Data) cBody_Sphere( Pos, Old, Radius );
 		return Body;
 	}
@@ -131,32 +131,10 @@ public: // - Methods -----------------------------------------------------------
 	}
 
 public:
-	inline const Matrix4x4 GetTransform() {
-		if ( BT_POINT ) {
-			return Matrix4x4::TranslationMatrix( GetPoint() );
-		}
-		else if ( BT_CIRCLE ) {
-			return Matrix4x4::TranslationMatrix( GetCircle().Pos );
-		}
-		else {
-			return Matrix4x4::Identity;
-		}
-	}
-	
-	inline const Rect3D GetRect() {
-		if ( BT_POINT ) {
-			return Rect3D( GetPoint(), Vector3D::Zero );
-		}
-		else if ( BT_CIRCLE ) {
-			return Rect3D( GetCircle().Pos - GetCircle().Radius.xxx(), GetCircle().Radius.xxx() * Real::Two );
-		}
-		else {
-			return Rect3D( Vector3D::Zero, Vector3D::Zero );
-		}		
-	}
+	const Matrix4x4 GetTransform();	
+	const Rect3D GetRect();
 
-public:
-	void DrawDebug( const Matrix4x4& Matrix );
+	void Draw( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_H__ //

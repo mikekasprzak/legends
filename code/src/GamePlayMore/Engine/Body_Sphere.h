@@ -11,8 +11,8 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 	Vector3D 	Pos;
-	Vector3D 	Old;
 	Real 		Radius;
+	Vector3D 	Old;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_Sphere()
 	{
@@ -20,15 +20,15 @@ public: // - Constructors and Destructors --------------------------------------
 
 	cBody_Sphere( const Vector3D& _Pos, const Real& _Radius ) :
 		Pos( _Pos ),
-		Old( _Pos ),
-		Radius( _Radius )
+		Radius( _Radius ),
+		Old( _Pos )
 	{
 	}
 
 	cBody_Sphere( const Vector3D& _Pos, const Vector3D& _Old, const Real& _Radius ) :
 		Pos( _Pos ),
-		Old( _Old ),
-		Radius( _Radius )
+		Radius( _Radius ),
+		Old( _Old )
 	{
 	}
 

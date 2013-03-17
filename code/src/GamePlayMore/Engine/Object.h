@@ -65,6 +65,7 @@ public: // - Constructors and Destructors --------------------------------------
 		// Copy Vars //
 		// Copy Body //
 		// Update Rect (Pos) //
+		UpdateRect();
 	}
 	
 	inline ~cObject() {
@@ -86,6 +87,15 @@ public: // - Methods -----------------------------------------------------------
 		}
 	}
 	
+	inline void UpdateRect() {
+		if ( Body ) {
+			Rect = Body->GetRect();
+		}
+		else {
+			Rect = Rect3D( Vector3D::Zero, Vector3D::Zero );
+		}
+	}
+	
 	void Notify( cObject* Reciever, const int Message ) {
 		cObject* TempObject = Shared.Object;
 		cTemplate* TempTemplate = Shared.Template;
@@ -101,6 +111,8 @@ public: // - Methods -----------------------------------------------------------
 public:	
 	void Step();
 	void Draw( const Matrix4x4& Matrix );
+
+	void DrawRect( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_OBJECT_H__ //

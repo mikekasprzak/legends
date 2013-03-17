@@ -21,7 +21,7 @@ cSceneGame::cSceneGame() {
 	SVar.Add("ShowDelayTime") = true;
 	
 	// Add Templates //
-	AddTemplate( "Screwy", new tScrewy() );
+//	AddTemplate( "Screwy", new tScrewy() );
 	AddTemplate( "Puck", new tPuck() );
 	AddTemplate( "Player1", new tPlayer( 0, GEL_RGB_ORANGE ) );
 	AddTemplate( "Player2", new tPlayer( 1, GEL_RGB_RED ) );

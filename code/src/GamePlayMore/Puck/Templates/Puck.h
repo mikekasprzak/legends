@@ -25,12 +25,10 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		//SetBody( BT_POINT, Pos );
-		Object->Body = cBody::new_Point( Pos );
-		
-		Log( "Screwy Instanced" );
+		Object->Body = cBody::new_Circle( Pos, Real(4) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
-		Log( "Screwy Instance Killed" );
+
 		// ... //
 		cTemplate::DestroyObject( Object );
 	}

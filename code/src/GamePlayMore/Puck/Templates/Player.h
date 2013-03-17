@@ -13,7 +13,8 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tPlayer( const int PlayerNumber, const GelColor& Color = GEL_RGB_WHITE ) {
 		TVar.Add("Number") = PlayerNumber;
-		Art = cArt::new_Circle( Vector3D::Zero, Real(12), Color );
+		TVar.Add("Radius") = 12.0f;
+		Art = cArt::new_Circle( Vector3D::Zero, TVar("Radius").ToFloat(), Color );
 	}
 	
 	virtual ~tPlayer() {
@@ -25,7 +26,7 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		
-		Object->Body = cBody::new_Point( Pos );
+		Object->Body = cBody::new_Circle( Pos, TVar("Radius").ToFloat() );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 

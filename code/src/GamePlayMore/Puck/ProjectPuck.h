@@ -26,7 +26,8 @@ public: // - Methods -----------------------------------------------------------
 	virtual void Draw( const Matrix4x4& Matrix ) {
 		cProject::Draw( Matrix );
 		if ( PVar("ShowDebug").ToBool() ) {
-			cProject::DrawDebug( Matrix );
+			cProject::DrawBody( Matrix );
+			cProject::DrawRect( Matrix );
 		}
 	}
 };

@@ -95,6 +95,7 @@ public: // - Methods -----------------------------------------------------------
 		if ( Itr != Template.end() ) {
 			cObject* NewObj = new cObject( Itr->second );
 			NewObj->Template->CreateObject( NewObj, Pos );
+			NewObj->UpdateRect();
 			
 			Active.push_back( NewObj );
 		}
@@ -111,7 +112,8 @@ public:
 	virtual void Step();
 	virtual void Draw( const Matrix4x4& Matrix );
 
-	void DrawDebug( const Matrix4x4& Matrix );
+	void DrawRect( const Matrix4x4& Matrix );
+	void DrawBody( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_SCENE_H__ //

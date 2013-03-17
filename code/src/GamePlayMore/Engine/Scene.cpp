@@ -78,6 +78,18 @@ void cScene::Step() {
 	}
 	Shared.Template = 0;
 	Shared.Object = 0;
+	
+	// Update All Object Rectangles //
+	{
+		// Step Statics First (because they never do tests, instead are tested) //
+		for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+			(*Itr)->UpdateRect();
+		}
+		// Step Actives Second //
+		for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+			(*Itr)->UpdateRect();
+		}
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cScene::Draw( const Matrix4x4& Matrix ) {
@@ -97,14 +109,24 @@ void cScene::Draw( const Matrix4x4& Matrix ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-void cScene::DrawDebug( const Matrix4x4& Matrix ) {
+void cScene::DrawRect( const Matrix4x4& Matrix ) {
 	// Draw Statics First (because they'll typically occlude Actives) //
 	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
-		(*Itr)->Body->DrawDebug( Matrix );
+		(*Itr)->DrawRect( Matrix );
 	}
 	// Draw Actives Second //
 	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
-		(*Itr)->Body->DrawDebug( Matrix );
+		(*Itr)->DrawRect( Matrix );
+	}
+}// - ------------------------------------------------------------------------------------------ - //
+void cScene::DrawBody( const Matrix4x4& Matrix ) {
+	// Draw Statics First (because they'll typically occlude Actives) //
+	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+		(*Itr)->Body->Draw( Matrix );
+	}
+	// Draw Actives Second //
+	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+		(*Itr)->Body->Draw( Matrix );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
