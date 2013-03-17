@@ -15,6 +15,8 @@
 #include "Vertex_DiamondCapsule.h"
 #include "Vertex_FlatCapsule.h"
 //#include "Vertex_SquareCapsule.h"
+
+#include "Vertex_Cube.h"
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __GEL2_GENERATE_VERTEX_H__ //
 // - ------------------------------------------------------------------------------------------ - //

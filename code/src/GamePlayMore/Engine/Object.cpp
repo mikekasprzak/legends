@@ -18,10 +18,10 @@ void cObject::Draw( const Matrix4x4& Matrix ) {
 void cObject::DrawRect( const Matrix4x4& Matrix ) {
 	const GelColor RectColor = GEL_RGB_RED;
 	
-	const st32 VertCount = size_Vertex3D_Rect();
+	const st32 VertCount = size_Vertex3D_Cube();
 	Vector3D Verts[ VertCount ];
-	generate_Vertex3D_Rect( Verts, Rect.P1(), Rect.Shape() );
+	generate_Vertex3D_Cube( Verts, Rect.P1(), Rect.Shape() );
 
-	Render::Flat( GEL_LINE_LOOP, Matrix, RectColor, Verts, VertCount );
+	Render::Flat( GEL_LINES, Matrix, RectColor, Verts, VertCount );
 }
 // - ------------------------------------------------------------------------------------------ - //
