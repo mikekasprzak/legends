@@ -23,8 +23,9 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
+		cArt_Capsule* Cap = Art->GetCapsulePtr();
 		
-		Object->Body = cBody::new_Point( Pos );
+		Object->Body = cBody::new_Capsule( Pos+Cap->PosA, Cap->RadiusA, Pos+Cap->PosB, Cap->RadiusB );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
