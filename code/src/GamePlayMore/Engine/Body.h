@@ -6,17 +6,22 @@
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 // - ------------------------------------------------------------------------------------------ - //
-enum eBodyType {		// Types ending in a V are Verlet Physics Versions -- Old, InvMass //
+enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, InvMass //
 	BT_NULL = 0,
 
-	BT_POINT,			// Objects with no physicality, just a position //
+	BT_POINT,				// Objects with no physicality, just a position //
 
-	BT_CIRCLE,			// Z not tested //
+	BT_CIRCLE,				// Z not tested //
 	BT_CIRCLEV,
-	BT_SPHERE,			// X, Y, and Z tested //
+	BT_SPHERE,				// X, Y, and Z tested //
 	BT_SPHEREV,
 
-	BT_CAPSULE,			// A Line Segment of 2 points, and a pair of Radius //
+	BT_HALFCIRCLE,			// Z not tested //
+	BT_HALFCIRCLEV,
+	BT_HALFSPHERE,			// X, Y, and Z tested //
+	BT_HALFSPHEREV,
+
+	BT_CAPSULE,				// A Line Segment of 2 points, and a pair of Radius //
 	BT_CAPSULEV,
 	
 //	BT_AABB,
@@ -27,6 +32,10 @@ enum eBodyType {		// Types ending in a V are Verlet Physics Versions -- Old, Inv
 // - ------------------------------------------------------------------------------------------ - //
 #include "Body_Sphere.h"			// Both Circles and Spheres //
 #include "Body_SphereV.h"			// with Verlet Physics //
+#include "Body_HalfSphere.h"			
+#include "Body_HalfSphereV.h"			
+#include "Body_Capsule.h"			
+#include "Body_CapsuleV.h"			
 // - ------------------------------------------------------------------------------------------ - //
 class cBody {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -55,9 +64,11 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsNull() const {
 		return Type == BT_NULL;
 	}
+
 	inline const bool IsPoint() const {
 		return Type == BT_POINT;
 	}
+
 	inline const bool IsCircle() const {
 		return Type == BT_CIRCLE;
 	}
@@ -70,6 +81,20 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsSphereV() const {
 		return Type == BT_SPHEREV;
 	}
+
+	inline const bool IsHalfCircle() const {
+		return Type == BT_HALFCIRCLE;
+	}
+	inline const bool IsHalfCircleV() const {
+		return Type == BT_HALFCIRCLEV;
+	}
+	inline const bool IsHalfSphere() const {
+		return Type == BT_HALFSPHERE;
+	}
+	inline const bool IsHalfSphereV() const {
+		return Type == BT_HALFSPHEREV;
+	}
+
 	inline const bool IsCapsule() const {
 		return Type == BT_CAPSULE;
 	}
@@ -82,6 +107,7 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D& GetPoint() const {
 		return *((Vector3D*)Data);
 	}
+
 	inline const cBody_Sphere& GetCircle() const {
 		return *((cBody_Sphere*)Data);
 	}
@@ -94,12 +120,13 @@ public: // - Methods -----------------------------------------------------------
 	inline const cBody_SphereV& GetSphereV() const {
 		return GetCircleV();
 	}
-//	inline const cBody_Capsule& GetCapsule() const {
-//		return *((cBody_Capsule*)Data);
-//	}
-//	inline const cBody_CapsuleVV& GetCapsuleV() const {
-//		return *((cBody_CapsuleV*)Data);
-//	}
+
+	inline const cBody_Capsule& GetCapsule() const {
+		return *((cBody_Capsule*)Data);
+	}
+	inline const cBody_CapsuleV& GetCapsuleV() const {
+		return *((cBody_CapsuleV*)Data);
+	}
 
 	// Data Changing -------------------------------------------------------------------------- - //
 	inline void SetPoint( const Vector3D& Pos ) {
@@ -124,10 +151,19 @@ public: // - Methods -----------------------------------------------------------
 		SetCircleV( Pos, Radius, Velocity, Mass );
 	}
 
+	inline void SetCapsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
+		((cBody_Capsule*)Data)->PosA = PosA;
+		((cBody_Capsule*)Data)->RadiusA = RadiusA;
+		((cBody_Capsule*)Data)->PosB = PosB;
+		((cBody_Capsule*)Data)->RadiusB = RadiusB;
+	}
+
+
 	// Data Access ---------------------------------------------------------------------------- - //
 	inline Vector3D* GetPointPtr() {
 		return (Vector3D*)Data;
 	}
+	
 	inline cBody_Sphere* GetCirclePtr() {
 		return (cBody_Sphere*)Data;
 	}
@@ -141,18 +177,27 @@ public: // - Methods -----------------------------------------------------------
 		return GetCircleVPtr();
 	}
 
+	inline cBody_Capsule* GetCapsulePtr() {
+		return (cBody_Capsule*)Data;
+	}
+	inline cBody_CapsuleV* GetCapsuleVPtr() {
+		return (cBody_CapsuleV*)Data;
+	}
+
 	// Create --------------------------------------------------------------------------------- - //
 	inline static cBody* new_Null() {
 		char* Ptr = new char[ sizeof(cBody) ];
 		cBody* Body = new(Ptr) cBody( BT_NULL, 0 );
 		return Body;
 	}
+
 	inline static cBody* new_Point( const Vector3D& Pos ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(Vector3D) ];
 		cBody* Body = new(Ptr) cBody( BT_POINT, sizeof(Vector3D) );
 		new(Body->Data) Vector3D( Pos );
 		return Body;
 	}
+
 	inline static cBody* new_Circle( const Vector3D& Pos, const Real& Radius ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Sphere) ];
 		cBody* Body = new(Ptr) cBody( BT_CIRCLE, sizeof(cBody_Sphere) );
@@ -163,6 +208,25 @@ public: // - Methods -----------------------------------------------------------
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
 		cBody* Body = new(Ptr) cBody( BT_CIRCLEV, sizeof(cBody_SphereV) );
 		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
+		return Body;
+	}
+	inline static cBody* new_Sphere( const Vector3D& Pos, const Real& Radius ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Sphere) ];
+		cBody* Body = new(Ptr) cBody( BT_SPHERE, sizeof(cBody_Sphere) );
+		new(Body->Data) cBody_Sphere( Pos, Radius );
+		return Body;
+	}
+	inline static cBody* new_SphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity, const Real& Mass ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
+		cBody* Body = new(Ptr) cBody( BT_SPHEREV, sizeof(cBody_SphereV) );
+		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
+		return Body;
+	}
+
+	inline static cBody* new_Capsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Capsule) ];
+		cBody* Body = new(Ptr) cBody( BT_CAPSULE, sizeof(cBody_Capsule) );
+		new(Body->Data) cBody_Capsule( PosA, RadiusA, PosB, RadiusB );
 		return Body;
 	}
 

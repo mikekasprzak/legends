@@ -1,15 +1,16 @@
 // - ------------------------------------------------------------------------------------------ - //
-#ifndef __PLAYMORE_BODY_SPHEREV_H__
-#define __PLAYMORE_BODY_SPHEREV_H__
+#ifndef __PLAYMORE_BODY_HALFSPHEREV_H__
+#define __PLAYMORE_BODY_HALFSPHEREV_H__
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Real.h>
 // - ------------------------------------------------------------------------------------------ - //
-class cBody_SphereV {
+class cBody_HalfSphereV {
 public: // - Class Helpers -------------------------------------------------------------------- - //
-	typedef cBody_SphereV thistype;
+	typedef cBody_HalfSphereV thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
+	Vector3D	Normal;		// Dividing Plane's Normal //
 	Real 		Radius;
 	Vector3D 	Pos;		// Position Last, so it can be followed by Verlet Members //
 
@@ -17,12 +18,12 @@ public: // - Members -----------------------------------------------------------
 	Vector3D 	Old;		// Old Position (Verlet) //
 	Real		InvMass;	// Inverse Mass (i.e. 1.0/Mass). This makes InvMass of 0 == infinity. //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cBody_SphereV()
+	cBody_HalfSphereV()
 	{
 	}
 
-	// Mass of 0 is considered Infinity (Even though according to usage here it's massless) //
-	cBody_SphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) :
+	cBody_HalfSphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& _Normal, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) :
+		Normal( _Normal ),
 		Radius( _Radius ),
 		Pos( _Pos ),
 		Old( _Pos - Velocity ),
@@ -31,23 +32,7 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
-	// NOTE: This explicitly sets the velocity property. It does not accumulate. //
-	inline void SetVelocity( const Vector3D& _Velocity ) {
-		Old = Pos - _Velocity;
-	}
-	// NOTE: Mass of 0 is considered infinite strength mass (not massless) //
-	inline void SetMass( const Real& _Mass ) {
-		if ( _Mass != Real::Zero ) {
-			InvMass = Real::One / _Mass;
-		}
-		else {
-			InvMass = _Mass;
-		}
-	}
-public:
-	inline void Step() {	
-	}
 };
 // - ------------------------------------------------------------------------------------------ - //
-#endif // __PLAYMORE_BODY_SPHEREV_H__ //
+#endif // __PLAYMORE_BODY_HALFSPHEREV_H__ //
 // - ------------------------------------------------------------------------------------------ - //
