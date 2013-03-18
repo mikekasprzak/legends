@@ -21,6 +21,9 @@ const Matrix4x4 cBody::GetTransform() {
 	else if ( IsHalfCircleV() || IsHalfSphereV() ) {
 		return Matrix4x4::TranslationMatrix( GetHalfCircleV().Pos );
 	}
+	else if ( IsCapsule() ) {
+		return Matrix4x4::TranslationMatrix( GetCapsule().GetCenter() );
+	}
 	else {
 		return Matrix4x4::Identity;
 	}
@@ -31,29 +34,64 @@ const Rect3D cBody::GetRect() {
 	if ( IsPoint() ) {
 		return Rect3D( GetPoint(), Vector3D::Zero );
 	}
-	else if ( IsCircle() || IsHalfCircle() ) {
+	else if ( IsCircle() ) {
 		return Rect3D( 
 			GetCircle().Pos - GetCircle().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
 			GetCircle().Radius._xx0() * Real::Two 
 			);
 	}
-	else if ( IsCircleV() || IsHalfCircleV() ) {
+	else if ( IsCircleV() ) {
 		return Rect3D( 
 			GetCircleV().Pos - GetCircleV().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
 			GetCircleV().Radius._xx0() * Real::Two 
 			);
 	}
-	else if ( IsSphere() || IsHalfSphere() ) {
+	else if ( IsSphere() ) {
 		return Rect3D( 
 			GetSphere().Pos - GetSphere().Radius._xxx(),
 			GetSphere().Radius._xxx() * Real::Two 
 			);
 	}
-	else if ( IsSphereV() || IsHalfSphereV() ) {
+	else if ( IsSphereV() ) {
 		return Rect3D( 
 			GetSphereV().Pos - GetSphereV().Radius._xxx(),
 			GetSphereV().Radius._xxx() * Real::Two 
 			);
+	}
+	else if ( IsHalfCircle() ) {
+		return Rect3D( 
+			GetHalfCircle().Pos - GetHalfCircle().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
+			GetHalfCircle().Radius._xx0() * Real::Two 
+			);
+	}
+	else if ( IsHalfCircleV() ) {
+		return Rect3D( 
+			GetHalfCircleV().Pos - GetHalfCircleV().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
+			GetHalfCircleV().Radius._xx0() * Real::Two 
+			);
+	}
+	else if ( IsHalfSphere() ) {
+		return Rect3D( 
+			GetHalfSphere().Pos - GetHalfSphere().Radius._xxx(),
+			GetHalfSphere().Radius._xxx() * Real::Two 
+			);
+	}
+	else if ( IsHalfSphereV() ) {
+		return Rect3D( 
+			GetHalfSphereV().Pos - GetHalfSphereV().Radius._xxx(),
+			GetHalfSphereV().Radius._xxx() * Real::Two 
+			);
+	}
+	else if ( IsCapsule() ) {
+		Rect3D Ret(
+			GetCapsule().PosA - GetCapsule().RadiusA._xx0(),
+			GetCapsule().RadiusA._xx0() * Real::Two
+			);
+		Ret -= Rect3D( 
+			GetCapsule().PosB - GetCapsule().RadiusB._xx0(),
+			GetCapsule().RadiusB._xx0() * Real::Two 
+			);
+		return Ret;
 	}
 	else {
 		return Rect3D( Vector3D::Zero, Vector3D::Zero );
@@ -92,7 +130,7 @@ void cBody::Draw( const Matrix4x4& Matrix ) {
 
 		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
 	}
-	else if ( IsCapsule() || IsCapsuleV() ) {
+	else if ( IsCapsule() ) {
 		const st32 VertCount = size_Vertex3D_Capsule();
 		Vector3D Verts[ VertCount ];
 		generate_Vertex3D_Capsule( Verts, GetCapsule().PosA, GetCapsule().RadiusA, GetCapsule().PosB, GetCapsule().RadiusB );

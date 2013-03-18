@@ -23,6 +23,7 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 
 	BT_CAPSULE,				// A Line Segment of 2 points, and a pair of Radius //
 	BT_CAPSULEV,
+	BT_CAPSULEVT,			// Transforming (i.e. it rotates and keeps shape) //
 	
 //	BT_AABB,
 	
@@ -34,8 +35,9 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 #include "Body_SphereV.h"			// with Verlet Physics //
 #include "Body_HalfSphere.h"			
 #include "Body_HalfSphereV.h"			
-#include "Body_Capsule.h"			
+#include "Body_Capsule.h"
 #include "Body_CapsuleV.h"			
+#include "Body_CapsuleVT.h"			
 // - ------------------------------------------------------------------------------------------ - //
 class cBody {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -101,6 +103,9 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsCapsuleV() const {
 		return Type == BT_CAPSULEV;
 	}
+	inline const bool IsCapsuleVT() const {
+		return Type == BT_CAPSULEVT;
+	}
 
 	// Data Retrieval ------------------------------------------------------------------------- - //
 	// NOTE: Point is a specific Body type. This is not used to get the center. //
@@ -139,6 +144,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline const cBody_CapsuleV& GetCapsuleV() const {
 		return *((cBody_CapsuleV*)Data);
+	}
+	inline const cBody_CapsuleVT& GetCapsuleVT() const {
+		return *((cBody_CapsuleVT*)Data);
 	}
 
 	// Data Changing -------------------------------------------------------------------------- - //
@@ -192,11 +200,21 @@ public: // - Methods -----------------------------------------------------------
 //		((cBody_CapsuleV*)Data)->PosA = PosA;
 //		((cBody_CapsuleV*)Data)->RadiusA = RadiusA;
 //		((cBody_CapsuleV*)Data)->SetVelocityA( VelocityA );
-//		((cBody_CapsuleV*)Data)->SetMassA( MassA );
 //		((cBody_CapsuleV*)Data)->PosB = PosB;
 //		((cBody_CapsuleV*)Data)->RadiusB = RadiusB;
 //		((cBody_CapsuleV*)Data)->SetVelocityB( VelocityB );
-//		((cBody_CapsuleV*)Data)->SetMassB( MassB );
+//		((cBody_CapsuleV*)Data)->SetMass( Mass );
+//	}
+//	inline void SetCapsuleVT( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB, const Vector3D& VelocityA, const Vector3D& VelocityB, const Real& MassA, const Real& MassB ) {
+//		((cBody_CapsuleVT*)Data)->PosA = PosA;
+//		((cBody_CapsuleVT*)Data)->RadiusA = RadiusA;
+//		((cBody_CapsuleVT*)Data)->SetVelocityA( VelocityA );
+//		((cBody_CapsuleVT*)Data)->SetMassA( MassA );
+//		((cBody_CapsuleVT*)Data)->PosB = PosB;
+//		((cBody_CapsuleVT*)Data)->RadiusB = RadiusB;
+//		((cBody_CapsuleVT*)Data)->SetVelocityB( VelocityB );
+//		((cBody_CapsuleVT*)Data)->SetMassB( MassB );
+//		((cBody_CapsuleVT*)Data)->CalcLength();
 //	}
 
 
@@ -236,6 +254,9 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline cBody_CapsuleV* GetCapsuleVPtr() {
 		return (cBody_CapsuleV*)Data;
+	}
+	inline cBody_CapsuleVT* GetCapsuleVTPtr() {
+		return (cBody_CapsuleVT*)Data;
 	}
 
 	// Create --------------------------------------------------------------------------------- - //

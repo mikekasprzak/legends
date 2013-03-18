@@ -15,11 +15,11 @@ public: // - Members -----------------------------------------------------------
 	Real 		RadiusB;
 	Vector3D 	PosB;
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	cBody_Capsule()
+	inline cBody_Capsule()
 	{
 	}
 
-	cBody_Capsule( const Vector3D& _PosA, const Real& _RadiusA, const Vector3D& _PosB, const Real& _RadiusB ) :
+	inline cBody_Capsule( const Vector3D& _PosA, const Real& _RadiusA, const Vector3D& _PosB, const Real& _RadiusB ) :
 		RadiusA( _RadiusA ),
 		PosA( _PosA ),
 		RadiusB( _RadiusB ),
@@ -28,6 +28,9 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	inline const Vector3D GetCenter() const {
+		return ((PosB-PosA) * Real::Half) + PosA;
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_CAPSULE_H__ //
