@@ -110,11 +110,22 @@ void cBody::Draw( const Matrix4x4& Matrix ) {
 		Render::Flat( GEL_LINE_LOOP, Matrix, PointColor, Verts, VertCount );
 	}
 	else if ( IsCircle() || IsCircleV() ) {
-		const st32 VertCount = size_Vertex3D_Circle();
-		Vector3D Verts[ VertCount ];
-		generate_Vertex3D_Circle( Verts, GetCircle().Pos, GetCircle().Radius );
-
-		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
+		// Debug //
+		{
+			const st32 VertCount = size_Vertex3D_Circle();
+			Vector3D Verts[ VertCount ];
+			generate_Vertex3D_Circle( Verts, GetCircle().Pos, GetCircle().Radius );
+	
+			Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
+		}
+		// Normals //
+		{
+			const st32 VertCount = size_Vertex3D_CircleNormals();
+			Vector3D Verts[ VertCount ];
+			generate_Vertex3D_CircleNormals( Verts, GetCircle().Pos, GetCircle().Radius );
+	
+			Render::Flat( GEL_LINES, Matrix, GeometryColor, Verts, VertCount );
+		}
 	}
 //	else if ( IsSphere() || IsSphereV() ) {
 //		const st32 VertCount = size_Vertex3D_Sphere();
