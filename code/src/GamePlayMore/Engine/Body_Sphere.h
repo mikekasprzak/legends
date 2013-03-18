@@ -10,25 +10,16 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cBody_Sphere thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	Vector3D 	Pos;
 	Real 		Radius;
-	Vector3D 	Old;
+	Vector3D 	Pos;		// Position Last, so it can be followed by Verlet Members //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_Sphere()
 	{
 	}
 
 	cBody_Sphere( const Vector3D& _Pos, const Real& _Radius ) :
-		Pos( _Pos ),
 		Radius( _Radius ),
-		Old( _Pos )
-	{
-	}
-
-	cBody_Sphere( const Vector3D& _Pos, const Vector3D& _Old, const Real& _Radius ) :
-		Pos( _Pos ),
-		Radius( _Radius ),
-		Old( _Old )
+		Pos( _Pos )
 	{
 	}
 
