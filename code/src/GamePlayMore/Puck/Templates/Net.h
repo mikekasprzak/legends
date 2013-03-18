@@ -11,11 +11,6 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tNet( const GelColor& Color = GEL_RGB_WHITE, const bool Right = false ) {
-//		if ( Right )
-//			Art = cArt::new_RightHalfCircle( Vector3D::Zero, Real(30), Color );
-//		else		
-//			Art = cArt::new_LeftHalfCircle( Vector3D::Zero, Real(30), Color );
-
 		Art = cArt::new_HalfCircle( Vector3D::Zero, Real(30), Right ? Vector3D(+1,0,0) : Vector3D(-1,0,0), Color );
 	}
 	
@@ -29,7 +24,6 @@ public: // - Specialization Methods --------------------------------------------
 		// ... //
 		cArt_HalfSphere* HS = Art->GetHalfCirclePtr();
 		
-//		Object->Body = cBody::new_Point( Pos );
 		Object->Body = cBody::new_HalfCircle( Pos+HS->Pos, HS->Radius, HS->Normal );
 	}
 	virtual void DestroyObject( cObject* Object ) {

@@ -10,9 +10,8 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tRink( const float Radius = 180, const float Length = 150 ) {
-		Art = cArt::new_Capsule( Vector3D(+Length,0,0),Real(Radius), Vector3D(-Length,0,0),Real(Radius), GEL_RGBA(255,255,255,64) );
-		//Art = cArt::new_RadiusRect( Vector3D::Zero, Vector2D(Radius,Radius), GEL_RGBA(255,255,255,64) );
+	tRink( const float Radius = 80, const float Length = 150 ) {
+		Art = cArt::new_Capsule( Vector3D(+Length,50,0),Real(Radius), Vector3D(-Length,0,0),Real(Radius), GEL_RGBA(255,255,255,64) );
 	}
 	
 	virtual ~tRink() {

@@ -28,9 +28,15 @@ public: // - Constructors and Destructors --------------------------------------
 		RadiusB( _RadiusB ),
 		Color( _Color )
 	{
+		Vector3D Center = GetCenter();
+		PosA -= Center;
+		PosB -= Center;
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	inline const Vector3D GetCenter() const {
+		return ((PosB-PosA) * Real::Half) + PosA;
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_ART_CAPSULE_H__ //
