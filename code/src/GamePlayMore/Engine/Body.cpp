@@ -15,6 +15,12 @@ const Matrix4x4 cBody::GetTransform() {
 	else if ( IsCircleV() || IsSphereV() ) {
 		return Matrix4x4::TranslationMatrix( GetCircleV().Pos );
 	}
+	else if ( IsHalfCircle() || IsHalfSphere() ) {
+		return Matrix4x4::TranslationMatrix( GetHalfCircle().Pos );
+	}
+	else if ( IsHalfCircleV() || IsHalfSphereV() ) {
+		return Matrix4x4::TranslationMatrix( GetHalfCircleV().Pos );
+	}
 	else {
 		return Matrix4x4::Identity;
 	}
@@ -79,13 +85,13 @@ void cBody::Draw( const Matrix4x4& Matrix ) {
 //
 //		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
 //	}
-//	else if ( IsHalfCircle() || IsHalfCircleV() ) {
-//		const st32 VertCount = size_Vertex3D_Circle();
-//		Vector3D Verts[ VertCount ];
-//		generate_Vertex3D_Circle( Verts, GetCircle().Pos, GetCircle().Radius );
-//
-//		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
-//	}
+	else if ( IsHalfCircle() || IsHalfCircleV() ) {
+		const st32 VertCount = size_Vertex3D_HalfCircle();
+		Vector3D Verts[ VertCount ];
+		generate_Vertex3D_HalfCircle( Verts, GetHalfCircle().Pos, GetHalfCircle().Radius, GetHalfCircle().Normal );
+
+		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
+	}
 	else if ( IsCapsule() || IsCapsuleV() ) {
 		const st32 VertCount = size_Vertex3D_Capsule();
 		Vector3D Verts[ VertCount ];

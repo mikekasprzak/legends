@@ -27,8 +27,10 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
+		cArt_HalfSphere* HS = Art->GetHalfCirclePtr();
 		
-		Object->Body = cBody::new_Point( Pos );
+//		Object->Body = cBody::new_Point( Pos );
+		Object->Body = cBody::new_HalfCircle( Pos+HS->Pos, HS->Radius, HS->Normal );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
