@@ -121,6 +121,19 @@ public: // - Methods -----------------------------------------------------------
 		return GetCircleV();
 	}
 
+	inline const cBody_HalfSphere& GetHalfCircle() const {
+		return *((cBody_HalfSphere*)Data);
+	}
+	inline const cBody_HalfSphereV& GetHalfCircleV() const {
+		return *((cBody_HalfSphereV*)Data);
+	}
+	inline const cBody_HalfSphere& GetHalfSphere() const {
+		return GetHalfCircle();
+	}
+	inline const cBody_HalfSphereV& GetHalfSphereV() const {
+		return GetHalfCircleV();
+	}
+
 	inline const cBody_Capsule& GetCapsule() const {
 		return *((cBody_Capsule*)Data);
 	}
@@ -140,7 +153,6 @@ public: // - Methods -----------------------------------------------------------
 	inline void SetSphere( const Vector3D& Pos, const Real& Radius ) {
 		SetCircle( Pos, Radius );
 	}
-
 	inline void SetCircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity, const Real& Mass ) {
 		((cBody_SphereV*)Data)->Pos = Pos;
 		((cBody_SphereV*)Data)->Radius = Radius;
@@ -151,12 +163,41 @@ public: // - Methods -----------------------------------------------------------
 		SetCircleV( Pos, Radius, Velocity, Mass );
 	}
 
+	inline void SetHalfCircle( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		((cBody_HalfSphere*)Data)->Pos = Pos;
+		((cBody_HalfSphere*)Data)->Radius = Radius;
+		((cBody_HalfSphere*)Data)->Normal = Normal;
+	}
+	inline void SetHalfSphere( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		SetHalfCircle( Pos, Radius, Normal );
+	}
+//	inline void SetHalfCircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
+//		((cBody_HalfSphere*)Data)->Pos = Pos;
+//		((cBody_HalfSphere*)Data)->Radius = Radius;
+//		((cBody_HalfSphere*)Data)->Normal = Normal;
+//		((cBody_HalfSphereV*)Data)->SetVelocity( Velocity );
+//		((cBody_HalfSphereV*)Data)->SetMass( Mass );
+//	}
+//	inline void SetHalfSphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
+//		SetHalfCircleV( Pos, Radius, Normal, Velocity, Mass );
+//	}
+
 	inline void SetCapsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
 		((cBody_Capsule*)Data)->PosA = PosA;
 		((cBody_Capsule*)Data)->RadiusA = RadiusA;
 		((cBody_Capsule*)Data)->PosB = PosB;
 		((cBody_Capsule*)Data)->RadiusB = RadiusB;
 	}
+//	inline void SetCapsuleV( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB, const Vector3D& VelocityA, const Vector3D& VelocityB, const Real& MassA, const Real& MassB ) {
+//		((cBody_CapsuleV*)Data)->PosA = PosA;
+//		((cBody_CapsuleV*)Data)->RadiusA = RadiusA;
+//		((cBody_CapsuleV*)Data)->SetVelocityA( VelocityA );
+//		((cBody_CapsuleV*)Data)->SetMassA( MassA );
+//		((cBody_CapsuleV*)Data)->PosB = PosB;
+//		((cBody_CapsuleV*)Data)->RadiusB = RadiusB;
+//		((cBody_CapsuleV*)Data)->SetVelocityB( VelocityB );
+//		((cBody_CapsuleV*)Data)->SetMassB( MassB );
+//	}
 
 
 	// Data Access ---------------------------------------------------------------------------- - //
@@ -175,6 +216,19 @@ public: // - Methods -----------------------------------------------------------
 	}
 	inline cBody_SphereV* GetSphereVPtr() {
 		return GetCircleVPtr();
+	}
+	
+	inline cBody_HalfSphere* GetHalfCirclePtr() {
+		return (cBody_HalfSphere*)Data;
+	}
+	inline cBody_HalfSphereV* GetHalfCircleVPtr() {
+		return (cBody_HalfSphereV*)Data;
+	}
+	inline cBody_HalfSphere* GetHalfSpherePtr() {
+		return GetHalfCirclePtr();
+	}
+	inline cBody_HalfSphereV* GetHalfSphereVPtr() {
+		return GetHalfCircleVPtr();
 	}
 
 	inline cBody_Capsule* GetCapsulePtr() {
@@ -223,6 +277,31 @@ public: // - Methods -----------------------------------------------------------
 		return Body;
 	}
 
+	inline static cBody* new_HalfCircle( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphere) ];
+		cBody* Body = new(Ptr) cBody( BT_HALFCIRCLE, sizeof(cBody_HalfSphere) );
+		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
+		return Body;
+	}
+//	inline static cBody* new_HalfCircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
+//		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphereV) ];
+//		cBody* Body = new(Ptr) cBody( BT_HALFCIRCLEV, sizeof(cBody_HalfSphereV) );
+//		new(Body->Data) cBody_HalfSphereV( Pos, Radius, Normal, Velocity, Mass );
+//		return Body;
+//	}
+	inline static cBody* new_HalfSphere( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphere) ];
+		cBody* Body = new(Ptr) cBody( BT_HALFSPHERE, sizeof(cBody_HalfSphere) );
+		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
+		return Body;
+	}
+//	inline static cBody* new_HalfSphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
+//		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphereV) ];
+//		cBody* Body = new(Ptr) cBody( BT_HALFSPHEREV, sizeof(cBody_HalfSphereV) );
+//		new(Body->Data) cBody_HalfSphereV( Pos, Radius, Normal, Velocity, Mass );
+//		return Body;
+//	}
+	
 	inline static cBody* new_Capsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Capsule) ];
 		cBody* Body = new(Ptr) cBody( BT_CAPSULE, sizeof(cBody_Capsule) );
