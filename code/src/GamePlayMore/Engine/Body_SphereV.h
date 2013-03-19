@@ -90,8 +90,6 @@ public:
 		
 		//AddForce( -GetVelocity().Normal() * cBody_Base::GetAirFriction() );
 	}
-	
-	//inline void Solve( 
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_SPHEREV_H__ //

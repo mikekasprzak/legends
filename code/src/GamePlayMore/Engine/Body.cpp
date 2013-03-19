@@ -206,22 +206,24 @@ void cBody::Solve( cBody* Vs ) {
 //			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
 			
 			Real Diff = RadiusSum - Length;			
-			Real InvMassSum = (A->InvMass+B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
-			Diff /= Length*InvMassSum;	// Thus Length/2, Length/1 //
+			Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
+			Diff /= Length * InvMassSum;	// Thus Length/2, Length/1 //
 			
+			// *** STEP 1: Move Objects out of each other (Penetration) *** //
 			A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
 			B->Pos += B->InvMass * Line * Diff;
 			
-			// Restore energy of Velocity //
+			// *** STEP 2: Restore Energy (Velocity) lost through fixing the penetration //
 			A->Old = A->Pos - VelocityA;
 			B->Old = B->Pos - VelocityB;
 			
 			Real MagnitudeA = VelocityA.NormalizeRet();
 			Real MagnitudeB = VelocityB.NormalizeRet();		
 
-			Real Impact = dot( VelocityA, VelocityB );	// Positive: Regular Impact, Negative: Special //
+			Real Impact = dot( VelocityA, VelocityB );
 
-			// Non-standard Collision (Not Directly Opposing) //
+			// *** STEP 4: Determine Collision Type (Opposing vs Not Opposing) *** //
+			// Non-standard Collision (Not Opposing) //
 			if ( Impact > Real::Zero ) {
 				Real ImpactA = dot( VelocityA, Line );
 
@@ -238,7 +240,7 @@ void cBody::Solve( cBody* Vs ) {
 							ScaleA /= MassRatioA;
 						}
 						
-						// A's Forces //
+						// *** STEP 4: Add Forces from A (Optional) *** //
 						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
 						A->AddForce( -VelocityA * ImpactA * ScaleA );
 					}
@@ -259,13 +261,13 @@ void cBody::Solve( cBody* Vs ) {
 							ScaleB /= MassRatioB;
 						}
 			
-						// B's Forces //
+						// *** STEP 5: Add Forces from B (Optional) *** //
 						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
 						B->AddForce( -VelocityB * ImpactB * ScaleB );
 					}
 				}
 			}
-			// Standard Collision (Both traveling towards eachother) //
+			// Standard Collision (Both traveling towards each other (Opposing)) //
 			else {
 				Real ImpactA = dot( VelocityA, Line );
 				{
@@ -278,7 +280,7 @@ void cBody::Solve( cBody* Vs ) {
 						ScaleA /= MassRatioA;
 					}
 					
-					// A's Forces //
+					// *** STEP 4: Add Forces from A *** //
 					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
 					A->AddForce( -VelocityA * ImpactA * ScaleA );
 				}
@@ -294,11 +296,14 @@ void cBody::Solve( cBody* Vs ) {
 						ScaleB /= MassRatioB;
 					}
 					
-					// B's Forces //
+					// *** STEP 5: Add Forces from B *** //
 					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
 					B->AddForce( -VelocityB * ImpactB * ScaleB );
 				}
 			}
+			
+			// *** STEP 6: Resolve Friction *** //
+			
 
 //			Log( "%f, %f, %f !! %f, %f, %f", A->Accum.x.ToFloat(), A->Accum.y.ToFloat(), A->Accum.z.ToFloat(), B->Accum.x.ToFloat(), B->Accum.y.ToFloat(), B->Accum.z.ToFloat() );
 		}
