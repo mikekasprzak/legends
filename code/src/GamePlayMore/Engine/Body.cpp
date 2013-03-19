@@ -304,6 +304,8 @@ void cBody::Solve( cBody* Vs ) {
 			
 			// *** STEP 6: Resolve Friction *** //
 			
+			// TODO: Don't store accumulated forces? Apply directly, but keep copies here.
+			// Then friction is a matter of scaling the modified velocity //
 
 //			Log( "%f, %f, %f !! %f, %f, %f", A->Accum.x.ToFloat(), A->Accum.y.ToFloat(), A->Accum.z.ToFloat(), B->Accum.x.ToFloat(), B->Accum.y.ToFloat(), B->Accum.z.ToFloat() );
 		}
