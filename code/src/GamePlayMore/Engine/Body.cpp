@@ -203,43 +203,119 @@ void cBody::Solve( cBody* Vs ) {
 			Vector3D VelocityA = A->GetVelocity();
 			Vector3D VelocityB = B->GetVelocity();
 			
+//			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
+			
 			Real Diff = RadiusSum - Length;
+
 //			Diff *= Real::Half; // Same as "div 2" //
-			
-			// TODO: The InvMass should be used to balance the forces added too //
-			// This code works, just unfinished. To make the code below work I need to understand //
-			// better this part below //
-			
+//			A->Pos -= Line * Diff;
+//			B->Pos += Line * Diff;
+						
 			Real InvMassSum = (A->InvMass+B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
+//			Real MassSum = (A->GetMass()+B->GetMass());	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
 			
 			Diff /= Length*InvMassSum;	// Thus Length/2, Length/1 //
-//			Diff /= InvMassSum;			// Cancels Out Reflection //
 			
 			A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
 			B->Pos += B->InvMass * Line * Diff;
-
-//			A->Pos -= Line * Diff;
-//			B->Pos += Line * Diff;
 			
-//			A->Old = A->Pos - VelocityA;
-//			B->Old = B->Pos - VelocityB;
-//			
-//			Real MagnitudeA = VelocityA.NormalizeRet();
-//			Real MagnitudeB = VelocityB.NormalizeRet();
-//			
-//			Real ImpactA = dot( VelocityA, Line );
-//			Real ImpactB = dot( VelocityB, -Line );
-//			
-//			ImpactA *= MagnitudeA / (MagnitudeA*InvMassSum);
-//			ImpactB *= MagnitudeB / (MagnitudeB*InvMassSum);
+			A->Old = A->Pos - VelocityA;
+			B->Old = B->Pos - VelocityB;
+			
+			Real MagnitudeA = VelocityA.NormalizeRet();
+			Real MagnitudeB = VelocityB.NormalizeRet();
+			
+			// Impact Directions //
+			Real ImpactA = dot( VelocityA, Line );
+			Real ImpactB = dot( VelocityB, -Line );
+			
+
+			// NOTE: Normalized //
+			Real Impact = dot( VelocityA, VelocityB );	// Positive: Regular Impact, Negative: Special //
+
+			if ( Impact > Real::Zero ) {
+				if ( ImpactA > Real::Zero ) {
+					Real MotionA = dot( A->GetVelocity(), VelocityB );
+						
+					if ( MotionA < MagnitudeA ) {
+						ImpactA *= MagnitudeA - MotionA;
+	
+						Real ScaleA = Real::One;
+						Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
+									
+						if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
+							ScaleA /= MassRatioA;
+						}
+						
+						// A's Forces //
+						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+						A->AddForce( -VelocityA * ImpactA * ScaleA );
+					}
+				}
+
+				if ( ImpactB > Real::Zero ) {
+					Real MotionB = dot( B->GetVelocity(), VelocityA );
+		
+					if ( MotionB < MagnitudeB ) {
+						ImpactB *= MagnitudeB - MotionB;
+	
+						Real ScaleB = Real::One;
+						Real MassRatioB = B->GetMass() * A->InvMass;// div A->GetMass();
+									
+						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+							ScaleB /= MassRatioB;
+						}
+			
+						// B's Forces //
+						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+						B->AddForce( -VelocityB * ImpactB * ScaleB );
+					}
+				}
+			}
+			else {
+				{
+					ImpactA *= MagnitudeA;
+	
+					Real ScaleA = Real::One;
+					Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
+								
+					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
+						ScaleA /= MassRatioA;
+					}
+					
+					// A's Forces //
+					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+					A->AddForce( -VelocityA * ImpactA * ScaleA );
+				}
+
+				{
+					ImpactB *= MagnitudeB;
+	
+					Real ScaleB = Real::One;
+					Real MassRatioB = B->GetMass() * A->InvMass;// div B->GetMass();
+								
+					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+						ScaleB /= MassRatioB;
+					}
+					
+					// B's Forces //
+					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+					B->AddForce( -VelocityB * ImpactB * ScaleB );
+				}
+			}
+
+//			ImpactA *= MagnitudeA;
+//			ImpactB *= MagnitudeB;
 //			
 //			// A's Forces //
-//			B->AddForce( Line * ImpactA * B->InvMass );
-//			A->AddForce( -VelocityA * ImpactA * A->InvMass );
+//			B->AddForce( Line * ImpactA );
+//			A->AddForce( -VelocityA * ImpactA );
 //
 //			// B's Forces //
-//			A->AddForce( -Line * ImpactB * A->InvMass );
-//			B->AddForce( -VelocityB * ImpactB * B->InvMass );
+//			A->AddForce( -Line * ImpactB );
+//			B->AddForce( -VelocityB * ImpactB );
+
+//			Log( "%f, %f, %f !! %f, %f, %f", A->Accum.x.ToFloat(), A->Accum.y.ToFloat(), A->Accum.z.ToFloat(), B->Accum.x.ToFloat(), B->Accum.y.ToFloat(), B->Accum.z.ToFloat() );
 		}
 	}
 }

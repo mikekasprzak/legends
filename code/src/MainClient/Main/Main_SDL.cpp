@@ -95,11 +95,15 @@ extern bool __UpKey;
 extern bool __DownKey;
 extern bool __LeftKey;
 extern bool __RightKey;
+extern bool __TabKey;
+extern bool __EscKey;
 // - ------------------------------------------------------------------------------------------ - //
 bool __UpKey = false;
 bool __DownKey = false;
 bool __LeftKey = false;
 bool __RightKey = false;
+bool __TabKey = false;
+bool __EscKey = false;
 // - ------------------------------------------------------------------------------------------ - //
 bool KillSignal = false;
 // - ------------------------------------------------------------------------------------------ - //
@@ -153,6 +157,12 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_RIGHT ) {
 			__RightKey = false;
 		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_TAB ) {
+			__TabKey = false;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_ESCAPE ) {
+			__EscKey = false;
+		}
 	}
 	else if ( Event->type == SDL_KEYDOWN ) {
 		if ( Event->key.keysym.scancode == SDL_SCANCODE_UP ) {
@@ -167,7 +177,12 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_RIGHT ) {
 			__RightKey = true;
 		}
-		
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_TAB ) {
+			__TabKey = true;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_ESCAPE ) {
+			__EscKey = true;
+		}		
 	}
 	else if ( Event->type == SDL_WINDOWEVENT ) {
 		VVLog( "**** [%i] %s [%i,%i]", Event->window.windowID, SDL_WindowEventName( Event->window.event ), Event->window.data1, Event->window.data2 );
@@ -300,7 +315,7 @@ int main( int argc, char* argv[] ) {
 	// **** //
 
 	{
-		cApp App;
+		cApp* App = new cApp();
 		SDL_SetEventFilter( EventHandler, 0 );
 		
 		Log( "Mem: %i", System::GetMemoryUsage() );
@@ -320,11 +335,16 @@ int main( int argc, char* argv[] ) {
 				Log("! WARNING: FramesOfWork is high (%i)! Skipping Work...", FramesOfWork );
 				FramesOfWork = 1;
 			}
+			
+			if ( __TabKey ) {
+				delete App;
+				App = new cApp();
+			}
 
 			for ( int Frame = 0; Frame < (FramesOfWork); Frame++ ) {
 				Input::Poll();
 				SDL_PumpEvents();
-				App.Step();
+				App->Step();
 
 				AddFrame( &WorkTime );
 			}
@@ -336,7 +356,7 @@ int main( int argc, char* argv[] ) {
 					if ( Screen::Native[idx].pWindow ) {
 						Screen::Native[idx].MakeCurrent(); // Memory Leak //
 						
-						App.Draw( Screen::Native[idx] );
+						App->Draw( Screen::Native[idx] );
 						
 						Screen::Native[idx].Swap(); // Memory Leak //
 					}
