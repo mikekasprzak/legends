@@ -4,8 +4,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Real.h>
+#include "Body_Base.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cBody_CapsuleV {
+class cBody_CapsuleV: public cBody_Base {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cBody_CapsuleV thistype;
 	inline void* GetThis() { return this; }

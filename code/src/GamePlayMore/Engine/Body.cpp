@@ -2,6 +2,8 @@
 #include "Engine.h"
 #include <Render/Render.h>
 #include <Generate/Vertex.h>
+
+#include <Geometry/Vs/3D.h>
 // - ------------------------------------------------------------------------------------------ - //
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
@@ -96,6 +98,147 @@ const Rect3D cBody::GetRect() {
 	else {
 		return Rect3D( Vector3D::Zero, Vector3D::Zero );
 	}		
+}
+// - ------------------------------------------------------------------------------------------ - //
+const bool cBody::Check( const cBody& Vs ) const {
+	if ( IsPoint() ) {
+		if ( Vs.IsPoint() ) {
+			return Test_Point_Vs_Point3D( GetPoint(), Vs.GetPoint() );
+		}
+		else if ( Vs.IsCircle() ) {
+			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+		}
+		else if ( Vs.IsSphere() ) {
+			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+	}
+	else if ( IsCircle() ) {
+		if ( Vs.IsPoint() ) {
+			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetCircle().Pos, GetCircle().Radius ); // * //
+		}
+		else if ( Vs.IsCircle() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+		}
+		else if ( Vs.IsSphere() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+	}
+	else if ( IsCircleV() ) {
+		if ( Vs.IsPoint() ) {
+			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetCircleV().Pos, GetCircleV().Radius ); // * //
+		}
+		else if ( Vs.IsCircle() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+		}
+		else if ( Vs.IsSphere() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+	}
+	else if ( IsSphere() ) {
+		if ( Vs.IsPoint() ) {
+			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetSphere().Pos, GetSphere().Radius ); // * //
+		}
+		else if ( Vs.IsCircle() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+		}
+		else if ( Vs.IsSphere() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+	}
+	else if ( IsSphereV() ) {
+		if ( Vs.IsPoint() ) {
+			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetSphereV().Pos, GetSphereV().Radius ); // * //
+		}
+		else if ( Vs.IsCircle() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+		}
+		else if ( Vs.IsSphere() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+	}
+	return false;
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cBody::Solve( cBody* Vs ) {
+	if ( IsCircleV() ) {
+		if ( Vs->IsCircleV() ) {
+			cBody_SphereV* A = GetCircleVPtr();
+			cBody_SphereV* B = Vs->GetCircleVPtr();
+			
+			Vector3D Line = B->Pos - A->Pos;
+			Real Length = Line.NormalizeRet();
+			
+			Real RadiusSum = A->Radius + B->Radius;
+			
+			Vector3D VelocityA = A->GetVelocity();
+			Vector3D VelocityB = B->GetVelocity();
+			
+			Real Diff = RadiusSum - Length;
+//			Diff *= Real::Half;
+			
+			// TODO: The InvMass should be used to balance the forces added too //
+			// This code works, just unfinished. To make the code below work I need to understand //
+			// better this part below //
+//			Diff /= Length*(A->InvMass+B->InvMass);
+			
+//			A->Pos -= A->InvMass * Line * Diff;
+//			B->Pos += B->InvMass * Line * Diff;
+
+			A->Pos -= Line * Diff;
+			B->Pos += Line * Diff;
+			
+			A->Old = A->Pos - VelocityA;
+			B->Old = B->Pos - VelocityB;
+			
+			Real MagnitudeA = VelocityA.NormalizeRet();
+			Real MagnitudeB = VelocityB.NormalizeRet();
+			
+			Real ImpactA = dot( VelocityA, Line );
+			Real ImpactB = dot( VelocityB, -Line );
+			
+			// A's Forces //
+			B->AddForce( Line * (MagnitudeA*ImpactA) );
+			A->AddForce( -VelocityA * (MagnitudeA*ImpactA) );
+
+			// B's Forces //
+			A->AddForce( -Line * (MagnitudeB*ImpactB) );
+			B->AddForce( -VelocityB * (MagnitudeB*ImpactB) );
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cBody::Step() {
+	GetBasePtr()->Step();
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cBody::Draw( const Matrix4x4& Matrix ) {

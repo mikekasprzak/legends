@@ -4,6 +4,10 @@
 #include <Generate/Vertex.h>
 // - ------------------------------------------------------------------------------------------ - //
 void cObject::Step() {
+	// TODO: Make Objects always take a Body, even if it doesn't need one //
+	//       And later, make this an assert. //
+	if ( Body )
+		Body->Step();	
 	Shared.Template = Template;
 	Template->Step( this );
 }

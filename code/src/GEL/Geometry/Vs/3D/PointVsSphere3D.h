@@ -87,7 +87,7 @@ inline Vector3D Nearest_Point_On_Sphere3D( const Vector3D& Pos, const Vector3D& 
 // Finds the nearest point on an edge, no matter what //
 inline Vector3D Nearest_Point_OnEdgeOf_Sphere3D( const Vector3D& Pos, const Vector3D& VsPos, const Real VsRadius ) {
 	Vector3D Point = Pos - VsPos;
-	Real Mag = Point.NormalizeRet();
+//	Real Mag = Point.NormalizeRet();
 	
 	return VsPos + (Point * VsRadius);	
 }

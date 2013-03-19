@@ -21,7 +21,7 @@ const bool cTemplate::Contact( cObject* Object, cObject* Vs ) {
 	return true;
 }
 // - ------------------------------------------------------------------------------------------ - //
-void cTemplate::Sense( cObject* Object, cObject* Vs ) {
+void cTemplate::Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Notice( cObject* Object, cObject* Sender, const int Message ) {

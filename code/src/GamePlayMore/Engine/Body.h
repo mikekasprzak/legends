@@ -108,6 +108,10 @@ public: // - Methods -----------------------------------------------------------
 	}
 
 	// Data Retrieval ------------------------------------------------------------------------- - //
+	inline const cBody_Base& GetBase() const {
+		return *((cBody_Base*)Data);
+	}
+	
 	// NOTE: Point is a specific Body type. This is not used to get the center. //
 	inline const Vector3D& GetPoint() const {
 		return *((Vector3D*)Data);
@@ -219,6 +223,10 @@ public: // - Methods -----------------------------------------------------------
 
 
 	// Data Access ---------------------------------------------------------------------------- - //
+	inline cBody_Base* GetBasePtr() {
+		return (cBody_Base*)Data;
+	}
+
 	inline Vector3D* GetPointPtr() {
 		return (Vector3D*)Data;
 	}
@@ -279,7 +287,7 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) cBody_Sphere( Pos, Radius );
 		return Body;
 	}
-	inline static cBody* new_CircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity, const Real& Mass ) {
+	inline static cBody* new_CircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
 		cBody* Body = new(Ptr) cBody( BT_CIRCLEV, sizeof(cBody_SphereV) );
 		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
@@ -291,7 +299,7 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) cBody_Sphere( Pos, Radius );
 		return Body;
 	}
-	inline static cBody* new_SphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity, const Real& Mass ) {
+	inline static cBody* new_SphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
 		cBody* Body = new(Ptr) cBody( BT_SPHEREV, sizeof(cBody_SphereV) );
 		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
@@ -339,7 +347,11 @@ public: // - Methods -----------------------------------------------------------
 public:
 	const Matrix4x4 GetTransform();	
 	const Rect3D GetRect();
+	
+	const bool Check( const cBody& Vs ) const;
+	void Solve( cBody* Vs );
 
+	void Step();
 	void Draw( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //

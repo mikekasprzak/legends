@@ -26,7 +26,7 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		
-		Object->Body = cBody::new_Circle( Pos, TVar("Radius").ToFloat() );
+		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D(1,0,0) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 

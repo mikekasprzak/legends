@@ -19,6 +19,10 @@
 
 #include "3D/PointVsPointCluster3D.h"
 #include "3D/PointVsPolygon3D.h"
+
+#include "3D/PointVsPoint3D.h"
+
+#include "3D/SphereVsSphere3D.h"
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __AdvancedGeometry_3D_H__ //
 // - ------------------------------------------------------------------------------------------ - //

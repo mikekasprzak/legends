@@ -4,8 +4,9 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Math/Vector.h>
 #include <Math/Real.h>
+#include "Body_Base.h"
 // - ------------------------------------------------------------------------------------------ - //
-class cBody_HalfSphereV {
+class cBody_HalfSphereV: public cBody_Base {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cBody_HalfSphereV thistype;
 	inline void* GetThis() { return this; }

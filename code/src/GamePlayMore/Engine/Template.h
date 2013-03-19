@@ -68,7 +68,7 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Draw( class cObject* Object, const Matrix4x4& Matrix );
 
 	virtual const bool Contact( class cObject* Object, class cObject* Vs );
-	virtual void Sense( class cObject* Object, class cObject* Vs );
+	virtual void Sense( class cObject* Object, class cObject* Vs, const st32 SensorIndex );
 	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
 };
 // - ------------------------------------------------------------------------------------------ - //
