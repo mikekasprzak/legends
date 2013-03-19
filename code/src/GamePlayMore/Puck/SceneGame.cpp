@@ -41,9 +41,9 @@ cSceneGame::cSceneGame() {
 	AddObject( "Player1", Vector3D(-60,+60,0) );
 	AddObject( "Player2", Vector3D(-60,-60,0) );
 	AddObject( "Player3", Vector3D(+60,+60,0) );
-	AddObject( "Player4", Vector3D(+84,-60,0) );
+	AddObject( "Player4", Vector3D(+72,-60,0) );
 	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(0,+1,0) );
-	Active.back()->Body->GetSphereVPtr()->SetMass( 0.5 );
+	Active.back()->Body->GetSphereVPtr()->SetMass( 1 );
 
 	AddObject( "Puck", Vector3D(0,0,0) );
 
