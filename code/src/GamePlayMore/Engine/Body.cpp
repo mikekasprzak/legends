@@ -204,35 +204,42 @@ void cBody::Solve( cBody* Vs ) {
 			Vector3D VelocityB = B->GetVelocity();
 			
 			Real Diff = RadiusSum - Length;
-//			Diff *= Real::Half;
+//			Diff *= Real::Half; // Same as "div 2" //
 			
 			// TODO: The InvMass should be used to balance the forces added too //
 			// This code works, just unfinished. To make the code below work I need to understand //
 			// better this part below //
-//			Diff /= Length*(A->InvMass+B->InvMass);
 			
-//			A->Pos -= A->InvMass * Line * Diff;
-//			B->Pos += B->InvMass * Line * Diff;
+			Real InvMassSum = (A->InvMass+B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
+			
+			Diff /= Length*InvMassSum;	// Thus Length/2, Length/1 //
+//			Diff /= InvMassSum;			// Cancels Out Reflection //
+			
+			A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
+			B->Pos += B->InvMass * Line * Diff;
 
-			A->Pos -= Line * Diff;
-			B->Pos += Line * Diff;
+//			A->Pos -= Line * Diff;
+//			B->Pos += Line * Diff;
 			
-			A->Old = A->Pos - VelocityA;
-			B->Old = B->Pos - VelocityB;
-			
-			Real MagnitudeA = VelocityA.NormalizeRet();
-			Real MagnitudeB = VelocityB.NormalizeRet();
-			
-			Real ImpactA = dot( VelocityA, Line );
-			Real ImpactB = dot( VelocityB, -Line );
-			
-			// A's Forces //
-			B->AddForce( Line * (MagnitudeA*ImpactA) );
-			A->AddForce( -VelocityA * (MagnitudeA*ImpactA) );
-
-			// B's Forces //
-			A->AddForce( -Line * (MagnitudeB*ImpactB) );
-			B->AddForce( -VelocityB * (MagnitudeB*ImpactB) );
+//			A->Old = A->Pos - VelocityA;
+//			B->Old = B->Pos - VelocityB;
+//			
+//			Real MagnitudeA = VelocityA.NormalizeRet();
+//			Real MagnitudeB = VelocityB.NormalizeRet();
+//			
+//			Real ImpactA = dot( VelocityA, Line );
+//			Real ImpactB = dot( VelocityB, -Line );
+//			
+//			ImpactA *= MagnitudeA / (MagnitudeA*InvMassSum);
+//			ImpactB *= MagnitudeB / (MagnitudeB*InvMassSum);
+//			
+//			// A's Forces //
+//			B->AddForce( Line * ImpactA * B->InvMass );
+//			A->AddForce( -VelocityA * ImpactA * A->InvMass );
+//
+//			// B's Forces //
+//			A->AddForce( -Line * ImpactB * A->InvMass );
+//			B->AddForce( -VelocityB * ImpactB * B->InvMass );
 		}
 	}
 }
