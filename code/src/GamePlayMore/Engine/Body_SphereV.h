@@ -90,6 +90,12 @@ public:
 		
 		//AddForce( -GetVelocity().Normal() * cBody_Base::GetAirFriction() );
 	}
+
+//	virtual const Real& GetFriction() const {
+//		static const Real DefaultFriction( 0.55f );
+//		return DefaultFriction;
+//	}
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_SPHEREV_H__ //

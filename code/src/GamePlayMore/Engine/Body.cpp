@@ -203,6 +203,9 @@ void cBody::Solve( cBody* Vs ) {
 			Vector3D VelocityA = A->GetVelocity();
 			Vector3D VelocityB = B->GetVelocity();
 			
+			Vector3D ForceA;
+			Vector3D ForceB;
+			
 //			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
 			
 			Real Diff = RadiusSum - Length;			
@@ -241,8 +244,10 @@ void cBody::Solve( cBody* Vs ) {
 						}
 						
 						// *** STEP 4: Add Forces from A (Optional) *** //
-						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-						A->AddForce( -VelocityA * ImpactA * ScaleA );
+//						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+//						A->AddForce( -VelocityA * ImpactA * ScaleA );
+						ForceB += Line * ImpactA * MassRatioA * ScaleA;
+						ForceA += -VelocityA * ImpactA * ScaleA;
 					}
 				}
 
@@ -262,8 +267,10 @@ void cBody::Solve( cBody* Vs ) {
 						}
 			
 						// *** STEP 5: Add Forces from B (Optional) *** //
-						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-						B->AddForce( -VelocityB * ImpactB * ScaleB );
+//						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+//						B->AddForce( -VelocityB * ImpactB * ScaleB );
+						ForceA += -Line * ImpactB * MassRatioB * ScaleB;
+						ForceB += -VelocityB * ImpactB * ScaleB;
 					}
 				}
 			}
@@ -281,8 +288,10 @@ void cBody::Solve( cBody* Vs ) {
 					}
 					
 					// *** STEP 4: Add Forces from A *** //
-					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-					A->AddForce( -VelocityA * ImpactA * ScaleA );
+//					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+//					A->AddForce( -VelocityA * ImpactA * ScaleA );
+					ForceB += Line * ImpactA * MassRatioA * ScaleA;
+					ForceA += -VelocityA * ImpactA * ScaleA;
 				}
 
 				Real ImpactB = dot( VelocityB, -Line );
@@ -297,8 +306,10 @@ void cBody::Solve( cBody* Vs ) {
 					}
 					
 					// *** STEP 5: Add Forces from B *** //
-					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-					B->AddForce( -VelocityB * ImpactB * ScaleB );
+//					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+//					B->AddForce( -VelocityB * ImpactB * ScaleB );
+					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
+					ForceB += -VelocityB * ImpactB * ScaleB;
 				}
 			}
 			
@@ -306,6 +317,13 @@ void cBody::Solve( cBody* Vs ) {
 			
 			// TODO: Don't store accumulated forces? Apply directly, but keep copies here.
 			// Then friction is a matter of scaling the modified velocity //
+			
+			// Blah //
+			VelocityA = A->GetVelocity();
+			VelocityB = B->GetVelocity();
+			
+			A->Old = A->Pos - (VelocityA + ForceA) * A->GetFriction();
+			B->Old = B->Pos - (VelocityB + ForceB) * B->GetFriction();
 
 //			Log( "%f, %f, %f !! %f, %f, %f", A->Accum.x.ToFloat(), A->Accum.y.ToFloat(), A->Accum.z.ToFloat(), B->Accum.x.ToFloat(), B->Accum.y.ToFloat(), B->Accum.z.ToFloat() );
 		}

@@ -14,7 +14,7 @@ public: // - Constructors and Destructors --------------------------------------
 public: // - Methods -------------------------------------------------------------------------- - //
 	virtual void Step() { }
 	virtual const Real& GetFriction() const {
-		static const Real DefaultFriction( 0.05f );
+		static const Real DefaultFriction( 1.0f );
 		return DefaultFriction;
 	}
 	inline static const Real& GetAirFriction() {
