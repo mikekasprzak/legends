@@ -281,10 +281,10 @@ void cBody::Solve( cBody* Vs ) {
 				if ( ImpactA > Real::Zero ) {
 					ImpactA *= MagnitudeA;
 	
-					Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
+					Real MassRatioA = B->GetMass() * A->InvMass;// div B->GetMass();
 								
 					Real ScaleA = Real::One;
-					if ( MassRatioA < Real::One ) {	// **Division By Zero Safe //
+					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
 						ScaleA /= MassRatioA;
 					}
 					
@@ -293,18 +293,18 @@ void cBody::Solve( cBody* Vs ) {
 //					A->AddForce( -VelocityA * ImpactA * ScaleA );
 //					ForceB += Line * ImpactA * MassRatioA * ScaleA;
 //					ForceA += -VelocityA * ImpactA * ScaleA;
-					ForceB += Line * (ImpactA * MassRatioA);
-					ForceA += -Line * (ImpactA / (MassRatioA * ScaleA));
+					ForceB += Line * (ImpactA / MassRatioA);
+					ForceA += -Line * (ImpactA * (MassRatioA * ScaleA));
 				}
 
 				Real ImpactB = dot( VelocityB, -Line );
 				if ( ImpactB > Real::Zero ) {
 					ImpactB *= MagnitudeB;
 	
-					Real MassRatioB = B->GetMass() * A->InvMass;// div B->GetMass();
+					Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();
 								
 					Real ScaleB = Real::One;
-					if ( MassRatioB < Real::One ) {	// Division By Zero Safe //
+					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
 						ScaleB /= MassRatioB;
 					}
 					
@@ -313,8 +313,8 @@ void cBody::Solve( cBody* Vs ) {
 //					B->AddForce( -VelocityB * ImpactB * ScaleB );
 //					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
 //					ForceB += -VelocityB * ImpactB * ScaleB;
-					ForceA += -Line * (ImpactB * MassRatioB);
-					ForceB += Line * (ImpactB / (MassRatioB * ScaleB));
+					ForceA += -Line * (ImpactB / MassRatioB);
+					ForceB += Line * (ImpactB * (MassRatioB * ScaleB));
 				}
 			}
 			
