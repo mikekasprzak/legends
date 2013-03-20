@@ -302,8 +302,6 @@ void cBody::Solve( cBody* Vs ) {
 				}
 
 				if ( ImpactB > Real::Zero ) {
-					ImpactB *= MagnitudeB;
-	
 					Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();
 								
 					Real ScaleB = Real::One;
