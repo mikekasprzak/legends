@@ -227,91 +227,94 @@ void cBody::Solve( cBody* Vs ) {
 
 			// *** STEP 4: Determine Collision Type (Opposing vs Not Opposing) *** //
 			// Non-standard Collision (Not Opposing) //
-			if ( Impact > Real::Zero ) {
+//			if ( Impact > Real::Zero ) {
+//				Real ImpactA = dot( VelocityA, Line );
+//
+//				if ( ImpactA > Real::Zero ) {
+//					Real MotionA = dot( VelocityA, VelocityB * MagnitudeB );
+//						
+//					if ( MotionA < MagnitudeA ) {
+//						ImpactA *= MagnitudeA - MotionA;
+//	
+//						Real ScaleA = Real::One;
+//						Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
+//									
+//						if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
+//							ScaleA /= MassRatioA;
+//						}
+//						
+//						// *** STEP 4: Add Forces from A (Optional) *** //
+////						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+////						A->AddForce( -VelocityA * ImpactA * ScaleA );
+//						ForceB += Line * ImpactA * MassRatioA * ScaleA;
+//						ForceA += -VelocityA * ImpactA * ScaleA;
+//					}
+//				}
+//
+//				Real ImpactB = dot( VelocityB, -Line );
+//
+//				if ( ImpactB > Real::Zero ) {
+//					Real MotionB = dot( VelocityB, VelocityA * MagnitudeA );
+//		
+//					if ( MotionB < MagnitudeB ) {
+//						ImpactB *= MagnitudeB - MotionB;
+//	
+//						Real ScaleB = Real::One;
+//						Real MassRatioB = B->GetMass() * A->InvMass;// div A->GetMass();
+//									
+//						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+//							ScaleB /= MassRatioB;
+//						}
+//			
+//						// *** STEP 5: Add Forces from B (Optional) *** //
+////						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+////						B->AddForce( -VelocityB * ImpactB * ScaleB );
+//						ForceA += -Line * ImpactB * MassRatioB * ScaleB;
+//						ForceB += -VelocityB * ImpactB * ScaleB;
+//					}
+//				}
+//			}
+//			// Standard Collision (Both traveling towards each other (Opposing)) //
+//			else 
+			{
 				Real ImpactA = dot( VelocityA, Line );
-
 				if ( ImpactA > Real::Zero ) {
-					Real MotionA = dot( VelocityA, VelocityB * MagnitudeB );
-						
-					if ( MotionA < MagnitudeA ) {
-						ImpactA *= MagnitudeA - MotionA;
-	
-						Real ScaleA = Real::One;
-						Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
-									
-						if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
-							ScaleA /= MassRatioA;
-						}
-						
-						// *** STEP 4: Add Forces from A (Optional) *** //
-//						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-//						A->AddForce( -VelocityA * ImpactA * ScaleA );
-						ForceB += Line * ImpactA * MassRatioA * ScaleA;
-						ForceA += -VelocityA * ImpactA * ScaleA;
-					}
-				}
-
-				Real ImpactB = dot( VelocityB, -Line );
-
-				if ( ImpactB > Real::Zero ) {
-					Real MotionB = dot( VelocityB, VelocityA * MagnitudeA );
-		
-					if ( MotionB < MagnitudeB ) {
-						ImpactB *= MagnitudeB - MotionB;
-	
-						Real ScaleB = Real::One;
-						Real MassRatioB = B->GetMass() * A->InvMass;// div A->GetMass();
-									
-						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-							ScaleB /= MassRatioB;
-						}
-			
-						// *** STEP 5: Add Forces from B (Optional) *** //
-//						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-//						B->AddForce( -VelocityB * ImpactB * ScaleB );
-						ForceA += -Line * ImpactB * MassRatioB * ScaleB;
-						ForceB += -VelocityB * ImpactB * ScaleB;
-					}
-				}
-			}
-			// Standard Collision (Both traveling towards each other (Opposing)) //
-			else {
-				Real ImpactA = dot( VelocityA, Line );
-				{
 					ImpactA *= MagnitudeA;
 	
-					Real ScaleA = Real::One;
 					Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
 								
-					if ( MassRatioA > Real::One )
-					{	// Division By Zero Safe //
+					Real ScaleA = Real::One;
+					if ( MassRatioA < Real::One ) {	// **Division By Zero Safe //
 						ScaleA /= MassRatioA;
 					}
 					
 					// *** STEP 4: Add Forces from A *** //
 //					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
 //					A->AddForce( -VelocityA * ImpactA * ScaleA );
-					ForceB += Line * ImpactA * MassRatioA * ScaleA;
-					ForceA += -VelocityA * ImpactA * ScaleA;
+//					ForceB += Line * ImpactA * MassRatioA * ScaleA;
+//					ForceA += -VelocityA * ImpactA * ScaleA;
+					ForceB += Line * (ImpactA * MassRatioA);
+					ForceA += -Line * (ImpactA / (MassRatioA * ScaleA));
 				}
 
 				Real ImpactB = dot( VelocityB, -Line );
-				{
+				if ( ImpactB > Real::Zero ) {
 					ImpactB *= MagnitudeB;
 	
-					Real ScaleB = Real::One;
 					Real MassRatioB = B->GetMass() * A->InvMass;// div B->GetMass();
 								
-					if ( MassRatioB > Real::One )
-					{	// Division By Zero Safe //
+					Real ScaleB = Real::One;
+					if ( MassRatioB < Real::One ) {	// Division By Zero Safe //
 						ScaleB /= MassRatioB;
 					}
 					
 					// *** STEP 5: Add Forces from B *** //
 //					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
 //					B->AddForce( -VelocityB * ImpactB * ScaleB );
-					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
-					ForceB += -VelocityB * ImpactB * ScaleB;
+//					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
+//					ForceB += -VelocityB * ImpactB * ScaleB;
+					ForceA += -Line * (ImpactB * MassRatioB);
+					ForceB += Line * (ImpactB / (MassRatioB * ScaleB));
 				}
 			}
 			
