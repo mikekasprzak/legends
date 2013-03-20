@@ -12,29 +12,37 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 	Real 		Radius;
-	Vector3D 	Pos;		// Position Last, so it can be followed by Verlet Members //
+	Vector3D 	Pos;			// Position Last, so it can be followed by Verlet Members //
 
 	// Verlet Members //
-	Vector3D 	Old;		// Old Position (Verlet) //
-	Real		InvMass;	// Inverse Mass (i.e. 1.0/Mass). This makes InvMass of 0 == infinity. //
-	Vector3D	Accum;		// Accumulated Forces //
+	Vector3D 	Old;			// Old Position (Verlet) //
+	Real		InvMass;		// Inverse Mass (i.e. 1.0/Mass). This makes InvMass of 0 == infinity. //
+	Real		Friction;
+	Real		Restitution;	// Elasticity. 1 is perfectly elastic physics (pool ball). 0 is inelastic. //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_SphereV() {
 	}
 
 	// Mass of 0 is considered Infinity (Even though according to usage here it's massless) //
-	cBody_SphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) :
+	cBody_SphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One, const Real& _Friction = Real::One, const Real& _Restitution = Real::One ) :
 		Radius( _Radius ),
 		Pos( _Pos ),
 		Old( _Pos - Velocity ),
 		InvMass( (Mass != Real::Zero) ? Real::One / Mass : Real::Zero ),
-		Accum( Vector3D::Zero )
+		Friction( _Friction ),
+		Restitution( _Restitution )		
 	{
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
 	inline const Vector3D GetVelocity() const {
-		return Pos - Old; // Old -> Pos, A -> B, B always goes first //
+		return Pos - Old; // Old -> Pos, Start -> Dest, A -> B, Dest (B) always goes first //
+	}
+	inline const Vector3D& GetPos() const {
+		return Pos;
+	}
+	inline const Vector3D& GetOld() const {
+		return Old;
 	}
 	inline const Real GetMass() const {
 		if ( InvMass == Real::Zero ) {
@@ -44,12 +52,16 @@ public: // - Methods -----------------------------------------------------------
 			return Real::One / InvMass;
 		}
 	}
-	inline const Vector3D& GetOld() const {
-		return Old;
+	inline const Real& GetFriction() const {
+		return Friction;
+	}
+	inline const Real& GetRestitution() const {
+		return Restitution;
 	}
 	inline const Real& GetInvMass() const {
 		return InvMass;
 	}
+
 	
 	// NOTE: This explicitly sets the velocity property. It does not accumulate. //
 	inline void SetVelocity( const Vector3D& _Velocity ) {
@@ -64,17 +76,20 @@ public: // - Methods -----------------------------------------------------------
 			InvMass = _Mass;
 		}
 	}
-	
-	inline void AddForce( const Vector3D& Force ) {
-		Accum += Force;
+	// NOTE: Friction of 0 is considered frictionless (Ice) //
+	inline void SetFriction( const Real& _Friction ) {
+		Friction = _Friction;
+	}
+	inline void SetRestitution( const Real& _Restitution ) {
+		Restitution = _Restitution;
 	}
 public:
 	virtual void Step() {
 		Vector3D Velocity = GetVelocity();
 		Old = Pos;
-		Pos += (Velocity + Accum) * 0.995f; // (Accum * TimeStep * TimeStep), but TimeStep is 1, so it cancels out. //
+		Pos += Velocity * 0.995f; // Was (Accum+Velocity) //
+		// (Accum * TimeStep * TimeStep), but TimeStep is 1, so it cancels out. //
 		
-		Accum = Vector3D::Zero;	// Clear the Accumulator //
 		// TODO: Do Friction by adding forces to the Accumulator. //
 		//       Note that friction should not reverse our direction (At least ideally not). //
 		//       Therefor, seperating the friction step may be ideal. //
@@ -87,15 +102,7 @@ public:
 		//       platformer map that may have different friction values associated with tiles. In //
 		//       this case, a function will need to somehow know the blocks touching, and respond //
 		//       with a different friction value. GetFriction should probably be a function. //
-		
-		//AddForce( -GetVelocity().Normal() * cBody_Base::GetAirFriction() );
 	}
-
-//	virtual const Real& GetFriction() const {
-//		static const Real DefaultFriction( 0.55f );
-//		return DefaultFriction;
-//	}
-
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_SPHEREV_H__ //

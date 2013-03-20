@@ -206,7 +206,7 @@ void cBody::Solve( cBody* Vs ) {
 			Vector3D ForceA;
 			Vector3D ForceB;
 			
-//			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
+			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
 			
 			Real Diff = RadiusSum - Length;			
 			Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
@@ -231,7 +231,7 @@ void cBody::Solve( cBody* Vs ) {
 				Real ImpactA = dot( VelocityA, Line );
 
 				if ( ImpactA > Real::Zero ) {
-					Real MotionA = dot( A->GetVelocity(), VelocityB );
+					Real MotionA = dot( VelocityA, VelocityB * MagnitudeB );
 						
 					if ( MotionA < MagnitudeA ) {
 						ImpactA *= MagnitudeA - MotionA;
@@ -254,7 +254,7 @@ void cBody::Solve( cBody* Vs ) {
 				Real ImpactB = dot( VelocityB, -Line );
 
 				if ( ImpactB > Real::Zero ) {
-					Real MotionB = dot( B->GetVelocity(), VelocityA );
+					Real MotionB = dot( VelocityB, VelocityA * MagnitudeA );
 		
 					if ( MotionB < MagnitudeB ) {
 						ImpactB *= MagnitudeB - MotionB;
@@ -283,7 +283,8 @@ void cBody::Solve( cBody* Vs ) {
 					Real ScaleA = Real::One;
 					Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
 								
-					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
+					if ( MassRatioA > Real::One )
+					{	// Division By Zero Safe //
 						ScaleA /= MassRatioA;
 					}
 					
@@ -301,7 +302,8 @@ void cBody::Solve( cBody* Vs ) {
 					Real ScaleB = Real::One;
 					Real MassRatioB = B->GetMass() * A->InvMass;// div B->GetMass();
 								
-					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+					if ( MassRatioB > Real::One )
+					{	// Division By Zero Safe //
 						ScaleB /= MassRatioB;
 					}
 					
@@ -322,10 +324,16 @@ void cBody::Solve( cBody* Vs ) {
 			VelocityA = A->GetVelocity();
 			VelocityB = B->GetVelocity();
 			
-			A->Old = A->Pos - (VelocityA + ForceA) * A->GetFriction();
-			B->Old = B->Pos - (VelocityB + ForceB) * B->GetFriction();
+			// Whoa... So "sqrt(0.8*0.8) == 0.8" and "sqrt(1.2*1.2) == 1.2". //
+			// It's a bit duh, but any two numbers squared, then rooted is the same //
+			// Also, if you keep squaring a number, it gradually makes its way towards 1.0 //
+			// Negatives don't sqrt. sqrt(0) is 0 (like 0*anything). sqrt(1) is 1. //
+			Real FrictionMix = Real::Sqrt(A->GetFriction() * B->GetFriction());//Real::Sqrt( A->InvFriction * B->InvFriction );
+			
+			A->Old = A->Pos - (VelocityA + ForceA) * FrictionMix;
+			B->Old = B->Pos - (VelocityB + ForceB) * FrictionMix;
 
-//			Log( "%f, %f, %f !! %f, %f, %f", A->Accum.x.ToFloat(), A->Accum.y.ToFloat(), A->Accum.z.ToFloat(), B->Accum.x.ToFloat(), B->Accum.y.ToFloat(), B->Accum.z.ToFloat() );
+			Log( "%f, %f, %f !! %f, %f, %f", A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(), B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 		}
 	}
 }
