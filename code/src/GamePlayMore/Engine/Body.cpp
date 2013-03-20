@@ -300,8 +300,24 @@ void cBody::Solve( cBody* Vs ) {
 					Real MomentumA1 = (MagnitudeA / MassRatioA); // * Real::Half;
 					Real MomentumA2 = (MagnitudeA * (MassRatioA * ScaleA)); // * Real::Half;
 
-					ForceB += Line * ImpactA * MomentumA1;
-					ForceA += -Line * ImpactA * MomentumA2;
+//					if ( Impact < Real::Zero ) {
+//						Log("Hog");
+//						Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();								
+//						Real ScaleB = Real::One;
+//						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+//							ScaleB /= MassRatioB;
+//						}
+//						Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
+//						Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
+//						
+//						ForceB += Line * ImpactA * (MomentumA1 + Impact * MomentumB1) * Real::Half;
+//						ForceA += -Line * ImpactA * (MomentumA2 + Impact * MomentumB2) * Real::Half;						
+//					}
+//					else 
+					{
+						ForceB += Line * ImpactA * MomentumA1;
+						ForceA += -Line * ImpactA * MomentumA2;
+					}
 				}
 
 				if ( ImpactB > Real::Zero ) {
