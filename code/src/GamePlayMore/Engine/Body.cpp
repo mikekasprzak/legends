@@ -297,8 +297,11 @@ void cBody::Solve( cBody* Vs ) {
 //					ForceB += Line * (ImpactA / MassRatioA);
 //					ForceA += -Line * (ImpactA * (MassRatioA * ScaleA));
 
-					ForceB += Line * ImpactA * (MagnitudeA / MassRatioA);// * Real::Half;
-					ForceA += -Line * ImpactA * (MagnitudeA * (MassRatioA * ScaleA));// * Real::Half;
+					Real MomentumA1 = (MagnitudeA / MassRatioA); // * Real::Half;
+					Real MomentumA2 = (MagnitudeA * (MassRatioA * ScaleA)); // * Real::Half;
+
+					ForceB += Line * ImpactA * MomentumA1;
+					ForceA += -Line * ImpactA * MomentumA2;
 				}
 
 				if ( ImpactB > Real::Zero ) {
@@ -314,8 +317,12 @@ void cBody::Solve( cBody* Vs ) {
 //					B->AddForce( -VelocityB * ImpactB * ScaleB );
 //					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
 //					ForceB += -VelocityB * ImpactB * ScaleB;
-					ForceA += -Line * ImpactB * (MagnitudeB / MassRatioB);
-					ForceB += Line * ImpactB * (MagnitudeB * (MassRatioB * ScaleB));
+
+					Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
+					Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
+
+					ForceA += -Line * ImpactB * MomentumB1;
+					ForceB += Line * ImpactB * MomentumB2;
 				}
 			}
 			
