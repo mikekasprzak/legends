@@ -19,6 +19,7 @@ public: // - Members -----------------------------------------------------------
 	Real		Mass;
 	Real		Friction;
 	Real		Restitution;	// Elasticity. 1 is perfectly elastic physics (pool ball). 0 is inelastic (pushing). //
+	Vector3D	Accum;			// Accumulator (Impulse Forces) //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_SphereV() {
 	}
@@ -29,7 +30,8 @@ public: // - Constructors and Destructors --------------------------------------
 		Old( _Pos - Velocity ),
 		Mass( _Mass ),
 		Friction( _Friction ),
-		Restitution( _Restitution )		
+		Restitution( _Restitution ),
+		Accum( Vector3D::Zero )
 	{
 	}
 
@@ -43,7 +45,7 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D& GetOld() const {
 		return Old;
 	}
-	inline const Real GetMass() const {
+	inline const Real& GetMass() const {
 		return Mass;
 	}
 	inline const Real& GetFriction() const {
@@ -68,27 +70,85 @@ public: // - Methods -----------------------------------------------------------
 	inline void SetRestitution( const Real& _Restitution ) {
 		Restitution = _Restitution;
 	}
+	
+	// Impulse Forces //
+	inline void AddForce( const Vector3D& Force ) {
+		Accum += Force;
+	}
 public:
 	virtual void Step() {
 		Vector3D Velocity = GetVelocity();
 		Old = Pos;
-		Pos += Velocity * 0.995f; // Was (Accum+Velocity) //
-		// (Accum * TimeStep * TimeStep), but TimeStep is 1, so it cancels out. //
+		// Accum is (Accum * TimeStep * TimeStep), but TimeStep is 1 so it cancels out. //
+		Pos += (Velocity + Accum);	// * 0.995f;
 		
-		// TODO: Do Friction by adding forces to the Accumulator. //
-		//       Note that friction should not reverse our direction (At least ideally not). //
-		//       Therefor, seperating the friction step may be ideal. //
-		
-		// TODO: Need some way to control friction of contacting objects. May need to store it //
-		//       inside an Object property, because otherwise I need to add a surface friction //
-		//       property to every body (even if it's a non V). Or add it directly to the Object, //
-		//       keeping bodies simple. No no! To the Template! Ha ha! However that may not be good //
-		//       for when it comes to things that can adjust their friction. Practical example is a //
-		//       platformer map that may have different friction values associated with tiles. In //
-		//       this case, a function will need to somehow know the blocks touching, and respond //
-		//       with a different friction value. GetFriction should probably be a function. //
+		// We use a seperate Accumulator so to not pollute the Velocity with impulse forces (??) //
+		Accum = Vector3D::Zero; 	// Clear the Accumulator //
 	}
 };
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+inline void Solve( cBody_SphereV* A, cBody_SphereV* B ) {
+	Vector3D Line = B->Pos - A->Pos;
+	Real Length = Line.NormalizeRet();
+	
+	Real RadiusSum = A->Radius + B->Radius;
+							
+	Real Diff = RadiusSum - Length;			
+
+	// TODO: Fix this code so that Penetrations after a collision work correctly. //
+	//       If I don't do this, then objects solved without enough relaxation steps //
+	//       will exhibit the bug I'm trying to avoid by doing this test. //
+	if ( Diff > Real(0.1f) ) {
+		// Take Velocities before we move Pos so we don't accidentially accumulate more force //
+		Vector3D VelocityA = A->GetVelocity();
+		Vector3D VelocityB = B->GetVelocity();
+		
+		// 50% solving, which is less error prone than using the mass here (use it later instead) //
+		Diff *= Real::Half;
+		A->Pos -= Line * Diff;
+		B->Pos += Line * Diff;
+
+		Real ContactA = dot(VelocityA,Line);
+		Real ContactB = dot(VelocityB,-Line);
+
+//		Log( "%f, %f, %f vs %f, %f, %f -- %f %f (%f) [%.2f %.2f]", 
+//			VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), 
+//			VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat(), 
+//			Length.ToFloat(), RadiusSum.ToFloat(), (RadiusSum-Length).ToFloat(),
+//			ContactA.ToFloat(), ContactB.ToFloat() );
+
+		Vector3D ImpactA = Line * ContactA;
+		Vector3D ImpactB = -Line * ContactB;
+		
+		// When Velocity and Line are Parallel, the cross is 0 so Tangents cancel out // 
+		Vector3D TangentA = cross(cross(VelocityA,Line),Line).Normal();
+		Vector3D TangentB = cross(cross(VelocityB,-Line),-Line).Normal();
+						
+		Real MassSum = (A->Mass+B->Mass);
+
+		Vector3D MomentumA = (A->Mass*ImpactA);
+		Vector3D MomentumB = (B->Mass*ImpactB);
+		Vector3D Momentum = MomentumA + MomentumB;
+
+		Real Restitution = Real::Max( A->Restitution, B->Restitution );
+		Real Friction = Real::Sqrt( A->Friction * B->Friction );
+		
+		Vector3D ContactVelocityA = ((Restitution*B->Mass*(ImpactB-ImpactA)+Momentum)/MassSum) * Friction;
+		Vector3D ContactVelocityB = ((Restitution*A->Mass*(ImpactA-ImpactB)+Momentum)/MassSum) * Friction;
+
+		Vector3D TangentVelocityA = TangentA * dot(VelocityA,TangentA);
+		Vector3D TangentVelocityB = TangentB * dot(VelocityB,TangentB);
+
+		A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
+		B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
+
+//		Log( "%f, %f, %f !! %f, %f, %f", 
+//			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+//			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+	}
+}
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_SPHEREV_H__ //
 // - ------------------------------------------------------------------------------------------ - //

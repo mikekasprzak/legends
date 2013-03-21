@@ -24,6 +24,7 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 	BT_CAPSULE,				// A Line Segment of 2 points, and a pair of Radius //
 	BT_CAPSULEV,
 	BT_CAPSULEVT,			// Transforming (i.e. it rotates and keeps shape) //
+	BT_INVCAPSULE,			// Inverse, in that it keeps things inside //
 	
 //	BT_AABB,
 	
