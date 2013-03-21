@@ -279,67 +279,89 @@ void cBody::Solve( cBody* Vs ) {
 			{
 				Real ImpactA = dot( VelocityA, Line );
 				Real ImpactB = dot( VelocityB, -Line );
+				
+				Real MassSum = (A->GetMass()+B->GetMass());
+				
+				Vector3D VelA = A->GetVelocity();
+				Vector3D VelB = B->GetVelocity();
+				
+//				Real MomentumA = (A->GetMass()*MagnitudeA);
+//				Real MomentumB = (B->GetMass()*MagnitudeB);
+				Vector3D MomentumA = (A->GetMass()*VelA);
+				Vector3D MomentumB = (B->GetMass()*VelB);
 
-				if ( ImpactA > Real::Zero ) {
-					Real MassRatioA = B->GetMass() * A->InvMass;// div B->GetMass();
-								
-					Real ScaleA = Real::One;
-					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
-						ScaleA /= MassRatioA;
-					}
-					
-					// *** STEP 4: Add Forces from A *** //
-//					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-//					A->AddForce( -VelocityA * ImpactA * ScaleA );
-//					ForceB += Line * ImpactA * MassRatioA * ScaleA;
-//					ForceA += -VelocityA * ImpactA * ScaleA;
+//				ForceA -= Line * ImpactA * ((MomentumA+MomentumB)/MassSum);
+//				ForceB -= Line * ImpactB * ((MomentumB+MomentumA)/MassSum);
 
-//					ForceB += Line * (ImpactA / MassRatioA);
-//					ForceA += -Line * (ImpactA * (MassRatioA * ScaleA));
+				Real Res( 1.0f );
 
-					Real MomentumA1 = (MagnitudeA / MassRatioA); // * Real::Half;
-					Real MomentumA2 = (MagnitudeA * (MassRatioA * ScaleA)); // * Real::Half;
+				A->Old = A->Pos - ((Res*B->GetMass()*(VelB-VelA)+(MomentumA+MomentumB))/MassSum);
+				B->Old = B->Pos - ((Res*A->GetMass()*(VelA-VelB)+(MomentumB+MomentumA))/MassSum);
+				
 
-//					if ( Impact < Real::Zero ) {
-//						Log("Hog");
-//						Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();								
-//						Real ScaleB = Real::One;
-//						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-//							ScaleB /= MassRatioB;
-//						}
-//						Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
-//						Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
-//						
-//						ForceB += Line * ImpactA * (MomentumA1 + Impact * MomentumB1) * Real::Half;
-//						ForceA += -Line * ImpactA * (MomentumA2 + Impact * MomentumB2) * Real::Half;						
+//				if ( ImpactA > Real::Zero ) {
+//					Real MassRatioA = B->GetMass() * A->InvMass;// div B->GetMass();
+//								
+//					Real ScaleA = Real::One;
+//					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
+//						ScaleA /= MassRatioA;
 //					}
-//					else 
-					{
-						ForceB += Line * ImpactA * MomentumA1;
-						ForceA += -Line * ImpactA * MomentumA2;
-					}
-				}
+//					
+//					// *** STEP 4: Add Forces from A *** //
+////					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
+////					A->AddForce( -VelocityA * ImpactA * ScaleA );
+////					ForceB += Line * ImpactA * MassRatioA * ScaleA;
+////					ForceA += -VelocityA * ImpactA * ScaleA;
+//
+////					ForceB += Line * (ImpactA / MassRatioA);
+////					ForceA += -Line * (ImpactA * (MassRatioA * ScaleA));
+//
+//					Real MomentumA1 = (MagnitudeA / MassRatioA); // * Real::Half;
+//					Real MomentumA2 = (MagnitudeA * (MassRatioA * ScaleA)); // * Real::Half;
+//
+//					// TODO: Detect the motion and bail if the added motion wont balance us... I think... shrug //
+//
+////					if ( Impact < Real::Zero ) {
+////						Log("Hog");
+////						Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();								
+////						Real ScaleB = Real::One;
+////						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+////							ScaleB /= MassRatioB;
+////						}
+////						Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
+////						Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
+////						
+////						ForceB += Line * ImpactA * (MomentumA1 + Impact * MomentumB1) * Real::Half;
+////						ForceA += -Line * ImpactA * (MomentumA2 + Impact * MomentumB2) * Real::Half;						
+////					}
+////					else 
+////					{
+////						ForceB += Line * ImpactA * MomentumA1;
+////						ForceA += -Line * ImpactA * MomentumA2;
+////					}
+////					
+////				}
 
-				if ( ImpactB > Real::Zero ) {
-					Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();
-								
-					Real ScaleB = Real::One;
-					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-						ScaleB /= MassRatioB;
-					}
-					
-					// *** STEP 5: Add Forces from B *** //
-//					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-//					B->AddForce( -VelocityB * ImpactB * ScaleB );
-//					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
-//					ForceB += -VelocityB * ImpactB * ScaleB;
-
-					Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
-					Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
-
-					ForceA += -Line * ImpactB * MomentumB1;
-					ForceB += Line * ImpactB * MomentumB2;
-				}
+//				if ( ImpactB > Real::Zero ) {
+//					Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();
+//								
+//					Real ScaleB = Real::One;
+//					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
+//						ScaleB /= MassRatioB;
+//					}
+//					
+//					// *** STEP 5: Add Forces from B *** //
+////					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
+////					B->AddForce( -VelocityB * ImpactB * ScaleB );
+////					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
+////					ForceB += -VelocityB * ImpactB * ScaleB;
+//
+//					Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
+//					Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
+//
+//					ForceA += -Line * ImpactB * MomentumB1;
+//					ForceB += Line * ImpactB * MomentumB2;
+//				}
 			}
 			
 			// *** STEP 6: Resolve Friction *** //
