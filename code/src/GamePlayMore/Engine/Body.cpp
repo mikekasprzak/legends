@@ -203,9 +203,6 @@ void cBody::Solve( cBody* Vs ) {
 			Vector3D VelocityA = A->GetVelocity();
 			Vector3D VelocityB = B->GetVelocity();
 			
-			Vector3D ForceA;
-			Vector3D ForceB;
-			
 			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
 			
 			Real Diff = RadiusSum - Length;			
@@ -215,175 +212,38 @@ void cBody::Solve( cBody* Vs ) {
 			// *** STEP 1: Move Objects out of each other (Penetration) *** //
 			A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
 			B->Pos += B->InvMass * Line * Diff;
-			
-			// *** STEP 2: Restore Energy (Velocity) lost through fixing the penetration //
-//			A->Old = A->Pos - VelocityA;
-//			B->Old = B->Pos - VelocityB;
-			
-//			Real MagnitudeA = VelocityA.NormalizeRet();
-//			Real MagnitudeB = VelocityB.NormalizeRet();		
-//
-//			Real Impact = dot( VelocityA, VelocityB );
 
-			// *** STEP 4: Determine Collision Type (Opposing vs Not Opposing) *** //
-			// Non-standard Collision (Not Opposing) //
-//			if ( Impact > Real::Zero ) {
-//				Real ImpactA = dot( VelocityA, Line );
-//
-//				if ( ImpactA > Real::Zero ) {
-//					Real MotionA = dot( VelocityA, VelocityB * MagnitudeB );
-//						
-//					if ( MotionA < MagnitudeA ) {
-//						ImpactA *= MagnitudeA - MotionA;
-//	
-//						Real ScaleA = Real::One;
-//						Real MassRatioA = A->GetMass() * B->InvMass;// div B->GetMass();
-//									
-//						if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
-//							ScaleA /= MassRatioA;
-//						}
-//						
-//						// *** STEP 4: Add Forces from A (Optional) *** //
-////						B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-////						A->AddForce( -VelocityA * ImpactA * ScaleA );
-//						ForceB += Line * ImpactA * MassRatioA * ScaleA;
-//						ForceA += -VelocityA * ImpactA * ScaleA;
-//					}
-//				}
-//
-//				Real ImpactB = dot( VelocityB, -Line );
-//
-//				if ( ImpactB > Real::Zero ) {
-//					Real MotionB = dot( VelocityB, VelocityA * MagnitudeA );
-//		
-//					if ( MotionB < MagnitudeB ) {
-//						ImpactB *= MagnitudeB - MotionB;
-//	
-//						Real ScaleB = Real::One;
-//						Real MassRatioB = B->GetMass() * A->InvMass;// div A->GetMass();
-//									
-//						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-//							ScaleB /= MassRatioB;
-//						}
-//			
-//						// *** STEP 5: Add Forces from B (Optional) *** //
-////						A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-////						B->AddForce( -VelocityB * ImpactB * ScaleB );
-//						ForceA += -Line * ImpactB * MassRatioB * ScaleB;
-//						ForceB += -VelocityB * ImpactB * ScaleB;
-//					}
-//				}
-//			}
-//			// Standard Collision (Both traveling towards each other (Opposing)) //
-//			else 
-			{
-//				Real ImpactA = dot( VelocityA, Line );
-//				Real ImpactB = dot( VelocityB, -Line );
+			Real ContactA = dot(VelocityA,Line);
+			Real ContactB = dot(VelocityB,-Line);
+			
+			if ( (ContactA > Real::Zero) || (ContactB > Real::Zero) ) {
+				Vector3D ImpactA = Line * ContactA;
+				Vector3D ImpactB = -Line * ContactB;
 				
+				// 
+				Vector3D TangentA = cross(cross(VelocityA,Line),Line).Normal();
+				Vector3D TangentB = cross(cross(VelocityB,-Line),-Line).Normal();
+								
 				Real MassSum = (A->GetMass()+B->GetMass());
-				
-//				Vector3D VelA = A->GetVelocity();
-//				Vector3D VelB = B->GetVelocity();
-				
-//				Real MomentumA = (A->GetMass()*MagnitudeA);
-//				Real MomentumB = (B->GetMass()*MagnitudeB);
-				Vector3D MomentumA = (A->GetMass()*VelocityA);
-				Vector3D MomentumB = (B->GetMass()*VelocityB);
+	
+				Vector3D MomentumA = (A->GetMass()*ImpactA);
+				Vector3D MomentumB = (B->GetMass()*ImpactB);
 				Vector3D Momentum = MomentumA + MomentumB;
-
-//				ForceA -= Line * ImpactA * ((MomentumA+MomentumB)/MassSum);
-//				ForceB -= Line * ImpactB * ((MomentumB+MomentumA)/MassSum);
-
+	
 				Real Restitution = Real::Max( A->Restitution, B->Restitution );
-
-				A->Old = A->Pos - ((Restitution*B->GetMass()*(VelocityB-VelocityA)+Momentum)/MassSum);
-				B->Old = B->Pos - ((Restitution*A->GetMass()*(VelocityA-VelocityB)+Momentum)/MassSum);
+				Real Friction = Real::Sqrt(A->GetFriction() * B->GetFriction());
 				
+				Vector3D ContactVelocityA = ((Restitution*B->GetMass()*(ImpactB-ImpactA)+Momentum)/MassSum) * Friction;
+				Vector3D ContactVelocityB = ((Restitution*A->GetMass()*(ImpactA-ImpactB)+Momentum)/MassSum) * Friction;
+	
+				Vector3D TangentVelocityA = TangentA * dot(VelocityA,TangentA);
+				Vector3D TangentVelocityB = TangentB * dot(VelocityB,TangentB);
 
-//				if ( ImpactA > Real::Zero ) {
-//					Real MassRatioA = B->GetMass() * A->InvMass;// div B->GetMass();
-//								
-//					Real ScaleA = Real::One;
-//					if ( MassRatioA > Real::One ) {	// Division By Zero Safe //
-//						ScaleA /= MassRatioA;
-//					}
-//					
-//					// *** STEP 4: Add Forces from A *** //
-////					B->AddForce( Line * ImpactA * MassRatioA * ScaleA );
-////					A->AddForce( -VelocityA * ImpactA * ScaleA );
-////					ForceB += Line * ImpactA * MassRatioA * ScaleA;
-////					ForceA += -VelocityA * ImpactA * ScaleA;
-//
-////					ForceB += Line * (ImpactA / MassRatioA);
-////					ForceA += -Line * (ImpactA * (MassRatioA * ScaleA));
-//
-//					Real MomentumA1 = (MagnitudeA / MassRatioA); // * Real::Half;
-//					Real MomentumA2 = (MagnitudeA * (MassRatioA * ScaleA)); // * Real::Half;
-//
-//					// TODO: Detect the motion and bail if the added motion wont balance us... I think... shrug //
-//
-////					if ( Impact < Real::Zero ) {
-////						Log("Hog");
-////						Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();								
-////						Real ScaleB = Real::One;
-////						if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-////							ScaleB /= MassRatioB;
-////						}
-////						Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
-////						Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
-////						
-////						ForceB += Line * ImpactA * (MomentumA1 + Impact * MomentumB1) * Real::Half;
-////						ForceA += -Line * ImpactA * (MomentumA2 + Impact * MomentumB2) * Real::Half;						
-////					}
-////					else 
-////					{
-////						ForceB += Line * ImpactA * MomentumA1;
-////						ForceA += -Line * ImpactA * MomentumA2;
-////					}
-////					
-////				}
-
-//				if ( ImpactB > Real::Zero ) {
-//					Real MassRatioB = A->GetMass() * B->InvMass;// div B->GetMass();
-//								
-//					Real ScaleB = Real::One;
-//					if ( MassRatioB > Real::One ) {	// Division By Zero Safe //
-//						ScaleB /= MassRatioB;
-//					}
-//					
-//					// *** STEP 5: Add Forces from B *** //
-////					A->AddForce( -Line * ImpactB * MassRatioB * ScaleB );
-////					B->AddForce( -VelocityB * ImpactB * ScaleB );
-////					ForceA += -Line * ImpactB * MassRatioB * ScaleB;
-////					ForceB += -VelocityB * ImpactB * ScaleB;
-//
-//					Real MomentumB1 = (MagnitudeB / MassRatioB); // * Real::Half;
-//					Real MomentumB2 = (MagnitudeB * (MassRatioB * ScaleB)); // * Real::Half;
-//
-//					ForceA += -Line * ImpactB * MomentumB1;
-//					ForceB += Line * ImpactB * MomentumB2;
-//				}
+				A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
+				B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
+	
+				Log( "%f, %f, %f !! %f, %f, %f", A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(), B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 			}
-			
-			// *** STEP 6: Resolve Friction *** //
-			
-			// TODO: Don't store accumulated forces? Apply directly, but keep copies here.
-			// Then friction is a matter of scaling the modified velocity //
-			
-			// Blah //
-			VelocityA = A->GetVelocity();
-			VelocityB = B->GetVelocity();
-			
-			// Whoa... So "sqrt(0.8*0.8) == 0.8" and "sqrt(1.2*1.2) == 1.2". //
-			// It's a bit duh, but any two numbers squared, then rooted is the same //
-			// Also, if you keep squaring a number, it gradually makes its way towards 1.0 //
-			// Negatives don't sqrt. sqrt(0) is 0 (like 0*anything). sqrt(1) is 1. //
-			Real FrictionMix = Real::Sqrt(A->GetFriction() * B->GetFriction());//Real::Sqrt( A->InvFriction * B->InvFriction );
-			
-			A->Old = A->Pos - (VelocityA + ForceA) * FrictionMix;
-			B->Old = B->Pos - (VelocityB + ForceB) * FrictionMix;
-
-			Log( "%f, %f, %f !! %f, %f, %f", A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(), B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 		}
 	}
 }
