@@ -16,19 +16,18 @@ public: // - Members -----------------------------------------------------------
 
 	// Verlet Members //
 	Vector3D 	Old;			// Old Position (Verlet) //
-	Real		InvMass;		// Inverse Mass (i.e. 1.0/Mass). This makes InvMass of 0 == infinity. //
+	Real		Mass;
 	Real		Friction;
-	Real		Restitution;	// Elasticity. 1 is perfectly elastic physics (pool ball). 0 is inelastic. //
+	Real		Restitution;	// Elasticity. 1 is perfectly elastic physics (pool ball). 0 is inelastic (pushing). //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_SphereV() {
 	}
 
-	// Mass of 0 is considered Infinity (Even though according to usage here it's massless) //
-	cBody_SphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One, const Real& _Friction = Real::One, const Real& _Restitution = Real::One ) :
+	cBody_SphereV( const Vector3D& _Pos, const Real& _Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& _Mass = Real::One, const Real& _Friction = Real::One, const Real& _Restitution = Real::One ) :
 		Radius( _Radius ),
 		Pos( _Pos ),
 		Old( _Pos - Velocity ),
-		InvMass( (Mass != Real::Zero) ? Real::One / Mass : Real::Zero ),
+		Mass( _Mass ),
 		Friction( _Friction ),
 		Restitution( _Restitution )		
 	{
@@ -45,12 +44,7 @@ public: // - Methods -----------------------------------------------------------
 		return Old;
 	}
 	inline const Real GetMass() const {
-		if ( InvMass == Real::Zero ) {
-			return Real::Zero;
-		}
-		else {
-			return Real::One / InvMass;
-		}
+		return Mass;
 	}
 	inline const Real& GetFriction() const {
 		return Friction;
@@ -58,23 +52,14 @@ public: // - Methods -----------------------------------------------------------
 	inline const Real& GetRestitution() const {
 		return Restitution;
 	}
-	inline const Real& GetInvMass() const {
-		return InvMass;
-	}
 
 	
 	// NOTE: This explicitly sets the velocity property. It does not accumulate. //
 	inline void SetVelocity( const Vector3D& _Velocity ) {
 		Old = Pos - _Velocity;
 	}
-	// NOTE: Mass of 0 is considered infinite strength mass (not massless) //
 	inline void SetMass( const Real& _Mass ) {
-		if ( _Mass != Real::Zero ) {
-			InvMass = Real::One / _Mass;
-		}
-		else {
-			InvMass = _Mass;
-		}
+		Mass = _Mass;
 	}
 	// NOTE: Friction of 0 is considered frictionless (Ice) //
 	inline void SetFriction( const Real& _Friction ) {

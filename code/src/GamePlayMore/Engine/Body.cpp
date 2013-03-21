@@ -210,12 +210,6 @@ void cBody::Solve( cBody* Vs ) {
 				Vector3D VelocityA = A->GetVelocity();
 				Vector3D VelocityB = B->GetVelocity();
 				
-				// *** STEP 1: Move Objects out of each other (Penetration) *** //
-//				Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
-//				Diff /= Length * InvMassSum;					// Thus Length/2, Length/1 //
-//				A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
-//				B->Pos += B->InvMass * Line * Diff;
-
 				// 50% solving, which is less error prone than using the mass here (use it later instead) //
 				Diff *= Real::Half;
 				A->Pos -= Line * Diff;
@@ -224,11 +218,11 @@ void cBody::Solve( cBody* Vs ) {
 				Real ContactA = dot(VelocityA,Line);
 				Real ContactB = dot(VelocityB,-Line);
 
-				Log( "%f, %f, %f vs %f, %f, %f -- %f %f (%f) [%.2f %.2f]", 
-					VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), 
-					VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat(), 
-					Length.ToFloat(), RadiusSum.ToFloat(), (RadiusSum-Length).ToFloat(),
-					ContactA.ToFloat(), ContactB.ToFloat() );
+//				Log( "%f, %f, %f vs %f, %f, %f -- %f %f (%f) [%.2f %.2f]", 
+//					VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), 
+//					VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat(), 
+//					Length.ToFloat(), RadiusSum.ToFloat(), (RadiusSum-Length).ToFloat(),
+//					ContactA.ToFloat(), ContactB.ToFloat() );
 
 				Vector3D ImpactA = Line * ContactA;
 				Vector3D ImpactB = -Line * ContactB;
@@ -237,17 +231,17 @@ void cBody::Solve( cBody* Vs ) {
 				Vector3D TangentA = cross(cross(VelocityA,Line),Line).Normal();
 				Vector3D TangentB = cross(cross(VelocityB,-Line),-Line).Normal();
 								
-				Real MassSum = (A->GetMass()+B->GetMass());
+				Real MassSum = (A->Mass+B->Mass);
 	
-				Vector3D MomentumA = (A->GetMass()*ImpactA);
-				Vector3D MomentumB = (B->GetMass()*ImpactB);
+				Vector3D MomentumA = (A->Mass*ImpactA);
+				Vector3D MomentumB = (B->Mass*ImpactB);
 				Vector3D Momentum = MomentumA + MomentumB;
 	
 				Real Restitution = Real::Max( A->Restitution, B->Restitution );
-				Real Friction = Real::Sqrt(A->GetFriction() * B->GetFriction());
+				Real Friction = Real::Sqrt( A->Friction * B->Friction );
 				
-				Vector3D ContactVelocityA = ((Restitution*B->GetMass()*(ImpactB-ImpactA)+Momentum)/MassSum) * Friction;
-				Vector3D ContactVelocityB = ((Restitution*A->GetMass()*(ImpactA-ImpactB)+Momentum)/MassSum) * Friction;
+				Vector3D ContactVelocityA = ((Restitution*B->Mass*(ImpactB-ImpactA)+Momentum)/MassSum) * Friction;
+				Vector3D ContactVelocityB = ((Restitution*A->Mass*(ImpactA-ImpactB)+Momentum)/MassSum) * Friction;
 	
 				Vector3D TangentVelocityA = TangentA * dot(VelocityA,TangentA);
 				Vector3D TangentVelocityB = TangentB * dot(VelocityB,TangentB);
@@ -255,9 +249,9 @@ void cBody::Solve( cBody* Vs ) {
 				A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
 				B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
 	
-				Log( "%f, %f, %f !! %f, %f, %f", 
-					A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
-					B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+//				Log( "%f, %f, %f !! %f, %f, %f", 
+//					A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+//					B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 			}
 		}
 	}
