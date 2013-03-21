@@ -217,13 +217,13 @@ void cBody::Solve( cBody* Vs ) {
 			B->Pos += B->InvMass * Line * Diff;
 			
 			// *** STEP 2: Restore Energy (Velocity) lost through fixing the penetration //
-			A->Old = A->Pos - VelocityA;
-			B->Old = B->Pos - VelocityB;
+//			A->Old = A->Pos - VelocityA;
+//			B->Old = B->Pos - VelocityB;
 			
-			Real MagnitudeA = VelocityA.NormalizeRet();
-			Real MagnitudeB = VelocityB.NormalizeRet();		
-
-			Real Impact = dot( VelocityA, VelocityB );
+//			Real MagnitudeA = VelocityA.NormalizeRet();
+//			Real MagnitudeB = VelocityB.NormalizeRet();		
+//
+//			Real Impact = dot( VelocityA, VelocityB );
 
 			// *** STEP 4: Determine Collision Type (Opposing vs Not Opposing) *** //
 			// Non-standard Collision (Not Opposing) //
@@ -277,26 +277,27 @@ void cBody::Solve( cBody* Vs ) {
 //			// Standard Collision (Both traveling towards each other (Opposing)) //
 //			else 
 			{
-				Real ImpactA = dot( VelocityA, Line );
-				Real ImpactB = dot( VelocityB, -Line );
+//				Real ImpactA = dot( VelocityA, Line );
+//				Real ImpactB = dot( VelocityB, -Line );
 				
 				Real MassSum = (A->GetMass()+B->GetMass());
 				
-				Vector3D VelA = A->GetVelocity();
-				Vector3D VelB = B->GetVelocity();
+//				Vector3D VelA = A->GetVelocity();
+//				Vector3D VelB = B->GetVelocity();
 				
 //				Real MomentumA = (A->GetMass()*MagnitudeA);
 //				Real MomentumB = (B->GetMass()*MagnitudeB);
-				Vector3D MomentumA = (A->GetMass()*VelA);
-				Vector3D MomentumB = (B->GetMass()*VelB);
+				Vector3D MomentumA = (A->GetMass()*VelocityA);
+				Vector3D MomentumB = (B->GetMass()*VelocityB);
+				Vector3D Momentum = MomentumA + MomentumB;
 
 //				ForceA -= Line * ImpactA * ((MomentumA+MomentumB)/MassSum);
 //				ForceB -= Line * ImpactB * ((MomentumB+MomentumA)/MassSum);
 
-				Real Res( 1.0f );
+				Real Restitution = Real::Max( A->Restitution, B->Restitution );
 
-				A->Old = A->Pos - ((Res*B->GetMass()*(VelB-VelA)+(MomentumA+MomentumB))/MassSum);
-				B->Old = B->Pos - ((Res*A->GetMass()*(VelA-VelB)+(MomentumB+MomentumA))/MassSum);
+				A->Old = A->Pos - ((Restitution*B->GetMass()*(VelocityB-VelocityA)+Momentum)/MassSum);
+				B->Old = B->Pos - ((Restitution*A->GetMass()*(VelocityA-VelocityB)+Momentum)/MassSum);
 				
 
 //				if ( ImpactA > Real::Zero ) {
