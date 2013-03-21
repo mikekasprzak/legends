@@ -202,19 +202,24 @@ void cBody::Solve( cBody* Vs ) {
 									
 			Real Diff = RadiusSum - Length;			
 
-			// TODO: Fix this code so that Penetrations of any depth work correctly. //
-			//       If I don't do this, then objects solved w/o enough relaxation steps //
+			// TODO: Fix this code so that Penetrations after a collision work correctly. //
+			//       If I don't do this, then objects solved without enough relaxation steps //
 			//       will exhibit the bug I'm trying to avoid by doing this test. //
-			if ( Diff > Real(0.3f) ) {
-				Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
-				Diff /= Length * InvMassSum;					// Thus Length/2, Length/1 //
-				
-				// *** STEP 1: Move Objects out of each other (Penetration) *** //
-				A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
-				B->Pos += B->InvMass * Line * Diff;
-
+			if ( Diff > Real(0.1f) ) {
+				// Take Velocities before we move Pos so we don't accidentially accumulate more force //
 				Vector3D VelocityA = A->GetVelocity();
 				Vector3D VelocityB = B->GetVelocity();
+				
+				// *** STEP 1: Move Objects out of each other (Penetration) *** //
+//				Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
+//				Diff /= Length * InvMassSum;					// Thus Length/2, Length/1 //
+//				A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
+//				B->Pos += B->InvMass * Line * Diff;
+
+				// 50% solving, which is less error prone than using the mass here (use it later instead) //
+				Diff *= Real::Half;
+				A->Pos -= Line * Diff;
+				B->Pos += Line * Diff;
 	
 				Real ContactA = dot(VelocityA,Line);
 				Real ContactB = dot(VelocityB,-Line);

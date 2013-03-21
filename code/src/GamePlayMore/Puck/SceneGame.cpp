@@ -38,19 +38,22 @@ cSceneGame::cSceneGame() {
 //	AddObject( "DummyRink2", Vector3D(+150,0,0) );
 	AddObject( "Rink", Vector3D(0,0,0) );
 
-	AddObject( "Player1", Vector3D(-60,+60,0) );
-	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(1,0,0) );
+	AddObject( "Player1", Vector3D(-60,+78,0) );
+	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(2,0,0) );
 	Active.back()->Body->GetSphereVPtr()->SetMass( 1 );
-	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
+	Active.back()->Body->GetSphereVPtr()->SetRestitution( 1 );	
 	AddObject( "Player2", Vector3D(-60,-60,0) );
+	Active.back()->Body->GetSphereVPtr()->SetMass( 10 );
+	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
 	AddObject( "Player3", Vector3D(+60,+60,0) );
-	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(0,0,0) );
+	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(-1,0,0) );
 	Active.back()->Body->GetSphereVPtr()->SetMass( 1 );
 	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
 	AddObject( "Player4", Vector3D(+72,-60,0) );
 //	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(0,+1,0) );
+	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(0,0,0) );
 //	Active.back()->Body->GetSphereVPtr()->SetMass( 1 );
-//	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
+	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
 
 	AddObject( "Puck", Vector3D(0,0,0) );
 
