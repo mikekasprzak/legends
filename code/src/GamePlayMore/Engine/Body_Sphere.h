@@ -27,14 +27,20 @@ public: // - Methods -----------------------------------------------------------
 	inline const Vector3D GetVelocity() const {
 		return Vector3D::Zero;
 	}
+	inline const Vector3D& GetPos() const {
+		return Pos;
+	}
+	inline const Vector3D& GetOld() const {
+		return Pos;
+	}
 	inline const Real GetMass() const {
 		return Real::Zero;
 	}
-	inline const Vector3D GetOld() const {
-		return Pos;
+	inline const Real& GetFriction() const {
+		return Real::Zero;	// Will not "Frick" //
 	}
-	inline const Real GetInvMass() const {
-		return Real::Zero;
+	inline const Real& GetRestitution() const {
+		return Real::Zero;	// Will take Vs Instead //
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

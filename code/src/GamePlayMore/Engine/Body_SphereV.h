@@ -6,6 +6,8 @@
 #include <Math/Real.h>
 #include "Body_Base.h"
 // - ------------------------------------------------------------------------------------------ - //
+#include "Body_Sphere.h"
+// - ------------------------------------------------------------------------------------------ - //
 class cBody_SphereV: public cBody_Base {
 public: // - Class Helpers -------------------------------------------------------------------- - //
 	typedef cBody_SphereV thistype;
@@ -147,6 +149,60 @@ inline void Solve( cBody_SphereV* A, cBody_SphereV* B ) {
 //		Log( "%f, %f, %f !! %f, %f, %f", 
 //			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
 //			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+inline void Solve( cBody_SphereV* A, cBody_Sphere* B ) {
+	Vector3D Line = B->Pos - A->Pos;
+	Real Length = Line.NormalizeRet();
+	
+	Real RadiusSum = A->Radius + B->Radius;						
+	Real Diff = RadiusSum - Length;			
+
+	// TODO: Fix this code so that Penetrations after a collision work correctly. //
+	//       If I don't do this, then objects solved without enough relaxation steps //
+	//       will exhibit the bug I'm trying to avoid by doing this test. //
+	if ( Diff > Real(0.1f) ) {
+		// Take Velocities before we move Pos so we don't accidentially accumulate more force //
+		Vector3D VelocityA = A->GetVelocity();
+//		Vector3D VelocityB = Vector3D::Zero;
+		
+		// 100% solving //
+		A->Pos -= Line * Diff;
+
+		Real ContactA = dot(VelocityA,Line);
+//		Real ContactB = Real::Zero;//dot(VelocityB,-Line);
+
+		Vector3D ImpactA = Line * ContactA;
+		Vector3D ImpactB = Vector3D::Zero;//-Line * ContactB;
+		
+		// When Velocity and Line are Parallel, the cross is 0 so Tangents cancel out // 
+		Vector3D TangentA = cross(cross(VelocityA,Line),Line).Normal();
+//		Vector3D TangentB = Vector3D::Zero;//cross(cross(VelocityB,-Line),-Line).Normal();
+						
+//		Real MassSum = (A->Mass+B->Mass);
+
+//		Vector3D MomentumA = (A->Mass*ImpactA);
+//		Vector3D MomentumB = Vector3D::Zero;//(B->Mass*ImpactB);
+//		Vector3D Momentum = MomentumA + MomentumB;
+
+		Real Restitution = A->Restitution;//Real::Max( A->Restitution, B->Restitution );
+		Real Friction = Real::Sqrt( A->Friction );//* B->Friction );
+		
+		// 1+Restitution may be wrong... it bounced off with 2x energy //
+		Vector3D ContactVelocityA = (((Real::One+Restitution)*(ImpactB-ImpactA)+ImpactA)) * Friction;
+//		Vector3D ContactVelocityA = ((Restitution*B->Mass*(ImpactB-ImpactA)+Momentum)/MassSum) * Friction;
+//		Vector3D ContactVelocityB = ((Restitution*A->Mass*(ImpactA-ImpactB)+Momentum)/MassSum) * Friction;
+
+		Vector3D TangentVelocityA = TangentA * dot(VelocityA,TangentA);
+//		Vector3D TangentVelocityB = TangentB * dot(VelocityB,TangentB);
+
+		A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
+//		B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
+
+		Log( "%f, %f, %f !! %f, %f, %f", 
+			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

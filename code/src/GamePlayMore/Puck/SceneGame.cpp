@@ -38,10 +38,11 @@ cSceneGame::cSceneGame() {
 //	AddObject( "DummyRink2", Vector3D(+150,0,0) );
 	AddObject( "Rink", Vector3D(0,0,0) );
 
-	AddObject( "Player1", Vector3D(-60,+78,0) );
+//	AddObject( "Player1", Vector3D(-60,+78,0) );
+	AddObject( "Player1", Vector3D(+60,0,0) );
 	Active.back()->Body->GetSphereVPtr()->SetVelocity( Vector3D(2,0,0) );
 	Active.back()->Body->GetSphereVPtr()->SetMass( 1 );
-	Active.back()->Body->GetSphereVPtr()->SetRestitution( 1 );	
+	Active.back()->Body->GetSphereVPtr()->SetRestitution( .1 );	
 	AddObject( "Player2", Vector3D(-60,-60,0) );
 	Active.back()->Body->GetSphereVPtr()->SetMass( 10 );
 	Active.back()->Body->GetSphereVPtr()->SetRestitution( 0 );	
