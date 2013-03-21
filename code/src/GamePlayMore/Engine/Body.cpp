@@ -199,28 +199,36 @@ void cBody::Solve( cBody* Vs ) {
 			Real Length = Line.NormalizeRet();
 			
 			Real RadiusSum = A->Radius + B->Radius;
-			
-			Vector3D VelocityA = A->GetVelocity();
-			Vector3D VelocityB = B->GetVelocity();
-			
-			Log( "%f, %f, %f vs %f, %f, %f", VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat() );
-			
+									
 			Real Diff = RadiusSum - Length;			
-			Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
-			Diff /= Length * InvMassSum;	// Thus Length/2, Length/1 //
-			
-			// *** STEP 1: Move Objects out of each other (Penetration) *** //
-			A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
-			B->Pos += B->InvMass * Line * Diff;
 
-			Real ContactA = dot(VelocityA,Line);
-			Real ContactB = dot(VelocityB,-Line);
-			
-			if ( (ContactA > Real::Zero) || (ContactB > Real::Zero) ) {
+			// TODO: Fix this code so that Penetrations of any depth work correctly. //
+			//       If I don't do this, then objects solved w/o enough relaxation steps //
+			//       will exhibit the bug I'm trying to avoid by doing this test. //
+			if ( Diff > Real(0.3f) ) {
+				Real InvMassSum = (A->InvMass + B->InvMass);	// Mass=1 is 1+1 = 2 | Mass=2 is 2+2 (.5+.5) = 4 (1) //
+				Diff /= Length * InvMassSum;					// Thus Length/2, Length/1 //
+				
+				// *** STEP 1: Move Objects out of each other (Penetration) *** //
+				A->Pos -= A->InvMass * Line * Diff;		// Scale up by the fraction size (1, .5)
+				B->Pos += B->InvMass * Line * Diff;
+
+				Vector3D VelocityA = A->GetVelocity();
+				Vector3D VelocityB = B->GetVelocity();
+	
+				Real ContactA = dot(VelocityA,Line);
+				Real ContactB = dot(VelocityB,-Line);
+
+				Log( "%f, %f, %f vs %f, %f, %f -- %f %f (%f) [%.2f %.2f]", 
+					VelocityA.x.ToFloat(), VelocityA.y.ToFloat(), VelocityA.z.ToFloat(), 
+					VelocityB.x.ToFloat(), VelocityB.y.ToFloat(), VelocityB.z.ToFloat(), 
+					Length.ToFloat(), RadiusSum.ToFloat(), (RadiusSum-Length).ToFloat(),
+					ContactA.ToFloat(), ContactB.ToFloat() );
+
 				Vector3D ImpactA = Line * ContactA;
 				Vector3D ImpactB = -Line * ContactB;
 				
-				// 
+				// When Velocity and Line are Parallel, the cross is 0 so Tangents cancel out // 
 				Vector3D TangentA = cross(cross(VelocityA,Line),Line).Normal();
 				Vector3D TangentB = cross(cross(VelocityB,-Line),-Line).Normal();
 								
@@ -242,7 +250,9 @@ void cBody::Solve( cBody* Vs ) {
 				A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
 				B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
 	
-				Log( "%f, %f, %f !! %f, %f, %f", A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(), B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+				Log( "%f, %f, %f !! %f, %f, %f", 
+					A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+					B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 			}
 		}
 	}
