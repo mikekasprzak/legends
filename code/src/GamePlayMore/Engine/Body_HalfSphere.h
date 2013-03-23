@@ -49,12 +49,26 @@ public: // - Methods -----------------------------------------------------------
 //		Log( "%s --- %s === %s (%s=%s) [%s %s]", Pos.ToString(), Vs.Pos.ToString(), Line.ToString(), Line.Magnitude().ToString(), RadiusSum.ToString(), Radius.ToString(), Vs.Radius.ToString() );
 		if ( Line.MagnitudeSquared() < RadiusSum*RadiusSum ) {
 			// Passed the sphere check. Now to test versus the half-space //
-			return dot(Normal,Line) > Real::Zero;
+			return dot(Normal,Line) > -Vs.Radius;//Real::Zero;
 		}
 		else {
 			return false;
 		}
 	}
+
+	inline const bool TestInside( const cBody_Sphere& Vs ) const {
+		Vector3D Line = Vs.Pos - Pos;
+		Real RadiusSum = Radius;// + Vs.Radius;
+//		Log( "%s --- %s === %s (%s=%s) [%s %s]", Pos.ToString(), Vs.Pos.ToString(), Line.ToString(), Line.Magnitude().ToString(), RadiusSum.ToString(), Radius.ToString(), Vs.Radius.ToString() );
+		if ( Line.MagnitudeSquared() < RadiusSum*RadiusSum ) {
+			// Passed the sphere check. Now to test versus the half-space //
+			return dot(Normal,Line) > +Vs.Radius;//Real::Zero;
+		}
+		else {
+			return false;
+		}
+	}
+
 
 	// NOTE: This should get the nearest point on the edge of shape //
 	inline const Vector3D GetNearestPointOn( const Vector3D& Vs ) const {

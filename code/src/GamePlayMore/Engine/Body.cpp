@@ -17,12 +17,9 @@ const Matrix4x4 cBody::GetTransform() {
 	else if ( IsCircleV() || IsSphereV() ) {
 		return Matrix4x4::TranslationMatrix( GetSphereV().Pos );
 	}
-	else if ( IsHalfCircle() || IsHalfSphere() ) {
+	else if ( IsHalfCircle() || IsHalfSphere() || IsHalfCircleI() || IsHalfSphereI() ) {
 		return Matrix4x4::TranslationMatrix( GetHalfSphere().Pos );
 	}
-//	else if ( IsHalfCircleV() || IsHalfSphereV() ) {
-//		return Matrix4x4::TranslationMatrix( GetHalfCircleV().Pos );
-//	}
 	else if ( IsCapsule() || IsInvCapsule() ) {
 		return Matrix4x4::TranslationMatrix( GetCapsule().GetCenter() );
 	}
@@ -60,30 +57,18 @@ const Rect3D cBody::GetRect() {
 			GetSphereV().Radius._xxx() * Real::Two 
 			);
 	}
-	else if ( IsHalfCircle() ) {
+	else if ( IsHalfCircle() || IsHalfCircleI() ) {
 		return Rect3D( 
 			GetHalfCircle().Pos - GetHalfCircle().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
 			GetHalfCircle().Radius._xx0() * Real::Two 
 			);
 	}
-//	else if ( IsHalfCircleV() ) {
-//		return Rect3D( 
-//			GetHalfCircleV().Pos - GetHalfCircleV().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
-//			GetHalfCircleV().Radius._xx0() * Real::Two 
-//			);
-//	}
-	else if ( IsHalfSphere() ) {
+	else if ( IsHalfSphere() || IsHalfSphereI() ) {
 		return Rect3D( 
 			GetHalfSphere().Pos - GetHalfSphere().Radius._xxx(),
 			GetHalfSphere().Radius._xxx() * Real::Two 
 			);
 	}
-//	else if ( IsHalfSphereV() ) {
-//		return Rect3D( 
-//			GetHalfSphereV().Pos - GetHalfSphereV().Radius._xxx(),
-//			GetHalfSphereV().Radius._xxx() * Real::Two 
-//			);
-//	}
 	else if ( IsCapsule() || IsInvCapsule() ) {
 		Rect3D Ret(
 			GetCapsule().PosA - GetCapsule().RadiusA._xx0(),
@@ -105,19 +90,13 @@ const bool cBody::Check( const cBody& Vs ) const {
 		if ( Vs.IsPoint() ) {
 			return Test_Point_Vs_Point3D( GetPoint(), Vs.GetPoint() );
 		}
-		else if ( Vs.IsCircle() ) {
-			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
-		else if ( Vs.IsHalfCircle() ) {
+		else if ( Vs.IsHalfCircle() || Vs.IsHalfCircle() ) {
 			return Vs.GetHalfCircle().Test( cBody_Sphere( GetPoint(), Real::Zero ) );
 		}
 		else if ( Vs.IsCapsule() ) {
@@ -129,16 +108,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		if ( Vs.IsPoint() ) {
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetCircle().Pos, GetCircle().Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
 		else if ( Vs.IsHalfCircle() ) {
@@ -153,22 +126,18 @@ const bool cBody::Check( const cBody& Vs ) const {
 		if ( Vs.IsPoint() ) {
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetCircleV().Pos, GetCircleV().Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
 		else if ( Vs.IsHalfCircle() ) {
-			// NOTE: This is unsafe //
-//			return Vs.GetHalfCircle().Test( GetCircle() );
-			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+			return Vs.GetHalfCircle().Test( GetCircle() );
+//			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsHalfCircleI() ) {
+			return Vs.GetHalfCircle().TestInside( GetCircle() );
 		}
 		else if ( Vs.IsCapsule() ) {
 			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircleV().Pos );
@@ -183,16 +152,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		if ( Vs.IsPoint() ) {
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetSphere().Pos, GetSphere().Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
 		else if ( Vs.IsCapsule() ) {
@@ -204,16 +167,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		if ( Vs.IsPoint() ) {
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetSphereV().Pos, GetSphereV().Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
 		else if ( Vs.IsCapsule() ) {
@@ -230,8 +187,8 @@ const bool cBody::Check( const cBody& Vs ) const {
 //		}
 //		else 
 		if ( Vs.IsCircleV() ) {
-			// NOTE: This is unsafe //
 			return GetHalfCircle().Test( Vs.GetCircle() );
+//			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
 		}
 //		else if ( Vs.IsSphere() ) {
 //			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
@@ -244,24 +201,21 @@ const bool cBody::Check( const cBody& Vs ) const {
 //			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Me.Pos, Me.Radius );
 //		}
 	}
+	else if ( IsHalfCircleI() ) {
+		if ( Vs.IsCircleV() ) {
+			return GetHalfCircle().TestInside( Vs.GetCircle() );
+		}
+	}
 	else if ( IsCapsule() ) {
 		if ( Vs.IsPoint() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetPoint() );
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), Me.Pos, Me.Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircle().Pos );
-			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircleV().Pos );
-			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphere().Pos );
 			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphereV().Pos );
 			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
@@ -279,19 +233,11 @@ const bool cBody::Check( const cBody& Vs ) const {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetPoint() );
 			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), Me.Pos, Me.Radius ); // * //
 		}
-		else if ( Vs.IsCircle() ) {
-			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircle().Pos );
-			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
-		}
-		else if ( Vs.IsCircleV() ) {
-			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircleV().Pos );
-			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
-		}
-		else if ( Vs.IsSphere() ) {
+		else if ( Vs.IsCircle() || Vs.IsSphere() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphere().Pos );
 			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
 		}
-		else if ( Vs.IsSphereV() ) {
+		else if ( Vs.IsCircleV() || Vs.IsSphereV() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphereV().Pos );
 			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}

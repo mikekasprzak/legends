@@ -6,7 +6,11 @@
 #include <Math/Matrix.h>
 #include <Geometry/Rect.h>
 // - ------------------------------------------------------------------------------------------ - //
-enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, InvMass //
+// Types ending in letters have special meanings //
+// V - Verlet Physics. I.e. Old, Accum, Mass, Restitution.
+// T - Transforming. I.e. Collision will change orientation.
+// I - Inside. I.e. Collision Tests only pass if inside.
+enum eBodyType {
 	BT_NULL = 0,
 
 	BT_POINT,				// Objects with no physicality, just a position //
@@ -17,9 +21,9 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 	BT_SPHEREV,
 
 	BT_HALFCIRCLE,			// Z not tested //
-//	BT_HALFCIRCLEV,
+	BT_HALFCIRCLEI,
 	BT_HALFSPHERE,			// X, Y, and Z tested //
-//	BT_HALFSPHEREV,
+	BT_HALFSPHEREI,
 
 	BT_CAPSULE,				// A Line Segment of 2 points, and a pair of Radius //
 	BT_CAPSULEV,
@@ -27,9 +31,6 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 	BT_INVCAPSULE,			// Inverse, in that it keeps things inside //
 	
 //	BT_AABB,
-	
-	// Use different ID's for non-transforming versions of these types //
-	// Station Region. Pivot Region. Transformed Region. Transformed and Pivot not actually different. //
 };
 // - ------------------------------------------------------------------------------------------ - //
 #include "Body_Sphere.h"			// Both Circles and Spheres //
@@ -88,15 +89,15 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsHalfCircle() const {
 		return Type == BT_HALFCIRCLE;
 	}
-//	inline const bool IsHalfCircleV() const {
-//		return Type == BT_HALFCIRCLEV;
-//	}
+	inline const bool IsHalfCircleI() const {
+		return Type == BT_HALFCIRCLEI;
+	}
 	inline const bool IsHalfSphere() const {
 		return Type == BT_HALFSPHERE;
 	}
-//	inline const bool IsHalfSphereV() const {
-//		return Type == BT_HALFSPHEREV;
-//	}
+	inline const bool IsHalfSphereI() const {
+		return Type == BT_HALFSPHEREI;
+	}
 
 	inline const bool IsCapsule() const {
 		return Type == BT_CAPSULE;
@@ -319,24 +320,24 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
 		return Body;
 	}
-//	inline static cBody* new_HalfCircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
-//		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphereV) ];
-//		cBody* Body = new(Ptr) cBody( BT_HALFCIRCLEV, sizeof(cBody_HalfSphereV) );
-//		new(Body->Data) cBody_HalfSphereV( Pos, Radius, Normal, Velocity, Mass );
-//		return Body;
-//	}
+	inline static cBody* new_HalfCircleI( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphere) ];
+		cBody* Body = new(Ptr) cBody( BT_HALFCIRCLEI, sizeof(cBody_HalfSphere) );
+		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
+		return Body;
+	}
 	inline static cBody* new_HalfSphere( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphere) ];
 		cBody* Body = new(Ptr) cBody( BT_HALFSPHERE, sizeof(cBody_HalfSphere) );
 		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
 		return Body;
 	}
-//	inline static cBody* new_HalfSphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal, const Vector3D& Velocity, const Real& Mass ) {
-//		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphereV) ];
-//		cBody* Body = new(Ptr) cBody( BT_HALFSPHEREV, sizeof(cBody_HalfSphereV) );
-//		new(Body->Data) cBody_HalfSphereV( Pos, Radius, Normal, Velocity, Mass );
-//		return Body;
-//	}
+	inline static cBody* new_HalfSphereI( const Vector3D& Pos, const Real& Radius, const Vector3D& Normal ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_HalfSphere) ];
+		cBody* Body = new(Ptr) cBody( BT_HALFSPHEREI, sizeof(cBody_HalfSphere) );
+		new(Body->Data) cBody_HalfSphere( Pos, Radius, Normal );
+		return Body;
+	}
 	
 	inline static cBody* new_Capsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Capsule) ];

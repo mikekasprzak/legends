@@ -22,6 +22,7 @@ const bool cTemplate::Contact( cObject* Object, cObject* Vs ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
+	Log("Ttt %i",SensorIndex);
 }
 // - ------------------------------------------------------------------------------------------ - //
 void cTemplate::Notice( cObject* Object, cObject* Sender, const int Message ) {

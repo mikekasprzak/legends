@@ -96,13 +96,13 @@ public: // - Methods -----------------------------------------------------------
 		}
 	}
 	
-	void Notify( cObject* Reciever, const int Message ) {
+	void Notify( cObject* Sender, const int Message ) {
 		cObject* TempObject = Shared.Object;
 		cTemplate* TempTemplate = Shared.Template;
-		Shared.Object = Reciever;
-		Shared.Template = Reciever->Template;
+		Shared.Object = this;
+		Shared.Template = this->Template;
 		
-		Reciever->Template->Notice( Reciever, this, Message );
+		this->Template->Notice( this, Sender, Message );
 		
 		Shared.Template = TempTemplate;
 		Shared.Object = TempObject;

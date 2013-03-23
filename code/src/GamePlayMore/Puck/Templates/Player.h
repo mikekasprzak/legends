@@ -38,7 +38,10 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
 
-		Vector3D Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
+		Vector3D Stick;
+		if ( SVar("DelayTime").ToInt() == 0 ) {
+			Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
+		}
 		Real StickMag = Stick.Magnitude();
 		if ( StickMag < Real(0.1f) )
 			Stick = Vector3D::Zero;
@@ -59,7 +62,7 @@ public: // - Specialization Methods --------------------------------------------
 //		Bd->AddForce( Stick * Scalar );
 
 		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.35) + Stick.Magnitude());
-		Bd->AddForce( Line * Real(0.125f) );
+		Bd->AddForce( Line * Real(0.25f) );
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );

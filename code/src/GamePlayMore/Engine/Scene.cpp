@@ -65,19 +65,21 @@ void cScene::Step() {
 			// My Sensors //
 			st32 Size = (*Itr)->Sensor.size();
 			for ( st32 idx = 0; idx < Size; idx++ ) {
+				cBody* Bd = (*Itr)->Sensor[idx];
+				
 				// Vs Statics //
 				for ( auto Itr2 = Static.begin(); Itr2 != Static.end(); Itr2++ ) {
-					if ( (*Itr)->Sensor[idx]->Check( *((*Itr2)->Body) ) ) {
+					if ( Bd->Check( *((*Itr2)->Body) ) ) {
 						(*Itr)->Template->Sense(*Itr,*Itr2,idx);
 					}
 				}
 	
 				// Vs Other Actives //
 				{
-					auto Itr2 = Itr;
-					Itr2++;
-					for ( ; Itr2 != Active.end(); Itr2++ ) {
-						if ( (*Itr)->Sensor[idx]->Check( *((*Itr2)->Body) ) ) {
+					for ( auto Itr2 = Active.begin(); Itr2 != Active.end(); Itr2++ ) {
+						if ( Itr == Itr2 )
+							continue;
+						if ( Bd->Check( *((*Itr2)->Body) ) ) {
 							(*Itr)->Template->Sense(*Itr,*Itr2,idx);
 						}
 					}

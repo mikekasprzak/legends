@@ -96,12 +96,14 @@ public:
 		Vector3D Velocity = GetVelocity();
 		Old = Pos;
 		// Accum is (Accum * TimeStep * TimeStep), but TimeStep is 1 so it cancels out. //
-		Pos += (Velocity + Accum) * 0.99f;//0.995f;
+		Pos += (Velocity + Accum) * 0.995f;
 		
 		// We use a seperate Accumulator so to not pollute the Velocity with impulse forces (??) //
 		Accum = Vector3D::Zero; 	// Clear the Accumulator //
 	}
 };
+// - ------------------------------------------------------------------------------------------ - //
+typedef cBody_SphereV cBody_CircleV;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //

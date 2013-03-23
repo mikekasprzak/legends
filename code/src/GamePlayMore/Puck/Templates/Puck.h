@@ -11,7 +11,6 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tPuck() {
-		//SetArt_Circle( Vector3D::Zero, Real(8), GEL_RGB_WHITE );
 		Art = cArt::new_Circle( Vector3D::Zero, Real(4), GEL_RGB_YELLOW );
 	}
 	
@@ -24,9 +23,7 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
-		//SetBody( BT_POINT, Pos );
-		Object->Body = cBody::new_CircleV( Pos, Real(4) );
-		Object->Body->GetCircleVPtr()->SetRestitution( 0.9f );
+		Object->Body = cBody::new_CircleV( Pos, Real(4), Vector3D::Zero, Real(0.1f), Real(0.9f) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -42,9 +39,20 @@ public: // - Specialization Methods --------------------------------------------
 //		Log( "Drawn" );
 //	}
 
-//	virtual void Contact( class cObject* Object, class cObject* Vs );
-//	virtual void Sense( class cObject* Object, class cObject* Vs );
-//	virtual void Notice( class cObject* Object, class cObject* Sender, const int Message );
+//	virtual void Contact( cObject* Object, cObject* Vs );
+//	virtual void Sense( cObject* Object, cObject* Vs );
+	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
+		if ( (Message == 1) || (Message == 2) ) { // Puck Go Home //
+			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
+			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
+			if ( Message == 1 ) {
+				SVar("Score1") += 1;
+			}
+			if ( Message == 2 ) {
+				SVar("Score2") += 1;
+			}
+		}		
+	}
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PUCK_TEMPLATE_PUCK_H__ //

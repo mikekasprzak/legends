@@ -11,6 +11,7 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tNet( const GelColor& Color = GEL_RGB_WHITE, const bool Right = false ) {
+		TVar.Add("Number") = Right ? 2 : 1;
 		Art = cArt::new_HalfCircle( Vector3D::Zero, Real(30), Right ? Vector3D(+1,0,0) : Vector3D(-1,0,0), Color );
 	}
 	
@@ -25,7 +26,9 @@ public: // - Specialization Methods --------------------------------------------
 		cArt_HalfSphere* HS = Art->GetHalfCirclePtr();
 		
 		Object->Body = cBody::new_HalfCircle( Pos+HS->Pos, HS->Radius, HS->Normal );
-//		Object->Body = cBody::new_Circle( Pos+HS->Pos, HS->Radius );
+
+		// TODO: Coordinate here should be Vector3D::Zero, but chaining coords unsupported //
+		Object->Sensor.push_back( cBody::new_HalfCircleI( Pos+HS->Pos, HS->Radius, HS->Normal ) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -44,7 +47,9 @@ public: // - Specialization Methods --------------------------------------------
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
 		return true;
 	}
-	virtual void Sense( cObject* Object, cObject* Vs ) {
+	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
+		Log("Hey %i", SensorIndex);
+		Vs->Notify( Object, TVar("Number").ToInt() ); // Go Home //
 	}
 	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
 	}
