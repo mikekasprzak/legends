@@ -26,6 +26,7 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		Object->OVar.Add("Stun") = 0;
+		Object->OVar.Add("Dash") = 0;
 		
 		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D::Zero, Real::One, Real(0.7f) );
 	}
@@ -48,11 +49,23 @@ public: // - Specialization Methods --------------------------------------------
 		if ( StickMag < Real(0.1f) )
 			Stick = Vector3D::Zero;
 
-		if ( Var("Stun").ToInt() == 0 ) {
-			cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
-	
-			Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.35) + Stick.Magnitude());
-			Bd->AddForce( Line * Real(0.25f) );
+		cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
+
+		if ( (Var("Stun").ToInt() == 0) && (Var("Dash").ToInt() == 0) ) {
+			if ( (Input::XInput::GamePad[TVar("Number").ToInt()].Button) ) {
+				Var("Dash") = 30;
+				Bd->AddForce( Stick * Real(2) );
+			}
+			else {	
+				Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.15) + Stick.Magnitude());
+				Bd->AddForce( Line * Real(0.25f) );
+			}
+		}
+		else {
+			if ( Var("Stun").ToInt() > 0 )
+				Var("Stun") -= 1;
+			if ( Var("Dash").ToInt() > 0 )
+				Var("Dash") -= 1;
 		}
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
