@@ -38,7 +38,7 @@ const Real Real::InvQuarterPi( One / QuarterPi );
 	
 const Real Real::e( 2.71828182845904523536028747135266249775724709369995 );
 	
-const Real Real::Sin45( 0.70710678118654752440084436210485 );
+const Real Real::Sine45( 0.70710678118654752440084436210485 );
 // - ------------------------------------------------------------------------------------------ - //
 Real Real::Random() {
 	return Real( rand() / (float)RAND_MAX );

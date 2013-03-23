@@ -426,6 +426,19 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Returns true if this vector is axis aligned, but false if a zero vector //
+	inline const bool IsAxisAligned() const {
+		int Zeroes = 0;
+		if ( x.IsZero() )
+			Zeroes++;
+		if ( y.IsZero() )
+			Zeroes++;
+			
+		return Zeroes == 1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// Return a special vector only with the x or y part that is largest //
 	// If you want this normalized, you must normalize it yourself, appropriately //
 	inline const Vector2D AxisAligned() const {
@@ -450,11 +463,11 @@ public:
 	// A 45 degree rotation of a vector.  Negating doesn't flip this, you want the -Tangent() of //
 	//   the rotation. i.e. -v.Rotate45().Tangent().  Alternatively, RotateNegative45() does this //
 	inline const Vector2D Rotate45() const {
-		return Vector2D( x + y, y - x ) * Real::Sin45;
+		return Vector2D( x + y, y - x ) * Real::Sine45;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Vector2D RotateNegative45() const {
-		return Vector2D( x - y, y + x ) * Real::Sin45;
+		return Vector2D( x - y, y + x ) * Real::Sine45;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 

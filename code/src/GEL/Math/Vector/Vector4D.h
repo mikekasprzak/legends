@@ -310,12 +310,29 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool IsZero() const {
-		return x.IsZero() && y.IsZero() && z.IsZero();
+		return x.IsZero() && y.IsZero() && z.IsZero() && w.IsZero();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Variation, that requires the guarentee that the number is positive. Used with magnitude. //
 	inline const bool IsZeroOrLess() const {
-		return x.IsZeroOrLess() && y.IsZeroOrLess() && z.IsZeroOrLess();
+		return x.IsZeroOrLess() && y.IsZeroOrLess() && z.IsZeroOrLess() && w.IsZeroOrLess();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Returns true if this vector is axis aligned, but false if a zero vector //
+	inline const bool IsAxisAligned() const {
+		int Zeroes = 0;
+		if ( x.IsZero() )
+			Zeroes++;
+		if ( y.IsZero() )
+			Zeroes++;
+		if ( z.IsZero() )
+			Zeroes++;
+		if ( w.IsZero() )
+			Zeroes++;
+			
+		return Zeroes == 3;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 

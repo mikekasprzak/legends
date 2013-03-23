@@ -353,6 +353,33 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Returns true if this vector is axis aligned, but false if a zero vector //
+	inline const bool IsAxisAligned() const {
+		int Zeroes = 0;
+		if ( x.IsZero() )
+			Zeroes++;
+		if ( y.IsZero() )
+			Zeroes++;
+		if ( z.IsZero() )
+			Zeroes++;
+			
+		return Zeroes == 2;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Give me a legal Tangent vector to this one. Does not guarentee anything else about it. //
+	inline const Vector3D Tangent() const {
+		Vector3D Ret( 1,0,0 );
+		if ( IsAxisAligned() ) {
+			Ret = Vector3D( Real::Sine45, Real::Sine45, 0 );
+		}
+		
+		return cross(cross(Ret,*this),*this);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// WARNING: A limit of 64 ToString calls can be made at a time, otherwise returned values may be bad //
 	inline const char* ToString() const {
 		static char Text[64][128];		// 64 slots, 128 chars long (8,192 bytes). An Int is 10 chars long max. //

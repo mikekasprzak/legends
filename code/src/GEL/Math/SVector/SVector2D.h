@@ -447,11 +447,11 @@ public:
 	// A 45 degree rotation of a vector.  Negating doesn't flip this, you want the -Tangent() of //
 	//   the rotation. i.e. -v.Rotate45().Tangent().  Alternatively, RotateNegative45() does this //
 //	inline const SVector2D Rotate45() const {
-//		return SVector2D( x + y, y - x ) * SInteger::Sin45;
+//		return SVector2D( x + y, y - x ) * SInteger::Sine45;
 //	}
 	// - -------------------------------------------------------------------------------------- - //
 //	inline const SVector2D RotateNegative45() const {
-//		return SVector2D( x - y, y + x ) * SInteger::Sin45;
+//		return SVector2D( x - y, y + x ) * SInteger::Sine45;
 //	}
 	// - -------------------------------------------------------------------------------------- - //
 

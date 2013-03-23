@@ -132,7 +132,7 @@ public:
 	
 	static const Real e;			// Euler's Number/Napier's Constant. Used in Natural Logarithms (log)
 	
-	static const Real Sin45;		// Precomputed value of a 45 degree angle //
+	static const Real Sine45;		// Precomputed value of a 45 degree angle //
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
