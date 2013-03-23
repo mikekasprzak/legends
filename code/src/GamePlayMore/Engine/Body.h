@@ -107,6 +107,9 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsCapsuleVT() const {
 		return Type == BT_CAPSULEVT;
 	}
+	inline const bool IsInvCapsule() const {
+		return Type == BT_INVCAPSULE;
+	}
 
 	// Data Retrieval ------------------------------------------------------------------------- - //
 	inline const cBody_Base& GetBase() const {
@@ -261,6 +264,9 @@ public: // - Methods -----------------------------------------------------------
 	inline cBody_Capsule* GetCapsulePtr() {
 		return (cBody_Capsule*)Data;
 	}
+	inline cBody_Capsule* GetInvCapsulePtr() {
+		return (cBody_Capsule*)Data;
+	}
 	inline cBody_CapsuleV* GetCapsuleVPtr() {
 		return (cBody_CapsuleV*)Data;
 	}
@@ -335,6 +341,12 @@ public: // - Methods -----------------------------------------------------------
 	inline static cBody* new_Capsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Capsule) ];
 		cBody* Body = new(Ptr) cBody( BT_CAPSULE, sizeof(cBody_Capsule) );
+		new(Body->Data) cBody_Capsule( PosA, RadiusA, PosB, RadiusB );
+		return Body;
+	}
+	inline static cBody* new_InvCapsule( const Vector3D& PosA, const Real& RadiusA, const Vector3D& PosB, const Real& RadiusB ) {
+		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_Capsule) ];
+		cBody* Body = new(Ptr) cBody( BT_INVCAPSULE, sizeof(cBody_Capsule) );
 		new(Body->Data) cBody_Capsule( PosA, RadiusA, PosB, RadiusB );
 		return Body;
 	}

@@ -10,8 +10,8 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tRink( const float Radius = 12, const float Length = 150 ) {
-		Art = cArt::new_Capsule( Vector3D(+Length,50,0),Real(Radius), Vector3D(-Length,0,0),Real(Radius), GEL_RGBA(255,255,255,64) );
+	tRink( const float Radius = 160, const float Length = 150 ) {
+		Art = cArt::new_Capsule( Vector3D(+Length,0,0),Real(Radius), Vector3D(-Length,0,0),Real(Radius), GEL_RGBA(255,255,255,64) );
 	}
 	
 	virtual ~tRink() {
@@ -24,7 +24,7 @@ public: // - Specialization Methods --------------------------------------------
 		// ... //
 		cArt_Capsule* Cap = Art->GetCapsulePtr();
 		
-		Object->Body = cBody::new_Capsule( Pos+Cap->PosA, Cap->RadiusA, Pos+Cap->PosB, Cap->RadiusB );
+		Object->Body = cBody::new_InvCapsule( Pos+Cap->PosA, Cap->RadiusA, Pos+Cap->PosB, Cap->RadiusB );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 

@@ -26,7 +26,7 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		
-		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D(1,0,0) );
+		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat() );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -43,8 +43,8 @@ public: // - Specialization Methods --------------------------------------------
 			Stick.x = Real::Zero;
 		if ( Stick.y.Abs() < Real(0.1f) )
 			Stick.y = Real::Zero;
-		Stick *= Real(0.9f);
-		Stick *= Real(1.1111111111111111111111f);
+//		Stick *= Real(0.9f);
+//		Stick *= Real(1.1111111111111111111111f);
 
 		Object->Body->GetCircleVPtr()->AddForce( Stick * Real(0.3f) );
 			

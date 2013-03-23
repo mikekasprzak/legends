@@ -292,7 +292,7 @@ public: // - Methods -----------------------------------------------------------
 	}
 	
 	// WARNING: A limit of 64 ToString calls can be made at a time, otherwise returned values may be bad //
-	inline const char* ToString() {
+	inline const char* ToString() const {
 		static char Text[64][128];		// 64 slots, 128 chars long (8,192 bytes). An Int is 10 chars long max. //
 		static int CurrentText = 0;
 		CurrentText++;

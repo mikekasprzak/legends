@@ -61,27 +61,61 @@ public: // - Methods -----------------------------------------------------------
 
 	inline const cBody_Sphere GetNearestSphere( const Vector3D& Pos ) const {
 		cBody_Sphere Ret;
-
-//		Log( "Near1 -- (%s) (%s) (%s)", PosA.ToString(), PosB.ToString(), Pos.ToString() );
 		
 		Vector3D Line = PosB-PosA;
 		Vector3D ToPos = Pos-PosA;
-
-//		Log( "Near2 -- (%s) vs (%s)", Line.ToString(), ToPos.ToString() );
-
 		
 		Real Length = Line.NormalizeRet();
 		Real Distance = dot( Line, ToPos );
 		Distance = max( Real::Zero, Distance );
 		Distance = min( Length, Distance );
-
-//		Log( "Near3 -- %s and %s", Length.ToString(), Distance.ToString() );
 		
 		Ret.Pos = PosA + (Line * Distance);
 		Ret.Radius = mix( RadiusA, RadiusB, Distance/Length );
 		
 		return Ret;
 	}
+	
+	// Points on the Capsule, or inside the capsule //
+	inline const Vector3D GetNearestPoint( const Vector3D& Pos ) const {
+		cBody_Sphere Point = GetNearestSphere( Pos );
+		
+		Vector3D Line = Pos - Point.Pos;
+		Real Length = Line.NormalizeRet();
+		
+		return Point.Pos + (Line * min(Length,Point.Radius)); 
+	}
+
+	// Points on the Capsule //
+	inline const Vector3D GetNearestPointOn( const Vector3D& Pos ) const {
+		cBody_Sphere Point = GetNearestSphere( Pos );
+		
+		Vector3D Line = Pos - Point.Pos;
+		Line.Normalize();
+		
+		return Point.Pos + (Line * Point.Radius); 
+	}
+
+//	// Points on the Capsule //
+//	inline const Vector3D GetNearestPointInside( const Vector3D& Pos ) const {
+//		cBody_Sphere Point = GetNearestSphere( Pos );
+//		
+//		Vector3D Line = Pos - Point.Pos;
+//		Real Length = Line.NormalizeRet();
+//		
+//		return Point.Pos + (Line * ((Length > Point.Radius) ? (Length * Real::One) : Point.Radius )); 
+//	}
+
+	// Points on the Capsule, or outside the capsule //
+	inline const Vector3D GetNearestPointNear( const Vector3D& Pos ) const {
+		cBody_Sphere Point = GetNearestSphere( Pos );
+		
+		Vector3D Line = Pos - Point.Pos;
+		Real Length = Line.NormalizeRet();
+		
+		return Point.Pos + (Line * max(Length,Point.Radius)); 
+	}
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_CAPSULE_H__ //
