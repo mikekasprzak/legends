@@ -29,19 +29,39 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	inline const cBody_Sphere& GetCircle() const {
+		return *((cBody_Sphere*)&Radius);
+	}
 	inline const cBody_Sphere& GetSphere() const {
 		return *((cBody_Sphere*)&Radius);
+	}
+
+	inline cBody_Sphere* GetCirclePtr() {
+		return ((cBody_Sphere*)&Radius);
 	}
 	inline cBody_Sphere* GetSpherePtr() {
 		return ((cBody_Sphere*)&Radius);
 	}
 
+	inline const bool Test( const cBody_Sphere& Vs ) const {
+		Vector3D Line = Vs.Pos - Pos;
+		Real RadiusSum = Radius + Vs.Radius;
+//		Log( "%s --- %s === %s (%s=%s) [%s %s]", Pos.ToString(), Vs.Pos.ToString(), Line.ToString(), Line.Magnitude().ToString(), RadiusSum.ToString(), Radius.ToString(), Vs.Radius.ToString() );
+		if ( Line.MagnitudeSquared() < RadiusSum*RadiusSum ) {
+			// Passed the sphere check. Now to test versus the half-space //
+			return dot(Normal,Line) > Real::Zero;
+		}
+		else {
+			return false;
+		}
+	}
 
+	// NOTE: This should get the nearest point on the entire shape //
 	inline const Vector3D GetNearestPointOn( const Vector3D& Vs ) const {
 		Vector3D Line = Vs-Pos;
 		Real Side = dot( Normal, Line );
 		
-		if ( Side < Real::Zero ) {
+		if ( Side > Real::Zero ) {
 			//Real Length = Line.NormalizeRet();
 			Line.Normalize();
 			return Pos + (Line*Radius);
@@ -58,6 +78,12 @@ public: // - Methods -----------------------------------------------------------
 			return PosA + (Distance * Tangent);
 		}
 	}
+	
+	// TODO: Do just an edge version, using the half space to place end-caps.
+	// Use this for the body //
+	
+	// TODO: Do a "fully inside" version, and make a new type BT_HALFCIRCLE_INSIDE //
+	// Create a sensor of the Inside type. Score points upon fully inside. //
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_BODY_HALFSPHERE_H__ //

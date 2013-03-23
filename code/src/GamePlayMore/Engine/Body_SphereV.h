@@ -38,6 +38,20 @@ public: // - Constructors and Destructors --------------------------------------
 	}
 
 public: // - Methods -------------------------------------------------------------------------- - //
+	inline const cBody_Sphere& GetCircle() const {
+		return *((cBody_Sphere*)&Radius);
+	}
+	inline const cBody_Sphere& GetSphere() const {
+		return *((cBody_Sphere*)&Radius);
+	}
+
+	inline cBody_Sphere* GetCirclePtr() {
+		return ((cBody_Sphere*)&Radius);
+	}
+	inline cBody_Sphere* GetSpherePtr() {
+		return ((cBody_Sphere*)&Radius);
+	}
+
 	inline const Vector3D GetVelocity() const {
 		return Pos - Old; // Old -> Pos, Start -> Dest, A -> B, Dest (B) always goes first //
 	}
@@ -157,7 +171,7 @@ inline void Solve( cBody_SphereV* A, const cBody_Sphere* B ) {
 	Real Length = Line.NormalizeRet();
 	
 	Real RadiusSum = A->Radius + B->Radius;						
-	Real Diff = RadiusSum - Length;			
+	Real Diff = RadiusSum - Length;
 
 	// TODO: Fix this code so that Penetrations after a collision work correctly. //
 	//       If I don't do this, then objects solved without enough relaxation steps //

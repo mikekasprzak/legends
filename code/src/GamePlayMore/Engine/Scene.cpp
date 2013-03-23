@@ -27,13 +27,16 @@ void cScene::Step() {
 
 			// Vs Statics //
 			for ( auto Itr2 = Static.begin(); Itr2 != Static.end(); Itr2++ ) {
-				// TODO: Set shared Object and Template correctly before the Contact Call //
-				if ( (*Itr)->Body->Check( *((*Itr2)->Body) ) ) {
-					Log( "Collision!" );
-					if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
-						(*Itr)->Body->Solve( (*Itr2)->Body );
-						(*Itr)->UpdateRect();
-						(*Itr2)->UpdateRect();
+				// Early out Rectangle Test //
+				if ( (*Itr)->Rect == (*Itr2)->Rect ) {
+					// TODO: Set shared Object and Template correctly before the Contact Call //
+					if ( (*Itr)->Body->Check( *((*Itr2)->Body) ) ) {
+						Log( "Collision!" );
+						if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
+							(*Itr)->Body->Solve( (*Itr2)->Body );
+							(*Itr)->UpdateRect();
+							(*Itr2)->UpdateRect();
+						}
 					}
 				}
 			}
@@ -43,12 +46,17 @@ void cScene::Step() {
 				auto Itr2 = Itr;
 				Itr2++;
 				for ( ; Itr2 != Active.end(); Itr2++ ) {
-					// TODO: Set shared Object and Template correctly before the Contact Call //
-					if ( (*Itr)->Body->Check( *((*Itr2)->Body) ) ) {
-						if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
-							(*Itr)->Body->Solve( (*Itr2)->Body );
-							(*Itr)->UpdateRect();
-							(*Itr2)->UpdateRect();
+					// Early out Rectangle Test //
+//					if ( (*Itr)->Rect == (*Itr2)->Rect )
+					{
+//						Log("pass");
+						// TODO: Set shared Object and Template correctly before the Contact Call //
+						if ( (*Itr)->Body->Check( *((*Itr2)->Body) ) ) {
+							if ( (*Itr)->Template->Contact(*Itr,*Itr2) && (*Itr2)->Template->Contact(*Itr2,*Itr) ) {
+								(*Itr)->Body->Solve( (*Itr2)->Body );
+								(*Itr)->UpdateRect();
+								(*Itr2)->UpdateRect();
+							}
 						}
 					}
 				}

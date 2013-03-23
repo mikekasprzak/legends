@@ -12,17 +12,17 @@ const Matrix4x4 cBody::GetTransform() {
 		return Matrix4x4::TranslationMatrix( GetPoint() );
 	}
 	else if ( IsCircle() || IsSphere() ) {
-		return Matrix4x4::TranslationMatrix( GetCircle().Pos );
+		return Matrix4x4::TranslationMatrix( GetSphere().Pos );
 	}
 	else if ( IsCircleV() || IsSphereV() ) {
-		return Matrix4x4::TranslationMatrix( GetCircleV().Pos );
+		return Matrix4x4::TranslationMatrix( GetSphereV().Pos );
 	}
 	else if ( IsHalfCircle() || IsHalfSphere() ) {
-		return Matrix4x4::TranslationMatrix( GetHalfCircle().Pos );
+		return Matrix4x4::TranslationMatrix( GetHalfSphere().Pos );
 	}
-	else if ( IsHalfCircleV() || IsHalfSphereV() ) {
-		return Matrix4x4::TranslationMatrix( GetHalfCircleV().Pos );
-	}
+//	else if ( IsHalfCircleV() || IsHalfSphereV() ) {
+//		return Matrix4x4::TranslationMatrix( GetHalfCircleV().Pos );
+//	}
 	else if ( IsCapsule() || IsInvCapsule() ) {
 		return Matrix4x4::TranslationMatrix( GetCapsule().GetCenter() );
 	}
@@ -66,24 +66,24 @@ const Rect3D cBody::GetRect() {
 			GetHalfCircle().Radius._xx0() * Real::Two 
 			);
 	}
-	else if ( IsHalfCircleV() ) {
-		return Rect3D( 
-			GetHalfCircleV().Pos - GetHalfCircleV().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
-			GetHalfCircleV().Radius._xx0() * Real::Two 
-			);
-	}
+//	else if ( IsHalfCircleV() ) {
+//		return Rect3D( 
+//			GetHalfCircleV().Pos - GetHalfCircleV().Radius._xx0(),	// NOTICE: _xx0, not _xxx //
+//			GetHalfCircleV().Radius._xx0() * Real::Two 
+//			);
+//	}
 	else if ( IsHalfSphere() ) {
 		return Rect3D( 
 			GetHalfSphere().Pos - GetHalfSphere().Radius._xxx(),
 			GetHalfSphere().Radius._xxx() * Real::Two 
 			);
 	}
-	else if ( IsHalfSphereV() ) {
-		return Rect3D( 
-			GetHalfSphereV().Pos - GetHalfSphereV().Radius._xxx(),
-			GetHalfSphereV().Radius._xxx() * Real::Two 
-			);
-	}
+//	else if ( IsHalfSphereV() ) {
+//		return Rect3D( 
+//			GetHalfSphereV().Pos - GetHalfSphereV().Radius._xxx(),
+//			GetHalfSphereV().Radius._xxx() * Real::Two 
+//			);
+//	}
 	else if ( IsCapsule() || IsInvCapsule() ) {
 		Rect3D Ret(
 			GetCapsule().PosA - GetCapsule().RadiusA._xx0(),
@@ -117,6 +117,9 @@ const bool cBody::Check( const cBody& Vs ) const {
 		else if ( Vs.IsSphereV() ) {
 			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+		else if ( Vs.IsHalfCircle() ) {
+			return Vs.GetHalfCircle().Test( cBody_Sphere( GetPoint(), Real::Zero ) );
+		}
 		else if ( Vs.IsCapsule() ) {
 			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetPoint() );
 			return Test_Point_Vs_Sphere3D( GetPoint(), Me.Pos, Me.Radius );
@@ -138,6 +141,9 @@ const bool cBody::Check( const cBody& Vs ) const {
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+		else if ( Vs.IsHalfCircle() ) {
+			return Vs.GetHalfCircle().Test( GetCircle() );
+		}
 		else if ( Vs.IsCapsule() ) {
 			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircle().Pos );
 			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Me.Pos, Me.Radius );
@@ -158,6 +164,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		}
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+		else if ( Vs.IsHalfCircle() ) {
+			// NOTE: This is unsafe //
+			return Vs.GetHalfCircle().Test( GetCircle() );
 		}
 		else if ( Vs.IsCapsule() ) {
 			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircleV().Pos );
@@ -210,6 +220,29 @@ const bool cBody::Check( const cBody& Vs ) const {
 			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Me.Pos, Me.Radius );
 		}
 	}
+	else if ( IsHalfCircle() ) {
+//		if ( Vs.IsPoint() ) {
+//			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), GetSphere().Pos, GetSphere().Radius ); // * //
+//		}
+//		else if ( Vs.IsCircle() ) {
+//			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+//		}
+//		else 
+		if ( Vs.IsCircleV() ) {
+			// NOTE: This is unsafe //
+			return GetHalfCircle().Test( Vs.GetCircle() );
+		}
+//		else if ( Vs.IsSphere() ) {
+//			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+//		}
+//		else if ( Vs.IsSphereV() ) {
+//			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+//		}
+//		else if ( Vs.IsCapsule() ) {
+//			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetSphere().Pos );
+//			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Me.Pos, Me.Radius );
+//		}
+	}
 	else if ( IsCapsule() ) {
 		if ( Vs.IsPoint() ) {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetPoint() );
@@ -231,6 +264,9 @@ const bool cBody::Check( const cBody& Vs ) const {
 			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphereV().Pos );
 			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+//		else if ( Vs.IsHalfCircle() ) {
+//			return Vs.GetHalfCircle().Test( cBody_Sphere( GetCircle().Pos, GetCircle().Radius ) );
+//		}
 //		else if ( Vs.IsCapsule() ) {
 //			// Use Nearest Line Test //
 //			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetSphereV().Pos );
@@ -275,6 +311,10 @@ void cBody::Solve( cBody* Vs ) {
 		else if ( Vs->IsCircle() ) {
 			::Solve( GetCircleVPtr(), Vs->GetCirclePtr() );
 		}
+		else if ( Vs->IsHalfCircle() ) {
+			cBody_Sphere Temp( Vs->GetHalfCircle().GetNearestPointOn( GetCircle().Pos ), Real::Zero );
+			::Solve( GetCircleVPtr(), &Temp );
+		}
 		else if ( Vs->IsCapsule() ) {
 			cBody_Sphere Temp = Vs->GetCapsule().GetNearestSphere( GetCircle().Pos );
 			::Solve( GetCircleVPtr(), &Temp );
@@ -283,6 +323,12 @@ void cBody::Solve( cBody* Vs ) {
 	else if ( IsCircle() ) {
 		if ( Vs->IsCircleV() ) {
 			::Solve( Vs->GetCircleVPtr(), GetCirclePtr() );
+		}
+	}
+	else if ( IsHalfCircle() ) {
+		if ( Vs->IsCircleV() ) {
+			Log( "Heyo2" );
+//			::Solve( Vs->GetCircleVPtr(), GetCirclePtr() );
 		}
 	}
 	else if ( IsCapsule() ) {
@@ -343,7 +389,7 @@ void cBody::Draw( const Matrix4x4& Matrix ) {
 //
 //		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
 //	}
-	else if ( IsHalfCircle() || IsHalfCircleV() ) {
+	else if ( IsHalfCircle() ) {
 		const st32 VertCount = size_Vertex3D_HalfCircle();
 		Vector3D Verts[ VertCount ];
 		generate_Vertex3D_HalfCircle( Verts, GetHalfCircle().Pos, GetHalfCircle().Radius, GetHalfCircle().Normal );

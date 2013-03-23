@@ -24,8 +24,8 @@ public: // - Specialization Methods --------------------------------------------
 		// ... //
 		cArt_HalfSphere* HS = Art->GetHalfCirclePtr();
 		
-//		Object->Body = cBody::new_HalfCircle( Pos+HS->Pos, HS->Radius, HS->Normal );
-		Object->Body = cBody::new_Circle( Pos+HS->Pos, HS->Radius );
+		Object->Body = cBody::new_HalfCircle( Pos+HS->Pos, HS->Radius, HS->Normal );
+//		Object->Body = cBody::new_Circle( Pos+HS->Pos, HS->Radius );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 

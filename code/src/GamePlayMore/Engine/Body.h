@@ -17,9 +17,9 @@ enum eBodyType {			// Types ending in a V are Verlet Physics Versions -- Old, In
 	BT_SPHEREV,
 
 	BT_HALFCIRCLE,			// Z not tested //
-	BT_HALFCIRCLEV,
+//	BT_HALFCIRCLEV,
 	BT_HALFSPHERE,			// X, Y, and Z tested //
-	BT_HALFSPHEREV,
+//	BT_HALFSPHEREV,
 
 	BT_CAPSULE,				// A Line Segment of 2 points, and a pair of Radius //
 	BT_CAPSULEV,
@@ -88,15 +88,15 @@ public: // - Methods -----------------------------------------------------------
 	inline const bool IsHalfCircle() const {
 		return Type == BT_HALFCIRCLE;
 	}
-	inline const bool IsHalfCircleV() const {
-		return Type == BT_HALFCIRCLEV;
-	}
+//	inline const bool IsHalfCircleV() const {
+//		return Type == BT_HALFCIRCLEV;
+//	}
 	inline const bool IsHalfSphere() const {
 		return Type == BT_HALFSPHERE;
 	}
-	inline const bool IsHalfSphereV() const {
-		return Type == BT_HALFSPHEREV;
-	}
+//	inline const bool IsHalfSphereV() const {
+//		return Type == BT_HALFSPHEREV;
+//	}
 
 	inline const bool IsCapsule() const {
 		return Type == BT_CAPSULE;
