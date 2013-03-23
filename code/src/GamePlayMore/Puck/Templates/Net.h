@@ -48,7 +48,7 @@ public: // - Specialization Methods --------------------------------------------
 		return true;
 	}
 	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
-		Log("Hey %i", SensorIndex);
+		Log("Sensor %i Found something inside the the Net", SensorIndex);
 		Vs->Notify( Object, TVar("Number").ToInt() ); // Go Home //
 	}
 	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {

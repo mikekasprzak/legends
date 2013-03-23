@@ -91,7 +91,10 @@ public: // - Methods -----------------------------------------------------------
 		cBody_Sphere Point = GetNearestSphere( Pos );
 		
 		Vector3D Line = Pos - Point.Pos;
-		Line.Normalize();
+		Real Length = Line.NormalizeRet();
+		
+		if ( Length.IsZero() )
+			Line = (PosB-PosA).Tangent().Normal();
 		
 		return Point.Pos + (Line * Point.Radius); 
 	}
