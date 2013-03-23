@@ -73,10 +73,10 @@ void Poll() {
 			GamePad[idx].RTrigger = State[idx].Gamepad.bRightTrigger / 255.0f;
 
 			// NOTE: Max Positive Stick X is +32767, not +32768
-			GamePad[idx].LStickX = State[idx].Gamepad.sThumbLX / 32768.0f;
-			GamePad[idx].LStickY = State[idx].Gamepad.sThumbLY / 32768.0f;
-			GamePad[idx].RStickX = State[idx].Gamepad.sThumbRX / 32768.0f;
-			GamePad[idx].RStickY = State[idx].Gamepad.sThumbRY / 32768.0f;
+			GamePad[idx].LStick.x = State[idx].Gamepad.sThumbLX / 32768.0f;
+			GamePad[idx].LStick.y = State[idx].Gamepad.sThumbLY / 32768.0f;
+			GamePad[idx].RStick.x = State[idx].Gamepad.sThumbRX / 32768.0f;
+			GamePad[idx].RStick.y = State[idx].Gamepad.sThumbRY / 32768.0f;
 		}
 	}
 	

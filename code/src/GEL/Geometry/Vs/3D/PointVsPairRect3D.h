@@ -11,7 +11,7 @@ inline bool Test_Point_Vs_PairRect3D( const Vector3D& v, const Vector3D& P1, con
 	if ( v.x >= P1.x )
 		if ( v.x < P2.x )
 			if ( v.y >= P1.y )
-				if ( v.y < P2.y );
+				if ( v.y < P2.y )
 					if ( v.z >= P1.z )
 						return ( v.z < P2.z );
 	return false;

@@ -4,16 +4,22 @@
 // - ------------------------------------------------------------------------------------------ - //
 #ifdef USES_XINPUT
 // - ------------------------------------------------------------------------------------------ - //
+#include <Math/Vector.h>
+// - ------------------------------------------------------------------------------------------ - //
 namespace Input {
 // - ------------------------------------------------------------------------------------------ - //
 namespace XInput {
 // - ------------------------------------------------------------------------------------------ - //
 struct cGamePad {
 	st32 Button;
-	float LStickX, LStickY;
-	float RStickX, RStickY;
-	float LTrigger;
-	float RTrigger;
+	Vector2D LStick;
+	Vector2D RStick;
+	Real LTrigger;
+	Real RTrigger;
+//	float LStickX, LStickY;
+//	float RStickX, RStickY;
+//	float LTrigger;
+//	float RTrigger;
 };
 // - ------------------------------------------------------------------------------------------ - //
 extern cGamePad GamePad[4];

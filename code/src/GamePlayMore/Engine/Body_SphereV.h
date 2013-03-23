@@ -152,7 +152,7 @@ inline void Solve( cBody_SphereV* A, cBody_SphereV* B ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline void Solve( cBody_SphereV* A, cBody_Sphere* B ) {
+inline void Solve( cBody_SphereV* A, const cBody_Sphere* B ) {
 	Vector3D Line = B->Pos - A->Pos;
 	Real Length = Line.NormalizeRet();
 	
@@ -166,6 +166,10 @@ inline void Solve( cBody_SphereV* A, cBody_Sphere* B ) {
 		// Take Velocities before we move Pos so we don't accidentially accumulate more force //
 		Vector3D VelocityA = A->GetVelocity();
 //		Vector3D VelocityB = Vector3D::Zero;
+
+		Log( "%f, %f, %f vs %f, %f, %f", 
+			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 		
 		// 100% solving //
 		A->Pos -= Line * Diff;

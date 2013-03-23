@@ -11,7 +11,7 @@ bool Test_Point_Vs_RadiusRect3D( const Vector3D& v, const Vector3D& Center, cons
 	if ( v.x >= (Center.x - HalfShape.x) )
 		if ( v.x < (Center.x + HalfShape.x) )
 			if ( v.y >= (Center.y - HalfShape.y) )
-				if ( v.y < (Center.y + HalfShape.y) );
+				if ( v.y < (Center.y + HalfShape.y) )
 					if ( v.z >= (Center.z - HalfShape.z) )
 						return ( v.z < (Center.z + HalfShape.z) );
 	return false;

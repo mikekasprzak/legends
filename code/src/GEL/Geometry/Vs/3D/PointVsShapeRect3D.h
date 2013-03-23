@@ -14,7 +14,7 @@ bool Test_Point_Vs_ShapeRect3D( const Vector3D& v, const Vector3D& P1, const Vec
 	if ( v.x >= P1.x )
 		if ( v.x < (P1.x + Shape.x) )
 			if ( v.y >= P1.y )
-				if ( v.y < (P1.y + Shape.y) );
+				if ( v.y < (P1.y + Shape.y) )
 					if ( v.z >= P1.z )
 						return ( v.z < (P1.z + Shape.z) );
 	return false;

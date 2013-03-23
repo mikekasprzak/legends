@@ -10,7 +10,7 @@ public: // - Class Helpers -----------------------------------------------------
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
-	tRink( const float Radius = 80, const float Length = 150 ) {
+	tRink( const float Radius = 12, const float Length = 150 ) {
 		Art = cArt::new_Capsule( Vector3D(+Length,50,0),Real(Radius), Vector3D(-Length,0,0),Real(Radius), GEL_RGBA(255,255,255,64) );
 	}
 	
@@ -41,7 +41,7 @@ public: // - Specialization Methods --------------------------------------------
 //	}
 
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
-		return false;
+		return true;
 	}
 //	virtual void Sense( cObject* Object, cObject* Vs ) {
 //	}

@@ -12,7 +12,7 @@ struct cNearest_PointInfo_On_Chain3D {
 	Vector3D Normal;
 	
 	Real EdgeDistanceSquared;
-	int EdgeIndex;
+	unsigned EdgeIndex;
 	
 	int Corner;
 	Vector3D PreviousLine;

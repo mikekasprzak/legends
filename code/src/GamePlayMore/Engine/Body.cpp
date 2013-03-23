@@ -117,6 +117,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		else if ( Vs.IsSphereV() ) {
 			return Test_Point_Vs_Sphere3D( GetPoint(), Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+		else if ( Vs.IsCapsule() ) {
+			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetPoint() );
+			return Test_Point_Vs_Sphere3D( GetPoint(), Me.Pos, Me.Radius );
+		}
 	}
 	else if ( IsCircle() ) {
 		if ( Vs.IsPoint() ) {
@@ -133,6 +137,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		}
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+		else if ( Vs.IsCapsule() ) {
+			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircle().Pos );
+			return Test_Sphere_Vs_Sphere3D( GetCircle().Pos, GetCircle().Radius, Me.Pos, Me.Radius );
 		}
 	}
 	else if ( IsCircleV() ) {
@@ -151,6 +159,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+		else if ( Vs.IsCapsule() ) {
+			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircleV().Pos );
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Me.Pos, Me.Radius );
+		}
 	}
 	else if ( IsSphere() ) {
 		if ( Vs.IsPoint() ) {
@@ -167,6 +179,10 @@ const bool cBody::Check( const cBody& Vs ) const {
 		}
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+		else if ( Vs.IsCapsule() ) {
+			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetSphere().Pos );
+			return Test_Sphere_Vs_Sphere3D( GetSphere().Pos, GetSphere().Radius, Me.Pos, Me.Radius );
 		}
 	}
 	else if ( IsSphereV() ) {
@@ -185,6 +201,41 @@ const bool cBody::Check( const cBody& Vs ) const {
 		else if ( Vs.IsSphereV() ) {
 			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
 		}
+		else if ( Vs.IsCapsule() ) {
+			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetSphereV().Pos );
+			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Me.Pos, Me.Radius );
+		}
+	}
+	else if ( IsCapsule() ) {
+		if ( Vs.IsPoint() ) {
+			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetPoint() );
+			return Test_Point_Vs_Sphere3D( Vs.GetPoint(), Me.Pos, Me.Radius ); // * //
+		}
+		else if ( Vs.IsCircle() ) {
+			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircle().Pos );
+			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
+		}
+		else if ( Vs.IsCircleV() ) {
+			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetCircleV().Pos );
+//			Log( "IsCirc (%s) vs (%s)", Vs.GetCircleV().Pos.ToString(), Me.Pos.ToString() );
+			bool Val = Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetCircleV().Pos, Vs.GetCircleV().Radius );
+			if ( Val )
+				Log( "Nert2" );
+			return Val;
+		}
+		else if ( Vs.IsSphere() ) {
+			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphere().Pos );
+			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphere().Pos, Vs.GetSphere().Radius );
+		}
+		else if ( Vs.IsSphereV() ) {
+			cBody_Sphere Me = GetCapsule().GetNearestSphere( Vs.GetSphereV().Pos );
+			return Test_Sphere_Vs_Sphere3D( Me.Pos, Me.Radius, Vs.GetSphereV().Pos, Vs.GetSphereV().Radius );
+		}
+//		else if ( Vs.IsCapsule() ) {
+//			// Use Nearest Line Test //
+//			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetSphereV().Pos );
+//			return Test_Sphere_Vs_Sphere3D( GetSphereV().Pos, GetSphereV().Radius, Me.Pos, Me.Radius );
+//		}
 	}
 	return false;
 }
@@ -197,10 +248,23 @@ void cBody::Solve( cBody* Vs ) {
 		else if ( Vs->IsCircle() ) {
 			::Solve( GetCircleVPtr(), Vs->GetCirclePtr() );
 		}
+		else if ( Vs->IsCapsule() ) {
+			Log("Colve");
+			cBody_Sphere Temp = Vs->GetCapsule().GetNearestSphere( GetCircle().Pos );
+			::Solve( GetCircleVPtr(), &Temp );
+		}
 	}
 	else if ( IsCircle() ) {
 		if ( Vs->IsCircleV() ) {
 			::Solve( Vs->GetCircleVPtr(), GetCirclePtr() );
+		}
+	}
+	else if ( IsCapsule() ) {
+		Log("preZolve");
+		if ( Vs->IsCircleV() ) {
+			Log("Zolve");
+			cBody_Sphere Temp = GetCapsule().GetNearestSphere( Vs->GetCircle().Pos );
+			::Solve( Vs->GetCircleVPtr(), &Temp );
 		}
 	}
 }

@@ -6,6 +6,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+#include <Style/Style.h>
 #include <External/boost/operators.hpp>
 
 #include <Math/Real.h>
@@ -472,7 +473,20 @@ public:
 		return Vector2D( x, -y );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	
+
+	// - -------------------------------------------------------------------------------------- - //
+	// WARNING: A limit of 64 ToString calls can be made at a time, otherwise returned values may be bad //
+	inline const char* ToString() const {
+		static char Text[64][128];		// 64 slots, 128 chars long (8,192 bytes). An Int is 10 chars long max. //
+		static int CurrentText = 0;
+		CurrentText++;
+		CurrentText &= 63;
+		
+		safe_sprintf( Text[CurrentText], sizeof(Text[CurrentText]), "%f,%f", x.ToFloat(), y.ToFloat() );
+		return Text[CurrentText];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 	// - -------------------------------------------------------------------------------------- - //
 	// Explicit Conversion Functions //
 	// - -------------------------------------------------------------------------------------- - //

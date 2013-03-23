@@ -37,12 +37,22 @@ public: // - Specialization Methods --------------------------------------------
 	// Works Just Fine //
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
+
+		Vector3D Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
+		if ( Stick.x.Abs() < Real(0.1f) )
+			Stick.x = Real::Zero;
+		if ( Stick.y.Abs() < Real(0.1f) )
+			Stick.y = Real::Zero;
+		Stick *= Real(0.9f);
+		Stick *= Real(1.1111111111111111111111f);
+
+		Object->Body->GetCircleVPtr()->AddForce( Stick * Real(0.3f) );
 			
-		*(Object->Body->GetPointPtr()) += Vector3D( 
-			Input::XInput::GamePad[TVar("Number").ToInt()].LStickX, 
-			Input::XInput::GamePad[TVar("Number").ToInt()].LStickY, 
-			0 
-			);
+//		Object->Body->GetCircleVPtr()->AddForce( Vector3D( 
+//			Input::XInput::GamePad[TVar("Number").ToInt()].LStickX, 
+//			Input::XInput::GamePad[TVar("Number").ToInt()].LStickY, 
+//			0 
+//			) );
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );
