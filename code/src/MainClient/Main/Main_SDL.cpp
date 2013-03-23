@@ -336,7 +336,7 @@ int main( int argc, char* argv[] ) {
 				FramesOfWork = 1;
 			}
 			
-			if ( __TabKey ) {
+			if ( __EscKey ) {
 				delete App;
 				App = new cApp();
 			}

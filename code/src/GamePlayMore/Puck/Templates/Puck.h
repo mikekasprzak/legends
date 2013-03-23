@@ -32,9 +32,13 @@ public: // - Specialization Methods --------------------------------------------
 	}
 
 	// Works Just Fine //
-//	virtual void Step( cObject* Object ) {
-//		Log( "Stepped" );
-//	}
+	virtual void Step( cObject* Object ) {
+		extern int __TabKey;
+		if ( __TabKey ) {
+			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
+			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
+		}				
+	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		Log( "Drawn" );
 //	}
