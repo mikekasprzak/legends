@@ -375,6 +375,7 @@ public:
 			Ret = Vector3D( Real::Sine45, Real::Sine45, 0 );
 		}
 		
+//		return cross(Ret,*this);
 		return cross(cross(Ret,*this),*this);
 	}
 	// - -------------------------------------------------------------------------------------- - //

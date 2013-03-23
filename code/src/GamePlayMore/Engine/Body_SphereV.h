@@ -96,7 +96,7 @@ public:
 		Vector3D Velocity = GetVelocity();
 		Old = Pos;
 		// Accum is (Accum * TimeStep * TimeStep), but TimeStep is 1 so it cancels out. //
-		Pos += (Velocity + Accum);	// * 0.995f;
+		Pos += (Velocity + Accum) * 0.99f;//0.995f;
 		
 		// We use a seperate Accumulator so to not pollute the Velocity with impulse forces (??) //
 		Accum = Vector3D::Zero; 	// Clear the Accumulator //
@@ -181,9 +181,9 @@ inline void Solve( cBody_SphereV* A, const cBody_Sphere* B ) {
 		Vector3D VelocityA = A->GetVelocity();
 //		Vector3D VelocityB = Vector3D::Zero;
 
-		Log( "%f, %f, %f vs %f, %f, %f", 
-			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
-			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+//		Log( "%f, %f, %f vs %f, %f, %f", 
+//			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+//			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 		
 		// 100% solving //
 		A->Pos -= Line * Diff;
@@ -218,9 +218,9 @@ inline void Solve( cBody_SphereV* A, const cBody_Sphere* B ) {
 		A->Old = A->Pos - (TangentVelocityA+ContactVelocityA);
 //		B->Old = B->Pos - (TangentVelocityB+ContactVelocityB);
 
-		Log( "%f, %f, %f !! %f, %f, %f", 
-			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
-			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
+//		Log( "%f, %f, %f !! %f, %f, %f", 
+//			A->GetVelocity().x.ToFloat(), A->GetVelocity().y.ToFloat(), A->GetVelocity().z.ToFloat(),
+//			B->GetVelocity().x.ToFloat(), B->GetVelocity().y.ToFloat(), B->GetVelocity().z.ToFloat() );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

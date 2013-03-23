@@ -167,7 +167,8 @@ const bool cBody::Check( const cBody& Vs ) const {
 		}
 		else if ( Vs.IsHalfCircle() ) {
 			// NOTE: This is unsafe //
-			return Vs.GetHalfCircle().Test( GetCircle() );
+//			return Vs.GetHalfCircle().Test( GetCircle() );
+			return Test_Sphere_Vs_Sphere3D( GetCircleV().Pos, GetCircleV().Radius, Vs.GetCircle().Pos, Vs.GetCircle().Radius );
 		}
 		else if ( Vs.IsCapsule() ) {
 			cBody_Sphere Me = Vs.GetCapsule().GetNearestSphere( GetCircleV().Pos );

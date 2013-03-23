@@ -294,10 +294,10 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) cBody_Sphere( Pos, Radius );
 		return Body;
 	}
-	inline static cBody* new_CircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) {
+	inline static cBody* new_CircleV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One, const Real& Restitution = Real::One ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
 		cBody* Body = new(Ptr) cBody( BT_CIRCLEV, sizeof(cBody_SphereV) );
-		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
+		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass, Restitution );
 		return Body;
 	}
 	inline static cBody* new_Sphere( const Vector3D& Pos, const Real& Radius ) {
@@ -306,10 +306,10 @@ public: // - Methods -----------------------------------------------------------
 		new(Body->Data) cBody_Sphere( Pos, Radius );
 		return Body;
 	}
-	inline static cBody* new_SphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One ) {
+	inline static cBody* new_SphereV( const Vector3D& Pos, const Real& Radius, const Vector3D& Velocity = Vector3D::Zero, const Real& Mass = Real::One, const Real& Restitution = Real::One ) {
 		char* Ptr = new char[ sizeof(cBody) + sizeof(cBody_SphereV) ];
 		cBody* Body = new(Ptr) cBody( BT_SPHEREV, sizeof(cBody_SphereV) );
-		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass );
+		new(Body->Data) cBody_SphereV( Pos, Radius, Velocity, Mass, Restitution );
 		return Body;
 	}
 

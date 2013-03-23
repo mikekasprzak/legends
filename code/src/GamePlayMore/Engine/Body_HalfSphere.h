@@ -13,18 +13,18 @@ public: // - Class Helpers -----------------------------------------------------
 	typedef cBody_HalfSphere thistype;
 	inline void* GetThis() { return this; }
 public: // - Members -------------------------------------------------------------------------- - //
-	Vector3D	Normal;		// Dividing Plane's Normal //
 	Real 		Radius;
 	Vector3D 	Pos;		// Position Last, so it can be followed by Verlet Members //
+	Vector3D	Normal;		// Dividing Plane's Normal //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	cBody_HalfSphere()
 	{
 	}
 
 	cBody_HalfSphere( const Vector3D& _Pos, const Real& _Radius, const Vector3D& _Normal ) :
-		Normal( _Normal ),
 		Radius( _Radius ),
-		Pos( _Pos )
+		Pos( _Pos ),
+		Normal( _Normal )
 	{
 	}
 
@@ -56,26 +56,39 @@ public: // - Methods -----------------------------------------------------------
 		}
 	}
 
-	// NOTE: This should get the nearest point on the entire shape //
+	// NOTE: This should get the nearest point on the edge of shape //
 	inline const Vector3D GetNearestPointOn( const Vector3D& Vs ) const {
 		Vector3D Line = Vs-Pos;
 		Real Side = dot( Normal, Line );
 		
 		if ( Side > Real::Zero ) {
-			//Real Length = Line.NormalizeRet();
 			Line.Normalize();
 			return Pos + (Line*Radius);
 		}
 		else {
-			Vector3D Tangent = Normal.Tangent();
-			Vector3D PosA = Pos - (Radius * Tangent);
-			
-			Vector3D ToVs = Vs-PosA;
-			Real Distance = dot( ToVs, Tangent );
-			Distance = max( Real::Zero, Distance );
-			Distance = min( Radius+Radius, Distance );
+			Line.Normalize();
 
-			return PosA + (Distance * Tangent);
+			// TODO: The generated tangent normal should be inside the plane created by //
+			//   the Line and the Normal. Right now this is just the Normal //
+			Vector3D Tangent = Normal.Tangent().Normal();
+
+//			Log("(%s) (%s)", Normal.ToString(), Tangent.ToString() );
+//			Tangent = cross(cross(Tangent,Line),Normal);
+//			Vector3D PosA = Pos - (Radius * Tangent);
+			
+//			Real Distance = dot( Line, Tangent * Radius );
+//			Distance = max( -Radius, Distance );
+//			Distance = min( Radius, Distance );
+
+			// 2D Version //
+//			Tangent = Normal.ToVector2D().Tangent().ToVector3D();
+
+			// Determine which side of the circle to use //
+			Real AdjSide = dot( Line, Tangent ).Normal();
+			if ( AdjSide.IsZero() )
+				AdjSide = Real::One;
+
+			return Pos + ((Radius*AdjSide) * Tangent);
 		}
 	}
 	

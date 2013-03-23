@@ -26,7 +26,7 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		
-		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat() );
+		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D::Zero, Real::One, Real(0.5f) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -39,20 +39,27 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::Step( Object );
 
 		Vector3D Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
-		if ( Stick.x.Abs() < Real(0.1f) )
-			Stick.x = Real::Zero;
-		if ( Stick.y.Abs() < Real(0.1f) )
-			Stick.y = Real::Zero;
+		Real StickMag = Stick.Magnitude();
+		if ( StickMag < Real(0.1f) )
+			Stick = Vector3D::Zero;
+
+//		if ( Stick.x.Abs() < Real(0.1f) )
+//			Stick.x = Real::Zero;
+//		if ( Stick.y.Abs() < Real(0.1f) )
+//			Stick.y = Real::Zero;
 //		Stick *= Real(0.9f);
 //		Stick *= Real(1.1111111111111111111111f);
 
-		Object->Body->GetCircleVPtr()->AddForce( Stick * Real(0.3f) );
-			
-//		Object->Body->GetCircleVPtr()->AddForce( Vector3D( 
-//			Input::XInput::GamePad[TVar("Number").ToInt()].LStickX, 
-//			Input::XInput::GamePad[TVar("Number").ToInt()].LStickY, 
-//			0 
-//			) );
+		cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
+
+//		Real Scalar(0.2f);
+//		if ( dot(Stick,Bd->GetVelocity()) < Real::Zero )
+//			Scalar = Real(0.4f);
+//
+//		Bd->AddForce( Stick * Scalar );
+
+		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.35) + Stick.Magnitude());
+		Bd->AddForce( Line * Real(0.125f) );
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );

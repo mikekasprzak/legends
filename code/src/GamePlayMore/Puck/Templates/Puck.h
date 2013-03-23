@@ -25,7 +25,8 @@ public: // - Specialization Methods --------------------------------------------
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
 		//SetBody( BT_POINT, Pos );
-		Object->Body = cBody::new_Circle( Pos, Real(4) );
+		Object->Body = cBody::new_CircleV( Pos, Real(4) );
+		Object->Body->GetCircleVPtr()->SetRestitution( 0.9f );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
