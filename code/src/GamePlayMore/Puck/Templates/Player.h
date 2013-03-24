@@ -51,33 +51,64 @@ public: // - Specialization Methods --------------------------------------------
 
 		cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
 
-		if ( (Var("Stun").ToInt() == 0) && (Var("Dash").ToInt() == 0) ) {
-			if ( (Input::XInput::GamePad[TVar("Number").ToInt()].Button) ) {
-				Var("Dash") = 30;
-				Bd->AddForce( Stick * Real(2) );
-			}
-			else {	
-				Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.15) + Stick.Magnitude());
-				Bd->AddForce( Line * Real(0.25f) );
-			}
+		if ( Var("Stun").ToInt() > 0 )
+			Var("Stun") -= 1;
+		if ( Var("Dash").ToInt() > 0 )
+			Var("Dash") -= 1;
+
+		Real Scalar = Real::One;
+		int Dash = Var("Dash").ToInt();
+
+		if ( Var("Dash").ToInt() > 0 ) {
+			if ( Dash > 20 )
+				Dash = 20;
+			Scalar = Real::One - Real(Dash / 20.0f); 
 		}
 		else {
-			if ( Var("Stun").ToInt() > 0 )
-				Var("Stun") -= 1;
-			if ( Var("Dash").ToInt() > 0 )
-				Var("Dash") -= 1;
+			if ( (Input::XInput::GamePad[TVar("Number").ToInt()].Button) ) {
+				Var("Dash") = 40;
+				Bd->AddForce( Stick * Real(2.5f) );
+			}
 		}
+
+		int Stun = Var("Stun").ToInt();
+
+		if ( Stun > 0 ) {
+			if ( Stun > 10 )
+				Stun = 10;
+			Scalar = min(Scalar,Real::One - Real(Stun / 10.0f)); 
+		}
+
+		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.15) + Stick.Magnitude());
+		Bd->AddForce( Line * Real(0.25f) * Scalar );
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );
 //	}
 
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
+		int DashA = Object->OVar("Dash").ToInt();
+		int DashB = 0;
+		if ( Vs->OVar.Exists("Dash") ) {
+			DashB = Vs->OVar("Dash").ToInt();
+		}
+		
+		if ( (DashA > 10) && (DashB > 10) ) {
+			// Both in Motion, no Effect //
+		}
+		else {
+			if ( DashA > 10) {
+				Vs->Notify( Object, 5 );
+			}
+		}
 		return true;
 	}
-	virtual void Sense( cObject* Object, cObject* Vs ) {
+	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
 	}
 	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
+		if ( Message == 5 ) {
+			Object->OVar("Stun") = 20;
+		}
 	}
 };
 // - ------------------------------------------------------------------------------------------ - //

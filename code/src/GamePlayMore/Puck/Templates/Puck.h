@@ -11,7 +11,7 @@ public: // - Class Helpers -----------------------------------------------------
 public: // - Members -------------------------------------------------------------------------- - //
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tPuck() {
-		Art = cArt::new_Circle( Vector3D::Zero, Real(4), GEL_RGB_YELLOW );
+		Art = cArt::new_Circle( Vector3D::Zero, Real(5), GEL_RGB_YELLOW );
 	}
 	
 	virtual ~tPuck() {
@@ -23,7 +23,7 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void CreateObject( cObject* Object, const Vector3D& Pos ) {
 		cTemplate::CreateObject( Object, Pos );
 		// ... //
-		Object->Body = cBody::new_CircleV( Pos, Real(4), Vector3D::Zero, Real(0.1f), Real(0.9f) );
+		Object->Body = cBody::new_CircleV( Pos, Real(5), Vector3D::Zero, Real(0.1f), Real(0.9f) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -44,7 +44,7 @@ public: // - Specialization Methods --------------------------------------------
 //	}
 
 //	virtual void Contact( cObject* Object, cObject* Vs );
-//	virtual void Sense( cObject* Object, cObject* Vs );
+//	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex );
 	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
 		if ( (Message == 1) || (Message == 2) ) { // Puck Go Home //
 			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;

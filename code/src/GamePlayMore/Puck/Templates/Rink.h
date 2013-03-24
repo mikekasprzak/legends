@@ -43,7 +43,7 @@ public: // - Specialization Methods --------------------------------------------
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
 		return true;
 	}
-//	virtual void Sense( cObject* Object, cObject* Vs ) {
+//	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
 //	}
 //	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
 //	}

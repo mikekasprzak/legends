@@ -41,6 +41,14 @@ public: // - Methods -----------------------------------------------------------
 		return Add( Name.c_str() );
 	}
 
+	inline const bool Exists( const char* Name ) {
+		auto Itr = Data.find( Name );
+		return Itr != Data.end();
+	}
+	inline const bool Exists( const std::string Name ) {
+		return Exists( Name.c_str() );
+	}
+
 	inline void Delete( const char* Name ) {
 		auto Itr = Data.find( Name );
 		if ( Itr != Data.end() ) {
