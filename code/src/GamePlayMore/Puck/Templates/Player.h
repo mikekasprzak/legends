@@ -106,7 +106,21 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Sense( cObject* Object, cObject* Vs, const st32 SensorIndex ) {
 	}
 	virtual void Notice( cObject* Object, cObject* Sender, const int Message ) {
-		if ( Message == 5 ) {
+		if ( (Message == 1) || (Message == 2) ) {
+			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
+			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
+			
+			int Number = TVar("Number").ToInt();
+			Log("Ha ha! You LOSE a point because you went in the net! %i", Number);
+			
+			if ( (Number == 0) || (Number == 1) ) {
+				SVar("Score1") -= 1;
+			}
+			else if ( (Number == 2) || (Number == 3) ) {
+				SVar("Score2") -= 1;
+			}
+		}
+		else if ( Message == 5 ) {
 			Object->OVar("Stun") = 20;
 		}
 	}
