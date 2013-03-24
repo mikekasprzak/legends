@@ -43,9 +43,9 @@ public: // - Specialization Methods --------------------------------------------
 
 		// Input //
 		Vector3D Stick;
-//		if ( SVar("DelayTime").ToInt() == 0 ) {
+		if ( (SVar("DelayTime").ToInt() == 0) && (SVar("Time").ToInt() > 0) ) {
 			Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
-//		}
+		}
 		Real StickMag = Stick.Magnitude();
 		if ( StickMag < Real(0.1f) )
 			Stick = Vector3D::Zero;

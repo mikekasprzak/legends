@@ -7,8 +7,12 @@
 #include <Style/Style.h>
 #include <Math/Vector.h>
 // - ------------------------------------------------------------------------------------------ - //
+enum {
+	GENERATE_DEFAULT_CIRCLE_STEPS = 128
+};
+// - ------------------------------------------------------------------------------------------ - //
 template< typename T >
-inline void generate_Vertex3D_Circle( T* Dest, const Vector3D& Pos, const Real& Radius, const st32 Steps = 32 ) {
+inline void generate_Vertex3D_Circle( T* Dest, const Vector3D& Pos, const Real& Radius, const st32 Steps = GENERATE_DEFAULT_CIRCLE_STEPS ) {
 	Vector3D* Out;
 
 //	float FloatSteps = Steps;
@@ -23,19 +27,19 @@ inline void generate_Vertex3D_Circle( T* Dest, const Vector3D& Pos, const Real& 
 }
 // - ------------------------------------------------------------------------------------------ - //
 template< typename T >
-inline void generate_Vertex3D_Circle( T* Dest, const Vector2D& Pos, const Real& Radius, const st32 Steps = 32 ) {
+inline void generate_Vertex3D_Circle( T* Dest, const Vector2D& Pos, const Real& Radius, const st32 Steps = GENERATE_DEFAULT_CIRCLE_STEPS ) {
 	generate_Vertex3D_Circle( Dest, Pos.ToVector3D(), Radius, Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline const st32 size_Vertex3D_Circle( const st32 Steps = 32 ) {
+inline const st32 size_Vertex3D_Circle( const st32 Steps = GENERATE_DEFAULT_CIRCLE_STEPS ) {
 	return Steps;
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline const st32 size_Vertex3D_Circle( const Vector3D&, const Real&, const st32 Steps = 32 ) {
+inline const st32 size_Vertex3D_Circle( const Vector3D&, const Real&, const st32 Steps = GENERATE_DEFAULT_CIRCLE_STEPS ) {
 	return size_Vertex3D_Circle( Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //
-inline const st32 size_Vertex3D_Circle( const Vector2D&, const Real&, const st32 Steps = 32 ) {
+inline const st32 size_Vertex3D_Circle( const Vector2D&, const Real&, const st32 Steps = GENERATE_DEFAULT_CIRCLE_STEPS ) {
 	return size_Vertex3D_Circle( Steps );
 }
 // - ------------------------------------------------------------------------------------------ - //

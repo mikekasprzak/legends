@@ -37,7 +37,9 @@ public: // - Specialization Methods --------------------------------------------
 		if ( __TabKey ) {
 			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
 			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
-		}				
+		}
+		
+		SVar("PuckSpeed") = Object->Body->GetCircleV().GetVelocity().Magnitude();
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		Log( "Drawn" );

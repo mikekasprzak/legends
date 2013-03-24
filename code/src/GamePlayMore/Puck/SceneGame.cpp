@@ -19,6 +19,8 @@ cSceneGame::cSceneGame() {
 	
 	SVar.Add("DelayTime") = 4*60;
 	SVar.Add("ShowDelayTime") = true;
+
+	SVar.Add("PuckSpeed") = 0.0f;	// Puck Velocity Magnitude //
 	
 	// Add Templates //
 //	AddTemplate( "Screwy", new tScrewy() );
@@ -58,7 +60,9 @@ void cSceneGame::Step() {
 		SVar("DelayTime") -= 1;
 	}
 	else {
-		SVar("Time") -= 1;		
+		if ( SVar("Time").ToInt() > 0 ) {
+			SVar("Time") -= 1;
+		}
 	}
 	
 	// *** //
@@ -89,6 +93,31 @@ void cSceneGame::Draw( const Matrix4x4& Matrix ) {
 				GEL_ALIGN_MIDDLE_CENTER, 
 				"%i%s", (DelayTime / 60) % 60, ((DelayTime / 60) == 0) ? "!" : ""
 			);
+		}
+
+		if ( SVar("Time").ToBool() == 0 ) {
+			if ( SVar("PuckSpeed").ToFloat() < 0.05f ) {
+				char* Text = "TIE!";
+				if ( SVar("Score1").ToInt() > SVar("Score2").ToInt() )
+					 Text = "ORANGE WINS!";
+				if ( SVar("Score2").ToInt() > SVar("Score1").ToInt() )
+					 Text = "GREEN WINS!";
+					
+				Font->printf( 
+					Vector3D(0,0,0), 
+					128.0f,
+					GEL_ALIGN_MIDDLE_CENTER, 
+					Text
+				);
+			}
+			else {
+				Font->printf( 
+					Vector3D(0,0,0), 
+					192.0f,
+					GEL_ALIGN_MIDDLE_CENTER, 
+					"END"
+				);
+			}
 		}
 	}
 }
