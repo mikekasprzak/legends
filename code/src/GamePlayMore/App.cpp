@@ -13,6 +13,7 @@ using namespace Texture;
 using namespace Render;
 // - ------------------------------------------------------------------------------------------ - //
 TextureHandle Texas;
+extern cFont* Font;
 cFont* Font;
 cRenderTarget* RT_Main;
 cRenderTarget* RT_Blur[2];
@@ -244,12 +245,6 @@ void cApp::Draw( Screen::cNative& Native ) {
 		LocalMatrix(1,1) = (4)*2;
 
 		ViewMatrix *= LocalMatrix;
-
-		Render::EnablePremultipliedAlphaBlending();
-		extern int FramesPerSecond;
-		Font->printf( Vector3D(-130,-70,0), 8.0f, GEL_ALIGN_BOTTOM_LEFT, "%i", FramesPerSecond );
-//		Font->printf( Vector3D(-100,-50,0), 8.0f, GEL_ALIGN_DEFAULT, "Hey Dude" );
-		Render::DisableBlending();
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
