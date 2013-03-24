@@ -142,7 +142,7 @@ public: // - Specialization Methods --------------------------------------------
 			}
 		}
 		else if ( Message == 5 ) {
-			Object->OVar("Stun") = 20;
+			Object->OVar("Stun") = 40;
 		}
 	}
 };

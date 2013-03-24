@@ -109,15 +109,20 @@ public: // - Methods -----------------------------------------------------------
 		return Point.Pos + (Line * max(Length,Point.Radius)); 
 	}
 
-//	// Points on the Capsule, or a proxy ... fFFUUU //
-//	inline const cBody_Sphere GetNearestSphereInside( const Vector3D& Pos ) const {
-//		cBody_Sphere Point = GetNearestSphere( Pos );
-//		
-//		Vector3D Line = Pos - Point.Pos;
-//		Real Length = Line.NormalizeRet();
-//		
-//		return Point.Pos + (Line * ((Length > Point.Radius) ? (Length * Real::One) : Point.Radius )); 
-//	}
+
+	inline const cBody_Sphere GetNearestSphereOn( const Vector3D& Pos ) const {
+		cBody_Sphere Point = GetNearestSphere( Pos );
+		
+		Vector3D Line = Pos - Point.Pos;
+		Real Length = Line.NormalizeRet();
+		
+		if ( Length.IsZero() )
+			Line = (PosB-PosA).Tangent().Normal();
+		
+		Point.Pos += (Line * (Point.Radius+Point.Radius));
+		
+		return Point;
+	}
 
 };
 // - ------------------------------------------------------------------------------------------ - //

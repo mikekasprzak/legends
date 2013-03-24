@@ -69,7 +69,7 @@ const Rect3D cBody::GetRect() {
 			GetHalfSphere().Radius._xxx() * Real::Two 
 			);
 	}
-	else if ( IsCapsule() || IsInvCapsule() ) {
+	else if ( IsCapsule() ) {
 		Rect3D Ret(
 			GetCapsule().PosA - GetCapsule().RadiusA._xx0(),
 			GetCapsule().RadiusA._xx0() * Real::Two
@@ -77,6 +77,17 @@ const Rect3D cBody::GetRect() {
 		Ret -= Rect3D( 
 			GetCapsule().PosB - GetCapsule().RadiusB._xx0(),
 			GetCapsule().RadiusB._xx0() * Real::Two 
+			);
+		return Ret;
+	}
+	else if ( IsInvCapsule() ) {
+		Rect3D Ret(
+			GetCapsule().PosA - GetCapsule().RadiusA._xx0() * Real::Two,
+			GetCapsule().RadiusA._xx0() * Real::Two * Real::Two
+			);
+		Ret -= Rect3D( 
+			GetCapsule().PosB - GetCapsule().RadiusB._xx0() * Real::Two,
+			GetCapsule().RadiusB._xx0() * Real::Two * Real::Two
 			);
 		return Ret;
 	}
@@ -266,6 +277,10 @@ void cBody::Solve( cBody* Vs ) {
 			cBody_Sphere Temp = Vs->GetCapsule().GetNearestSphere( GetCircle().Pos );
 			::Solve( GetCircleVPtr(), &Temp );
 		}
+		else if ( Vs->IsInvCapsule() ) {
+			cBody_Sphere Temp = Vs->GetCapsule().GetNearestSphereOn( GetCircle().Pos );
+			::Solve( GetCircleVPtr(), &Temp );
+		}
 	}
 	else if ( IsCircle() ) {
 		if ( Vs->IsCircleV() ) {
@@ -286,12 +301,8 @@ void cBody::Solve( cBody* Vs ) {
 	}
 	else if ( IsInvCapsule() ) {
 		if ( Vs->IsCircleV() ) {
-//			cBody_Sphere Temp = GetCapsule().GetNearestSphere( Vs->GetCircle().Pos );
-			cBody_Sphere Temp;
-			Temp.Pos = GetCapsule().GetNearestPointOn( Vs->GetCircle().Pos );
-			Temp.Radius = Real::Zero;
+			cBody_Sphere Temp = GetCapsule().GetNearestSphereOn( Vs->GetCircle().Pos );
 			::Solve( Vs->GetCircleVPtr(), &Temp );
-			// this should work... fix me.
 		}
 	}
 }
