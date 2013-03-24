@@ -14,7 +14,7 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	//virtual void Create() { // Can't do this in C++. See Project.h. Using Constructor instead. //
 	cProjectPuck() {
-		PVar.Add( "ShowDebug" ) = true;
+		PVar.Add( "ShowDebug" ) = false;
 		AddScene( "Game", new cSceneGame() );
 	}
 	

@@ -4,6 +4,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 #include <Engine/Engine.h>
 #include <Input/Input.h>
+#include <Generate/Vertex.h>
 // - ------------------------------------------------------------------------------------------ - //
 class tPlayer: public cTemplate {
 public: // - Class Helpers -------------------------------------------------------------------- - //
@@ -28,7 +29,7 @@ public: // - Specialization Methods --------------------------------------------
 		Object->OVar.Add("Stun") = 0;
 		Object->OVar.Add("Dash") = 0;
 		
-		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D::Zero, Real::One, Real(0.7f) );
+		Object->Body = cBody::new_CircleV( Pos, TVar("Radius").ToFloat(), Vector3D::Zero, Real::One, Real(0.8f) );
 	}
 	virtual void DestroyObject( cObject* Object ) {
 
@@ -74,17 +75,37 @@ public: // - Specialization Methods --------------------------------------------
 		int Stun = Var("Stun").ToInt();
 
 		if ( Stun > 0 ) {
-			if ( Stun > 10 )
-				Stun = 10;
-			Scalar = min(Scalar,Real::One - Real(Stun / 10.0f)); 
+			if ( Stun > 5 )
+				Stun = 5;
+			Scalar = min(Scalar,Real::One - Real(Stun / 5.0f)); 
 		}
 
 		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.15) + Stick.Magnitude());
 		Bd->AddForce( Line * Real(0.25f) * Scalar );
 	}
-//	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
-//		cTemplate::Draw( Object, Matrix );
-//	}
+	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
+		cTemplate::Draw( Object, Matrix );
+
+		if ( Object->OVar("Dash").ToInt() > 0 ) {
+			cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
+	
+			const st32 VertCount = size_Vertex3D_Circle();
+			Vector3D Verts[ VertCount ];
+			generate_Vertex3D_Circle( Verts, Bd->Pos, Bd->Radius + Real(Object->OVar("Dash").ToInt()-10) * Real(0.125f) );
+	
+			Render::Flat( GEL_LINE_LOOP, Matrix, GEL_RGBA(255,255,255,255), Verts, VertCount );
+		}
+
+		if ( Object->OVar("Stun").ToInt() > 0 ) {
+			cBody_SphereV* Bd = Object->Body->GetCircleVPtr();
+	
+			const st32 VertCount = size_Vertex3D_Circle();
+			Vector3D Verts[ VertCount ];
+			generate_Vertex3D_Circle( Verts, Bd->Pos, Bd->Radius + Real(Object->OVar("Stun").ToInt()-5) * Real(0.125f) );
+	
+			Render::Flat( GEL_LINE_LOOP, Matrix, GEL_RGBA(0,255,255,255), Verts, VertCount );
+		}
+	}
 
 	virtual const bool Contact( cObject* Object, cObject* Vs ) {
 		int DashA = Object->OVar("Dash").ToInt();
