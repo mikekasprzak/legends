@@ -38,6 +38,17 @@ public: // - Specialization Methods --------------------------------------------
 			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
 			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
 		}
+
+		extern int __1Key;
+		if ( __1Key ) {
+			Art->GetCirclePtr()->Radius = Real(5);
+			Object->Body->GetCircleVPtr()->Radius = Real(5);
+		}
+		extern int __2Key;
+		if ( __2Key ) {
+			Art->GetCirclePtr()->Radius = Real(15);
+			Object->Body->GetCircleVPtr()->Radius = Real(15);
+		}
 		
 		SVar("PuckSpeed") = Object->Body->GetCircleV().GetVelocity().Magnitude();
 	}

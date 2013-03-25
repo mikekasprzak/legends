@@ -136,6 +136,7 @@ public: // - Specialization Methods --------------------------------------------
 		if ( (Message == 1) || (Message == 2) ) {
 			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
 			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
+			Object->OVar("Stun") = 30;
 			
 			int Number = TVar("Number").ToInt();
 			Log("Ha ha! You LOSE a point because you went in the net! %i", Number);

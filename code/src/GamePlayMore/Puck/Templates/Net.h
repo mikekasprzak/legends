@@ -12,7 +12,7 @@ public: // - Members -----------------------------------------------------------
 public: // - Constructors and Destructors ----------------------------------------------------- - //
 	tNet( const GelColor& Color = GEL_RGB_WHITE, const bool Right = false ) {
 		TVar.Add("Number") = Right ? 2 : 1;
-		Art = cArt::new_HalfCircle( Vector3D::Zero, Real(30), Right ? Vector3D(+1,0,0) : Vector3D(-1,0,0), Color );
+		Art = cArt::new_HalfCircle( Vector3D::Zero, Real(36+2), Right ? Vector3D(+1,0,0) : Vector3D(-1,0,0), Color );
 	}
 	
 	virtual ~tNet() {
@@ -39,6 +39,20 @@ public: // - Specialization Methods --------------------------------------------
 	// Works Just Fine //
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
+			
+//		extern int __1Key;
+//		if ( __1Key ) {
+//			Art->GetHalfCirclePtr()->Radius = Real(30);
+//			Object->Body->GetHalfCircleVPtr()->Radius = Real(30);
+//			Object->Sensor[0]->GetHalfCirclePtr()->Radius = Real(30);
+//		}
+//		extern int __2Key;
+//		if ( __2Key ) {
+//			Art->GetHalfCirclePtr()->Radius = Real(40);
+//			Object->Body->GetHalfCircleVPtr()->Radius = Real(40);
+//			Object->Sensor[0]->GetHalfCirclePtr()->Radius = Real(40);
+//		}
+
 	}
 //	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
 //		cTemplate::Draw( Object, Matrix );
