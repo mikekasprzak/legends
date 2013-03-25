@@ -43,6 +43,12 @@ public: // - Specialization Methods --------------------------------------------
 
 		// Input //
 		Vector3D Stick;
+		st32 Button = Input::XInput::GamePad[TVar("Number").ToInt()].Button;
+		st32 ActionMask = (b01100101 << 8) | b01010101;
+		if ( SVar("GameMode").ToInt() == 1 ) {
+			ActionMask = 0xFFFF;
+		}
+		st32 AltMask = (~ActionMask) & 0xFFFF;
 		if ( (SVar("DelayTime").ToInt() == 0) && (SVar("Time").ToInt() > 0) ) {
 			Stick = Input::XInput::GamePad[TVar("Number").ToInt()].LStick.ToVector3D();
 		}
@@ -66,7 +72,7 @@ public: // - Specialization Methods --------------------------------------------
 			Scalar = Real::One - Real(Dash / 20.0f); 
 		}
 		else {
-			if ( (Input::XInput::GamePad[TVar("Number").ToInt()].Button) ) {
+			if ( Button & ActionMask ) {
 				Var("Dash") = 40;
 				Bd->AddForce( Stick * Real(2.5f) );
 			}
@@ -142,7 +148,7 @@ public: // - Specialization Methods --------------------------------------------
 			}
 		}
 		else if ( Message == 5 ) {
-			Object->OVar("Stun") = 40;
+			Object->OVar("Stun") = 20 + Sender->OVar("Dash").ToInt();
 		}
 	}
 };

@@ -101,6 +101,8 @@ extern bool __F1Key;
 extern bool __F2Key;
 extern bool __F3Key;
 extern bool __F4Key;
+extern bool __1Key;
+extern bool __2Key;
 // - ------------------------------------------------------------------------------------------ - //
 bool __UpKey = false;
 bool __DownKey = false;
@@ -112,6 +114,8 @@ bool __F1Key = false;
 bool __F2Key = false;
 bool __F3Key = false;
 bool __F4Key = false;
+bool __1Key = false;
+bool __2Key = false;
 // - ------------------------------------------------------------------------------------------ - //
 bool KillSignal = false;
 // - ------------------------------------------------------------------------------------------ - //
@@ -183,6 +187,12 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F4 ) {
 			__F4Key = false;
 		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_1 ) {
+			__1Key = false;
+		}
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_2 ) {
+			__2Key = false;
+		}
 	}
 	else if ( Event->type == SDL_KEYDOWN ) {
 		if ( Event->key.keysym.scancode == SDL_SCANCODE_UP ) {
@@ -214,6 +224,12 @@ int EventHandler( void* /*UserData*/, SDL_Event* Event ) {
 		}		
 		else if ( Event->key.keysym.scancode == SDL_SCANCODE_F4 ) {
 			__F4Key = true;
+		}		
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_1 ) {
+			__1Key = true;
+		}		
+		else if ( Event->key.keysym.scancode == SDL_SCANCODE_2 ) {
+			__2Key = true;
 		}		
 	}
 	else if ( Event->type == SDL_WINDOWEVENT ) {

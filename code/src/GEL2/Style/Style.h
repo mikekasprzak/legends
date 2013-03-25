@@ -17,6 +17,7 @@
 
 #include "NSet.h"			// NSet1, NSet2, like Set but each member can have a different type //
 #include <Types/Set.h>		// TODO: Move to style //
+#include <Util/Binary.h>	// TODO: ^ //
 
 #include "MinMax.h"			// Min and Max functions that take up to 7 arguments //
 #include "EqLtGt.h"			// Test functions Eq,Neq,Lt,Gt,Lte,Gte that test one vs up to 7 values //

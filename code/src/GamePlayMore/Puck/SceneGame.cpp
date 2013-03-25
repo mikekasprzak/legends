@@ -19,6 +19,8 @@ cSceneGame::cSceneGame() {
 	
 	SVar.Add("DelayTime") = 4*60;
 	SVar.Add("ShowDelayTime") = true;
+	
+	SVar.Add("GameMode") = 1;
 
 	SVar.Add("PuckSpeed") = 0.0f;	// Puck Velocity Magnitude //
 	
@@ -27,7 +29,7 @@ cSceneGame::cSceneGame() {
 	AddTemplate( "Player1", new tPlayer( 0, GEL_RGB_ORANGE ) );
 	AddTemplate( "Player2", new tPlayer( 1, GEL_RGB_RED ) );
 	AddTemplate( "Player3", new tPlayer( 2, GEL_RGB_MINT ) );
-	AddTemplate( "Player4", new tPlayer( 3, GEL_RGB_GREEN ) );
+	AddTemplate( "Player4", new tPlayer( 3, GEL_RGB(0,128,255) ) );
 	AddTemplate( "Net1", new tNet( GEL_RGB_ORANGE, false ) );
 	AddTemplate( "Net2", new tNet( GEL_RGB_MINT, true ) );
 	AddTemplate( "Rink", new tRink() );

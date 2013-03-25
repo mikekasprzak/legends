@@ -52,10 +52,10 @@ public: // - Specialization Methods --------------------------------------------
 			Object->Body->GetCircleVPtr()->Pos = Vector3D::Zero;
 			Object->Body->GetCircleVPtr()->SetVelocity( Vector3D::Zero );
 			if ( Message == 1 ) {
-				SVar("Score1") += 1;
+				SVar("Score2") += 1;
 			}
 			if ( Message == 2 ) {
-				SVar("Score2") += 1;
+				SVar("Score1") += 1;
 			}
 		}		
 	}
