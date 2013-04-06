@@ -155,6 +155,7 @@ public: // - Specialization Methods --------------------------------------------
 
 	void DrawRect( const Matrix4x4& Matrix );
 	void DrawBody( const Matrix4x4& Matrix );
+	void DrawSensors( const Matrix4x4& Matrix );
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __PLAYMORE_PROJECT_H__ //

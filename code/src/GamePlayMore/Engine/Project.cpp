@@ -29,3 +29,9 @@ void cProject::DrawBody( const Matrix4x4& Matrix ) {
 	}	
 }
 // - ------------------------------------------------------------------------------------------ - //
+void cProject::DrawSensors( const Matrix4x4& Matrix ) {
+	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+		(*Itr)->DrawSensors( Matrix );
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //

@@ -86,7 +86,7 @@ public: // - Specialization Methods --------------------------------------------
 			Scalar = min(Scalar,Real::One - Real(Stun / 5.0f)); 
 		}
 
-		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(0.15) + Stick.Magnitude());
+		Vector3D Line = ((Stick * Real(2)) - Bd->GetVelocity()) * (Real(1) + Stick.Magnitude());
 		Bd->AddForce( Line * Real(0.25f) * Scalar );
 	}
 	virtual void Draw( cObject* Object, const Matrix4x4& Matrix ) {
@@ -149,6 +149,7 @@ public: // - Specialization Methods --------------------------------------------
 			}
 		}
 		else if ( Message == 5 ) {
+			Object->Body->GetCircleVPtr()->SetVelocity( Object->Body->GetCircleVPtr()->GetVelocity() * Real(1.5f) );
 			Object->OVar("Stun") = 20 + Sender->OVar("Dash").ToInt();
 		}
 	}

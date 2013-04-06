@@ -129,7 +129,8 @@ void cScene::DrawRect( const Matrix4x4& Matrix ) {
 	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
 		(*Itr)->DrawRect( Matrix );
 	}
-}// - ------------------------------------------------------------------------------------------ - //
+}
+// - ------------------------------------------------------------------------------------------ - //
 void cScene::DrawBody( const Matrix4x4& Matrix ) {
 	// Draw Statics First (because they'll typically occlude Actives) //
 	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
@@ -138,6 +139,21 @@ void cScene::DrawBody( const Matrix4x4& Matrix ) {
 	// Draw Actives Second //
 	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
 		(*Itr)->Body->Draw( Matrix );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+void cScene::DrawSensors( const Matrix4x4& Matrix ) {
+	// Draw Statics First (because they'll typically occlude Actives) //
+	for ( auto Itr = Static.begin(); Itr != Static.end(); Itr++ ) {
+		for ( st idx = 0; idx < (*Itr)->Sensor.size(); idx++ ) {
+			(*Itr)->Sensor[idx]->Draw( Matrix );
+		}
+	}
+	// Draw Actives Second //
+	for ( auto Itr = Active.begin(); Itr != Active.end(); Itr++ ) {
+		for ( st idx = 0; idx < (*Itr)->Sensor.size(); idx++ ) {
+			(*Itr)->Sensor[idx]->Draw( Matrix );
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

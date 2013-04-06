@@ -42,6 +42,7 @@ public: // - Methods -----------------------------------------------------------
 		cProject::Draw( Matrix );
 			
 		if ( PVar("ShowDebug").ToBool() ) {
+			cProject::DrawSensors( Matrix );
 			cProject::DrawBody( Matrix );
 			cProject::DrawRect( Matrix );
 		}

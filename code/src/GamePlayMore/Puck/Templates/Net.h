@@ -40,6 +40,9 @@ public: // - Specialization Methods --------------------------------------------
 	virtual void Step( cObject* Object ) {
 		cTemplate::Step( Object );
 			
+		Object->Sensor[0]->GetHalfCirclePtr()->Pos = Object->Body->GetHalfCirclePtr()->Pos;
+		Object->Sensor[0]->GetHalfCirclePtr()->Radius = Object->Body->GetHalfCirclePtr()->Radius - Real::Two;
+			
 //		extern int __1Key;
 //		if ( __1Key ) {
 //			Art->GetHalfCirclePtr()->Radius = Real(30);

@@ -347,7 +347,7 @@ void cBody::Draw( const Matrix4x4& Matrix ) {
 //
 //		Render::Flat( GEL_LINE_LOOP, Matrix, GeometryColor, Verts, VertCount );
 //	}
-	else if ( IsHalfCircle() ) {
+	else if ( IsHalfCircle() || IsHalfCircleI() ) {
 		const st32 VertCount = size_Vertex3D_HalfCircle();
 		Vector3D Verts[ VertCount ];
 		generate_Vertex3D_HalfCircle( Verts, GetHalfCircle().Pos, GetHalfCircle().Radius, GetHalfCircle().Normal );
