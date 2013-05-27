@@ -24,9 +24,9 @@ endif # NUMBER_OF_PROCESSORS #
 
 # - ------------------------------------------------------------------------ - #
 default:
-	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS)
+	$(MAKE) -f $(BUILD_MAKEFILE) -j
 run clean cleanmain info upload package install cache startcache:
-	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS) $@
+	$(MAKE) -f $(BUILD_MAKEFILE) -j $@
 # - ------------------------------------------------------------------------ - #
 
 # - ------------------------------------------------------------------------ - #
@@ -35,5 +35,5 @@ all: $(addprefix obj/,$(SKU_ALL_FILE))
 other: $(addprefix obj/,$(filter-out $(notdir $(SKU_FILE)),$(SKU_ALL_FILE)))
 # - ------------------------------------------------------------------------ - #
 obj/%:
-	$(MAKE) -f $(BUILD_MAKEFILE) -j $(NUM_PROCESSORS) SKU_FILE=SKU/$(PROJECT_FILE)/$* $(target) $(action)
+	$(MAKE) -f $(BUILD_MAKEFILE) -j SKU_FILE=SKU/$(PROJECT_FILE)/$* $(target) $(action)
 # - ------------------------------------------------------------------------ - #

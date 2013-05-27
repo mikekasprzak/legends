@@ -1,4 +1,22 @@
 
+Prerequisites:
+
+libsdl:
+1. Download mainline SDL: hg clone http://hg.libsdl.org/SDL
+2. configure inside a folder. i.e. mkdir (then) cd /SDLBuild/; ../SDL/configure
+TODO: May need to disable haptic and joystick (so far no)
+
+openssl:
+1. Download latest source: http://www.openssl.org/source/
+2. Configure and Build. (may not work with -j)
+
+libcurl:
+1. Download latest Curl source: http://curl.haxx.se/download.html
+2. ./configure --disable-shared (builds a static library, not a DLL)
+TODO: How to get SSH support
+
+--------------------------------------------------------------------------------
+
 setup.sh   - Initialize this source tree for use
 
 sku.sh     - Manage and change the current product SKU
