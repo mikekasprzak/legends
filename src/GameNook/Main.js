@@ -249,6 +249,8 @@ function RunMainLoop() {
 function Main_ShowPaused() {
 	//Game.ShowPaused();
 
+	gelSetColor( 0,0,0,255 );
+	gelDrawTextCenter( "*PAUSED*", Canvas.width >> 1, (Canvas.height >> 1)+3, 48, "ShowG" );
 	gelSetColor( 255,254,100,255 );
 	gelDrawTextCenter( "*PAUSED*", Canvas.width >> 1, Canvas.height >> 1, 48, "ShowG" );
 
