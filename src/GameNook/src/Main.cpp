@@ -473,6 +473,7 @@ public:
 	bool OnCeiling, WasOnCeiling;
 	bool OnWall, WasOnWall;
 	int JumpPower;
+	int FloatTime; // How long the character has been floating (i.e. not on ground, not jumping) //
 
 	bool FacingLeft;
 	
@@ -512,6 +513,7 @@ public:
 		OnWall = false;
 		WasOnWall = false;
 		JumpPower = 0;
+		FloatTime = 0;
 		
 		FacingLeft = false;
 		
@@ -820,7 +822,7 @@ public:
 					JumpPower--;
 				}
 			}
-			if ( !Input_Key( KEY_UP ) ) {
+			if ( !Input_Key( KEY_UP ) && (FloatTime > 8) ) {
 				JumpPower = 0;
 			}
 			Pos -= (Pos-Old) - Velocity;
@@ -1174,7 +1176,16 @@ public:
 				}
 				
 			}
-									
+			
+			// Increment a counter while you are not on the ground //
+			if ( !OnGround && !OnWall ) {
+				FloatTime++;
+			}
+			else {
+				// On the ground, so clear the timer //
+				FloatTime = 0;
+			}
+								
 			/*
 			for ( int _y = StartY; _y < EndY; _y++ ) {
 				for ( int _x = StartX; _x < EndX; _x++ ) {
